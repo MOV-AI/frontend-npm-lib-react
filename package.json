@@ -1,17 +1,17 @@
 {
   "name": "mov.ai-core",
   "version": "1.0.0",
-  "description": "The Mov.AI's core frontend library.",
+  "description": "The Mov.AI's frontend library for React.",
   "main": "./dist/index.js",
   "scripts": {
     "test": "jest",
     "build": "webpack --mode=production",
     "buildDev": "webpack --mode=development",
-    "clean": "rm -r node_modules; rm package-lock.json"
+    "clean": "rm -rf node_modules/ package-lock.json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://pedromovai@bitbucket.org/robosavvy/mov.ai-core.git"
+    "url": "git+https://pedromovai@bitbucket.org/robosavvy/mov.ai-react.git"
   },
   "keywords": [
     "frontend",
@@ -22,7 +22,7 @@
   ],
   "author": "MOV.AI",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/robosavvy/mov.ai-core#readme",
+  "homepage": "https://bitbucket.org/robosavvy/mov.ai-react#readme",
   "devDependencies": {
     "@babel/core": "^7.7.4",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
@@ -46,8 +46,6 @@
     "react-dom": "^16.12.0"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.7.4",
-    "jwt-decode": "^2.2.0",
-    "monet": "^0.9.0"
+    "@babel/runtime-corejs3": "^7.7.4"
   }
 }
