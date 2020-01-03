@@ -33,7 +33,7 @@ Button.defaultProps = {
   color: "default", // default, inherit, primary or secondary
   variant: "contained", // text, outlined, contained
   size: "medium", // small, medium, large
-  startIcon: <div></div>,
+  startIcon: undefined,
   children: <div></div>
 };
 
