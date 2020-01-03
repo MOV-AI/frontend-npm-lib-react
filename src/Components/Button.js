@@ -6,7 +6,7 @@ const Button = props => {
   return (
     <MaterialButton
       className={props.className}
-      styles={props.styles}
+      style={props.style}
       onClick={props.onClick}
       color={props.color}
       variant={props.variant}
@@ -18,7 +18,7 @@ const Button = props => {
 };
 
 Button.propTypes = {
-  styles: PropTypes.object,
+  style: PropTypes.object,
   onClick: PropTypes.func,
   color: PropTypes.string,
   variant: PropTypes.string,
@@ -26,7 +26,7 @@ Button.propTypes = {
   children: PropTypes.node.isRequired
 };
 Button.defaultProps = {
-  styles: {},
+  style: {},
   onClick: () => console.log("Click MOV.AI button"),
   color: "default", // default, inherit, primary or secondary
   variant: "contained", // text, outlined, contained
