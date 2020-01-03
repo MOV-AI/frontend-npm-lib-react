@@ -11,6 +11,7 @@ const Button = props => {
       color={props.color}
       variant={props.variant}
       size={props.size}
+      startIcon={props.startIcon}
     >
       {props.children}
     </MaterialButton>
@@ -23,6 +24,7 @@ Button.propTypes = {
   color: PropTypes.string,
   variant: PropTypes.string,
   size: PropTypes.string,
+  startIcon: PropTypes.element,
   children: PropTypes.node.isRequired
 };
 Button.defaultProps = {
@@ -31,6 +33,7 @@ Button.defaultProps = {
   color: "default", // default, inherit, primary or secondary
   variant: "contained", // text, outlined, contained
   size: "medium", // small, medium, large
+  startIcon: <div></div>,
   children: <div></div>
 };
 
