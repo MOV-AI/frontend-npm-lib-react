@@ -9,12 +9,8 @@ const Collapse = props => {
   return (
     <List>
       <ListItem button onClick={props.onClick}>
-        {props.open ? (
-          <ExpandMore style={props.iconStyle} />
-        ) : (
-          <ChevronRightIcon style={props.iconStyle} />
-        )}
-        <div style={{ ...props.style }}>{props.item}</div>
+        {props.open ? <ExpandMore /> : <ChevronRightIcon />}
+        <div style={{ width: "100%" }}>{props.item}</div>
       </ListItem>
       {props.divided ? <Divider /> : []}
       <MaterialCollapse
@@ -32,8 +28,7 @@ Collapse.propTypes = {
   item: PropTypes.object,
   onClick: PropTypes.func,
   open: PropTypes.bool,
-  divided: PropTypes.bool,
-  iconStyle: PropTypes.object
+  divided: PropTypes.bool
 };
 
 Collapse.defaultProps = {
@@ -41,8 +36,7 @@ Collapse.defaultProps = {
   onClick: () => {},
   open: false,
   divided: false,
-  iconStyle: {},
-  style: { width: "100%" }
+  style: {}
 };
 
 export default Collapse;
