@@ -3,22 +3,20 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import PropTypes from "prop-types";
 import MaterialCollapse from "@material-ui/core/Collapse";
-import { Divider } from "@material-ui/core";
+import { Divider, ListItem, List } from "@material-ui/core";
 
 const Collapse = props => {
   return (
-    <div>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div onClick={props.onClose()}>
-          {props.open ? (
-            <ExpandMore style={props.iconStyle} />
-          ) : (
-            <ChevronRightIcon style={props.iconStyle} />
-          )}
-        </div>
+    <List>
+      <ListItem button style={{ ...props.style }} onClick={props.onClose()}>
+        {props.open ? (
+          <ExpandMore style={props.iconStyle} />
+        ) : (
+          <ChevronRightIcon style={props.iconStyle} />
+        )}
         <div>{props.item}</div>
-      </div>
-      {props.divided ? <Divider></Divider> : []}
+      </ListItem>
+      {props.divided ? <Divider /> : []}
       <MaterialCollapse
         className={props.className}
         style={props.style}
@@ -26,7 +24,7 @@ const Collapse = props => {
       >
         {props.children}
       </MaterialCollapse>
-    </div>
+    </List>
   );
 };
 
@@ -43,7 +41,8 @@ Collapse.defaultProps = {
   onClose: () => {},
   open: false,
   divided: false,
-  iconStyle: {}
+  iconStyle: {},
+  style: {}
 };
 
 export default Collapse;
