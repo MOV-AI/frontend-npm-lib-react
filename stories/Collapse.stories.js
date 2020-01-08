@@ -44,3 +44,19 @@ export const divided = () => {
 divided.story = {
   name: "divided Collapse"
 };
+
+export const iconStyled = () => {
+  return (
+    <Collapse
+      open={false}
+      iconStyle={{ color: "blue" }}
+      item={<div>simple</div>}
+    >
+      {data}
+    </Collapse>
+  );
+};
+
+iconStyled.story = {
+  name: "Icon styled"
+};
