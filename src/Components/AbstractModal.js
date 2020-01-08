@@ -56,7 +56,7 @@ const AbstractModal = props => {
             {props.submitText}
           </Button>
           <Button color="secondary" onClick={cancel}>
-            {"Cancel"}
+            {props.cancelText}
           </Button>
         </CardActions>
       </Card>
@@ -70,6 +70,7 @@ AbstractModal.propTypes = {
   open: PropTypes.bool,
   title: PropTypes.string,
   submitText: PropTypes.string,
+  cancelText: PropTypes.string,
   width: PropTypes.string,
   height: PropTypes.string
 };
@@ -80,6 +81,7 @@ AbstractModal.defaultProps = {
   open: false,
   title: "New",
   submitText: "Confirm",
+  cancelText: "Cancel",
   width: "25%",
   height: "25%"
 };
