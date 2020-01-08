@@ -6,21 +6,34 @@ import MaterialCollapse from "@material-ui/core/Collapse";
 import { Divider, ListItem, List } from "@material-ui/core";
 
 const Collapse = props => {
+  const [open, setOpen] = React.useState(props.open);
+
+  React.useEffect(() => {
+    if (props.open !== open) {
+      setOpen(props.open);
+    }
+  }, [props.open]);
+
+  const handleClickFactory = clickLambda => () => {
+    setOpen(!open);
+    clickLambda();
+  };
+
   return (
     <List>
-      <ListItem button style={{ ...props.style }} onClick={props.onClose()}>
-        {props.open ? (
-          <ExpandMore style={props.iconStyle} />
+      <ListItem button onClick={handleClickFactory(props.onClick)}>
+        {open ? (
+          <ExpandMore style={{ ...props.iconStyle }} />
         ) : (
-          <ChevronRightIcon style={props.iconStyle} />
+          <ChevronRightIcon style={{ ...props.iconStyle }} />
         )}
-        <div>{props.item}</div>
+        <div style={{ width: "100%" }}>{props.item}</div>
       </ListItem>
       {props.divided ? <Divider /> : []}
       <MaterialCollapse
         className={props.className}
         style={props.style}
-        in={props.open}
+        in={open}
       >
         {props.children}
       </MaterialCollapse>
@@ -30,7 +43,7 @@ const Collapse = props => {
 
 Collapse.propTypes = {
   item: PropTypes.object,
-  onClose: PropTypes.func,
+  onClick: PropTypes.func,
   open: PropTypes.bool,
   divided: PropTypes.bool,
   iconStyle: PropTypes.object
@@ -38,11 +51,11 @@ Collapse.propTypes = {
 
 Collapse.defaultProps = {
   item: <div></div>,
-  onClose: () => {},
+  onClick: () => {},
   open: false,
   divided: false,
-  iconStyle: {},
-  style: {}
+  style: {},
+  iconStyle: {}
 };
 
 export default Collapse;

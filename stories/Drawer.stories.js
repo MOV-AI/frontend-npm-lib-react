@@ -1,5 +1,6 @@
 import React from "react";
 import Drawer from "../src/Components/Drawer";
+import Button from "../src/Components/Button";
 import List from "@material-ui/core/List";
 import { Utils } from "mov.ai-core";
 import { ListItem } from "@material-ui/core";
@@ -7,37 +8,31 @@ export default {
   title: "Drawer"
 };
 
-export const drawerClosed = () => {
+const drawerFactory = initialOpen => () => {
+  const [open, setOpen] = React.useState(initialOpen);
   return (
-    <Drawer open={false}>
-      <List>
-        {Utils.range(10).map(i => (
-          <ListItem key={"listItem" + i}>
-            <span key={"span" + i}>{`Span${i}`}</span>
-          </ListItem>
-        ))}
-      </List>
-    </Drawer>
+    <div>
+      <Button onClick={() => setOpen(!open)}>Toggle</Button>
+      <Drawer open={open} onClose={() => setOpen(false)}>
+        <List>
+          {Utils.range(10).map(i => (
+            <ListItem key={"listItem" + i}>
+              <span key={"span" + i}>{`Span${i}`}</span>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+    </div>
   );
 };
+
+export const drawerClosed = drawerFactory(false);
 
 drawerClosed.story = {
   name: "closed drawer"
 };
 
-export const drawerOpen = () => {
-  return (
-    <Drawer open={true}>
-      <List>
-        {Utils.range(10).map(i => (
-          <ListItem key={"listItem" + i}>
-            <span key={"span" + i}>{`Span${i}`}</span>
-          </ListItem>
-        ))}
-      </List>
-    </Drawer>
-  );
-};
+export const drawerOpen = drawerFactory(true);
 
 drawerOpen.story = {
   name: "opened drawer"
