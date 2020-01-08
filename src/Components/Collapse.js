@@ -6,10 +6,12 @@ import MaterialCollapse from "@material-ui/core/Collapse";
 import { Divider, ListItem, List } from "@material-ui/core";
 
 const Collapse = props => {
-  const [open, setOpen] = React.useState({ ...props.open });
+  const [open, setOpen] = React.useState(props.open);
 
   React.useEffect(() => {
-    setOpen({ ...props.open });
+    if (props.open !== open) {
+      setOpen(props.open);
+    }
   }, [props.open]);
 
   const handleClickFactory = clickLambda => () => {

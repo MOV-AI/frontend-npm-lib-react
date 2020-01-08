@@ -7,7 +7,7 @@ export default {
   title: "Collapse"
 };
 
-const data = Utils.range(10).map(i => <List>{`data${i}`}</List>);
+const data = Utils.range(10).map(i => <List key={i}>{`data${i}`}</List>);
 
 export const closed = () => {
   return (
