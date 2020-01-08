@@ -6,17 +6,28 @@ import MaterialCollapse from "@material-ui/core/Collapse";
 import { Divider, ListItem, List } from "@material-ui/core";
 
 const Collapse = props => {
+  const [open, setOpen] = React.useState({ ...props.open });
+
+  React.useEffect(() => {
+    setOpen({ ...props.open });
+  }, [props.open]);
+
+  const handleClickFactory = clickLambda => () => {
+    setOpen(!open);
+    clickLambda();
+  };
+
   return (
     <List>
-      <ListItem button onClick={props.onClick}>
-        {props.open ? <ExpandMore /> : <ChevronRightIcon />}
+      <ListItem button onClick={handleClickFactory(props.onClick)}>
+        {open ? <ExpandMore /> : <ChevronRightIcon />}
         <div style={{ width: "100%" }}>{props.item}</div>
       </ListItem>
       {props.divided ? <Divider /> : []}
       <MaterialCollapse
         className={props.className}
         style={props.style}
-        in={props.open}
+        in={open}
       >
         {props.children}
       </MaterialCollapse>
