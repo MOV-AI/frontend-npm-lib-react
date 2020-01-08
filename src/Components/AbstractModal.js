@@ -1,11 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Button from "./Button";
 import {
   Card,
   Typography,
   CardContent,
   Divider,
-  Button,
+  // Button,
   CardActions,
   Modal
 } from "@material-ui/core";
@@ -46,17 +47,27 @@ const AbstractModal = props => {
     >
       <Card style={{ ...style, width: props.width, height: props.height }}>
         <CardContent style={{ flexGrow: 1 }}>
-          <Typography variant="h5">{props.title}</Typography>
-          <Divider style={{ marginBottom: "5%" }} />
-          {props.children}
+          <Typography
+            variant="h5"
+            style={{
+              padding: "12px 0px 12px 6px",
+              fontFamily: "Open Sans",
+              fontStyle: "normal",
+              fontWeight: 600,
+              fontSize: "24px"
+            }}
+          >
+            {props.title}
+          </Typography>
+          <div style={{ paddingLeft: "6px" }}>{props.children}</div>
         </CardContent>
         <Divider />
-        <CardActions>
+        <CardActions style={{ alignSelf: "flex-end" }}>
+          <Button onClick={cancel} variant="outlined">
+            {props.cancelText}
+          </Button>
           <Button color="primary" onClick={submit}>
             {props.submitText}
-          </Button>
-          <Button color="secondary" onClick={cancel}>
-            {props.cancelText}
           </Button>
         </CardActions>
       </Card>

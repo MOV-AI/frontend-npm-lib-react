@@ -6,7 +6,7 @@ export default {
 
 export const simple = () => {
   return (
-    <AbstractModal title={"Simple Modal"} open={true}>
+    <AbstractModal title={"Simple Modal"} open={true} width={500} height={200}>
       Simple
     </AbstractModal>
   );
