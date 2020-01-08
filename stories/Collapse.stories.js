@@ -7,7 +7,7 @@ export default {
   title: "Collapse"
 };
 
-const data = Utils.range(10).map(i => <List>{`data${i}`}</List>);
+const data = Utils.range(10).map(i => <List key={i}>{`data${i}`}</List>);
 
 export const closed = () => {
   return (
@@ -18,7 +18,7 @@ export const closed = () => {
 };
 
 closed.story = {
-  name: "closed Collapse"
+  name: "closed Collapse "
 };
 
 export const opened = () => {
@@ -43,4 +43,20 @@ export const divided = () => {
 
 divided.story = {
   name: "divided Collapse"
+};
+
+export const iconStyled = () => {
+  return (
+    <Collapse
+      open={false}
+      iconStyle={{ color: "blue" }}
+      item={<div>simple</div>}
+    >
+      {data}
+    </Collapse>
+  );
+};
+
+iconStyled.story = {
+  name: "Icon styled"
 };
