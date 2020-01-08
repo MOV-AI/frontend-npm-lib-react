@@ -18,7 +18,7 @@ export const closed = () => {
 };
 
 closed.story = {
-  name: "closed Collapse"
+  name: "closed Collapse "
 };
 
 export const opened = () => {
