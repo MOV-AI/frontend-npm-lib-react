@@ -8,7 +8,7 @@ import { Divider, ListItem, List } from "@material-ui/core";
 const Collapse = props => {
   return (
     <List>
-      <ListItem button onClick={props.onClose()}>
+      <ListItem button onClick={props.onClick}>
         {props.open ? (
           <ExpandMore style={props.iconStyle} />
         ) : (
@@ -30,7 +30,7 @@ const Collapse = props => {
 
 Collapse.propTypes = {
   item: PropTypes.object,
-  onClose: PropTypes.func,
+  onClick: PropTypes.func,
   open: PropTypes.bool,
   divided: PropTypes.bool,
   iconStyle: PropTypes.object
@@ -38,11 +38,11 @@ Collapse.propTypes = {
 
 Collapse.defaultProps = {
   item: <div></div>,
-  onClose: () => {},
+  onClick: () => {},
   open: false,
   divided: false,
   iconStyle: {},
-  style: {}
+  style: { width: "100%" }
 };
 
 export default Collapse;
