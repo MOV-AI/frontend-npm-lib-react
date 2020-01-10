@@ -46,7 +46,14 @@ const AbstractModal = props => {
       }}
     >
       <Card style={{ ...style, width: props.width, height: props.height }}>
-        <CardContent style={{ flexGrow: 1 }}>
+        <CardContent
+          style={{
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+            minHeight: 0
+          }}
+        >
           <Typography
             variant="h5"
             style={{
@@ -59,7 +66,16 @@ const AbstractModal = props => {
           >
             {props.title}
           </Typography>
-          <div style={{ paddingLeft: "6px" }}>{props.children}</div>
+          <div
+            style={{
+              paddingLeft: "6px",
+              flexGrow: 1,
+              overflow: "auto",
+              minHeight: 0
+            }}
+          >
+            {props.children}
+          </div>
         </CardContent>
         <Divider />
         <CardActions style={{ alignSelf: "flex-end" }}>
