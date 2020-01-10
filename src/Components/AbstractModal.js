@@ -45,7 +45,15 @@ const AbstractModal = props => {
         justifyContent: "center"
       }}
     >
-      <Card style={{ ...style, width: props.width, height: props.height }}>
+      <Card
+        style={{
+          ...style,
+          width: props.width,
+          height: props.height,
+          minWidth: "260px",
+          minHeight: "280px"
+        }}
+      >
         <CardContent
           style={{
             flexGrow: 1,
