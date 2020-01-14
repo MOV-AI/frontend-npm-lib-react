@@ -52,8 +52,15 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.7.4",
+    "@babylonjs/gui": "^4.0.3",
     "@material-ui/core": "^4.8.2",
     "@material-ui/icons": "^4.5.1",
-    "mov.ai-core": "git+ssh://git@bitbucket.org/robosavvy/mov.ai-core.git#develop"
+    "babylonjs": "^4.0.3",
+    "babylonjs-loaders": "^4.0.3",
+    "earcut": "^2.2.1",
+    "monet": "^0.9.0",
+    "mov.ai-core": "git+ssh://git@bitbucket.org/robosavvy/mov.ai-core.git#develop",
+    "prop-types": "^15.7.2",
+    "react-resize-detector": "^4.2.1"
   }
 }
