@@ -2,6 +2,11 @@ import { Maybe } from "monet";
 import { ASSETS_TYPES, AssetsTypesFactory } from "../Utils/AssetsTypesFactory";
 import { MasterDB } from "mov.ai-core";
 
+const REST_API =
+  window.location.port === ""
+    ? `http://${window.location.hostname}`
+    : `http://${window.location.hostname}:${window.location.port}`;
+
 /**
  *  Graphic Assets Manager, retrieves and manages the assets that are in DB.
  */
@@ -82,7 +87,7 @@ class AssetsManager {
    *                                                                                      */
   //========================================================================================
 
-  getMapUrl = src => `http://${window.CURRENT_HOST}/static/maps/${src}`;
+  getMapUrl = src => `${REST_API}/static/maps/${src}`;
 
   getImageSize(src) {
     return new Promise((resolve, reject) => {
