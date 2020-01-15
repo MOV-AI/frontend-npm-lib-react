@@ -33,7 +33,12 @@ export const custom = () => {
           }
         ]}
         data={[
-          { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 }
+          {
+            name: "Vicente",
+            surname: "Queiroz",
+            birthYear: 1987,
+            birthCity: 63
+          }
         ]}
       ></Table>
     </div>

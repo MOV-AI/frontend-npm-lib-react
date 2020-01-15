@@ -4,5 +4,14 @@ import Drawer from "./src/Components/Drawer";
 import Collapse from "./src/Components/Collapse";
 import VerticalBar from "./src/Components/VerticalBar";
 import ContextMenu from "./src/Components/ContextMenu";
+import Table from "./src/Components/Table";
 
-export { Button, AbstractModal, Drawer, Collapse, VerticalBar, ContextMenu };
+export {
+  Button,
+  AbstractModal,
+  Drawer,
+  Collapse,
+  VerticalBar,
+  ContextMenu,
+  Table
+};
