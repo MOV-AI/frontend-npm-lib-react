@@ -54,6 +54,7 @@
     "@babel/runtime-corejs3": "^7.7.4",
     "@material-ui/core": "^4.8.2",
     "@material-ui/icons": "^4.5.1",
+    "material-table": "^1.55.0",
     "mov.ai-core": "git+ssh://git@bitbucket.org/robosavvy/mov.ai-core.git#develop"
   }
 }
