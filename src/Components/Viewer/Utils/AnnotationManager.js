@@ -1,4 +1,4 @@
-import MasterDB from "../../../api/MasterDB";
+import { MasterDB } from "mov.ai-core";
 
 class AnnotationManager {
   constructor() {

@@ -4,7 +4,7 @@ import * as BABYLON from "babylonjs";
 import Util3d from "../Util3d/Util3d";
 import { Maybe } from "monet";
 import React from "react";
-import { positiveMod } from "../../_shared/Utils/Utils";
+import { Utils } from "mov.ai-core";
 import Constants from "../Utils/Constants";
 
 const RADIUS = Constants.RADIUS;
@@ -176,7 +176,7 @@ const addKeyPointInBetween = (scene, keyPointMesh, mainView, orientation) => {
   mainView.getNodeFromTree(name).forEach(pathTreeNode => {
     const item = pathTreeNode.item;
     const numberOfPoints = item.localPolygon.length;
-    const nextIndex = positiveMod(index + orientation, numberOfPoints);
+    const nextIndex = Utils.mod(index + orientation, numberOfPoints);
     const mesh = item.mesh;
     const oldPoints = item.localPolygon.map(x => Vec3.of(x).toBabylon());
 

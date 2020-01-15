@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import * as BABYLON from "babylonjs";
 import { Typography } from "@material-ui/core";
 import ReactResizeDetector from "react-resize-detector";
-import { FLEX_STYLE } from "../../_shared/Utils/Utils";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
+import { Engine } from "babylonjs";
 
 /**
  *  props:
@@ -15,12 +14,11 @@ class BaseViewer extends Component {
     size: { width: "100px", height: "100px" }
   };
 
-  addEventListeners = () =>
-    this.props.addEventListeners2Canvas(this.canvas)
+  addEventListeners = () => this.props.addEventListeners2Canvas(this.canvas);
 
   componentDidMount() {
     this.addEventListeners();
-    this.engine = new BABYLON.Engine(this.canvas, true, {
+    this.engine = new Engine(this.canvas, true, {
       stencil: true
     });
     const scene = this.props.createScene(this.engine, this.canvas);
@@ -42,7 +40,16 @@ class BaseViewer extends Component {
 
   render() {
     return (
-      <Typography component="div" style={{ width: "100%", height: "100%", ...FLEX_STYLE }}>
+      <Typography
+        component="div"
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1
+        }}
+      >
         <canvas
           ref={canvas => (this.canvas = canvas)}
           style={{ flexGrow: 1 }}
@@ -63,11 +70,11 @@ BaseViewer.propTypes = {
   createScene: PropTypes.func,
   is2render: PropTypes.bool,
   addEventListeners2Canvas: PropTypes.func
-}
+};
 
 BaseViewer.defaultProps = {
-  createScene: (engine, canvas) => { },
+  createScene: (engine, canvas) => {},
   is2render: true,
-  addEventListeners2Canvas: canvas => { }
-}
+  addEventListeners2Canvas: canvas => {}
+};
 export default BaseViewer;

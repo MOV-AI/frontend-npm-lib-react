@@ -1,8 +1,8 @@
 import Vec3 from "../Math/Vec3";
 import Util3d from "../Util3d/Util3d";
-import * as BABYLON from "babylonjs";
-import MasterDB from "../../../api/MasterDB";
+import { MasterDB } from "mov.ai-core";
 import AssetNodeItem from "./AssetNodeItem";
+import { Axis, Space, Vector3, Quaternion, Color3 } from "babylonjs";
 
 class Robot extends AssetNodeItem {
   static ROBOT_MESH_NAME = "Tugbot.STL";
@@ -76,17 +76,17 @@ class Robot extends AssetNodeItem {
       .prodVec(new Vec3([speed, 0, 0]))
       .toBabylon();
     mesh.position = mesh.position.add(vel.scale(dt));
-    mesh.rotate(BABYLON.Axis.Z, (-Math.PI / 2) * dt, BABYLON.Space.LOCAL);
+    mesh.rotate(Axis.Z, (-Math.PI / 2) * dt, Space.LOCAL);
     if (Math.random() < 0.01) parentView.updateNodeInServer(mesh.name);
   };
 
   static updateRobotMeshTree(newRobotTf, robot) {
-    robot.mesh.position = new BABYLON.Vector3(
+    robot.mesh.position = new Vector3(
       newRobotTf.position.x,
       newRobotTf.position.y,
       newRobotTf.position.z
     );
-    const quaternion = new BABYLON.Quaternion(
+    const quaternion = new Quaternion(
       newRobotTf.orientation.x,
       newRobotTf.orientation.y,
       newRobotTf.orientation.z,
@@ -131,7 +131,7 @@ class Robot extends AssetNodeItem {
     const boundingSphere = mesh.getBoundingInfo().boundingSphere;
     const pivotSphere = Util3d.createSphere(
       scene,
-      new BABYLON.Color3(0.0, 0.0, 0.0),
+      new Color3(0.0, 0.0, 0.0),
       0.25 * boundingSphere.radius,
       `pivotSphere${mesh.name}`,
       false
@@ -144,7 +144,7 @@ class Robot extends AssetNodeItem {
 
     const tfSphereMesh = Util3d.createSphere(
       scene,
-      new BABYLON.Color3(0.0, 0.0, 0.0),
+      new Color3(0.0, 0.0, 0.0),
       0.5 * boundingSphere.radius,
       `tfsphere${mesh.name}`,
       false
@@ -158,7 +158,7 @@ class Robot extends AssetNodeItem {
     tfSphereMesh.position.set(0, 0, translate);
     const spherePlaceHolder = Util3d.createSphere(
       scene,
-      new BABYLON.Color3(0.0, 0.0, 0.0),
+      new Color3(0.0, 0.0, 0.0),
       boundScale,
       mesh.name,
       true
@@ -175,7 +175,7 @@ class Robot extends AssetNodeItem {
     if (!mesh) {
       mesh = Util3d.createSphere(
         scene,
-        new BABYLON.Color3(0.0, 0.0, 0.0),
+        new Color3(0.0, 0.0, 0.0),
         0.5,
         node.name,
         false
@@ -185,12 +185,12 @@ class Robot extends AssetNodeItem {
       mesh: mesh,
       children: []
     };
-    const position = new BABYLON.Vector3(
+    const position = new Vector3(
       node.position.x,
       node.position.y,
       node.position.z
     );
-    const quaternion = new BABYLON.Quaternion(
+    const quaternion = new Quaternion(
       node.orientation.x,
       node.orientation.y,
       node.orientation.z,

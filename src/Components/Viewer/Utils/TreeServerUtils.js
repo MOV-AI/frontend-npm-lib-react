@@ -1,7 +1,7 @@
 import TreeObject from "../TreeObject/TreeObject";
 import TreeNode from "../TreeObject/TreeNode";
 import GlobalRef from "../NodeItem/GlobalRef";
-import MasterDB from "../../../api/MasterDB";
+import { MasterDB } from "mov.ai-core";
 import Constants from "./Constants";
 
 const CLOUD_FUNCTION_NAME = Constants.CLOUD_FUNCTION_NAME;

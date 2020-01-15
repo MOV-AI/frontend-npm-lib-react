@@ -1,5 +1,4 @@
-import MasterComponent from "../../MasterComponent/MasterComponent";
-import MasterDB from "../../../api/MasterDB";
+import { MasterDB } from "mov.ai-core";
 import Constants from "./Constants";
 
 class SceneServerUtils {
@@ -17,11 +16,9 @@ class SceneServerUtils {
   };
 }
 
-const DEFAULT_FAILURE = failureLocation => data =>
-  MasterComponent.alert(
-    `Exception caught in ${failureLocation}: ${data.error}`,
-    MasterComponent.ALERTS.error
-  );
+const DEFAULT_FAILURE = failureLocation => data => {
+  throw "" + `Exception caught in ${failureLocation}: ${data.error}`;
+};
 
 const DEFAULT_SUCCESS = data => {};
 

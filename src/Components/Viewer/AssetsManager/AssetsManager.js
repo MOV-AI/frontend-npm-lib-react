@@ -1,6 +1,6 @@
 import { Maybe } from "monet";
 import { ASSETS_TYPES, AssetsTypesFactory } from "../Utils/AssetsTypesFactory";
-import MasterDB from "../../../api/MasterDB";
+import { MasterDB } from "mov.ai-core";
 
 /**
  *  Graphic Assets Manager, retrieves and manages the assets that are in DB.

@@ -4,12 +4,11 @@ import Action from "./Action";
 import Map from "../NodeItem/Map";
 import { Maybe } from "monet";
 import React from "react";
-import MasterComponent from "../../MasterComponent/MasterComponent";
 import GlobalRef from "../NodeItem/GlobalRef";
 import { Vector3 } from "babylonjs";
 import DefaultScene from "../Utils/DefaultScene";
 import { ACTIONS } from "../MainView/MainViewActions";
-import MasterDB from "../../../api/MasterDB";
+import { MasterDB } from "mov.ai-core";
 import Constants from "../Utils/Constants";
 
 class AddMapAction extends Action {
@@ -85,18 +84,8 @@ class AddMapAction extends Action {
         return this.addMap(parentView);
       } else {
         const oldMapName = parentView.getObjectTree()[1].title;
-        MasterComponent.confirmAlert(
-          "Switch Maps",
-          `Do you want to replace ${oldMapName} by ${this.name}`,
-          () => {
-            parentView.deleteNodeFromTreeUsingName(oldMapName);
-            this.addMap(parentView);
-          },
-          () => {
-            /* Empty */
-          },
-          "Switch Maps"
-        );
+        parentView.deleteNodeFromTreeUsingName(oldMapName);
+        this.addMap(parentView);
       }
     });
     parentView.setSelectedAction(ACTIONS.dragObjects);
@@ -105,19 +94,12 @@ class AddMapAction extends Action {
   getType = () => AddMapAction.TYPE;
 
   deleteAsset = () => {
-    MasterComponent.confirmAlert(
-      "Confirm to delete",
-      `Are you sure you want to delete ${this.name}?`,
-      () => {
-        MasterDB.cloudFunction(
-          Constants.CLOUD_FUNCTION_NAME,
-          "deleteMap",
-          this.name,
-          data => {
-            console.log("Delete Maps", data);
-            MasterComponent.alert(`Map ${this.name} was deleted`);
-          }
-        );
+    MasterDB.cloudFunction(
+      Constants.CLOUD_FUNCTION_NAME,
+      "deleteMap",
+      this.name,
+      data => {
+        console.log("Delete Maps", data);
       }
     );
   };

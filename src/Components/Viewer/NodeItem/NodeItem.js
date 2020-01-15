@@ -1,8 +1,8 @@
 import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
-import * as BABYLON from "babylonjs";
-import { capitalize } from "../../_shared/Utils/Utils";
+import { Utils } from "mov.ai-core";
 import AnnotationManager from "../Utils/AnnotationManager";
+import { Quaternion, Color3, Vector3 } from "babylonjs";
 
 class NodeItem {
   constructor(mesh, keyValueMap = {}) {
@@ -25,7 +25,7 @@ class NodeItem {
       quaternion: Maybe.fromNull(this.mesh.rotationQuaternion)
         .map(x => [x.w, x.x, x.y, x.z])
         .orLazy(() => {
-          const q = BABYLON.Quaternion.RotationYawPitchRoll(
+          const q = Quaternion.RotationYawPitchRoll(
             this.mesh.rotation.y,
             this.mesh.rotation.x,
             this.mesh.rotation.z
@@ -41,11 +41,7 @@ class NodeItem {
 
   toForm() {
     const info = this.toDict();
-    const color = new BABYLON.Color3(
-      info.color[0],
-      info.color[1],
-      info.color[2]
-    );
+    const color = new Color3(info.color[0], info.color[1], info.color[2]);
     const schema = {
       jsonSchema: {
         type: "object",
@@ -147,7 +143,7 @@ class NodeItem {
     Object.keys(annotations).forEach(annotation => {
       if (annotations[annotation].labels.length > 0) {
         schema.jsonSchema.properties.annotations.properties[annotation] = {
-          title: capitalize(annotation),
+          title: Utils.capitalize(annotation),
           type: "string",
           enumNames: annotations[annotation].labels,
           enum: annotations[annotation].names
@@ -163,13 +159,13 @@ class NodeItem {
     const item = new NodeItem(this.mesh);
     item.name = form.name;
     item.mesh.name = form.name;
-    item.mesh.position = new BABYLON.Vector3(
+    item.mesh.position = new Vector3(
       form.position.x,
       form.position.y,
       form.position.z
     );
 
-    item.mesh.rotationQuaternion = new BABYLON.Quaternion(
+    item.mesh.rotationQuaternion = new Quaternion(
       form.quaternion.x,
       form.quaternion.y,
       form.quaternion.z,
@@ -177,12 +173,8 @@ class NodeItem {
     ).normalize();
 
     if (item.mesh.material) {
-      item.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(
-        form.color
-      );
-      item.mesh.material.emissiveColor = BABYLON.Color3.FromHexString(
-        form.color
-      );
+      item.mesh.material.diffuseColor = Color3.FromHexString(form.color);
+      item.mesh.material.emissiveColor = Color3.FromHexString(form.color);
     }
 
     item.keyValueMap = { ...form.annotations };
@@ -204,7 +196,7 @@ class NodeItem {
         position => (mesh.position = Vec3.of(position).toBabylon())
       );
       Maybe.fromNull(someDict.quaternion).forEach(quaternion => {
-        const babylonQuaternion = new BABYLON.Quaternion(
+        const babylonQuaternion = new Quaternion(
           quaternion[1],
           quaternion[2],
           quaternion[3],
@@ -213,7 +205,7 @@ class NodeItem {
         mesh.rotationQuaternion = babylonQuaternion.normalize();
       });
       Maybe.fromNull(someDict.color).forEach(color => {
-        const babylonColor = new BABYLON.Color3(color[0], color[1], color[2]);
+        const babylonColor = new Color3(color[0], color[1], color[2]);
         Maybe.fromNull(mesh.material).forEach(material => {
           Maybe.fromNull(material.diffuseColor).forEach(
             z => (mesh.material.diffuseColor = babylonColor)
