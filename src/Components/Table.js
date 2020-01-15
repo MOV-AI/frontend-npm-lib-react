@@ -44,6 +44,8 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
+// More information in: https://material-table.com/#/docs/all-props
+
 const Table = props => {
   return (
     <MaterialTable
