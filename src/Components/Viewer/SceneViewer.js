@@ -205,11 +205,13 @@ class SceneViewer extends Component {
 }
 
 SceneViewer.propTypes = {
-  sceneName: PropTypes.shape({ Value: PropTypes.string })
+  sceneName: PropTypes.shape({ Value: PropTypes.string }),
+  doAction: PropTypes.func
 };
 
 SceneViewer.defaultProps = {
-  sceneName: { Value: "Pedro" }
+  sceneName: { Value: "Pedro" },
+  doAction: () => {}
 };
 
 export default SceneViewer;
