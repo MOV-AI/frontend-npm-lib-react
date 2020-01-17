@@ -210,7 +210,7 @@ SceneViewer.propTypes = {
 };
 
 SceneViewer.defaultProps = {
-  sceneName: { Value: "Pedro" },
+  sceneName: { Value: "Movai" },
   focusObject: ""
 };
 

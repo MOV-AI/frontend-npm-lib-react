@@ -21,7 +21,12 @@ class MeshLoader {
     //   onFinally();
     // } else {
     const assetsManager = new AssetsManager(this.scene);
-    const meshTask = assetsManager.addMeshTask("", "", "../", meshName);
+    const meshTask = assetsManager.addMeshTask(
+      "",
+      "",
+      REST_API + "/static/meshes/",
+      meshName
+    );
     meshTask.onSuccess = onSuccess;
     meshTask.onError = onFailure;
     assetsManager.onFinish = onFinally;
@@ -29,5 +34,10 @@ class MeshLoader {
     // }
   }
 }
+
+const REST_API =
+  window.location.port === ""
+    ? `http://${window.location.hostname}`
+    : `http://${window.location.hostname}:${window.location.port}`;
 
 export default MeshLoader;

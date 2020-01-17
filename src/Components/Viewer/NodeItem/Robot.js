@@ -5,7 +5,7 @@ import AssetNodeItem from "./AssetNodeItem";
 import { Axis, Space, Vector3, Quaternion, Color3 } from "babylonjs";
 
 class Robot extends AssetNodeItem {
-  static ROBOT_MESH_NAME = "Tugbot.STL";
+  static ROBOT_MESH_NAME = "Tugbot.stl";
 
   constructor(meshTree, assetName, keyValueMap = {}) {
     super(meshTree.mesh, assetName, keyValueMap);
