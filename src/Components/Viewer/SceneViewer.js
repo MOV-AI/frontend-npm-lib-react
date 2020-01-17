@@ -116,7 +116,7 @@ class SceneViewer extends Component {
     this.getSceneMemory().forEach(memory => {
       const engine = memory.engine;
       const scene = memory.scene;
-      MeshLoader.of(scene).loadMeshes(
+      MeshLoader.of(scene).loadMesh(
         Robot.ROBOT_MESH_NAME,
         task => {
           const mesh = Robot.transformMesh(task.loadedMeshes[0], scene);

@@ -10,7 +10,7 @@ class MeshLoader {
     return new MeshLoader(scene);
   }
 
-  loadMeshes(
+  loadMesh(
     meshName,
     onSuccess = task => {},
     onFinally = task => {},
