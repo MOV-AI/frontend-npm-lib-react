@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import "./Snackbar.css";
 
-export class ReactConfirmAlert extends Component {
+export default class ReactConfirmAlert extends Component {
   static propTypes = {
     message: PropTypes.string,
     customUI: PropTypes.func,
@@ -169,7 +169,7 @@ function removeBodyClass() {
   document.body.classList.remove("react-confirm-alert-body-element");
 }
 
-export default function snackbar(properties) {
+export function snackbar(properties) {
   addBodyClass();
   createElementReconfirm(properties);
 }
