@@ -326,6 +326,12 @@ class Util3d {
       .reduce((e, x) => e.add(x), Vec3.ZERO)
       .scale(1 / arrayOfPoints.length);
   }
+
+  static randomVector3(a, b) {
+    return new Vector3.FromArray(
+      [0, 0, 0].map(x => a + (b - a) * Math.random())
+    );
+  }
 }
 
 export default Util3d;

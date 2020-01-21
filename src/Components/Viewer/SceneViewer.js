@@ -65,6 +65,7 @@ class SceneViewer extends Component {
   };
 
   updateNodeInServer = (name, oldName = null) => {
+    if (this.props.focusObject.Value === name) this.setCameraToTarget();
     TreeServerUtils.ofScene(this.sceneName).updateNodeInServer(
       name,
       [...this.objectTree],
@@ -90,16 +91,40 @@ class SceneViewer extends Component {
     this.objectTree = newObjectTree;
   };
 
+  setCameraToTarget = () => {
+    this.sceneMemory.forEach(memory => {
+      const camera = memory.camera;
+      const focusObject = this.props.focusObject.Value;
+      this.getNodeFromTree(focusObject).cata(
+        () => {
+          console.log(
+            "Set Camera",
+            this.getRootNode().item.mesh._absolutePosition
+          );
+          camera.setTarget(
+            this.getRootNode().item.mesh._absolutePosition.clone()
+          );
+        },
+        x => {
+          console.log("Set Camera, Found Object", x.item.mesh);
+          camera.setTarget(x.item.mesh._absolutePosition.clone());
+        }
+      );
+    });
+  };
+
   //========================================================================================
   /*                                                                                      *
    *                                    Scene functions                                   *
    *                                                                                      */
   //========================================================================================
 
-  retrieveSceneFromServer = () => {
-    SceneServerUtils.retrieveScene(this.sceneName, data =>
-      MainViewRetriever.importScene(this, data.result)
-    );
+  retrieveSceneFromServer = afterLoading => {
+    SceneServerUtils.retrieveScene(this.sceneName, data => {
+      MainViewRetriever.importScene(this, data.result);
+      // TODO: check why we need the hack below
+      setTimeout(afterLoading);
+    });
   };
 
   getAssets = afterLoading => {
@@ -131,7 +156,11 @@ class SceneViewer extends Component {
   };
 
   loadScene = () => {
-    this.loadMeshes(() => this.getAssets(() => this.retrieveSceneFromServer()));
+    this.loadMeshes(() =>
+      this.getAssets(() =>
+        this.retrieveSceneFromServer(() => this.setCameraToTarget())
+      )
+    );
   };
 
   cameraViewObservable = camera => {
@@ -171,9 +200,22 @@ class SceneViewer extends Component {
   //========================================================================================
 
   componentDidUpdate = prevProps => {
-    if (this.props.sceneName.Value !== prevProps.sceneName.Value) {
-      this.sceneName = this.props.sceneName.Value;
-    }
+    const predicateAction = [
+      {
+        propVar: x => x.sceneName.Value,
+        action: () => (this.sceneName = this.props.sceneName.Value)
+      },
+      {
+        propVar: x => x.focusObject.Value,
+        action: this.setCameraToTarget
+      }
+    ];
+    predicateAction.map(predAction => {
+      const { propVar, action } = predAction;
+      if (propVar(this.props) !== propVar(prevProps)) {
+        action();
+      }
+    });
   };
 
   componentDidMount = () => {
@@ -206,12 +248,12 @@ class SceneViewer extends Component {
 
 SceneViewer.propTypes = {
   sceneName: PropTypes.shape({ Value: PropTypes.string }),
-  focusObject: PropTypes.string
+  focusObject: PropTypes.shape({ Value: PropTypes.string })
 };
 
 SceneViewer.defaultProps = {
-  sceneName: { Value: "Movai" },
-  focusObject: ""
+  sceneName: { Value: "Pedro" },
+  focusObject: { Value: "" }
 };
 
 export default SceneViewer;
