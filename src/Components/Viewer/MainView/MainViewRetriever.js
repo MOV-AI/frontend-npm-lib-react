@@ -86,6 +86,7 @@ class MainViewRetriever {
     } else {
       importDefaultScene(mainView, isNewScene);
     }
+    console.log("End Importing scene");
   }
 }
 
