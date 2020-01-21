@@ -6,7 +6,7 @@ import VerticalBar from "./src/Components/VerticalBar";
 import ContextMenu from "./src/Components/ContextMenu";
 import Table from "./src/Components/Table";
 import SceneViewer from "./src/Components/Viewer/SceneViewer";
-import snackbar from "./src/Components/Snackbar/Snackbar";
+import { snackbar } from "./src/Components/Snackbar/Snackbar";
 
 export {
   Button,
