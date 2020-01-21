@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../src/Components/Button";
-import { confirmAlert } from "../src/Components/Snackbar/Snackbar";
+import { snackbar } from "../src/Components/Snackbar/Snackbar";
 import "../src/Components/Snackbar/Snackbar.css";
 
 export default {
@@ -9,28 +9,37 @@ export default {
 
 export const simpleSnackbar = () => {
   return (
-    <div style={{ height: "100vh" }}>
-      <Button
-        onClick={() =>
-          confirmAlert({
-            title: "Confirm to submit",
-            message: "Are you sure to do this.",
-            buttons: [
-              {
-                label: "Yes",
-                onClick: () => alert("Click Yes")
-              },
-              {
-                label: "No",
-                onClick: () => alert("Click No")
-              }
-            ]
-          })
-        }
-      >
-        Open Snackbar
-      </Button>
-    </div>
+    <Button
+      onClick={() =>
+        snackbar({
+          message: "Are you sure to do this.",
+          severity: "success"
+        })
+      }
+    >
+      Open Snackbar
+    </Button>
+  );
+};
+
+simpleSnackbar.story = {
+  name: "Simple Snackbar"
+};
+
+export const customSnackbar = () => {
+  return (
+    <Button
+      onClick={() =>
+        snackbar({
+          message:
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+          severity: "error",
+          closable: false
+        })
+      }
+    >
+      Open Snackbar
+    </Button>
   );
 };
 

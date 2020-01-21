@@ -1,38 +1,40 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { render, unmountComponentAtNode } from "react-dom";
+import { Alert } from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Button from "../Button";
 
 export default class ReactConfirmAlert extends Component {
   static propTypes = {
-    title: PropTypes.string,
     message: PropTypes.string,
-    buttons: PropTypes.array.isRequired,
-    childrenElement: PropTypes.func,
     customUI: PropTypes.func,
     closeOnClickOutside: PropTypes.bool,
     closeOnEscape: PropTypes.bool,
     willUnmount: PropTypes.func,
     onClickOutside: PropTypes.func,
-    onKeypressEscape: PropTypes.func
+    onKeypressEscape: PropTypes.func,
+    // new props
+    severity: PropTypes.string,
+    closeText: PropTypes.string,
+    autoHideDuration: PropTypes.number,
+    closable: PropTypes.bool
   };
 
+  autoClose = null;
+
   static defaultProps = {
-    buttons: [
-      {
-        label: "Cancel",
-        onClick: () => null
-      },
-      {
-        label: "Confirm",
-        onClick: () => null
-      }
-    ],
-    childrenElement: () => null,
     closeOnClickOutside: true,
     closeOnEscape: true,
     willUnmount: () => null,
     onClickOutside: () => null,
-    onKeypressEscape: () => null
+    onKeypressEscape: () => null,
+    // new props
+    severity: "info", // error, warning, info or success
+    closeText: "Close",
+    autoHideDuration: 6000,
+    closable: true
   };
 
   handleClickButton = button => {
@@ -53,7 +55,6 @@ export default class ReactConfirmAlert extends Component {
   close = () => {
     removeBodyClass();
     removeElementReconfirm();
-    //removeSVGBlurReconfirm();
   };
 
   keyboardClose = event => {
@@ -68,10 +69,19 @@ export default class ReactConfirmAlert extends Component {
 
   componentDidMount = () => {
     document.addEventListener("keydown", this.keyboardClose, false);
+    this.autoClose = setTimeout(() => {
+      if (
+        document.getElementById("react-confirm-alert") ||
+        document.getElementById("react-confirm-alert-body-element")
+      ) {
+        this.close();
+      }
+    }, this.props.autoHideDuration);
   };
 
   componentWillUnmount = () => {
     document.removeEventListener("keydown", this.keyboardClose, false);
+    clearTimeout(this.autoClose);
     this.props.willUnmount();
   };
 
@@ -87,7 +97,7 @@ export default class ReactConfirmAlert extends Component {
   };
 
   render() {
-    const { title, message, buttons, childrenElement, customUI } = this.props;
+    const { message, customUI, severity, closeText, closable } = this.props;
 
     return (
       <div
@@ -100,51 +110,34 @@ export default class ReactConfirmAlert extends Component {
             this.renderCustomUI()
           ) : (
             <div className="react-confirm-alert-body">
-              {title && <h1>{title}</h1>}
-              {message}
-              {childrenElement()}
-              <div className="react-confirm-alert-button-group">
-                {buttons.map((button, i) => (
-                  <button
-                    key={i}
-                    onClick={() => this.handleClickButton(button)}
-                  >
-                    {button.label}
-                  </button>
-                ))}
-              </div>
+              <Alert
+                elevation={6}
+                variant="filled"
+                severity={severity}
+                closeText={closeText}
+                action={
+                  closable ? (
+                    <IconButton
+                      size="small"
+                      aria-label="close"
+                      color="inherit"
+                      onClick={() => this.close()}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  ) : (
+                    undefined
+                  )
+                }
+              >
+                {message}
+              </Alert>
             </div>
           )}
         </div>
       </div>
     );
   }
-}
-
-function createSVGBlurReconfirm() {
-  // If has svg ignore to create the svg
-  const svg = document.getElementById("react-confirm-alert-firm-svg");
-  if (svg) return;
-  const svgNS = "http://www.w3.org/2000/svg";
-  const feGaussianBlur = document.createElementNS(svgNS, "feGaussianBlur");
-  feGaussianBlur.setAttribute("stdDeviation", "0.3");
-
-  const filter = document.createElementNS(svgNS, "filter");
-  filter.setAttribute("id", "gaussian-blur");
-  filter.appendChild(feGaussianBlur);
-
-  const svgElem = document.createElementNS(svgNS, "svg");
-  svgElem.setAttribute("id", "react-confirm-alert-firm-svg");
-  svgElem.setAttribute("class", "react-confirm-alert-svg");
-  svgElem.appendChild(filter);
-
-  document.body.appendChild(svgElem);
-}
-
-function removeSVGBlurReconfirm() {
-  const svg = document.getElementById("react-confirm-alert-firm-svg");
-  svg.parentNode.removeChild(svg);
-  document.body.children[0].classList.remove("react-confirm-alert-blur");
 }
 
 function createElementReconfirm(properties) {
@@ -176,8 +169,7 @@ function removeBodyClass() {
   document.body.classList.remove("react-confirm-alert-body-element");
 }
 
-export function confirmAlert(properties) {
+export function snackbar(properties) {
   addBodyClass();
-  //createSVGBlurReconfirm();
   createElementReconfirm(properties);
 }
