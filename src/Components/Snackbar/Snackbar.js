@@ -4,7 +4,7 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { Alert } from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import Button from "../Button";
+import "./Snackbar.css";
 
 export default class ReactConfirmAlert extends Component {
   static propTypes = {

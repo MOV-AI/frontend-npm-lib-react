@@ -1,7 +1,6 @@
 import React from "react";
 import Button from "../src/Components/Button";
 import { snackbar } from "../src/Components/Snackbar/Snackbar";
-import "../src/Components/Snackbar/Snackbar.css";
 
 export default {
   title: "Snackbar"
