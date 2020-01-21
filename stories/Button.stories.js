@@ -4,17 +4,13 @@ export default {
   title: "Button"
 };
 
-export const button = () => {
-  return <Button>Simple</Button>;
-};
+export const button = () => <Button>Simple</Button>;
 
 button.story = {
   name: "simple button"
 };
 
-export const outline = () => {
-  return <Button variant="outlined">outlined</Button>;
-};
+export const outline = () => <Button variant="outlined">outlined</Button>;
 
 outline.story = {
   name: "outlined button"
