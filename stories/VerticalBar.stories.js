@@ -13,7 +13,7 @@ export default {
 export const simple = () => {
   return (
     <div style={{ height: "100vh" }}>
-      <VerticalBar></VerticalBar>
+      <VerticalBar width="150px"></VerticalBar>
     </div>
   );
 };
