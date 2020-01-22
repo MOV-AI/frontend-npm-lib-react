@@ -34,6 +34,7 @@ const Breadcrumb = props => {
       <Breadcrumbs
         separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb"
+        style={props.style}
       >
         {props.pathList.map((element, index) => {
           if (props.pathList.length - 1 !== index) {
