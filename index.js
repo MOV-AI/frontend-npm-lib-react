@@ -6,6 +6,7 @@ import VerticalBar from "./src/Components/VerticalBar";
 import ContextMenu from "./src/Components/ContextMenu";
 import Table from "./src/Components/Table";
 import Tabs from "./src/Components/Tabs";
+import Text from "./src/Components/Text";
 import Breadcrumb from "./src/Components/Breadcrumb";
 import SceneViewer from "./src/Components/Viewer/SceneViewer";
 import { snackbar } from "./src/Components/Snackbar/Snackbar";
@@ -19,6 +20,7 @@ export {
   ContextMenu,
   Table,
   Tabs,
+  Text,
   Breadcrumb,
   SceneViewer,
   snackbar
