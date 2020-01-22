@@ -28,12 +28,19 @@ export const simpleTab = () => (
         },
         { label: "Tab 3", component: <div>Component 3</div> }
       ]}
-    >
-      Simple
-    </Tabs>
+    ></Tabs>
   </div>
 );
 
 simpleTab.story = {
   name: "simple tab"
+};
+export const controlledTab = () => (
+  <div style={{ height: "90vh" }}>
+    <Tabs selectedTab={1}></Tabs>
+  </div>
+);
+
+controlledTab.story = {
+  name: "controlled tab"
 };

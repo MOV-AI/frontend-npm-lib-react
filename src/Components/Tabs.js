@@ -45,7 +45,13 @@ const useStyles = makeStyles(theme => ({
 
 export default function Tabs(props) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(props.selectedTab);
+
+  React.useEffect(() => {
+    if (props.selectedTab !== value) {
+      setValue(props.selectedTab);
+    }
+  }, [props.selectedTab]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -73,7 +79,8 @@ export default function Tabs(props) {
 }
 
 Tabs.propTypes = {
-  tabList: PropTypes.array
+  tabList: PropTypes.array,
+  selectedTab: PropTypes.number
 };
 
 Tabs.defaultProps = {
@@ -96,5 +103,6 @@ Tabs.defaultProps = {
       )
     },
     { label: "Tab 3", component: <div>Component 3</div> }
-  ]
+  ],
+  selectedTab: 0
 };
