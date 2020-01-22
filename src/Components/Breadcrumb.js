@@ -13,17 +13,19 @@ const useStyles = makeStyles(theme => ({
   },
   link: {
     fontSize: "24px",
+    fontWeight: 800,
+    fontFamily: "Avenir",
     "&:hover": {
       cursor: "pointer",
       textDecoration: "underline"
     }
+  },
+  lastLabel: {
+    fontSize: "24px",
+    fontWeight: 800,
+    fontFamily: "Avenir"
   }
 }));
-
-function handleClick(event) {
-  event.preventDefault();
-  console.info("You clicked a breadcrumb.");
-}
 
 const Breadcrumb = props => {
   const classes = useStyles();
@@ -37,16 +39,18 @@ const Breadcrumb = props => {
           if (props.pathList.length - 1 !== index) {
             return (
               <Typography
+                key={index}
                 color="primary"
                 variant="inherit"
                 className={classes.link}
+                onClick={element.function}
               >
                 {element.label}
               </Typography>
             );
           }
         })}
-        <Typography color="textPrimary">
+        <Typography color="textPrimary" className={classes.lastLabel}>
           {props.pathList[props.pathList.length - 1].label}
         </Typography>
       </Breadcrumbs>
@@ -60,9 +64,9 @@ Breadcrumb.propTypes = {
 
 Breadcrumb.defaultProps = {
   pathList: [
-    { label: "Mov.ai", path: "/" },
-    { label: "User", path: "/" },
-    { label: "Vicente", path: "/" }
+    { label: "Mov.ai", function: () => console.log("pth1/") },
+    { label: "User", function: () => console.log("path1/path2") },
+    { label: "Vicente" }
   ]
 };
 
