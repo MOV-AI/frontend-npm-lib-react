@@ -38,7 +38,14 @@ function a11yProps(index) {
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
+    height: "100%"
+  },
+  tabPanel: {
+    flexGrow: 1,
+    minHeight: 0,
+    height: "calc(100% - 48px)",
+    overflowY: "auto"
   }
 }));
 
@@ -69,7 +76,12 @@ export default function Tabs(props) {
         ))}
       </MaterialTabs>
       {props.tabList.map((tab, index) => (
-        <TabPanel key={index} selectedTab={selectedTab} index={index}>
+        <TabPanel
+          key={index}
+          selectedTab={selectedTab}
+          index={index}
+          className={props.scrollable ? classes.tabPanel : undefined}
+        >
           {tab.component}
         </TabPanel>
       ))}
@@ -79,7 +91,8 @@ export default function Tabs(props) {
 
 Tabs.propTypes = {
   tabList: PropTypes.array,
-  selectedTab: PropTypes.number
+  selectedTab: PropTypes.number,
+  scrollable: PropTypes.bool
 };
 
 Tabs.defaultProps = {
@@ -103,5 +116,6 @@ Tabs.defaultProps = {
     },
     { label: "Tab 3", component: <div>Component 3</div> }
   ],
-  selectedTab: 0
+  selectedTab: 0,
+  scrollable: true
 };
