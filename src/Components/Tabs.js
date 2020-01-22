@@ -4,21 +4,20 @@ import { makeStyles } from "@material-ui/core/styles";
 import MaterialTabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, selectedTab, index, ...other } = props;
 
   return (
     <Typography
       component="div"
       role="tabpanel"
-      hidden={value !== index}
+      hidden={selectedTab !== index}
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
       {...other}
     >
-      {value === index && <Box p={3}>{children}</Box>}
+      {selectedTab === index && children}
     </Typography>
   );
 }
@@ -26,7 +25,7 @@ function TabPanel(props) {
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired
+  selectedTab: PropTypes.any.isRequired
 };
 
 function a11yProps(index) {
@@ -45,22 +44,22 @@ const useStyles = makeStyles(theme => ({
 
 export default function Tabs(props) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(props.selectedTab);
+  const [selectedTab, setSelectedTab] = React.useState(props.selectedTab);
 
   React.useEffect(() => {
-    if (props.selectedTab !== value) {
-      setValue(props.selectedTab);
+    if (props.selectedTab !== selectedTab) {
+      setSelectedTab(props.selectedTab);
     }
   }, [props.selectedTab]);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleChange = (event, newSelectedTab) => {
+    setSelectedTab(newSelectedTab);
   };
 
   return (
     <div className={classes.root}>
       <MaterialTabs
-        value={value}
+        value={selectedTab}
         onChange={handleChange}
         indicatorColor="primary"
         textColor="primary"
@@ -70,7 +69,7 @@ export default function Tabs(props) {
         ))}
       </MaterialTabs>
       {props.tabList.map((tab, index) => (
-        <TabPanel key={index} value={value} index={index}>
+        <TabPanel key={index} selectedTab={selectedTab} index={index}>
           {tab.component}
         </TabPanel>
       ))}
