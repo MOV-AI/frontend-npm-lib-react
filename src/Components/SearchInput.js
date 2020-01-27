@@ -63,15 +63,15 @@ class SearchInput extends Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes, style, placeholder } = this.props;
     return (
-      <div className={classes.search} style={props.style}>
+      <div className={classes.search} style={style}>
         <div className={classes.searchIcon}>
           <SearchIcon />
         </div>
         <InputBase
           ref={this.setSearchInput}
-          placeholder={this.props.placeholder}
+          placeholder={placeholder}
           classes={{
             root: classes.inputRoot,
             input: classes.inputInput
