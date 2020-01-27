@@ -1,10 +1,10 @@
-import React from "react";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import React, { Component } from "react";
+import { fade, withStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import PropTypes from "prop-types";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
@@ -40,33 +40,64 @@ const useStyles = makeStyles(theme => ({
       width: 200
     }
   }
-}));
+});
 
-const SearchInput = props => {
-  const classes = useStyles();
-  return (
-    <div className={classes.search}>
-      <div className={classes.searchIcon}>
-        <SearchIcon />
+class SearchInput extends Component {
+  searchInput = undefined;
+  timer = undefined;
+
+  handleChange = evt => {
+    this.searchInput = evt.target.value;
+    if (this.props.enableTimeout) {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+      this.timer = setTimeout(this.handleSearch, this.props.time);
+    } else {
+      this.handleSearch();
+    }
+  };
+
+  handleSearch = () => {
+    if (this.searchInput !== undefined) this.props.onChange(this.searchInput);
+  };
+
+  render() {
+    const { classes, theme } = this.props;
+    return (
+      <div className={classes.search}>
+        <div className={classes.searchIcon}>
+          <SearchIcon />
+        </div>
+        <InputBase
+          ref={this.setSearchInput}
+          placeholder={this.props.placeholder}
+          classes={{
+            root: classes.inputRoot,
+            input: classes.inputInput
+          }}
+          inputProps={{ "aria-label": "search" }}
+          onChange={this.handleChange}
+        />
       </div>
-      <InputBase
-        placeholder={props.placeholder}
-        classes={{
-          root: classes.inputRoot,
-          input: classes.inputInput
-        }}
-        inputProps={{ "aria-label": "search" }}
-      />
-    </div>
-  );
-};
+    );
+  }
+}
 
 SearchInput.propTypes = {
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
+  onChange: PropTypes.func,
+  time: PropTypes.number,
+  enableTimeout: PropTypes.bool
 };
 
 SearchInput.defaultProps = {
-  placeholder: "Search..."
+  placeholder: "Search...",
+  onChange: input => {
+    console.log(input);
+  },
+  time: 250,
+  enableTimeout: true
 };
 
-export default SearchInput;
+export default withStyles(styles, { withTheme: true })(SearchInput);
