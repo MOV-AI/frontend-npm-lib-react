@@ -65,7 +65,7 @@ class SearchInput extends Component {
   render() {
     const { classes, theme } = this.props;
     return (
-      <div className={classes.search}>
+      <div className={classes.search} style={props.style}>
         <div className={classes.searchIcon}>
           <SearchIcon />
         </div>
@@ -88,7 +88,8 @@ SearchInput.propTypes = {
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
   time: PropTypes.number,
-  enableTimeout: PropTypes.bool
+  enableTimeout: PropTypes.bool,
+  style: PropTypes.object
 };
 
 SearchInput.defaultProps = {
@@ -97,7 +98,8 @@ SearchInput.defaultProps = {
     console.log(input);
   },
   time: 250,
-  enableTimeout: true
+  enableTimeout: true,
+  style: {}
 };
 
 export default withStyles(styles, { withTheme: true })(SearchInput);
