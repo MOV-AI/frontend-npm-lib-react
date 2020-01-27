@@ -1,5 +1,6 @@
 import React from "react";
 import Text from "../src/Components/Text";
+import SearchInput from "../src/Components/SearchInput";
 export default {
   title: "Text Fields"
 };
@@ -23,4 +24,10 @@ export const textOutlined = () => (
 
 textOutlined.story = {
   name: "Outlined Text"
+};
+
+export const searchInput = () => <SearchInput />;
+
+searchInput.story = {
+  name: "Search Input"
 };
