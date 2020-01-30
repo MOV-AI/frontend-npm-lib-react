@@ -7,6 +7,7 @@ import ContextMenu from "./src/Components/ContextMenu";
 import Table from "./src/Components/Table";
 import Tabs from "./src/Components/Tabs";
 import Text from "./src/Components/Text";
+import Toggle from "./src/Components/Toggle";
 import SearchInput from "./src/Components/SearchInput";
 import Breadcrumb from "./src/Components/Breadcrumb";
 import SceneViewer from "./src/Components/Viewer/SceneViewer";
@@ -22,6 +23,7 @@ export {
   Table,
   Tabs,
   Text,
+  Toggle,
   SearchInput,
   Breadcrumb,
   SceneViewer,
