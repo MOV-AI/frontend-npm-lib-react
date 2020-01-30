@@ -6,23 +6,12 @@ import { green, grey } from "@material-ui/core/colors";
 import PropTypes from "prop-types";
 
 const useStyles = makeStyles(theme => ({
-  colorSwitchBase: {
-    color: grey[300],
-    "&$colorChecked": {
-      color: theme.palette.primary.main, //green[500]
-      "& + $colorBar": {
-        backgroundColor: theme.palette.primary.main //green[500]
-      }
-    }
-  },
   label: {
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "normal",
     fontSize: "14px"
-  },
-  colorBar: {},
-  colorChecked: { "&hover": { backgroundColor: theme.palette.primary.main } }
+  }
 }));
 
 const Toggle = props => {
@@ -35,11 +24,6 @@ const Toggle = props => {
           checked={props.toggle}
           onChange={props.onToggle}
           color={props.color}
-          //   classes={{
-          //     switchBase: classes.colorSwitchBase,
-          //     checked: classes.colorChecked,
-          //     track: classes.colorBar
-          //   }}
         />
       }
       labelPlacement="start"
