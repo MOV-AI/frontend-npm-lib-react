@@ -29,7 +29,7 @@ const Toggle = props => {
       labelPlacement="start"
       label={props.label}
       classes={{ label: classes.label }}
-      style={{ margin: 0, display: "flex", justifyContent: "center" }}
+      style={props.style}
     />
   );
 };
@@ -38,7 +38,8 @@ Toggle.propTypes = {
   toggle: PropTypes.bool,
   onToggle: PropTypes.func,
   label: PropTypes.string,
-  color: PropTypes.string
+  color: PropTypes.string,
+  style: PropTypes.object
 };
 Toggle.defaultProps = {
   label: undefined,
