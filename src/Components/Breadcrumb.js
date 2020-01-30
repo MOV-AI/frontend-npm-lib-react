@@ -67,7 +67,7 @@ Breadcrumb.defaultProps = {
   pathList: [
     { label: "Mov.ai", function: () => console.log("pth1/") },
     { label: "User", function: () => console.log("path1/path2") },
-    { label: "Vicente" }
+    { label: "John Doe" }
   ]
 };
 
