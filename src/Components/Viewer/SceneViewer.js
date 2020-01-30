@@ -108,6 +108,7 @@ class SceneViewer extends Component {
         x => {
           console.log("Set Camera, Found Object", x.item.mesh);
           camera.setTarget(x.item.mesh._absolutePosition.clone());
+          camera.beta = 0;
         }
       );
     });
