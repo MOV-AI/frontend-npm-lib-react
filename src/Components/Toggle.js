@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "normal",
-    fontSize: "14px"
+    fontSize: "16px"
   }
 }));
 
