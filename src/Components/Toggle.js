@@ -26,7 +26,7 @@ const Toggle = props => {
           color={props.color}
         />
       }
-      labelPlacement="start"
+      labelPlacement={props.labelPlacement}
       label={props.label}
       classes={{ label: classes.label }}
       style={props.style}
@@ -39,10 +39,10 @@ Toggle.propTypes = {
   onToggle: PropTypes.func,
   label: PropTypes.string,
   color: PropTypes.string,
+  labelPlacement: PropTypes.string, // 'end', 'start', 'top', 'bottom'
   style: PropTypes.object
 };
 Toggle.defaultProps = {
-  label: undefined,
   color: "primary" // or secondary
 };
 
