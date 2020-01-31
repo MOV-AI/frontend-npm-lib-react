@@ -11,6 +11,7 @@ import Toggle from "./src/Components/Toggle";
 import SearchInput from "./src/Components/SearchInput";
 import Breadcrumb from "./src/Components/Breadcrumb";
 import SceneViewer from "./src/Components/Viewer/SceneViewer";
+import Select from "./src/Components/Select";
 import { snackbar } from "./src/Components/Snackbar/Snackbar";
 
 export {
@@ -27,5 +28,6 @@ export {
   SearchInput,
   Breadcrumb,
   SceneViewer,
+  Select,
   snackbar
 };
