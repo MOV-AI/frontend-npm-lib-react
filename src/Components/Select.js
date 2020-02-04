@@ -20,8 +20,8 @@ const Select = props => {
   let noneOption = <div></div>;
   if (props.noneOption) {
     noneOption = (
-      <MenuItem value="">
-        <em>None</em>
+      <MenuItem value="n/a">
+        <em>N/A</em>
       </MenuItem>
     );
   }
