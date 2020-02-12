@@ -10,7 +10,9 @@ const useStyles = makeStyles(theme => ({
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "normal",
-    fontSize: "16px"
+    fontSize: "16px",
+    marginLeft: 0,
+    marginRight: 0
   }
 }));
 
@@ -29,7 +31,7 @@ const Toggle = props => {
       labelPlacement={props.labelPlacement}
       label={props.label}
       classes={{ label: classes.label }}
-      style={props.style}
+      style={{ ...props.style, marginLeft: 0, marginRight: 0 }}
     />
   );
 };
