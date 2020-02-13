@@ -5,7 +5,7 @@ export default {
   title: "Toggle Input"
 };
 
-export const text = () => <Toggle></Toggle>;
+export const text = () => <Toggle label="Teste"></Toggle>;
 
 text.story = {
   name: "simple toggle"

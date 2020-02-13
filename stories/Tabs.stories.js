@@ -46,7 +46,7 @@ controlledTab.story = {
 };
 
 export const flexTab = () => (
-  <div style={{ height: "90vh", display: "flex", flexDirection: "column" }}>
+  <div style={{ height: "80vh", display: "flex", flexDirection: "column" }}>
     <Tabs
       scrollable={true}
       tabList={[
@@ -197,6 +197,6 @@ export const flexTab = () => (
   </div>
 );
 
-controlledTab.story = {
-  name: "flexGrow tab"
+flexTab.story = {
+  name: "scrollable tab"
 };
