@@ -18,7 +18,6 @@ const useStyles = makeStyles(theme => ({
 
 const Toggle = props => {
   const classes = useStyles();
-  console.log("props", props);
   return (
     <FormControlLabel
       control={
