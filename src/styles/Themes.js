@@ -74,7 +74,7 @@ const themeFactory = particular => ({
   }
 });
 
-export const Themes = {
+const Themes = {
   dark: createMuiTheme(
     themeFactory({
       label: "dark",
@@ -196,3 +196,5 @@ export const Themes = {
     })
   )
 };
+
+export default Themes;
