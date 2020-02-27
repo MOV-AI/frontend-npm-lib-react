@@ -13,6 +13,7 @@ import Breadcrumb from "./src/Components/Breadcrumb";
 import SceneViewer from "./src/Components/Viewer/SceneViewer";
 import Select from "./src/Components/Select";
 import { snackbar } from "./src/Components/Snackbar/Snackbar";
+import { Themes } from "./src/styles/Themes";
 
 export {
   Button,
@@ -24,6 +25,7 @@ export {
   Table,
   Tabs,
   Text,
+  Themes,
   Toggle,
   SearchInput,
   Breadcrumb,
