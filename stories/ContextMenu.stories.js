@@ -36,7 +36,12 @@ export const button = () => {
           },
           {
             onClick: () => console.log("clicked 2"),
-            element: <CropFree></CropFree>,
+            element: (
+              <div>
+                <CropFree></CropFree>
+                AHAHAHA
+              </div>
+            ),
             onClose: false
           },
           {
