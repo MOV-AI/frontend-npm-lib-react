@@ -32,8 +32,9 @@ const Themes = {
   dark: createMuiTheme(
     themeFactory({
       label: "dark",
+      backgroundColor:
+        "linear-gradient(114.01deg, #212121 0%, #050505 100.43%)",
       general: {
-        background: "linear-gradient(114.01deg, #212121 0%, #050505 100.43%)",
         blue: "#2090B7",
         stripePrimary: "#2B2B2B",
         stripeSecondary: "#353535",
@@ -149,8 +150,9 @@ const Themes = {
   light: createMuiTheme(
     themeFactory({
       label: "light",
+      backgroundColor:
+        "linear-gradient(122.19deg, #FFFFFF 2.58%, #FFFFFF 76.23%)", // it was white before
       general: {
-        background: "linear-gradient(122.19deg, #FFFFFF 2.58%, #FFFFFF 76.23%)", // it was white before
         grey: "#CDCDCD",
         blue: "#007097",
         stripePrimary: "#f0f0f0",
