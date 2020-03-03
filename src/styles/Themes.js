@@ -34,32 +34,32 @@ const Themes = {
       label: "dark",
       backgroundColor:
         "linear-gradient(114.01deg, #212121 0%, #050505 100.43%)",
-      general: {
-        blue: "#2090B7",
-        stripePrimary: "#2B2B2B",
-        stripeSecondary: "#353535",
-        stripeBorder: "#353535",
-        stripeHover: "#f0f0f0",
-        palette: {
-          grey: {
-            50: "#F7F7F7",
-            100: "#E1E1E1",
-            200: "#CFCFCF",
-            300: "#B1B1B1",
-            400: "#9E9E9E",
-            500: "#7E7E7E",
-            600: "#626262",
-            700: "#515151",
-            800: "#3B3B3B",
-            900: "#222222",
-            A700: "#616161",
-            A100: "#d5d5d5",
-            A400: "#303030",
-            A200: "#aaaaaa"
-          },
-          common: { black: "" }
-        }
-      },
+      // general: {
+      //   blue: "#2090B7",
+      //   stripePrimary: "#2B2B2B",
+      //   stripeSecondary: "#353535",
+      //   stripeBorder: "#353535",
+      //   stripeHover: "#f0f0f0",
+      //   palette: {
+      //     grey: {
+      //       50: "#F7F7F7",
+      //       100: "#E1E1E1",
+      //       200: "#CFCFCF",
+      //       300: "#B1B1B1",
+      //       400: "#9E9E9E",
+      //       500: "#7E7E7E",
+      //       600: "#626262",
+      //       700: "#515151",
+      //       800: "#3B3B3B",
+      //       900: "#222222",
+      //       A700: "#616161",
+      //       A100: "#d5d5d5",
+      //       A400: "#303030",
+      //       A200: "#aaaaaa"
+      //     },
+      //     common: { black: "" }
+      //   }
+      // },
       bottomNavigation: { background: "#212121" },
       globalStats: {
         borderColor: "#474747",
@@ -152,32 +152,32 @@ const Themes = {
       label: "light",
       backgroundColor:
         "linear-gradient(122.19deg, #FFFFFF 2.58%, #FFFFFF 76.23%)", // it was white before
-      general: {
-        grey: "#CDCDCD",
-        blue: "#007097",
-        stripePrimary: "#f0f0f0",
-        stripeSecondary: "#FAFAFA",
-        stripeBorder: "#F0F0F0",
-        stripeHover: "#2B2B2B",
-        palette: {
-          grey: {
-            50: "#fafafa",
-            100: "#f5f5f5",
-            200: "#eeeeee",
-            300: "#e0e0e0",
-            400: "#bdbdbd",
-            500: "#9e9e9e",
-            600: "#757575",
-            700: "#616161",
-            800: "#424242",
-            900: "#212121",
-            A700: "#616161",
-            A100: "#d5d5d5",
-            A400: "#303030",
-            A200: "#aaaaaa"
-          }
-        }
-      },
+      // general: {
+      //   grey: "#CDCDCD",
+      //   blue: "#007097",
+      //   stripePrimary: "#f0f0f0",
+      //   stripeSecondary: "#FAFAFA",
+      //   stripeBorder: "#F0F0F0",
+      //   stripeHover: "#2B2B2B",
+      //   palette: {
+      //     grey: {
+      //       50: "#fafafa",
+      //       100: "#f5f5f5",
+      //       200: "#eeeeee",
+      //       300: "#e0e0e0",
+      //       400: "#bdbdbd",
+      //       500: "#9e9e9e",
+      //       600: "#757575",
+      //       700: "#616161",
+      //       800: "#424242",
+      //       900: "#212121",
+      //       A700: "#616161",
+      //       A100: "#d5d5d5",
+      //       A400: "#303030",
+      //       A200: "#aaaaaa"
+      //     }
+      //   }
+      // },
       bottomNavigation: { background: "#c3c3c3" },
       globalStats: {
         borderColor: "#E6E6E6",
