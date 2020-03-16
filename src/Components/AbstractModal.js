@@ -66,10 +66,7 @@ const AbstractModal = props => {
             variant="h5"
             style={{
               padding: "12px 0px 12px 6px",
-              fontFamily: "Open Sans",
-              fontStyle: "normal",
-              fontWeight: 600,
-              fontSize: "24px"
+              fontWeight: 600
             }}
           >
             {props.title}
