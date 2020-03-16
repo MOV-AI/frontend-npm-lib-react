@@ -117,6 +117,30 @@ const Themes = {
               borderRadius: "4px"
             }
           }
+        },
+        MuiTypography: {
+          fontFamily: "Roboto",
+          h1: {
+            fontFamily: "Avenir"
+          },
+          h2: {
+            fontFamily: "Avenir"
+          },
+          h3: {
+            fontFamily: "Avenir"
+          },
+          h4: {
+            fontFamily: "Avenir"
+          },
+          h5: {
+            fontFamily: "Avenir"
+          },
+          h6: {
+            fontFamily: "Avenir"
+          },
+          body1: {
+            fontFamily: "Roboto"
+          }
         }
       }
     })
@@ -207,6 +231,30 @@ const Themes = {
             "&::before": {
               borderRadius: "4px"
             }
+          }
+        },
+        MuiTypography: {
+          fontFamily: "Roboto",
+          h1: {
+            fontFamily: "Avenir"
+          },
+          h2: {
+            fontFamily: "Avenir"
+          },
+          h3: {
+            fontFamily: "Avenir"
+          },
+          h4: {
+            fontFamily: "Avenir"
+          },
+          h5: {
+            fontFamily: "Avenir"
+          },
+          h6: {
+            fontFamily: "Avenir"
+          },
+          body1: {
+            fontFamily: "Roboto"
           }
         }
       }
