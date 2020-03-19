@@ -96,9 +96,6 @@ const Alert = props => {
   } = props;
   return (
     <div
-      role={role}
-      square
-      elevation={0}
       className={clsx(
         classes.root,
         classes[`${variant}${capitalize(color || severity)}`],
