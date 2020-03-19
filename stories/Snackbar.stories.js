@@ -6,6 +6,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { Paper, Typography } from "@material-ui/core";
 import MatButton from "@material-ui/core/Button";
 import Table from "../src/Components/Table";
+import AutoRenew from "@material-ui/icons/Autorenew";
 
 const Themes = {
   dark: createMuiTheme({
@@ -84,14 +85,12 @@ simpleSnackbar.story = {
 };
 
 export const themeSnackbar = () => {
-  const snackbarTheme = obj => snackbar(obj, Themes["dark"]);
-
   return (
     <div>
       <ThemeProvider theme={Themes["dark"]}>
         <Button
           onClick={() =>
-            snackbarTheme({
+            snackbar({
               message:
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
               severity: "error"
@@ -119,6 +118,12 @@ export const themeSnackbar = () => {
                 surname: "Queiroz",
                 birthYear: 1987,
                 birthCity: 63
+              }
+            ]}
+            actions={[
+              {
+                icon: () => <AutoRenew color="primary"></AutoRenew>,
+                onClick: () => console.log("recover")
               }
             ]}
           ></Table>

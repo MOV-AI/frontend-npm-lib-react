@@ -1,8 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { withStyles, lighten, darken } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
+import { withStyles } from "@material-ui/core/styles";
 import SuccessOutlinedIcon from "./svg-icons/SuccessOutlined";
 import ReportProblemOutlinedIcon from "./svg-icons/ReportProblemOutlined";
 import ErrorOutlineIcon from "./svg-icons/ErrorOutline";
@@ -11,11 +10,11 @@ import CloseIcon from "./svg-icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import { capitalize } from "@material-ui/core/utils";
 
-export const styles = theme => {
+export const styles = () => {
   return {
     /* Styles applied to the root element. */
     root: {
-      borderRadius: theme.shape.borderRadius,
+      // borderRadius: theme.shape.borderRadius,
       backgroundColor: "transparent",
       display: "flex",
       padding: "6px 16px"
@@ -23,25 +22,25 @@ export const styles = theme => {
     /* Styles applied to the root element if `variant="filled"` and `color="success"`. */
     filledSuccess: {
       color: "#fff",
-      fontWeight: theme.typography.fontWeightMedium,
+      // fontWeight: theme.typography.fontWeightMedium,
       backgroundColor: "#4caf50"
     },
     /* Styles applied to the root element if `variant="filled"` and `color="info"`. */
     filledInfo: {
       color: "#fff",
-      fontWeight: theme.typography.fontWeightMedium,
+      // fontWeight: theme.typography.fontWeightMedium,
       backgroundColor: "#2196f3"
     },
     /* Styles applied to the root element if `variant="filled"` and `color="warning"`. */
     filledWarning: {
       color: "#fff",
-      fontWeight: theme.typography.fontWeightMedium,
+      // fontWeight: theme.typography.fontWeightMedium,
       backgroundColor: "#ff9800"
     },
     /* Styles applied to the root element if `variant="filled"` and `color="error"`. */
     filledError: {
       color: "#fff",
-      fontWeight: theme.typography.fontWeightMedium,
+      // fontWeight: theme.typography.fontWeightMedium,
       backgroundColor: "#f44336"
     },
     /* Styles applied to the icon wrapper element. */
@@ -70,11 +69,17 @@ export const styles = theme => {
   };
 };
 
+// const defaultIconMapping = {
+//   success: <SuccessOutlinedIcon fontSize="inherit" />,
+//   warning: <ReportProblemOutlinedIcon fontSize="inherit" />,
+//   error: <ErrorOutlineIcon fontSize="inherit" />,
+//   info: <InfoOutlinedIcon fontSize="inherit" />
+// };
 const defaultIconMapping = {
-  success: <SuccessOutlinedIcon fontSize="inherit" />,
-  warning: <ReportProblemOutlinedIcon fontSize="inherit" />,
-  error: <ErrorOutlineIcon fontSize="inherit" />,
-  info: <InfoOutlinedIcon fontSize="inherit" />
+  success: <div>i</div>,
+  warning: <div>i</div>,
+  error: <div>i</div>,
+  info: <div>i</div>
 };
 
 const Alert = props => {
@@ -94,6 +99,9 @@ const Alert = props => {
     theme,
     ...other
   } = props;
+
+  console.log("action", action);
+
   return (
     <div
       className={clsx(
@@ -119,7 +127,7 @@ const Alert = props => {
             color="inherit"
             onClick={onClose}
           >
-            <CloseIcon fontSize="small" />
+            <CloseIcon fontSize="small" onClick={onClose} />
           </IconButton>
         </div>
       ) : null}

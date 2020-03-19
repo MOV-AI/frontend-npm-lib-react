@@ -7,12 +7,8 @@ import { render, unmountComponentAtNode } from "react-dom";
 import Alert from "./Alert/Alert";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import { withStyles } from "@material-ui/core/styles";
 import "./Snackbar.css";
-
-const styles = theme => ({
-  root: {}
-});
+import Close from "./Alert/svg-icons/Close";
 
 class ReactConfirmAlert extends Component {
   static propTypes = {
@@ -141,7 +137,13 @@ class ReactConfirmAlert extends Component {
                       color="inherit"
                       onClick={() => this.close()}
                     >
-                      <CloseIcon fontSize="small" />
+                      {/* <CloseIcon
+                        fontSize="small"
+                        onClick={() => this.close()}
+                      /> */}
+                      <svg>
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                      </svg>
                     </IconButton>
                   ) : (
                     undefined
@@ -192,4 +194,4 @@ export function snackbar(properties, theme) {
   createElementReconfirm(properties, theme);
 }
 
-export default withStyles(styles, { withTheme: true })(ReactConfirmAlert);
+export default ReactConfirmAlert;
