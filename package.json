@@ -58,7 +58,7 @@
     "@babylonjs/gui": "^4.0.3",
     "@material-ui/core": "^4.9.0",
     "@material-ui/icons": "^4.5.1",
-    "@material-ui/lab": "^4.0.0-alpha.40",
+    "@material-ui/lab": "^4.0.0-alpha.46",
     "babylonjs": "^4.0.3",
     "babylonjs-loaders": "^4.0.3",
     "earcut": "^2.2.2",
