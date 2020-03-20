@@ -68,3 +68,13 @@ body.react-confirm-alert-body-element {
   font-size: 12px;
   cursor: pointer;
 }
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-container:hover {
+  cursor: pointer;
+}

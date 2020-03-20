@@ -2,13 +2,9 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
-import SuccessOutlinedIcon from "./svg-icons/SuccessOutlined";
-import ReportProblemOutlinedIcon from "./svg-icons/ReportProblemOutlined";
-import ErrorOutlineIcon from "./svg-icons/ErrorOutline";
-import InfoOutlinedIcon from "./svg-icons/InfoOutlined";
-import CloseIcon from "./svg-icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import { capitalize } from "@material-ui/core/utils";
+import { svgIcons } from "./svg-icons/svgIcons";
 
 export const styles = () => {
   return {
@@ -69,17 +65,11 @@ export const styles = () => {
   };
 };
 
-// const defaultIconMapping = {
-//   success: <SuccessOutlinedIcon fontSize="inherit" />,
-//   warning: <ReportProblemOutlinedIcon fontSize="inherit" />,
-//   error: <ErrorOutlineIcon fontSize="inherit" />,
-//   info: <InfoOutlinedIcon fontSize="inherit" />
-// };
 const defaultIconMapping = {
-  success: <div>i</div>,
-  warning: <div>i</div>,
-  error: <div>i</div>,
-  info: <div>i</div>
+  success: svgIcons.SuccessOutlined,
+  warning: svgIcons.ReportProblemOutlined,
+  error: svgIcons.ErrorOutline,
+  info: svgIcons.InfoOutlined
 };
 
 const Alert = props => {
@@ -127,7 +117,7 @@ const Alert = props => {
             color="inherit"
             onClick={onClose}
           >
-            <CloseIcon fontSize="small" onClick={onClose} />
+            {svgIcons.Close}
           </IconButton>
         </div>
       ) : null}
