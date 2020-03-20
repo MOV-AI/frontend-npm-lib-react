@@ -10,6 +10,30 @@ import CloseIcon from "@material-ui/icons/Close";
 import "./Snackbar.css";
 import Close from "./Alert/svg-icons/Close";
 
+const SVG = ({
+  style = {},
+  fill = "#fff",
+  width = "50%",
+  className = "",
+  height = "50%",
+  viewBox = "0 0 32 32"
+}) => (
+  <svg
+    width={width}
+    style={style}
+    height={height}
+    viewBox={viewBox}
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
+  >
+    <path
+      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+      fill={fill}
+    />
+  </svg>
+);
+
 class ReactConfirmAlert extends Component {
   static propTypes = {
     message: PropTypes.string,
@@ -131,7 +155,7 @@ class ReactConfirmAlert extends Component {
                 closeText={closeText}
                 action={
                   closable ? (
-                    <IconButton
+                    <div
                       size="small"
                       aria-label="close"
                       color="inherit"
@@ -141,10 +165,8 @@ class ReactConfirmAlert extends Component {
                         fontSize="small"
                         onClick={() => this.close()}
                       /> */}
-                      <svg>
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-                      </svg>
-                    </IconButton>
+                      <SVG></SVG>
+                    </div>
                   ) : (
                     undefined
                   )
