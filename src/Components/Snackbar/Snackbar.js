@@ -1,12 +1,16 @@
+// Inspired from https://github.com/GA-MO/react-confirm-alert
+
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { render, unmountComponentAtNode } from "react-dom";
-import { Alert } from "@material-ui/lab";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
+// import { Alert } from "@material-ui/lab";
+import Alert from "./Alert/Alert";
+
 import "./Snackbar.css";
 
-export default class ReactConfirmAlert extends Component {
+import { svgIcons } from "./Alert/svg-icons/svgIcons";
+
+class ReactConfirmAlert extends Component {
   static propTypes = {
     message: PropTypes.string,
     customUI: PropTypes.func,
@@ -97,7 +101,14 @@ export default class ReactConfirmAlert extends Component {
   };
 
   render() {
-    const { message, customUI, severity, closeText, closable } = this.props;
+    const {
+      message,
+      customUI,
+      severity,
+      closeText,
+      closable,
+      theme
+    } = this.props;
 
     return (
       <div
@@ -111,20 +122,19 @@ export default class ReactConfirmAlert extends Component {
           ) : (
             <div className="react-confirm-alert-body">
               <Alert
+                theme={theme}
                 elevation={6}
                 variant="filled"
                 severity={severity}
                 closeText={closeText}
                 action={
                   closable ? (
-                    <IconButton
-                      size="small"
-                      aria-label="close"
-                      color="inherit"
+                    <div
+                      className="icon-container"
                       onClick={() => this.close()}
                     >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
+                      {svgIcons.Close}
+                    </div>
                   ) : (
                     undefined
                   )
@@ -140,18 +150,18 @@ export default class ReactConfirmAlert extends Component {
   }
 }
 
-function createElementReconfirm(properties) {
+function createElementReconfirm(properties, theme) {
   let divTarget = document.getElementById("react-confirm-alert");
   if (divTarget) {
     // Rerender - the mounted ReactConfirmAlert
-    render(<ReactConfirmAlert {...properties} />, divTarget);
+    render(<ReactConfirmAlert {...properties} theme={theme} />, divTarget);
   } else {
     // Mount the ReactConfirmAlert component
     document.body.children[0].classList.add("react-confirm-alert-blur");
     divTarget = document.createElement("div");
     divTarget.id = "react-confirm-alert";
     document.body.appendChild(divTarget);
-    render(<ReactConfirmAlert {...properties} />, divTarget);
+    render(<ReactConfirmAlert {...properties} theme={theme} />, divTarget);
   }
 }
 
@@ -169,7 +179,9 @@ function removeBodyClass() {
   document.body.classList.remove("react-confirm-alert-body-element");
 }
 
-export function snackbar(properties) {
+export function snackbar(properties, theme) {
   addBodyClass();
-  createElementReconfirm(properties);
+  createElementReconfirm(properties, theme);
 }
+
+export default ReactConfirmAlert;
