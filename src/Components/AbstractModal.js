@@ -8,7 +8,7 @@ import {
   Divider,
   // Button,
   CardActions,
-  Modal
+  Modal,
 } from "@material-ui/core";
 
 const style = {
@@ -16,11 +16,11 @@ const style = {
   position: "absolute",
   overflow: "auto",
   display: "flex",
-  flexDirection: "column"
+  flexDirection: "column",
 };
 
-const AbstractModal = props => {
-  const onKeyPress = e => {
+const AbstractModal = (props) => {
+  const onKeyPress = (e) => {
     if (e.key === "Enter") {
       submit();
     }
@@ -42,7 +42,7 @@ const AbstractModal = props => {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
       }}
     >
       <Card
@@ -51,7 +51,7 @@ const AbstractModal = props => {
           width: props.width,
           height: props.height,
           minWidth: "260px",
-          minHeight: "280px"
+          minHeight: "280px",
         }}
       >
         <CardContent
@@ -59,14 +59,14 @@ const AbstractModal = props => {
             flexGrow: 1,
             display: "flex",
             flexDirection: "column",
-            minHeight: 0
+            minHeight: 0,
           }}
         >
           <Typography
             variant="h5"
             style={{
               padding: "12px 0px 12px 6px",
-              fontWeight: 600
+              fontWeight: 600,
             }}
           >
             {props.title}
@@ -76,7 +76,7 @@ const AbstractModal = props => {
               paddingLeft: "6px",
               flexGrow: 1,
               overflow: "auto",
-              minHeight: 0
+              minHeight: 0,
             }}
           >
             {props.children}
@@ -84,10 +84,10 @@ const AbstractModal = props => {
         </CardContent>
         <Divider />
         <CardActions style={{ alignSelf: "flex-end" }}>
-          <Button onClick={cancel} variant="outlined">
+          <Button onClick={cancel} variant="outlined" color={props.cancelColor}>
             {props.cancelText}
           </Button>
-          <Button color="primary" onClick={submit}>
+          <Button color={props.submitColor} onClick={submit}>
             {props.submitText}
           </Button>
         </CardActions>
@@ -102,9 +102,11 @@ AbstractModal.propTypes = {
   open: PropTypes.bool,
   title: PropTypes.string,
   submitText: PropTypes.string,
+  submitColor: PropTypes.string,
   cancelText: PropTypes.string,
+  cancelColor: PropTypes.string,
   width: PropTypes.string,
-  height: PropTypes.string
+  height: PropTypes.string,
 };
 
 AbstractModal.defaultProps = {
@@ -113,9 +115,11 @@ AbstractModal.defaultProps = {
   open: false,
   title: "New",
   submitText: "Confirm",
+  submitColor: "primary",
   cancelText: "Cancel",
+  cancelColor: "inherit",
   width: "25%",
-  height: "25%"
+  height: "25%",
 };
 
 export default AbstractModal;

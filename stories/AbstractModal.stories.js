@@ -1,7 +1,7 @@
 import React from "react";
 import AbstractModal from "../src/Components/AbstractModal";
 export default {
-  title: "Modal"
+  title: "Modal",
 };
 
 export const simple = () => {
@@ -11,6 +11,9 @@ export const simple = () => {
       open={true}
       width={"50%"}
       height={"50%"}
+      onSubmit={() => console.log("submit!")}
+      onCancel={() => console.log("gðdel!")}
+      submitColor={"secondary"}
     >
       Lorem Ipsum is simply dummy text of the printing and typesetting
       industry.Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -21,5 +24,5 @@ export const simple = () => {
 };
 
 simple.story = {
-  name: "simple Modal"
+  name: "simple Modal",
 };
