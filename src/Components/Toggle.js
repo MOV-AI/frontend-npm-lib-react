@@ -5,18 +5,18 @@ import { makeStyles } from "@material-ui/core/styles";
 import { green, grey } from "@material-ui/core/colors";
 import PropTypes from "prop-types";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   label: {
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "normal",
     fontSize: "16px",
     marginLeft: 0,
-    marginRight: 0
-  }
+    marginRight: 0,
+  },
 }));
 
-const Toggle = props => {
+const Toggle = (props) => {
   const classes = useStyles();
   return (
     <FormControlLabel
@@ -25,6 +25,8 @@ const Toggle = props => {
           checked={props.toggle}
           onChange={props.onToggle}
           color={props.color}
+          disabled={props.disabled}
+          hidden={props.hidden}
         />
       }
       labelPlacement={props.labelPlacement}
@@ -41,10 +43,10 @@ Toggle.propTypes = {
   label: PropTypes.string,
   color: PropTypes.string,
   labelPlacement: PropTypes.string, // 'end', 'start', 'top', 'bottom'
-  style: PropTypes.object
+  style: PropTypes.object,
 };
 Toggle.defaultProps = {
-  color: "primary" // or secondary
+  color: "primary", // or secondary
 };
 
 export default Toggle;
