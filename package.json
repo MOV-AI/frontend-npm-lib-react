@@ -54,18 +54,21 @@
     "react-dom": "^16.12.0"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.8.4",
-    "@babylonjs/gui": "^4.0.3",
-    "@material-ui/core": "^4.9.0",
+    "@babel/runtime-corejs3": "^7.10.3",
+    "@babylonjs/gui": "^4.1.0",
+    "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.5.1",
-    "@material-ui/lab": "^4.0.0-alpha.46",
-    "babylonjs": "^4.0.3",
-    "babylonjs-loaders": "^4.0.3",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@babylonjs/core": "^4.1.0",
+    "@babylonjs/loaders": "^4.1.0",
     "earcut": "^2.2.2",
+    "lodash": "^4.17.15",
+    "lodash.isequal": "^4.5.0",
     "material-table": "^1.56.1",
     "monet": "^0.9.0",
-    "mov.ai-core": "git+ssh://git@bitbucket.org/robosavvy/mov.ai-core.git#develop",
+    "mov.ai-core": "file:../mov.ai-core",
     "prop-types": "^15.7.2",
+    "rbush": "^3.0.1",
     "react-resize-detector": "^4.2.1"
   },
   "proxy": {
