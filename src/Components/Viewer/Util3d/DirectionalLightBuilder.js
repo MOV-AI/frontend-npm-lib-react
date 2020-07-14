@@ -1,4 +1,4 @@
-import * as BABYLON from "babylonjs";
+import { DirectionalLight } from "@babylonjs/core";
 
 class DirectionalLightBuilder {
   constructor(scene) {
@@ -29,7 +29,7 @@ class DirectionalLightBuilder {
       if (x === null)
         throw `There are missing variables to build a light, e.g ${x}`;
     });
-    const light = new BABYLON.DirectionalLight(
+    const light = new DirectionalLight(
       this._name,
       this._direction.normalize(),
       this._scene

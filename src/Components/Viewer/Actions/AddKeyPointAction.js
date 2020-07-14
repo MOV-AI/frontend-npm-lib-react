@@ -1,28 +1,28 @@
 import Util3d from "../Util3d/Util3d";
-import * as BABYLON from "babylonjs";
 import KeyPoint from "../NodeItem/KeyPoint";
 import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
-import MouseAction from "./MouseAction";
 import React from "react";
+import MouseKeysAction from "./MouseKeysAction";
+import { Color3, Axis } from "@babylonjs/core";
 
 let instance = null;
 
 const TEMP_KEY_POINT_NAME = "temp_key_point";
 
-class AddKeyPointAction extends MouseAction {
+class AddKeyPointAction extends MouseKeysAction {
   constructor() {
     if (instance) return instance;
     super();
     this.key = "addKeyPoint";
-    this.name = "Add Key Point";
+    this.name = "Add Key Point [K]";
     this.maybeMousePos = Maybe.none();
     this.tempMesh = null;
     this.icon = props => <i className="fas fa-map-marker" {...props}></i>;
     instance = this;
   }
 
-  static getInstace() {
+  static getInstance() {
     return new AddKeyPointAction();
   }
 
@@ -32,7 +32,7 @@ class AddKeyPointAction extends MouseAction {
     scene,
     parentView,
     is2addInServer = true,
-    color = BABYLON.Color3.Gray()
+    color = Color3.Gray()
   ) => {
     const rootMesh = parentView.getRootNode().item.mesh;
 
@@ -43,13 +43,13 @@ class AddKeyPointAction extends MouseAction {
     const mesh = keyPoint.mesh;
     mesh.parent = rootMesh;
 
-    const localPosition = Util3d.computeLocalCoordinateFromMesh(
+    const localPosition = Util3d.computeLocalCoordinatesFromMesh(
       { parent: rootMesh },
       Vec3.ofBabylon(position)
     ).toBabylon();
 
     mesh.setPositionWithLocalVector(
-      localPosition.add(BABYLON.Axis.Z.scale(KeyPoint.DEFAULT_SIZE))
+      localPosition.add(Axis.Z.scale(KeyPoint.DEFAULT_SIZE))
     );
 
     if (is2addInServer) {
@@ -68,9 +68,7 @@ class AddKeyPointAction extends MouseAction {
       return;
     }
     parentView.getSceneMemory().forEach(memory => {
-      const scene = memory.scene;
-      const ground = memory.ground;
-      const camera = memory.camera;
+      const { scene, ground, camera } = memory;
       this.maybeMousePos = Util3d.getGroundPosition(scene, ground);
       this.maybeMousePos.forEach(mousePos => {
         camera.detachControl(memory.canvas);
@@ -107,14 +105,16 @@ class AddKeyPointAction extends MouseAction {
       maybeCurrent.forEach(current => {
         this.maybeMousePos.forEach(oldMousePos => {
           if (this.tempMesh) this.tempMesh.dispose();
+          const name = `KeyPoint${Math.floor(Math.random() * 1e3)}`;
           this.createKeyPoint(
             current,
-            `KeyPoint${Math.floor(Math.random() * 1e3)}`,
+            name,
             scene,
             parentView,
             true,
-            new BABYLON.Color3(Math.random(), Math.random(), Math.random())
+            new Color3(Math.random(), Math.random(), Math.random())
           );
+          parentView.setPropertiesWithName(name);
         });
       });
       this.maybeMousePos = Maybe.none();

@@ -1,5 +1,6 @@
-import { AssetsManager } from "babylonjs";
 import MeshCache from "./MeshCache";
+import { AssetsManager } from "@babylonjs/core";
+import "@babylonjs/loaders";
 
 class MeshLoader {
   constructor(scene) {
@@ -10,34 +11,34 @@ class MeshLoader {
     return new MeshLoader(scene);
   }
 
-  loadMesh(
-    meshName,
-    onSuccess = task => {},
-    onFinally = task => {},
-    onFailure = (task, message, exception) => {}
-  ) {
-    // TODO: There is a problem when mesh already exist on cache
-    // if (MeshCache.getInstance().hasKey(meshName, this.scene)) {
-    //   onFinally();
-    // } else {
-    const assetsManager = new AssetsManager(this.scene);
-    const meshTask = assetsManager.addMeshTask(
-      "",
-      "",
-      REST_API + "/static/meshes/",
-      meshName
-    );
-    meshTask.onSuccess = onSuccess;
-    meshTask.onError = onFailure;
-    assetsManager.onFinish = onFinally;
-    assetsManager.load();
-    // }
-  }
+  load = (meshName, mapFunction = mesh => mesh) =>
+    new Promise((re, rej) => {
+      const meshCache = MeshCache.getInstance();
+      if (meshCache.hasKey(meshName, this.scene)) {
+        console.log(`Found Mesh ${meshName} in cache for scene ${this.scene}`);
+        re(mapFunction(meshCache.get(meshName, this.scene)));
+      } else {
+        console.log("Loading mesh....");
+        const assetsManager = new AssetsManager(this.scene);
+        const meshTask = assetsManager.addMeshTask("", "", MESH_URL, meshName);
+        meshTask.onSuccess = task => {
+          console.log("Load Success", meshName);
+          const mesh = task.loadedMeshes[0];
+          mesh.name = meshName;
+          meshCache.put(meshName, this.scene, mesh);
+        };
+        meshTask.onError = (task, message, exception) =>
+          rej({ message, exception });
+        assetsManager.onFinish = task => {
+          console.log("Load finish ");
+          re(mapFunction(meshCache.get(meshName, this.scene)));
+        };
+        assetsManager.load();
+      }
+    });
+
+  static getMeshUrl = src => `${MESH_URL}${src}`;
 }
 
-const REST_API =
-  window.location.port === ""
-    ? `http://${window.location.hostname}`
-    : `http://${window.location.hostname}:${window.location.port}`;
-
+const MESH_URL = `/static/meshes/`;
 export default MeshLoader;

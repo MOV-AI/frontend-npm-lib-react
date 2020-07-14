@@ -5,6 +5,7 @@ class AnnotationManager {
     if (instance) return instance;
     instance = this;
     this.annotations = {};
+    this.observers = [];
     this.retrieveAnnotationsFromDb();
   }
 
@@ -15,6 +16,14 @@ class AnnotationManager {
   //========================================================================================
 
   getAnnotations = () => this.annotations;
+
+  /**
+   *
+   * @param {*} lambda: AnnotationManager -> {}
+   */
+  pushObserver(lambda) {
+    this.observers.push(lambda);
+  }
 
   //========================================================================================
   /*                                                                                      *
@@ -27,35 +36,48 @@ class AnnotationManager {
       { Scope: "Annotation", Name: "*" },
       data => {
         console.log("Annotation update", data);
-        //TODO: handle delete
+        const actionMap = {
+          del: annotation => this.delAnnotation(annotation),
+          set: annotation => this.addAnnotation(annotation)
+        };
         const annotation = data.key.Annotation;
-        Object.keys(annotation).forEach(name => {
-          const annotationObj = annotation[name];
-          if (!annotationObj.Type) return;
-          const type = annotationObj.Type.toLowerCase();
-          const label = annotationObj.Label;
-          if (!(type in this.annotations)) {
-            this.annotations[type] = { names: [], labels: [] };
-          }
-          this.annotations[type].names.push(name);
-          this.annotations[type].labels.push(label ? label : name);
-        });
+        actionMap[data.event](annotation);
+        this.observers.forEach(f => f(this));
       },
       data => {
+        console.log("Annotation start", data);
         const annotation = data.value.Annotation;
-        Object.keys(annotation).forEach(name => {
-          const annotationObj = annotation[name];
-          if (!annotationObj.Type) return;
-          const type = annotationObj.Type.toLowerCase();
-          const label = annotationObj.Label;
-          if (!(type in this.annotations)) {
-            this.annotations[type] = { names: [], labels: [] };
-          }
-          this.annotations[type].names.push(name);
-          this.annotations[type].labels.push(label);
-        });
+        this.addAnnotation(annotation);
       }
     );
+  }
+
+  delAnnotation(annotation) {
+    if (!annotation) return;
+    const names2delete = Object.keys(annotation).reduce((e, x) => {
+      e.push(x);
+      return e;
+    }, []);
+    Object.keys(this.annotations).forEach(annotationType => {
+      const value = this.annotations[annotationType];
+      value.names = value.names.filter(x => !names2delete.includes(x));
+      value.labels = value.labels.filter(x => !names2delete.includes(x));
+    });
+  }
+
+  addAnnotation(annotation) {
+    if (!annotation) return;
+    Object.keys(annotation).forEach(name => {
+      const annotationObj = annotation[name];
+      if (!annotationObj.Type) return;
+      const type = annotationObj.Type.toLowerCase();
+      const label = annotationObj.Label;
+      if (!(type in this.annotations)) {
+        this.annotations[type] = { names: [], labels: [] };
+      }
+      this.annotations[type].names.push(name);
+      this.annotations[type].labels.push(label ? label : name);
+    });
   }
 
   //========================================================================================

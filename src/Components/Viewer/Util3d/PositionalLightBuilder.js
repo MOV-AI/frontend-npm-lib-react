@@ -1,4 +1,4 @@
-import * as BABYLON from "babylonjs";
+import { PointLight } from "@babylonjs/core";
 
 class PositionalLightBuilder {
   constructor(scene) {
@@ -29,11 +29,7 @@ class PositionalLightBuilder {
       if (x === null)
         throw `There are missing variables to build a light, e.g ${x}`;
     });
-    const light = new BABYLON.PointLight(
-      this._name,
-      this._position,
-      this._scene
-    );
+    const light = new PointLight(this._name, this._position, this._scene);
     light.intensity = this._intensity;
     return light;
   }

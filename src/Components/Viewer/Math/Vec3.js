@@ -1,5 +1,5 @@
-import * as BABYLON from "babylonjs";
 import Mat3 from "./Mat3";
+import { Vector3 } from "@babylonjs/core";
 
 /**
  * Class that describes immutable 3-vectors
@@ -45,7 +45,7 @@ class Vec3 {
   }
 
   scale(r) {
-    return this.map(x => x * r);
+    return this.map((x) => x * r);
   }
 
   dot(x) {
@@ -71,7 +71,7 @@ class Vec3 {
   };
 
   toBabylon() {
-    return new BABYLON.Vector3(this.vec3[0], this.vec3[1], this.vec3[2]);
+    return new Vector3(this.vec3[0], this.vec3[1], this.vec3[2]);
   }
 
   toArray() {
@@ -103,6 +103,10 @@ class Vec3 {
 
   static of(array) {
     return array ? new Vec3(array) : new Vec3([0, 0, 0]);
+  }
+
+  static random() {
+    return new Vec3([1, 2, 3].map(Math.random()));
   }
 
   /**

@@ -1,6 +1,10 @@
 import { Maybe } from "monet";
-
-let instance = null;
+/**
+ * Mesh cache for each scene.
+ *
+ * Each mesh is associated with a scene therefore we must have a cache per scene.
+ *
+ */
 class MeshCache {
   constructor() {
     if (instance) return instance;
@@ -16,8 +20,11 @@ class MeshCache {
   hasKey(key, scene) {
     const sceneId = scene._uid;
     return Maybe.fromNull(this.meshCacheBySceneId[sceneId])
-    .flatMap(meshCache => ofNull(meshCache[key]))
-    .orSome(false);
+      .flatMap(meshCache => ofNull(meshCache[key]))
+      .cata(
+        () => false,
+        () => true
+      );
   }
 
   put(key, scene, mesh) {
@@ -45,7 +52,16 @@ class MeshCache {
       })
       .orNull();
   }
+
+  del(scene) {
+    const sceneId = scene._uid;
+    if (sceneId in this.meshCacheBySceneId) {
+      delete this.meshCacheBySceneId[sceneId];
+    }
+  }
 }
 
-const ofNull = x => Maybe.fromNull(x)
+const ofNull = x => Maybe.fromNull(x);
+// private instance
+let instance = null;
 export default MeshCache;

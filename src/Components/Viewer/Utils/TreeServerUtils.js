@@ -22,15 +22,17 @@ class TreeServerUtils {
   //========================================================================================
 
   getNodeFromTree = (name, objectTree) => {
-    return new TreeObject(objectTree).getNode(x => name === x.title);
+    return new TreeObject(objectTree).getNode((x) => name === x.title);
   };
 
   getParentFromChild = (childName, objectTree) => {
-    return new TreeObject(objectTree).getParentNode(x => childName === x.title);
+    return new TreeObject(objectTree).getParentNode(
+      (x) => childName === x.title
+    );
   };
 
   deleteNodeFromTreeUsingName = (name, objectTree, is2delInServer = true) => {
-    this.getNodeFromTree(name, objectTree).forEach(node => {
+    this.getNodeFromTree(name, objectTree).forEach((node) => {
       // destroy treeNode
       TreeNode.dispose(node);
 
@@ -39,11 +41,13 @@ class TreeServerUtils {
       }
 
       const maybeParent = this.getParentFromChild(name, objectTree);
-      maybeParent.forEach(parentNode => {
-        parentNode.children = parentNode.children.filter(x => x.title !== name);
+      maybeParent.forEach((parentNode) => {
+        parentNode.children = parentNode.children.filter(
+          (x) => x.title !== name
+        );
       });
 
-      objectTree = objectTree.filter(x => x.title !== name);
+      objectTree = objectTree.filter((x) => x.title !== name);
     });
     return objectTree;
   };
@@ -70,7 +74,7 @@ class TreeServerUtils {
 
     if (parentName) {
       const maybeParentNode = this.getNodeFromTree(parentName, objectTree);
-      maybeParentNode.forEach(parentNode => {
+      maybeParentNode.forEach((parentNode) => {
         if (is2addInServer) this.addNodeItem2Server(node2Add, parentNode.title);
         parentNode.children.push(node2Add);
       });
@@ -89,15 +93,15 @@ class TreeServerUtils {
 
   updateNodeInServer = (name, objectTree, oldName = null) => {
     console.log("updateNodeInServer!", this.sceneName);
-    this.getNodeFromTree(name, objectTree).forEach(node => {
+    this.getNodeFromTree(name, objectTree).forEach((node) => {
       const parentName = this.getParentFromChild(name, objectTree)
-        .map(x => x.title)
+        .map((x) => x.title)
         .orNull();
       MasterDB.cloudFunction(
         CLOUD_FUNCTION_NAME,
         "updateNode",
         [TreeNode.toDict(node), parentName, oldName, this.sceneName],
-        data => {
+        (data) => {
           console.log("Update node with success?", data.success);
         }
       );
@@ -109,18 +113,18 @@ class TreeServerUtils {
       CLOUD_FUNCTION_NAME,
       "addNodeItem",
       [TreeNode.toDict(treeNode), parentName, this.sceneName],
-      data => {
+      (data) => {
         console.log("Add node with success?", data.success);
       }
     );
   };
 
-  deleteNodeInServer = name => {
+  deleteNodeInServer = (name) => {
     MasterDB.cloudFunction(
       CLOUD_FUNCTION_NAME,
       "deleteNodeByName",
       [name, this.sceneName],
-      data => {
+      (data) => {
         console.log("Deleted node with success?", data.success);
       }
     );

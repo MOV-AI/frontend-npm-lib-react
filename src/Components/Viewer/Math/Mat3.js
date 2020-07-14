@@ -1,5 +1,5 @@
 import Vec3 from "./Vec3";
-import * as BABYLON from "babylonjs";
+import { Matrix } from "@babylonjs/core";
 
 class Mat3 {
   constructor(v1, v2, v3) {
@@ -8,7 +8,7 @@ class Mat3 {
       if (v[i].constructor !== Array || v[i].length < 3)
         throw "One of the inputs is not a array";
     }
-    this.mat3 = v.map(x => new Vec3(x));
+    this.mat3 = v.map((x) => new Vec3(x));
   }
 
   /**
@@ -66,7 +66,7 @@ class Mat3 {
   }
 
   static ofBabylonMatrix(babylonMat) {
-    const arrayMat = BABYLON.Matrix.GetAsMatrix3x3(babylonMat);
+    const arrayMat = Matrix.GetAsMatrix3x3(babylonMat);
     const u = [arrayMat[0], arrayMat[1], arrayMat[2]];
     const v = [arrayMat[3], arrayMat[4], arrayMat[5]];
     const w = [arrayMat[6], arrayMat[7], arrayMat[8]];

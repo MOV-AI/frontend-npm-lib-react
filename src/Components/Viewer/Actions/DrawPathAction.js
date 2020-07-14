@@ -1,28 +1,91 @@
 import Util3d from "../Util3d/Util3d";
-import * as BABYLON from "babylonjs";
 import Vec3 from "../Math/Vec3";
 import Path from "../NodeItem/Path";
-import MouseAction from "./MouseAction";
+import MouseKeysAction from "./MouseKeysAction";
 import React from "react";
+import { Color3 } from "@babylonjs/core";
 
-let instance = null;
-
-const TEMP_PATH_NAME = "temp_curve";
-
-class DrawPathAction extends MouseAction {
+class DrawPathAction extends MouseKeysAction {
   constructor() {
     if (instance) return instance;
     super();
     this.key = "drawPath";
-    this.name = "Draw Path";
+    this.name = "Draw Path [P]";
     this.mouseCurve = [];
     this.icon = props => <i className="fas fa-bezier-curve" {...props}></i>;
     instance = this;
   }
 
-  static getInstace() {
+  static getInstance() {
     return new DrawPathAction();
   }
+
+  action = parentView => {
+    super.action(parentView);
+    parentView.setSelectedAction(this);
+  };
+
+  onPointerDown = (evt, parentView) => {
+    if (!(evt.buttons === 1)) return;
+    parentView.getSceneMemory().forEach(memory => {
+      const { scene, ground, camera, canvas } = memory;
+      const maybeMousePos = Util3d.getGroundPosition(scene, ground);
+      maybeMousePos.forEach(mousePos => {
+        camera.detachControl(canvas);
+        this.mouseCurve.push(mousePos);
+        const drawPathPoints =
+          this.mouseCurve.length === 1
+            ? [this.mouseCurve[0], this.mouseCurve[0]]
+            : this.mouseCurve;
+
+        this.createCurve(
+          drawPathPoints,
+          TEMP_PATH_NAME,
+          scene,
+          parentView,
+          false
+        );
+        parentView.setContextActions(
+          this.getDrawPathContextAction(camera, canvas, scene)
+        );
+      });
+    });
+  };
+
+  onPointerMove = (evt, parentView) => {
+    // empty
+  };
+
+  onPointerUp = parentView => {
+    // empty
+  };
+
+  onKeyDown = (evt, parentView) => {
+    parentView.getSceneMemory().forEach(memory => {
+      const { scene, camera, canvas } = memory;
+      const contextActions = this.getDrawPathContextAction(
+        camera,
+        canvas,
+        scene
+      );
+      const keyCodeActionMap = {
+        Enter: () => contextActions[1].action(parentView),
+        Delete: () => contextActions[0].action(parentView),
+        Backspace: () => contextActions[0].action(parentView),
+        Escape: () => {
+          if (this.mouseCurve.length === 0) {
+            super.onKeyDown(evt, parentView);
+          }
+          contextActions[0].action(parentView);
+        }
+      };
+      if (evt.code in keyCodeActionMap) {
+        keyCodeActionMap[evt.code]();
+      } else {
+        super.onKeyDown(evt, parentView);
+      }
+    });
+  };
 
   createCurve = (
     curve,
@@ -30,12 +93,12 @@ class DrawPathAction extends MouseAction {
     scene,
     parentView,
     is2addInServer = true,
-    color = BABYLON.Color3.White()
+    color = Color3.Gray()
   ) => {
     const rootMesh = parentView.getRootNode().item.mesh;
 
     const localCurve = curve.map(w =>
-      Util3d.computeLocalCoordinateFromMesh(
+      Util3d.computeLocalCoordinatesFromMesh(
         { parent: rootMesh },
         Vec3.ofBabylon(w)
       ).toBabylon()
@@ -57,22 +120,17 @@ class DrawPathAction extends MouseAction {
     parentView.addNodeItem2Tree(pathItem, rootMesh.name, is2addInServer);
   };
 
-  action = parentView => {
-    super.action(parentView);
-    parentView.setSelectedAction(this);
-  };
-
   getDrawPathContextAction = (camera, canvas, scene) => {
     const ans = [];
     ans.push({
-      icon: props => <i className="fas fa-times" {...props}></i>,
+      icon: props => <i className="fas fa-trash" {...props}></i>,
       action: parentView => {
         camera.attachControl(canvas, true);
         parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false);
         this.mouseCurve = [];
         parentView.closeContextDial();
       },
-      name: "Clear Path"
+      name: "Clear Path [ESC | DEL | Backspace]"
     });
     if (this.mouseCurve.length > 1) {
       ans.push({
@@ -80,63 +138,19 @@ class DrawPathAction extends MouseAction {
         action: parentView => {
           camera.attachControl(canvas, true);
           parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false);
-          this.createCurve(
-            this.mouseCurve,
-            `Path${Math.floor(Math.random() * 1e3)}`,
-            scene,
-            parentView,
-            true
-          );
+          const name = `Path${Math.floor(Math.random() * 1e3)}`;
+          this.createCurve(this.mouseCurve, name, scene, parentView, true);
           this.mouseCurve = [];
+          parentView.setPropertiesWithName(name);
           parentView.closeContextDial();
         },
-        name: "Create Path"
+        name: "Create Path [Enter]"
       });
     }
     return ans;
   };
-
-  onPointerDown = (evt, parentView) => {
-    if(!(evt.buttons === 1)) return;
-    parentView.getSceneMemory().forEach(memory => {
-      const scene = memory.scene;
-      const ground = memory.ground;
-      const camera = memory.camera;
-      const maybeMousePos = Util3d.getGroundPosition(scene, ground);
-      maybeMousePos.forEach(mousePos => {
-        camera.detachControl(memory.canvas);
-        this.mouseCurve.push(mousePos);
-        if (this.mouseCurve.length === 1) {
-          this.createCurve(
-            [this.mouseCurve[0], this.mouseCurve[0]],
-            TEMP_PATH_NAME,
-            scene,
-            parentView,
-            false
-          );
-        } else {
-          this.createCurve(
-            this.mouseCurve,
-            TEMP_PATH_NAME,
-            scene,
-            parentView,
-            false
-          );
-        }
-        parentView.setContextActions(
-          this.getDrawPathContextAction(camera, memory.canvas, scene)
-        );
-      });
-    });
-  };
-
-  onPointerMove = (evt, parentView) => {
-    // empty
-  };
-
-  onPointerUp = parentView => {
-    // empty
-  };
 }
 
+let instance = null;
+const TEMP_PATH_NAME = "temp_curve";
 export default DrawPathAction;

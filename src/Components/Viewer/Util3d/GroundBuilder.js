@@ -1,4 +1,10 @@
-import * as BABYLON from "babylonjs";
+import {
+  Mesh,
+  Vector3,
+  StandardMaterial,
+  Texture,
+  Space
+} from "@babylonjs/core";
 
 class GroundBuilder {
   constructor(scene) {
@@ -36,20 +42,20 @@ class GroundBuilder {
   }
 
   build() {
-    const ground = BABYLON.Mesh.CreateGround(
+    const ground = Mesh.CreateGround(
       this._name,
       this._width,
       this._height,
       1,
       this._scene
     );
-    ground.translate(new BABYLON.Vector3(0, -1, 0), 1e-1, BABYLON.Space.WORLD);
+    ground.translate(new Vector3(0, -1, 0), 1e-1, Space.WORLD);
     if (this._textureSrc) {
-      ground.material = new BABYLON.StandardMaterial(
+      ground.material = new StandardMaterial(
         `Texture${this._name}`,
         this._scene
       );
-      ground.material.ambientTexture = new BABYLON.Texture(
+      ground.material.ambientTexture = new Texture(
         this._textureSrc,
         this._scene
       );

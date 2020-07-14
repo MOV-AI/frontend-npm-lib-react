@@ -2,12 +2,17 @@ import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
 import { Utils } from "mov.ai-core";
 import AnnotationManager from "../Utils/AnnotationManager";
-import { Quaternion, Color3, Vector3 } from "babylonjs";
+import { Quaternion, Color3, Vector3 } from "@babylonjs/core";
+import Clipboard from "../Utils/Clipboard";
+
+const { capitalize } = Utils;
 
 class NodeItem {
   constructor(mesh, keyValueMap = {}) {
     this.name = mesh.name;
     this.mesh = mesh;
+    this.mesh.getMouseContextActions = this.getMouseContextActions;
+    this.mesh.nodeItem = this;
     this.keyValueMap = keyValueMap;
     //Hack to load annotations
     AnnotationManager.getInstance();
@@ -35,10 +40,14 @@ class NodeItem {
       color: Maybe.fromNull(this.mesh.material)
         .flatMap(x => Maybe.fromNull(x.diffuseColor).map(z => [z.r, z.g, z.b]))
         .orSome([0, 0, 0]),
-      keyValueMap: this.keyValueMap
+      keyValueMap: this.keyValueMap,
+      isVisible: this.mesh.isEnabled()
     };
   }
 
+  /**
+   * Generates json based on https://github.com/rjsf-team/react-jsonschema-form
+   */
   toForm() {
     const info = this.toDict();
     const color = new Color3(info.color[0], info.color[1], info.color[2]);
@@ -100,11 +109,6 @@ class NodeItem {
           color: {
             type: "string",
             title: "Color"
-          },
-          annotations: {
-            title: "Annotations",
-            type: "object",
-            properties: {}
           }
         }
       },
@@ -117,6 +121,12 @@ class NodeItem {
         },
         oldName: {
           "ui:widget": "hidden"
+        },
+        position: {
+          "ui:widget": "collapse"
+        },
+        quaternion: {
+          "ui:widget": "collapse"
         }
       },
       data: {
@@ -134,56 +144,74 @@ class NodeItem {
           y: info.quaternion[2],
           z: info.quaternion[3]
         },
-        color: color.toHexString(),
-        annotations: { ...info.keyValueMap }
+        color: color.toHexString()
       }
     };
 
-    const annotations = AnnotationManager.getAnnotations();
-    Object.keys(annotations).forEach(annotation => {
-      if (annotations[annotation].labels.length > 0) {
-        schema.jsonSchema.properties.annotations.properties[annotation] = {
-          title: Utils.capitalize(annotation),
-          type: "string",
-          enumNames: annotations[annotation].labels,
-          enum: annotations[annotation].names
-        };
-      }
-    });
-
+    NodeItem.setAnnotations2Form(schema, this.keyValueMap);
     return schema;
   }
 
+  /**
+   * Changes NodeItem based on a form
+   *
+   * Warning: side effect function
+   * @param {*} form
+   */
   ofForm(form) {
-    // kind of a hack, TODO: please revise;
-    const item = new NodeItem(this.mesh);
-    item.name = form.name;
-    item.mesh.name = form.name;
-    item.mesh.position = new Vector3(
-      form.position.x,
-      form.position.y,
-      form.position.z
-    );
+    this.name = form.name;
+    this.mesh.name = form.name;
 
-    item.mesh.rotationQuaternion = new Quaternion(
-      form.quaternion.x,
-      form.quaternion.y,
-      form.quaternion.z,
-      form.quaternion.w
-    ).normalize();
-
-    if (item.mesh.material) {
-      item.mesh.material.diffuseColor = Color3.FromHexString(form.color);
-      item.mesh.material.emissiveColor = Color3.FromHexString(form.color);
+    Maybe.fromNull(form.position).forEach(position => {
+      this.mesh.position = new Vector3(position.x, position.y, position.z);
+    });
+    Maybe.fromNull(form.quaternion).forEach(quaternion => {
+      this.mesh.rotationQuaternion = new Quaternion(
+        quaternion.x,
+        quaternion.y,
+        quaternion.z,
+        quaternion.w
+      ).normalize();
+    });
+    if (this.mesh.material) {
+      this.mesh.material.diffuseColor = Color3.FromHexString(form.color);
+      this.mesh.material.emissiveColor = Color3.FromHexString(form.color);
     }
-
-    item.keyValueMap = { ...form.annotations };
-
-    item.getType = this.getType;
-    return item;
+    this.keyValueMap = { ...form.annotations };
   }
 
   getType = () => NodeItem.TYPE;
+
+  getMouseContextActions(mainView) {
+    return [
+      {
+        title: "Copy",
+        onClick: () =>
+          // mousePosFromRoot : Vector3
+          Clipboard.copy((mousePosFromRoot, someMainView) =>
+            // "this" comes from the mesh
+            someMainView.getSceneMemory().forEach(({ scene }) => {
+              const { item: rootItem } = someMainView.getRootNode();
+              const item = this.nodeItem;
+              const copyDict = item.toDict();
+              copyDict.name += "*";
+              const newPosArray = Vec3.ofBabylon(mousePosFromRoot).toArray();
+              // preserves z-coordinate
+              newPosArray[2] = copyDict.position[2];
+              copyDict.position = newPosArray;
+              const copiedNodeItem = item.ofDict(scene, copyDict, someMainView);
+              const { mesh: copiedMesh } = copiedNodeItem;
+              copiedMesh.parent = rootItem.mesh;
+              someMainView.addNodeItem2Tree(copiedNodeItem);
+            })
+          )
+      },
+      {
+        title: "Delete",
+        onClick: () => mainView.deleteNodeFromTreeUsingName(this.name)
+      }
+    ];
+  }
 
   static TYPE = "NodeItem";
 
@@ -217,6 +245,30 @@ class NodeItem {
       });
     });
     return mesh;
+  }
+
+  // side effect function
+  static setAnnotations2Form(schema, keyValueMap = {}) {
+    schema.jsonSchema.properties.annotations = {
+      title: "Annotations",
+      type: "object",
+      properties: {}
+    };
+    schema.uiSchema.annotations = {
+      "ui:widget": "collapse"
+    };
+    schema.data["annotations"] = { ...keyValueMap };
+    const annotations = AnnotationManager.getAnnotations();
+    Object.keys(annotations).forEach(annotation => {
+      if (annotations[annotation].labels.length > 0) {
+        schema.jsonSchema.properties.annotations.properties[annotation] = {
+          title: capitalize(annotation),
+          type: "string",
+          enumNames: annotations[annotation].labels,
+          enum: annotations[annotation].names
+        };
+      }
+    });
   }
 }
 

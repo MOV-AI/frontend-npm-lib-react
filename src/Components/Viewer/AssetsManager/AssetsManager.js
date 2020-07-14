@@ -1,11 +1,7 @@
 import { Maybe } from "monet";
 import { ASSETS_TYPES, AssetsTypesFactory } from "../Utils/AssetsTypesFactory";
 import { MasterDB } from "mov.ai-core";
-
-const REST_API =
-  window.location.port === ""
-    ? `http://${window.location.hostname}`
-    : `http://${window.location.hostname}:${window.location.port}`;
+import MapLoader from "./MapLoader";
 
 /**
  *  Graphic Assets Manager, retrieves and manages the assets that are in DB.
@@ -43,10 +39,111 @@ class AssetsManager {
     return this;
   }
 
+  signalObservers = () => this.observers.forEach(obs => obs());
+
   addAsset(assetKey, asset) {
-    this.assets[assetKey] = asset;
-    this.assetsActionMap[assetKey] = AssetsTypesFactory[asset.type](asset);
+    try {
+      this.assets[assetKey] = asset;
+      this.assetsActionMap[assetKey] = AssetsTypesFactory[asset.type](asset);
+    } catch (e) {
+      console.log("Caught exception while adding asset", e);
+    }
   }
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                      Subscribers                                     *
+   *                                                                                      */
+  //========================================================================================
+
+  subs = [
+    () =>
+      MasterDB.subscribe(
+        {
+          Scope: "Robot",
+          Name: "*",
+          RobotName: "*"
+        },
+        data => {
+          // console.log("UPDATE ROBOTS", data);
+        },
+        data => {
+          ofNull(data.value)
+            .flatMap(maybeGet("Robot"))
+            .forEach(r => {
+              Object.keys(r).forEach(id => this.addRobot(id, r[id].RobotName));
+            });
+          this.finishSub("RobotName");
+        }
+      ),
+    () =>
+      MasterDB.subscribe(
+        {
+          Scope: "Robot",
+          Name: "*",
+          Parameter: "tf"
+        },
+        data => {
+          // console.log("UPDATE ROBOTS", data);
+        },
+        data => {
+          ofNull(data.value)
+            .flatMap(maybeGet("Robot"))
+            .forEach(r => {
+              Object.keys(r).forEach(id =>
+                this.addRobot(id, null, r[id].Parameter.tf.Value)
+              );
+            });
+          this.finishSub("Robot tf");
+        }
+      ),
+    () =>
+      MasterDB.subscribe(
+        {
+          Scope: "Package",
+          File: "*",
+          Name: "maps",
+          FileLabel: "*"
+        },
+        this.getMapUpdater(({ key }) => key, this.signalObservers),
+        this.getMapSubscriber(
+          ({ value }) => value,
+          () => this.finishSub("Maps")
+        )
+      ),
+    () =>
+      MasterDB.subscribe(
+        { Scope: "Package", File: "*", Name: "meshes", FileLabel: "*" },
+        this.getMeshUpdater(),
+        this.getMeshSubscriber(
+          ({ value }) => value,
+          () => this.finishSub("Meshes")
+        )
+      )
+  ];
+
+  retrieveAssetsFromDb() {
+    this.subs.forEach(f => f());
+  }
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                         Utils                                        *
+   *                                                                                      */
+  //========================================================================================
+
+  finishSub = place => {
+    console.log("FINISH SUB ", place, this.finishInitialSubscribers);
+    if (++this.finishInitialSubscribers > this.subs.length - 1) {
+      this.afterLoad.forEach(f => f());
+    }
+  };
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Robots                                        *
+   *                                                                                      */
+  //========================================================================================
 
   addRobot(id, name = null, tf = null) {
     if (!(id in this.robots)) {
@@ -56,8 +153,8 @@ class AssetsManager {
         tf: null
       };
     }
-    Maybe.fromNull(name).forEach(name => (this.robots[id].name = name));
-    Maybe.fromNull(tf).forEach(tf => (this.robots[id].tf = tf));
+    ofNull(name).forEach(name => (this.robots[id].name = name));
+    ofNull(tf).forEach(tf => (this.robots[id].tf = tf));
     if (Object.values(this.robots[id]).every(x => x !== null)) {
       const localRobot = this.robots[id];
       localRobot.tf.name = localRobot.name;
@@ -70,155 +167,94 @@ class AssetsManager {
     }
   }
 
-  addMap(yamlSrc) {
-    return fetch(this.getMapUrl(yamlSrc))
-      .then(response => response.text())
-      .then(yamlTxt => this.parseYaml(yamlTxt))
-      .then(map => {
-        map["type"] = ASSETS_TYPES.Map;
-        return map;
-      })
-      .then(map => this.addAsset(map.name, map));
-  }
-
   //========================================================================================
   /*                                                                                      *
-   *                                         Utils                                        *
+   *                                         Maps                                         *
    *                                                                                      */
   //========================================================================================
 
-  getMapUrl = src => `${REST_API}/static/maps/${src}`;
-
-  getImageSize(src) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => resolve([img.naturalWidth, img.naturalHeight]);
-    });
-  }
-
-  parseYaml = async yamlTxt => {
-    const ans = {};
-    const actionDict = {
-      image: (k, v) => (ans[k] = v),
-      resolution: (k, v) => (ans[k] = Number.parseFloat(v)),
-      origin: (k, v) => (ans[k] = JSON.parse(v))
-    };
-    yamlTxt
-      .split("\n")
-      .map(s => s.split(": "))
-      .filter(split => split.length >= 2)
-      .filter(split => split[0] in actionDict)
-      .forEach(split => actionDict[split[0]](split[0], split[1]));
-    ans["name"] = ans["image"].split("/").pop();
-    ans["image"] = this.getMapUrl(ans["image"]);
-    console.log("Yaml text", yamlTxt);
-    ans["size"] = await this.getImageSize(ans["image"]);
-    return ans;
+  getMapSubscriber = (dataGetter, after = () => {}) => {
+    return data =>
+      this.getMapFileData(dataGetter, data).forEach(fileName => {
+        Object.keys(fileName)
+          .filter(f => f.includes(".yaml"))
+          .forEach(this.addMap);
+        after();
+      });
   };
 
-  finishSub = place => {
-    console.log("FINISH SUB ", place, this.finishInitialSubscribers);
-    if (++this.finishInitialSubscribers > 2) {
-      this.afterLoad.forEach(f => f());
-    }
-  };
-
-  getMapSubscribe = (dataGetter, apply2Maps = () => {}) => {
-    return data => {
-      return Maybe.fromNull(dataGetter(data))
-        .flatMap(v => Maybe.fromNull(v.Package))
-        .flatMap(p => Maybe.fromNull(p.maps))
-        .flatMap(m => Maybe.fromNull(m.File))
-        .forEach(f => {
-          const promises = Object.keys(f)
-            .filter(s => s.includes(".yaml"))
-            .map(y => this.addMap(y));
-          Promise.all(promises)
-            .then(() => apply2Maps())
-            .catch(e => console.log("Caught exception", e));
-        });
-    };
-  };
-
-  getUpdateMapSub = (dataGetter, apply2Maps) => {
+  getMapUpdater = (dataGetter, after = () => {}) => {
     const actionMap = {
       del: data => {
-        Maybe.fromNull(dataGetter(data))
-          .flatMap(v => Maybe.fromNull(v.Package))
-          .flatMap(p => Maybe.fromNull(p.maps))
-          .flatMap(m => Maybe.fromNull(m.File))
-          .forEach(f => {
-            delete this.assets[Object.keys(f)[0]];
-            delete this.assetsActionMap[Object.keys(f)[0]];
-            apply2Maps();
-          });
+        this.getMapFileData(dataGetter, data).forEach(f => {
+          let filename = Object.keys(f)[0];
+          filename = filename.split(".")[0];
+          delete this.assets[filename];
+          delete this.assetsActionMap[filename];
+        });
+        after();
       },
-      set: this.getMapSubscribe(dataGetter, apply2Maps),
-      subscribe: this.getMapSubscribe(dataGetter, apply2Maps)
+      set: this.getMapSubscriber(dataGetter, after),
+      subscribe: this.getMapSubscriber(dataGetter, after)
     };
     return data => {
+      console.log("MAP UPDATE", data);
       actionMap[data.event](data);
     };
   };
 
-  retrieveAssetsFromDb() {
-    MasterDB.subscribe(
-      {
-        Scope: "Robot",
-        Name: "*",
-        RobotName: "*"
-      },
-      data => {
-        // console.log("UPDATE ROBOTS", data);
-      },
-      data => {
-        Maybe.fromNull(data.value)
-          .flatMap(v => Maybe.fromNull(v.Robot))
-          .forEach(r => {
-            Object.keys(r).forEach(id => this.addRobot(id, r[id].RobotName));
-          });
-        this.finishSub("RobotName");
-      }
-    );
+  addMap = yamlSrc => {
+    const map = {
+      name: yamlSrc.split(".")[0],
+      loader: new MapLoader(yamlSrc),
+      type: ASSETS_TYPES.Map
+    };
+    this.addAsset(map.name, map);
+  };
 
-    MasterDB.subscribe(
-      {
-        Scope: "Robot",
-        Name: "*",
-        Parameter: "tf"
-      },
-      data => {
-        // console.log("UPDATE ROBOTS", data);
-      },
-      data => {
-        Maybe.fromNull(data.value)
-          .flatMap(v => Maybe.fromNull(v.Robot))
-          .forEach(r => {
-            Object.keys(r).forEach(id =>
-              this.addRobot(id, null, r[id].Parameter.tf.Value)
-            );
-          });
-        this.finishSub("Robot tf");
-      }
-    );
+  getMapFileData = (dataGetter, data) =>
+    ofNull(dataGetter(data))
+      .flatMap(maybeGet("Package"))
+      .flatMap(maybeGet("maps"))
+      .flatMap(maybeGet("File"));
 
-    MasterDB.subscribe(
-      {
-        Scope: "Package",
-        File: "*",
-        Name: "maps"
-      },
-      this.getUpdateMapSub(
-        data => data.key,
-        () => this.observers.forEach(obs => obs())
-      ),
-      this.getMapSubscribe(
-        data => data.value,
-        () => this.finishSub("Maps")
-      )
+  //========================================================================================
+  /*                                                                                      *
+   *                                         Mesh                                         *
+   *                                                                                      */
+  //========================================================================================
+
+  getMeshSubscriber = (dataGetter, after = () => {}) => data => {
+    this.getMeshFileData(dataGetter, data).forEach(d =>
+      Object.keys(d).forEach(id => {
+        const mesh = { id: id, name: d[id].FileLabel, type: ASSETS_TYPES.Mesh };
+        this.addAsset(mesh.name, mesh);
+      })
     );
-  }
+    after();
+  };
+
+  getMeshUpdater = () => {
+    const actionMap = {
+      del: data => {
+        this.getMeshFileData(d => d.key, data).forEach(f => {
+          let filename = Object.keys(f)[0];
+          delete this.assets[filename];
+          delete this.assetsActionMap[filename];
+        });
+        this.signalObservers();
+      },
+      set: this.getMeshSubscriber(d => d.key, this.signalObservers),
+      subscribe: this.getMeshSubscriber(d => d.key, this.signalObservers)
+    };
+    return data => actionMap[data.event](data);
+  };
+
+  getMeshFileData = (dataGetter, data) =>
+    ofNull(dataGetter(data))
+      .flatMap(maybeGet("Package"))
+      .flatMap(maybeGet("meshes"))
+      .flatMap(maybeGet("File"));
 
   //========================================================================================
   /*                                                                                      *
@@ -231,7 +267,13 @@ class AssetsManager {
   }
 }
 
-// private variable from outside
+// private variable
 let instance = null;
+
+// auxiliary functions
+const ofNull = Maybe.fromNull;
+const get = prop => obj => obj[prop];
+const dot = f => g => x => f(g(x));
+const maybeGet = prop => dot(ofNull)(get(prop));
 
 export default AssetsManager;

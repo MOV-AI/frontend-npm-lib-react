@@ -1,80 +1,104 @@
-import React, { Component } from "react";
-import { Typography } from "@material-ui/core";
+//========================================================================================
+/*                                                                                      *
+ *         Based from https://doc.babylonjs.com/resources/babylonjs_and_reactjs         *
+ *                                                                                      */
+//========================================================================================
+
+import { Engine, Scene } from "@babylonjs/core";
+import React, { useEffect, useRef, useState } from "react";
 import ReactResizeDetector from "react-resize-detector";
 import PropTypes from "prop-types";
-import { Engine } from "babylonjs";
 
-/**
- *  props:
- *    @param createScene: (Engine, canvas) => scene, function responsible for creating a scene
- *    @param is2render: Boolean, boolean responsible for rendering the scene in the beginning
- */
-class BaseViewer extends Component {
-  state = {
-    size: { width: "100px", height: "100px" }
-  };
+const FLEX_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  flexGrow: 1,
+};
 
-  addEventListeners = () => this.props.addEventListeners2Canvas(this.canvas);
+const BaseViewer = (props) => {
+  const reactCanvas = useRef(null);
+  const {
+    antialias,
+    engineOptions,
+    adaptToDeviceRatio,
+    sceneOptions,
+    onRender,
+    onSceneReady,
+    is2render,
+    sceneFactory,
+    ...rest
+  } = props;
 
-  componentDidMount() {
-    this.addEventListeners();
-    this.engine = new Engine(this.canvas, true, {
-      stencil: true
-    });
-    const scene = this.props.createScene(this.engine, this.canvas);
-    if (this.props.is2render) {
-      this.engine.runRenderLoop(() => {
+  const [loaded, setLoaded] = useState(false);
+  const [scene, setScene] = useState(null);
+  const [size, setSize] = useState({ width: 100, height: 100 });
+
+  useEffect(() => {
+    if (!loaded) {
+      setLoaded(true);
+      const engine = new Engine(
+        reactCanvas.current,
+        antialias,
+        engineOptions,
+        adaptToDeviceRatio
+      );
+      const scene = sceneFactory
+        ? sceneFactory(engine)
+        : new Scene(engine, sceneOptions);
+      setScene(scene);
+      if (scene.isReady()) {
+        props.onSceneReady(scene);
+      } else {
+        scene.onReadyObservable.addOnce((scene) => props.onSceneReady(scene));
+      }
+      if (!is2render) return;
+      engine.runRenderLoop(() => {
+        if (typeof onRender === "function") {
+          onRender(scene);
+        }
         scene.render();
       });
     }
-  }
 
-  getCanvas = () => this.canvas;
+    return () => {
+      if (scene !== null) scene.dispose();
+    };
+  }, [reactCanvas]);
 
-  onResize = (width, height) => {
-    console.log("Canvas on resize", width, height);
-    this.setState({ size: { width: width, height: height } });
+  const onResize = (width, height) => {
+    setSize({ width, height });
+    scene && scene.getEngine().resize();
   };
 
-  getSize = () => this.state.size;
-
-  render() {
-    return (
-      <Typography
-        component="div"
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          flexGrow: 1
-        }}
-      >
-        <canvas
-          ref={canvas => (this.canvas = canvas)}
-          style={{ flexGrow: 1 }}
-          width={this.state.size.width}
-          height={this.state.size.height}
-        />
-        <ReactResizeDetector
-          handleWidth
-          handleHeight
-          onResize={this.onResize}
-        />
-      </Typography>
-    );
-  }
-}
+  loaded && reactCanvas.current.focus();
+  return (
+    <div style={{ ...FLEX_STYLE }}>
+      <canvas
+        ref={reactCanvas}
+        width={size.width}
+        height={size.height}
+        {...rest}
+      />
+      <ReactResizeDetector handleWidth handleHeight onResize={onResize} />
+    </div>
+  );
+};
 
 BaseViewer.propTypes = {
-  createScene: PropTypes.func,
+  antialias: PropTypes.bool,
+  engineOptions: PropTypes.object,
+  adaptToDeviceRatio: PropTypes.bool,
+  sceneOptions: PropTypes.object,
+  onSceneReady: PropTypes.func,
+  onRender: PropTypes.func,
   is2render: PropTypes.bool,
-  addEventListeners2Canvas: PropTypes.func
+  sceneFactory: PropTypes.func,
 };
 
 BaseViewer.defaultProps = {
-  createScene: (engine, canvas) => {},
+  antialias: true,
+  onSceneReady: (scene) => {},
   is2render: true,
-  addEventListeners2Canvas: canvas => {}
 };
+
 export default BaseViewer;

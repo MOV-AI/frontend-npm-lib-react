@@ -1,69 +1,22 @@
 import { Maybe } from "monet";
-import MouseAction from "./MouseAction";
+import MouseKeysAction from "./MouseKeysAction";
 import BoxRegion from "../NodeItem/BoxRegion";
 import Vec3 from "../Math/Vec3";
-import * as BABYLON from "babylonjs";
 import Util3d from "../Util3d/Util3d";
 import React from "react";
+import { Color3 } from "@babylonjs/core";
 
-let instance = null;
-
-const TEMP_BOX_REGION_NAME = "temp_box_region";
-
-class BoxRegionAction extends MouseAction {
+class BoxRegionAction extends MouseKeysAction {
   constructor() {
     if (instance) return instance;
     super();
     this.key = "drawBoxRegion";
-    this.name = "Draw Box Region";
+    this.name = "Draw Box Region [B]";
     this.maybeMousePos = Maybe.none();
     this.tempMesh = null;
     this.icon = props => <i className="fas fa-square" {...props} />;
     instance = this;
   }
-
-  static getInstace() {
-    return new BoxRegionAction();
-  }
-
-  createBoxRegion = (
-    region,
-    name,
-    scene,
-    parentView,
-    is2addInServer = true,
-    color = BABYLON.Color3.Red(),
-    height = 1
-  ) => {
-    const rootMesh = parentView.getRootNode().item.mesh;
-
-    const localRegion = region.map(r =>
-      Util3d.computeLocalCoordinateFromMesh(
-        { parent: rootMesh },
-        Vec3.ofBabylon(r)
-      )
-    );
-
-    localRegion[1] = localRegion[1].add(Vec3.of([0, 0, height]));
-    const middlePoint = localRegion[0].add(localRegion[1]).scale(0.5);
-    const centeredRegion = localRegion.map(r => r.sub(middlePoint));
-
-    const boxRegionItem = BoxRegion.ofDict(
-      scene,
-      {
-        name: name,
-        position: middlePoint.toArray(),
-        color: [color.r, color.g, color.b],
-        corners: centeredRegion.map(x => x.toArray())
-      },
-      parentView
-    );
-    boxRegionItem.mesh.parent = rootMesh;
-    if (is2addInServer) {
-      parentView.addNodeItem2Tree(boxRegionItem, rootMesh.name, is2addInServer);
-    }
-    return boxRegionItem.mesh;
-  };
 
   action = parentView => {
     super.action(parentView);
@@ -71,6 +24,7 @@ class BoxRegionAction extends MouseAction {
   };
 
   onPointerDown = (evt, parentView) => {
+    if (!(evt.buttons === 1)) return;
     parentView.getSceneMemory().forEach(memory => {
       const scene = memory.scene;
       const ground = memory.ground;
@@ -112,19 +66,69 @@ class BoxRegionAction extends MouseAction {
       maybeCurrent.forEach(current => {
         this.maybeMousePos.forEach(oldMousePos => {
           this.tempMesh.dispose();
+          const name = `BoxRegion${Math.floor(Math.random() * 1e3)}`;
           this.createBoxRegion(
             [oldMousePos, current],
-            `BoxRegion${Math.floor(Math.random() * 1e3)}`,
+            name,
             scene,
             parentView,
             true
           );
+          parentView.setPropertiesWithName(name);
         });
       });
       this.maybeMousePos = Maybe.none();
       camera.attachControl(memory.canvas, true);
+      parentView.renderMenus();
     });
   };
+
+  createBoxRegion = (
+    region,
+    name,
+    scene,
+    parentView,
+    is2addInServer = true,
+    color = Color3.Red(),
+    height = 1
+  ) => {
+    const rootMesh = parentView.getRootNode().item.mesh;
+
+    const localRegion = region.map(r =>
+      Util3d.computeLocalCoordinatesFromMesh(
+        { parent: rootMesh },
+        Vec3.ofBabylon(r)
+      )
+    );
+
+    localRegion[1] = localRegion[1].add(Vec3.of([0, 0, height]));
+    const middlePoint = localRegion[0].add(localRegion[1]).scale(0.5);
+    const centeredRegion = localRegion.map(r => r.sub(middlePoint));
+
+    const boxRegionItem = BoxRegion.ofDict(
+      scene,
+      {
+        name: name,
+        position: middlePoint.toArray(),
+        color: [color.r, color.g, color.b],
+        corners: centeredRegion.map(x => x.toArray())
+      },
+      parentView
+    );
+    boxRegionItem.mesh.parent = rootMesh;
+    if (is2addInServer) {
+      parentView.addNodeItem2Tree(boxRegionItem, rootMesh.name, is2addInServer);
+    }
+    return boxRegionItem.mesh;
+  };
+
+  static getInstance() {
+    return new BoxRegionAction();
+  }
 }
+
+let instance = null;
+
+const TEMP_BOX_REGION_NAME = "temp_box_region";
 
 export default BoxRegionAction;

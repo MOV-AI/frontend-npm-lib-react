@@ -5,9 +5,9 @@ import Path from "../NodeItem/Path";
 import Wall from "../NodeItem/Wall";
 import BoxRegion from "../NodeItem/BoxRegion";
 import PolygonRegion from "../NodeItem/PolygonRegion";
-import Robot from "../NodeItem/Robot";
-import Map from "../NodeItem/Map";
 import { Maybe } from "monet";
+import { ASSETS_TYPES } from "../Utils/AssetsTypesFactory";
+import GraphItem from "../NodeItem/GraphItem";
 
 const NODE_ITEM_FACTORY_MAP = {
   GlobalRef: GlobalRef,
@@ -16,38 +16,44 @@ const NODE_ITEM_FACTORY_MAP = {
   Path: Path,
   Wall: Wall,
   BoxRegion: BoxRegion,
-  PolygonRegion: PolygonRegion
-};
-
-const ASSET_NODE_ITEM_MAP = {
-  Robot: Robot,
-  Map: Map
+  PolygonRegion: PolygonRegion,
+  GraphItem: GraphItem
 };
 
 function isAsset(nodeDict) {
-  return nodeDict.type in ASSET_NODE_ITEM_MAP;
+  return nodeDict.type in ASSETS_TYPES;
 }
 
 function importAsset(mainView, nodeDict, parent) {
   const assetName = Maybe.fromNull(nodeDict.assetName).orSome(nodeDict.name);
-  const retrievedAction = mainView.getAssetsActionMap()[assetName];
+  const assetActionMap = mainView.getAssetsActionMap();
+  // legacy
+  const retrievedAction = Maybe.fromNull(assetActionMap[assetName]).orSome(
+    assetActionMap[assetName.split(".")[0]]
+  );
+  if (!retrievedAction) {
+    console.log(`Action ${assetName}, has not found, keep importing...`);
+    return;
+  }
   retrievedAction.memory["parentObj"] = { parent: parent };
   retrievedAction.memory["nodeItemDict"] = nodeDict;
   retrievedAction.memory["assetName"] = assetName;
   retrievedAction.memory["name"] = nodeDict.name;
+  retrievedAction.memory["isImport"] = true;
   retrievedAction.action(mainView);
 }
 
 function importNodeItem(mainView, nodeDict, parent) {
-  const nodeItemClass = NODE_ITEM_FACTORY_MAP[nodeDict.type]; // retrieve default export
+  const nodeItemClass = NODE_ITEM_FACTORY_MAP[nodeDict.type]; //retrieve default export
   if (nodeItemClass) {
     mainView.getSceneMemory().forEach(memory => {
       const scene = memory.scene;
       const nodeItem = nodeItemClass.ofDict(scene, nodeDict, mainView);
+      nodeItem.mesh.setEnabled(nodeDict.isVisible);
       mainView.getNodeFromTree(parent).forEach(treeNode => {
         nodeItem.mesh.parent = treeNode.item.mesh;
       });
-      mainView.addNodeItem2Tree(nodeItem, parent, false);
+      mainView.addNodeItem2Tree(nodeItem, parent, false, nodeDict.isVisible);
     });
   }
 }

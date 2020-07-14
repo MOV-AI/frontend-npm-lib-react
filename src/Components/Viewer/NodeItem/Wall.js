@@ -1,9 +1,63 @@
 import NodeItem from "./NodeItem";
 import Vec3 from "../Math/Vec3";
-import * as BABYLON from "babylonjs";
 import { Maybe } from "monet";
 import Util3d from "../Util3d/Util3d";
 import Constants from "../Utils/Constants";
+import { Vector3, Color3, Observable, StandardMaterial } from "@babylonjs/core";
+
+class Wall extends NodeItem {
+  constructor(mesh, localWall, size, keyPoints = {}, keyValueMap = {}) {
+    super(mesh, keyValueMap);
+    this.localWall = localWall;
+    this.size = size;
+    this.keyPoints = keyPoints;
+  }
+
+  toDict() {
+    const dict = super.toDict();
+    dict.localWall = this.localWall;
+    dict.size = this.size;
+    return dict;
+  }
+
+  ofDict(scene, dict = null, mainView = null) {
+    return Wall.ofDict(scene, dict, mainView);
+  }
+
+  getType = () => Wall.TYPE;
+
+  static TYPE = "Wall";
+
+  static ofDict(scene, dict = null, mainView = null) {
+    if (!dict) throw "null dictionary describing wall";
+    const name = Maybe.fromNull(dict.name).orSome(
+      `Wall${Math.floor(Math.random() * 1e3)}`
+    );
+    const mesh = createWallMesh(dict, name, scene);
+
+    const material = new StandardMaterial(`WallMaterial${name}`, scene);
+    const color = new Color3(dict.color[0], dict.color[1], dict.color[2]);
+    material.diffuseColor = color;
+    material.emissiveColor = color;
+    mesh.material = material;
+    // babylonjs highlight shader flickers when floor intersect
+    mesh.position.z += 1e-3;
+
+    const keypoints = createPlaceHolderKeyPoints(
+      scene,
+      dict.localWall.map(x => Vec3.of(x).toBabylon()),
+      mesh,
+      mainView
+    );
+    return new Wall(
+      mesh,
+      dict.localWall,
+      dict.size,
+      keypoints,
+      dict.keyValueMap
+    );
+  }
+}
 
 const RADIUS = Constants.RADIUS;
 const FACES = [
@@ -25,14 +79,14 @@ function createWallMesh(dict, name, scene) {
   const centeredWall = dict.localWall.map(x => Vec3.of(x).toBabylon());
   const middlePoint = Vec3.of(dict.position).toBabylon();
   const tangent = centeredWall[1].subtract(centeredWall[0]).normalize();
-  const normal = new BABYLON.Vector3(-tangent.y, tangent.x, 0);
+  const normal = new Vector3(-tangent.y, tangent.x, 0);
   const shape = [
     centeredWall[0].add(normal.scale(dict.size.width)),
     centeredWall[0].subtract(normal.scale(dict.size.width)),
     centeredWall[1].subtract(normal.scale(dict.size.width)),
     centeredWall[1].add(normal.scale(dict.size.width))
   ];
-  const h = new BABYLON.Vector3(0, 0, dict.size.height);
+  const h = new Vector3(0, 0, dict.size.height);
   const wallMesh = {
     positions: [
       shape[0],
@@ -62,9 +116,7 @@ function createNewMeshFromOldUsingNewPoints(newWall, scene, mesh, item) {
   );
   newWall.position = average.toArray();
   newWall.localWall = newWall.localWall.map(x =>
-    Vec3.of(x)
-      .sub(average)
-      .toArray()
+    Vec3.of(x).sub(average).toArray()
   );
 
   const newMesh = createWallMesh(newWall, mesh.name, scene);
@@ -119,7 +171,7 @@ const createPlaceHolderKeyPoints = (scene, wall, wallMesh, mainView) => {
   wall.forEach((p, i) => {
     const keyPoint = Util3d.createSphere(
       scene,
-      new BABYLON.Color3(0.25, 0.25, 0.25),
+      new Color3(0.25, 0.25, 0.25),
       RADIUS,
       `${wallMesh.name}keyPointWall${i}`,
       true
@@ -127,65 +179,11 @@ const createPlaceHolderKeyPoints = (scene, wall, wallMesh, mainView) => {
     keyPoint.parent = wallMesh;
     keyPoint.position = p;
     keyPoint.index = i;
-    keyPoint.observers = new BABYLON.Observable();
+    keyPoint.observers = new Observable();
     keyPoint.observers.add(getKeyPointObserverFunction(mainView, scene));
     keyPoints.push(keyPoint);
   });
   return keyPoints;
 };
-
-class Wall extends NodeItem {
-  constructor(mesh, localWall, size, keyPoints = {}, keyValueMap = {}) {
-    super(mesh, keyValueMap);
-    this.localWall = localWall;
-    this.size = size;
-    this.keyPoints = keyPoints;
-  }
-
-  toDict() {
-    const dict = super.toDict();
-    dict.localWall = this.localWall;
-    dict.size = this.size;
-    return dict;
-  }
-
-  getType = () => Wall.TYPE;
-
-  static TYPE = "Wall";
-
-  static ofDict(scene, dict = null, mainView = null) {
-    if (!dict) throw "null dictionary describing wall";
-    const name = Maybe.fromNull(dict.name).orSome(
-      `Wall${Math.floor(Math.random() * 1e3)}`
-    );
-    const mesh = createWallMesh(dict, name, scene);
-
-    const material = new BABYLON.StandardMaterial(`WallMaterial${name}`, scene);
-    const color = new BABYLON.Color3(
-      dict.color[0],
-      dict.color[1],
-      dict.color[2]
-    );
-    material.diffuseColor = color;
-    material.emissiveColor = color;
-    mesh.material = material;
-    // babylonjs highlight shader flickers when floor intersect
-    mesh.position.z += 1e-3;
-
-    const keypoints = createPlaceHolderKeyPoints(
-      scene,
-      dict.localWall.map(x => Vec3.of(x).toBabylon()),
-      mesh,
-      mainView
-    );
-    return new Wall(
-      mesh,
-      dict.localWall,
-      dict.size,
-      keypoints,
-      dict.keyValueMap
-    );
-  }
-}
 
 export default Wall;
