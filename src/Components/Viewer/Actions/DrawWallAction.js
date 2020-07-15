@@ -1,69 +1,30 @@
-import * as BABYLON from "babylonjs";
 import Util3d from "../Util3d/Util3d";
 import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
 import Wall from "../NodeItem/Wall";
-import MouseAction from "./MouseAction";
+import MouseKeysAction from "./MouseKeysAction";
 import React from "react";
+import { Color3 } from "@babylonjs/core";
 
 let instance = null;
 
 const TEMP_WALL_NAME = "temp_wall";
 
-class DrawWallAction extends MouseAction {
+class DrawWallAction extends MouseKeysAction {
   constructor() {
     if (instance) return instance;
     super();
     this.key = "drawWall";
-    this.name = "Draw wall";
+    this.name = "Draw wall [W]";
     this.maybeMousePos = Maybe.none();
     this.tempMesh = null;
     this.icon = props => <i className="fas fa-arrows-alt-h" {...props}></i>;
     instance = this;
   }
 
-  static getInstace() {
+  static getInstance() {
     return new DrawWallAction();
   }
-
-  createWall = (
-    wall,
-    name,
-    scene,
-    parentView,
-    is2addInServer = true,
-    size = { width: 0.1, height: 1 },
-    color = new BABYLON.Color3(0.25, 0.25, 0.25)
-  ) => {
-    const rootMesh = parentView.getRootNode().item.mesh;
-
-    const localWall = wall.map(w =>
-      Util3d.computeLocalCoordinateFromMesh(
-        { parent: rootMesh },
-        Vec3.ofBabylon(w)
-      ).toBabylon()
-    );
-
-    const middlePoint = localWall[1].add(localWall[0]).scale(0.5);
-    const centeredWall = localWall.map(w => w.subtract(middlePoint));
-
-    const wallItem = Wall.ofDict(
-      scene,
-      {
-        name: name,
-        position: Vec3.ofBabylon(middlePoint).toArray(),
-        size: size,
-        color: [color.r, color.g, color.b],
-        localWall: centeredWall.map(x => Vec3.ofBabylon(x).toArray())
-      },
-      parentView
-    );
-    wallItem.mesh.parent = rootMesh;
-    if (is2addInServer) {
-      parentView.addNodeItem2Tree(wallItem, rootMesh.name, is2addInServer);
-    }
-    return wallItem.mesh;
-  };
 
   action = parentView => {
     super.action(parentView);
@@ -116,19 +77,61 @@ class DrawWallAction extends MouseAction {
         this.maybeMousePos.forEach(oldMousePos => {
           this.tempMesh.dispose();
           if (oldMousePos.subtract(current).length() > 0.1) {
+            const name = `Wall${Math.floor(Math.random() * 1e3)}`;
             this.createWall(
               [oldMousePos, current],
-              `Wall${Math.floor(Math.random() * 1e3)}`,
+              name,
               scene,
               parentView,
               true
             );
+            parentView.setPropertiesWithName(name);
           }
         });
       });
       this.maybeMousePos = Maybe.none();
       camera.attachControl(memory.canvas, true);
+      parentView.renderMenus();
     });
+  };
+
+  createWall = (
+    wall,
+    name,
+    scene,
+    parentView,
+    is2addInServer = true,
+    size = { width: 0.1, height: 1 },
+    color = new Color3(0.25, 0.25, 0.25)
+  ) => {
+    const rootMesh = parentView.getRootNode().item.mesh;
+
+    const localWall = wall.map(w =>
+      Util3d.computeLocalCoordinatesFromMesh(
+        { parent: rootMesh },
+        Vec3.ofBabylon(w)
+      ).toBabylon()
+    );
+
+    const middlePoint = localWall[1].add(localWall[0]).scale(0.5);
+    const centeredWall = localWall.map(w => w.subtract(middlePoint));
+
+    const wallItem = Wall.ofDict(
+      scene,
+      {
+        name: name,
+        position: Vec3.ofBabylon(middlePoint).toArray(),
+        size: size,
+        color: [color.r, color.g, color.b],
+        localWall: centeredWall.map(x => Vec3.ofBabylon(x).toArray())
+      },
+      parentView
+    );
+    wallItem.mesh.parent = rootMesh;
+    if (is2addInServer) {
+      parentView.addNodeItem2Tree(wallItem, rootMesh.name, is2addInServer);
+    }
+    return wallItem.mesh;
   };
 }
 export default DrawWallAction;

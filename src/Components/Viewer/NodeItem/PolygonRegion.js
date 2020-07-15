@@ -1,13 +1,96 @@
 import NodeItem from "./NodeItem";
 import Vec3 from "../Math/Vec3";
-import * as BABYLON from "babylonjs";
 import Util3d from "../Util3d/Util3d";
 import { Maybe } from "monet";
 import React from "react";
 import { Utils } from "mov.ai-core";
 import Constants from "../Utils/Constants";
+import {
+  Vector3,
+  Observable,
+  Color3,
+  StandardMaterial,
+  Quaternion
+} from "@babylonjs/core";
 
 const RADIUS = Constants.RADIUS;
+const positiveMod = Utils.mod;
+
+class PolygonRegion extends NodeItem {
+  /**
+   * @param {*} mesh
+   * @param {*} localPolygon: is an array of 3-arrays of numbers of the local coordinates in relation to mesh.position and quaternion
+   * @param {*} keyPoints: are the keyPoints meshes array
+   */
+  constructor(mesh, localPolygon, height, keyPoints, keyValueMap = {}) {
+    super(mesh, keyValueMap);
+    this.localPolygon = localPolygon;
+    this.height = height;
+    this.keyPoints = keyPoints;
+  }
+
+  toDict() {
+    const dict = super.toDict();
+    dict.localPolygon = this.localPolygon;
+    dict.height = this.height;
+    return dict;
+  }
+
+  ofDict(scene, dict = null, mainView = null) {
+    return PolygonRegion.ofDict(scene, dict, mainView);
+  }
+
+  getType = () => PolygonRegion.TYPE;
+
+  static TYPE = "PolygonRegion";
+
+  static ofDict(scene, dict = null, mainView = null) {
+    if (!dict || !mainView)
+      throw "null dictionary describing polygon or null mainView";
+
+    const polygon = dict.localPolygon.map(z => Vec3.of(z).toBabylon());
+    const middlePoint = Vec3.of(dict.position).toBabylon();
+
+    const mesh = createExtrudedPolygonMesh(
+      scene,
+      polygon,
+      dict.height,
+      dict.name
+    );
+    mesh.position = middlePoint;
+
+    const material = new StandardMaterial(`PolygonMaterial${dict.name}`, scene);
+    const color = new Color3(dict.color[0], dict.color[1], dict.color[2]);
+    material.diffuseColor = color;
+    material.emissiveColor = color;
+    mesh.material = material;
+    mesh.visibility = 0.5;
+    Maybe.fromNull(dict.quaternion).forEach(quaternion => {
+      const babylonQuaternion = new Quaternion(
+        quaternion[1],
+        quaternion[2],
+        quaternion[3],
+        quaternion[0]
+      );
+      mesh.rotationQuaternion = babylonQuaternion.normalize();
+    });
+
+    const keypoints = createPlaceHolderKeyPoints(
+      scene,
+      polygon,
+      mesh,
+      mainView
+    );
+
+    return new PolygonRegion(
+      mesh,
+      polygon.map(point => [point.x, point.y, point.z]),
+      dict.height,
+      keypoints,
+      dict.keyValueMap
+    );
+  }
+}
 
 /**
  *
@@ -41,7 +124,7 @@ const reverseOrientation = triangleIndice => {
  * @param {*} name
  */
 const createExtrudedPolygonMesh = (scene, polygon, height, name) => {
-  const h = new BABYLON.Vector3(0, 0, height);
+  const h = new Vector3(0, 0, height);
   const polygonRegionMesh = {
     positions: [],
     faces: []
@@ -84,7 +167,7 @@ function defaultKeyPointUpdate(scene, mainView, oldMesh, item) {
   });
 
   return item.keyPoints.map((k, i) => {
-    k.observers = new BABYLON.Observable();
+    k.observers = new Observable();
     k.observers.add(getKeyPointObserverFunction(scene, mainView));
     k.index = i;
     k.name = `${oldMesh.name}keyPoint${i}`;
@@ -128,6 +211,7 @@ function createNewMeshFromOldUsingNewPoints(
 
 const getKeyPointObserverFunction = (scene, mainView) => {
   return ({ updatedPointMesh, is2updateServer }) => {
+    if (!updatedPointMesh.parent) return;
     mainView
       .getNodeFromTree(updatedPointMesh.parent.name)
       .forEach(polygonTreeNode => {
@@ -176,7 +260,7 @@ const addKeyPointInBetween = (scene, keyPointMesh, mainView, orientation) => {
   mainView.getNodeFromTree(name).forEach(pathTreeNode => {
     const item = pathTreeNode.item;
     const numberOfPoints = item.localPolygon.length;
-    const nextIndex = Utils.mod(index + orientation, numberOfPoints);
+    const nextIndex = positiveMod(index + orientation, numberOfPoints);
     const mesh = item.mesh;
     const oldPoints = item.localPolygon.map(x => Vec3.of(x).toBabylon());
 
@@ -233,23 +317,14 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
 
     if (polygon.length > 3) {
       actions.push({
-        icon: props => <i className="fas fa-times" {...props}></i>,
+        icon: props => <i className="fas fa-trash" {...props}></i>,
         action: parentView => {
           deleteKeyPoint(scene, keyPointMesh, parentView);
           parentView.closeContextDial();
         },
-        name: "Delete node"
+        name: "Delete node [DEL]"
       });
     }
-
-    actions.push({
-      icon: props => <i className="fas fa-greater-than" {...props}></i>,
-      action: parentView => {
-        addKeyPointInBetween(scene, keyPointMesh, parentView, 1);
-        parentView.closeContextDial();
-      },
-      name: "Add next"
-    });
 
     actions.push({
       icon: props => <i className="fas fa-less-than" {...props}></i>,
@@ -259,6 +334,15 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
       },
       name: "Add previous"
     });
+
+    actions.push({
+      icon: props => <i className="fas fa-greater-than" {...props}></i>,
+      action: parentView => {
+        addKeyPointInBetween(scene, keyPointMesh, parentView, 1);
+        parentView.closeContextDial();
+      },
+      name: "Add next"
+    });
   });
 
   return actions;
@@ -267,7 +351,7 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
 const createPlaceHolderKeyPoints = (scene, polygon, polygonMesh, mainView) => {
   const keyPoints = [];
   polygon.forEach((p, i) => {
-    const color = new BABYLON.Color3(0.25, 0.25, 0.25);
+    const color = new Color3(0.25, 0.25, 0.25);
     const keyPoint = Util3d.createSphere(
       scene,
       color,
@@ -278,7 +362,7 @@ const createPlaceHolderKeyPoints = (scene, polygon, polygonMesh, mainView) => {
     keyPoint.parent = polygonMesh;
     keyPoint.position = p;
     keyPoint.index = i;
-    keyPoint.observers = new BABYLON.Observable();
+    keyPoint.observers = new Observable();
 
     keyPoints.push(keyPoint);
 
@@ -293,84 +377,5 @@ const createPlaceHolderKeyPoints = (scene, polygon, polygonMesh, mainView) => {
 
   return keyPoints;
 };
-
-class PolygonRegion extends NodeItem {
-  /**
-   * @param {*} mesh
-   * @param {*} localPolygon: is an array of 3-arrays of numbers of the local coordinates in relation to mesh.position and quaternion
-   * @param {*} keyPoints: are the keyPoints meshes array
-   */
-  constructor(mesh, localPolygon, height, keyPoints, keyValueMap = {}) {
-    super(mesh, keyValueMap);
-    this.localPolygon = localPolygon;
-    this.height = height;
-    this.keyPoints = keyPoints;
-  }
-
-  toDict() {
-    const dict = super.toDict();
-    dict.localPolygon = this.localPolygon;
-    dict.height = this.height;
-    return dict;
-  }
-
-  getType = () => PolygonRegion.TYPE;
-
-  static TYPE = "PolygonRegion";
-
-  static ofDict(scene, dict = null, mainView = null) {
-    if (!dict || !mainView)
-      throw "null dictionary describing polygon or null mainView";
-
-    const polygon = dict.localPolygon.map(z => Vec3.of(z).toBabylon());
-    const middlePoint = Vec3.of(dict.position).toBabylon();
-
-    const mesh = createExtrudedPolygonMesh(
-      scene,
-      polygon,
-      dict.height,
-      dict.name
-    );
-    mesh.position = middlePoint;
-
-    const material = new BABYLON.StandardMaterial(
-      `PolygonMaterial${dict.name}`,
-      scene
-    );
-    const color = new BABYLON.Color3(
-      dict.color[0],
-      dict.color[1],
-      dict.color[2]
-    );
-    material.diffuseColor = color;
-    material.emissiveColor = color;
-    mesh.material = material;
-    mesh.visibility = 0.5;
-    Maybe.fromNull(dict.quaternion).forEach(quaternion => {
-      const babylonQuaternion = new BABYLON.Quaternion(
-        quaternion[1],
-        quaternion[2],
-        quaternion[3],
-        quaternion[0]
-      );
-      mesh.rotationQuaternion = babylonQuaternion.normalize();
-    });
-
-    const keypoints = createPlaceHolderKeyPoints(
-      scene,
-      polygon,
-      mesh,
-      mainView
-    );
-
-    return new PolygonRegion(
-      mesh,
-      polygon.map(point => [point.x, point.y, point.z]),
-      dict.height,
-      keypoints,
-      dict.keyValueMap
-    );
-  }
-}
 
 export default PolygonRegion;

@@ -1,4 +1,4 @@
-import * as BABYLON from "babylonjs";
+import { GizmoManager } from "@babylonjs/core";
 
 class GizmoManagerBuilder {
   constructor(scene) {
@@ -36,7 +36,7 @@ class GizmoManagerBuilder {
   }
 
   build() {
-    const gizmoManager = new BABYLON.GizmoManager(this._scene);
+    const gizmoManager = new GizmoManager(this._scene);
     gizmoManager.positionGizmoEnabled = this._isPosition;
     gizmoManager.rotationGizmoEnabled = this._isRotation;
     gizmoManager.boundingBoxGizmoEnabled = this._isBoundingBox;

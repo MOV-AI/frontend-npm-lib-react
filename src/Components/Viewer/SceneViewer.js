@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 import BaseViewer from "./BaseViewer/BaseViewer";
 import PropTypes from "prop-types";
-import { HighlightLayer, Vector3 } from "babylonjs";
+import { HighlightLayer, Vector3 } from "@babylonjs/core";
 import { Maybe } from "monet";
-import Robot from "./NodeItem/Robot";
-import MeshCache from "./Utils/MeshCache";
 import MainViewRetriever from "./MainView/MainViewRetriever";
 import DefaultScene from "./Utils/DefaultScene";
 import GlobalRef from "./NodeItem/GlobalRef";
 import SceneServerUtils from "./Utils/SceneServerUtils";
-import MeshLoader from "./Utils/MeshLoader";
 import TreeServerUtils from "./Utils/TreeServerUtils";
 import AssetsManager from "./AssetsManager/AssetsManager";
+import TreeObject from "./TreeObject/TreeObject";
+import GraphItem from "./NodeItem/GraphItem";
+import DefaultMouseEvents from "./Utils/DefaultMouseEvents";
+import Util3d from "./Util3d/Util3d";
+import Vec3 from "./Math/Vec3";
+import ReactResizeDetector from "react-resize-detector";
 
 //========================================================================================
 /*                                                                                      *
@@ -43,9 +46,15 @@ class SceneViewer extends Component {
 
   getObjectTree = () => this.objectTree;
 
-  setSelectedAction = action => {
+  setSelectedAction = () => {
     /* empty */
   };
+
+  getGraph() {
+    return new TreeObject(this.objectTree).getNode(
+      x => GraphItem.TYPE === x.item.getType()
+    );
+  }
 
   //========================================================================================
   /*                                                                                      *
@@ -60,7 +69,7 @@ class SceneViewer extends Component {
     );
   };
 
-  deleteNodeFromTreeUsingName = (name, is2delInServer = true) => {
+  deleteNodeFromTreeUsingName = () => {
     throw "Delete Node in viewer Exception";
   };
 
@@ -92,8 +101,7 @@ class SceneViewer extends Component {
   };
 
   setCameraToTarget = () => {
-    this.sceneMemory.forEach(memory => {
-      const camera = memory.camera;
+    this.sceneMemory.forEach(({ camera }) => {
       const focusObject = this.props.focusObject.Value;
       this.getNodeFromTree(focusObject).cata(
         () => {
@@ -108,9 +116,59 @@ class SceneViewer extends Component {
         x => {
           console.log("Set Camera, Found Object", x.item.mesh);
           camera.setTarget(x.item.mesh._absolutePosition.clone());
-          camera.beta = 0;
         }
       );
+    });
+  };
+
+  addCanvasEventListeners(canvas) {
+    const events = [
+      {
+        name: "pointerdown",
+        function: evt => this.onPointerDown(evt)
+      },
+      { name: "pointerup", function: evt => this.onPointerUp(evt) },
+      {
+        name: "pointermove",
+        function: evt => this.onPointerMove(evt)
+      }
+    ];
+    events.forEach(event =>
+      canvas.addEventListener(event.name, event.function, false)
+    );
+  }
+
+  onPointerDown = evt => {
+    DefaultMouseEvents.onPointerDown(this)(evt);
+  };
+
+  onPointerUp = evt => {
+    DefaultMouseEvents.onPointerUp(this)(evt);
+  };
+
+  onPointerMove = evt => {
+    DefaultMouseEvents.onPointerMove(this)(evt);
+  };
+
+  getMouseCoordinatesFromRoot() {
+    return this.sceneMemory.flatMap(({ scene, ground }) => {
+      const maybeCurrent = Util3d.getGroundPosition(scene, ground);
+      return maybeCurrent.flatMap(current =>
+        Maybe.fromNull(this.getRootNode()).map(rootNode =>
+          Util3d.computeLocalCoordinatesFromMesh(
+            rootNode.item.mesh,
+            Vec3.ofBabylon(current)
+          ).toBabylon()
+        )
+      );
+    });
+  }
+
+  onResize = (w, h) => {
+    if (w == 0 && h == 0) return;
+    this.getSceneMemory().forEach(({ mouseLocationText }) => {
+      mouseLocationText.left = -w / 2 + w / 17;
+      mouseLocationText.top = -h / 2 + h / 30;
     });
   };
 
@@ -120,15 +178,15 @@ class SceneViewer extends Component {
    *                                                                                      */
   //========================================================================================
 
-  retrieveSceneFromServer = afterLoading => {
+  retrieveSceneFromServer = (afterLoading = () => {}) => {
     SceneServerUtils.retrieveScene(this.sceneName, data => {
       MainViewRetriever.importScene(this, data.result);
-      // TODO: check why we need the hack below
+      // TODO : check why we need the hack below
       setTimeout(afterLoading);
     });
   };
 
-  getAssets = afterLoading => {
+  getAssets = (afterLoading = () => {}) => {
     const assetManager = AssetsManager.getInstance();
     assetManager.addAfterLoad(afterLoading);
     // In the case the assets are already loaded
@@ -137,60 +195,35 @@ class SceneViewer extends Component {
     }
   };
 
-  loadMeshes = (afterLoading = () => {}) => {
-    //TODO: refactor this code, is equal to MainView
-    this.getSceneMemory().forEach(memory => {
-      const engine = memory.engine;
-      const scene = memory.scene;
-      MeshLoader.of(scene).loadMesh(
-        Robot.ROBOT_MESH_NAME,
-        task => {
-          const mesh = Robot.transformMesh(task.loadedMeshes[0], scene);
-          MeshCache.getInstance().put(Robot.ROBOT_MESH_NAME, scene, mesh);
-        },
-        tasks => {
-          engine.runRenderLoop(() => scene.render());
-          afterLoading();
-        }
-      );
-    });
-  };
+  loadScene = () =>
+    this.getAssets(() => this.retrieveSceneFromServer(this.renderScene));
 
-  loadScene = () => {
-    this.loadMeshes(() =>
-      this.getAssets(() =>
-        this.retrieveSceneFromServer(() => this.setCameraToTarget())
-      )
+  renderScene = () => {
+    this.getSceneMemory().forEach(({ engine, scene }) =>
+      engine.runRenderLoop(() => scene.render())
     );
+    this.setCameraToTarget();
   };
 
-  cameraViewObservable = camera => {
-    const isLookingDown = Math.abs(camera.beta) <= 0.01;
-    if (isLookingDown) camera.panningAxis = new Vector3(1, 1, 0);
-    else camera.panningAxis = new Vector3(1, 0, 1);
-  };
-
-  createScene = (engine, canvas) => {
-    const scene = DefaultScene.createScene(engine);
-
+  onSceneReady = scene => {
+    const engine = scene.getEngine();
+    const canvas = engine.getRenderingCanvas();
+    this.addCanvasEventListeners(canvas);
+    const mouseLocationText = DefaultScene.createMouseLocationText(scene);
     this.sceneMemory = Maybe.some({
       engine: engine,
       canvas: canvas,
       scene: scene,
-      camera: DefaultScene.createCamera(scene, canvas, camera =>
-        camera.onViewMatrixChangedObservable.add(() =>
-          this.cameraViewObservable(camera)
-        )
-      ),
+      camera: DefaultScene.createCamera(scene, canvas),
       light: DefaultScene.createLight(scene),
       ground: DefaultScene.createMeshGround(scene),
       gizmoManager: DefaultScene.createGizmo(scene),
       highlightLayer: {
         hl: new HighlightLayer("hl1", scene),
-        lastHlMesh: null
-      }
+        lastHlMeshes: []
+      },
+      mouseLocationText: mouseLocationText
     });
-
     return scene;
   };
 
@@ -211,8 +244,7 @@ class SceneViewer extends Component {
         action: this.setCameraToTarget
       }
     ];
-    predicateAction.map(predAction => {
-      const { propVar, action } = predAction;
+    predicateAction.map(({ propVar, action }) => {
       if (propVar(this.props) !== propVar(prevProps)) {
         action();
       }
@@ -220,12 +252,25 @@ class SceneViewer extends Component {
   };
 
   componentDidMount = () => {
-    console.log("SceneViewer Did Mount!!");
+    console.log("SceneViewer Did Mount!! ");
     this.loadScene();
   };
 
   render() {
-    return <BaseViewer createScene={this.createScene} is2render={false} />;
+    return (
+      <div style={{ display: "flex", flexGrow: 1 }}>
+        <BaseViewer
+          onSceneReady={this.onSceneReady}
+          is2render={false}
+          sceneFactory={DefaultScene.createScene}
+        />
+        <ReactResizeDetector
+          handleWidth
+          handleHeight
+          onResize={this.onResize}
+        />
+      </div>
+    );
   }
 
   //========================================================================================

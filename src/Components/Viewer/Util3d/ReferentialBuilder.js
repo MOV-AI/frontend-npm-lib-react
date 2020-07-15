@@ -1,5 +1,4 @@
-import * as BABYLON from "babylonjs";
-
+import { Mesh, Vector3, Color3, MeshBuilder } from "@babylonjs/core";
 class ReferentialBuilder {
   constructor(scene) {
     this._scene = scene;
@@ -31,47 +30,47 @@ class ReferentialBuilder {
 
   build() {
     const size = this._size;
-    const axisX = BABYLON.Mesh.CreateLines(
+    const axisX = Mesh.CreateLines(
       `axisX${this._name}`,
       [
-        new BABYLON.Vector3.Zero(),
-        new BABYLON.Vector3(size, 0, 0),
-        new BABYLON.Vector3(size * 0.95, 0.05 * size, 0),
-        new BABYLON.Vector3(size, 0, 0),
-        new BABYLON.Vector3(size * 0.95, -0.05 * size, 0)
+        new Vector3.Zero(),
+        new Vector3(size, 0, 0),
+        new Vector3(size * 0.95, 0.05 * size, 0),
+        new Vector3(size, 0, 0),
+        new Vector3(size * 0.95, -0.05 * size, 0)
       ],
       this._scene
     );
-    axisX.color = new BABYLON.Color3(1, 0, 0);
+    axisX.color = new Color3(1, 0, 0);
     axisX.isPickable = false;
-    const axisY = BABYLON.Mesh.CreateLines(
+    const axisY = Mesh.CreateLines(
       `axisY${this._name}`,
       [
-        new BABYLON.Vector3.Zero(),
-        new BABYLON.Vector3(0, size, 0),
-        new BABYLON.Vector3(-0.05 * size, size * 0.95, 0),
-        new BABYLON.Vector3(0, size, 0),
-        new BABYLON.Vector3(0.05 * size, size * 0.95, 0)
+        new Vector3.Zero(),
+        new Vector3(0, size, 0),
+        new Vector3(-0.05 * size, size * 0.95, 0),
+        new Vector3(0, size, 0),
+        new Vector3(0.05 * size, size * 0.95, 0)
       ],
       this._scene
     );
-    axisY.color = new BABYLON.Color3(0, 1, 0);
+    axisY.color = new Color3(0, 1, 0);
     axisY.isPickable = false;
-    const axisZ = BABYLON.Mesh.CreateLines(
+    const axisZ = Mesh.CreateLines(
       `axisZ${this._name}`,
       [
-        new BABYLON.Vector3.Zero(),
-        new BABYLON.Vector3(0, 0, size),
-        new BABYLON.Vector3(0, -0.05 * size, size * 0.95),
-        new BABYLON.Vector3(0, 0, size),
-        new BABYLON.Vector3(0, 0.05 * size, size * 0.95)
+        new Vector3.Zero(),
+        new Vector3(0, 0, size),
+        new Vector3(0, -0.05 * size, size * 0.95),
+        new Vector3(0, 0, size),
+        new Vector3(0, 0.05 * size, size * 0.95)
       ],
       this._scene
     );
-    axisZ.color = new BABYLON.Color3(0, 0, 1);
+    axisZ.color = new Color3(0, 0, 1);
     axisZ.isPickable = false;
 
-    const localOrigin = BABYLON.MeshBuilder.CreateBox(
+    const localOrigin = MeshBuilder.CreateBox(
       this._name,
       { size: this._boxParams.size },
       this._scene

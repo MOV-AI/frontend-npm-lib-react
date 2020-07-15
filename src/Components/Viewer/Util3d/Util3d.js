@@ -18,17 +18,64 @@ import {
   Mesh,
   Matrix,
   MeshBuilder,
-  VertexBuffer
-} from "babylonjs";
-
-const randomDigits = () => {
-  return Math.floor(Math.random() * 1e3);
-};
+  VertexBuffer,
+  Curve3
+} from "@babylonjs/core";
+import GlobalRef from "../NodeItem/GlobalRef";
 
 class Util3d {
-  static computeLocalCoordinateFromMesh(mesh, positionInWorldCoord) {
+  static getWorldCoordinates(mesh, localPosition) {
+    if (mesh.parent && mesh.parent.name === GlobalRef.NAME)
+      return Vec3.ofBabylon(localPosition);
+    const meshParent = mesh.parent;
+    const meshParentPos = Vec3.ofBabylon(meshParent.position);
+    const meshParentRotMat = Util3d.getRotationMatrix(meshParent);
+    const meshParentScaling = Vec3.ofBabylon(meshParent.scaling);
+    return meshParentRotMat
+      .prodVec(
+        meshParentScaling.mul(
+          Util3d.getWorldCoordinates(mesh.parent, localPosition)
+        )
+      )
+      .add(meshParentPos);
+  }
+
+  static getBabylonCoordinates(positionInWorld) {
+    return GlobalRef.forwardCoordinates(positionInWorld);
+  }
+
+  /**
+   *
+   * @param {*} mesh
+   * @param {*} worldPosition: Vector3
+   */
+  static getLocalCoordinatesFromWorld(mesh, worldPosition) {
+    if (mesh.parent && mesh.parent.name === GlobalRef.NAME)
+      return Vec3.ofBabylon(worldPosition);
+    const meshParent = mesh.parent;
+    const meshParentPos = Vec3.ofBabylon(meshParent.position);
+    const meshParentRotMat = Util3d.getRotationMatrix(meshParent);
+    const meshParentScaling = Vec3.ofBabylon(meshParent.scaling);
+    return meshParentScaling
+      .map(z => 1 / z)
+      .mul(
+        meshParentRotMat.dotVec(
+          Util3d.getLocalCoordinatesFromWorld(meshParent, worldPosition).sub(
+            meshParentPos
+          )
+        )
+      );
+  }
+
+  /**
+   *
+   * @param {*} mesh
+   * @param {*} worldPosition: Vec3
+   */
+  static computeLocalCoordinatesFromMesh(mesh, worldPosition) {
+    /// WARNING: very similar with getLocalCoordinatesFromWorld
     if (!mesh.parent) {
-      return positionInWorldCoord;
+      return worldPosition;
     }
     const meshParent = mesh.parent;
     const meshParentPos = Vec3.ofBabylon(meshParent.position);
@@ -39,10 +86,9 @@ class Util3d {
 
     return inverseScaling.mul(
       meshParentRotMat.dotVec(
-        Util3d.computeLocalCoordinateFromMesh(
-          meshParent,
-          positionInWorldCoord
-        ).sub(meshParentPos)
+        Util3d.computeLocalCoordinatesFromMesh(meshParent, worldPosition).sub(
+          meshParentPos
+        )
       )
     );
   }
@@ -113,7 +159,7 @@ class Util3d {
   static createOrientedCone = (
     scene,
     u = new Vector3(1, 0, 0),
-    color = Color3(0.5, 0.5, 0.5),
+    color = Color3.Gray(),
     name = `OrientedCone${randomDigits()}`,
     isPickable = true,
     segments = 16
@@ -167,15 +213,17 @@ class Util3d {
 
   static createSphere = (
     scene,
-    color = Color3(0.5, 0.5, 0.5),
+    color = Color3.Gray(),
     diameter = 1,
     name = `Sphere${randomDigits()}`,
     isPickable = true
   ) => {
     const sphere = Mesh.CreateSphere(name, 16, diameter, scene);
-    const material = new StandardMaterial(`SphereMaterial${name}`, scene);
-    material.diffuseColor = color;
-    material.emissiveColor = color;
+    const material = Util3d.getMaterialFromColor(
+      color,
+      scene,
+      `SphereMaterial${name}`
+    );
     sphere.material = material;
     sphere.isPickable = isPickable;
     return sphere;
@@ -183,7 +231,7 @@ class Util3d {
 
   static createBox = (
     scene,
-    color = Color3(0.5, 0.5, 0.5),
+    color = Color3.Gray(),
     size = Box.DEFAULT_SIZE,
     name = `Box${randomDigits()}`,
     isPickable = true
@@ -195,6 +243,33 @@ class Util3d {
     box.material = material;
     box.isPickable = isPickable;
     return box;
+  };
+
+  static createTubeFromPoints = (
+    scene,
+    points,
+    color = Color3.Gray(),
+    radius = 1,
+    name = `Tube${randomDigits()}`,
+    isPickable = true
+  ) => {
+    const mesh = MeshBuilder.CreateTube(
+      name,
+      {
+        path: points,
+        radius: radius,
+        sideOrientation: Mesh.DOUBLESIDE,
+        updatable: true
+      },
+      scene
+    );
+    mesh.material = Util3d.getMaterialFromColor(
+      color,
+      scene,
+      `Material${name}`
+    );
+    mesh.isPickable = isPickable;
+    return mesh;
   };
 
   static positionalLightBuilder = scene => {
@@ -224,7 +299,7 @@ class Util3d {
    * @param {Ground} ground a Babylon mesh that represents the ground
    * @returns {Maybe} a maybe 3-vector representing the mouse ground intersection
    */
-  static getGroundPosition = function(scene, ground) {
+  static getGroundPosition = function (scene, ground) {
     // Use a predicate to get position on the ground
     const pickinfo = scene.pick(
       scene.pointerX,
@@ -332,6 +407,55 @@ class Util3d {
       [0, 0, 0].map(x => a + (b - a) * Math.random())
     );
   }
+
+  static getMaterialFromColor(
+    color,
+    scene,
+    name = `MaterialFromColor${randomDigits()}`
+  ) {
+    const material = new StandardMaterial(name, scene);
+    material.diffuseColor = color;
+    material.emissiveColor = color;
+    return material;
+  }
+
+  static piecewiseCurveDistance = curve => {
+    let distance = 0;
+    for (let i = 0; i < curve.length - 1; i++) {
+      const v = curve[i + 1].subtract(curve[i]);
+      distance += v.length();
+    }
+    return distance;
+  };
+
+  static getCurveOrientations = curve => {
+    const orientations = [];
+    for (let i = 0; i < curve.length - 1; i++) {
+      const v = curve[i + 1].subtract(curve[i]);
+      orientations.push(Math.atan2(v.y, v.x));
+    }
+    orientations.push(orientations[orientations.length - 1]);
+    return orientations;
+  };
+
+  static getSplineFromCurve = curve => {
+    const nbPoints = Math.ceil(curve.length);
+    const closed = false;
+    return {
+      points: Curve3.CreateCatmullRomSpline(curve, nbPoints, closed).getPoints()
+    };
+  };
+
+  static splineObj2redis = splineObj => {
+    const orientations = Util3d.getCurveOrientations(splineObj.points);
+    return splineObj.points.map((x, i) => {
+      return [x.x, x.y, orientations[i]];
+    });
+  };
 }
+
+const randomDigits = () => {
+  return Math.floor(Math.random() * 1e3);
+};
 
 export default Util3d;

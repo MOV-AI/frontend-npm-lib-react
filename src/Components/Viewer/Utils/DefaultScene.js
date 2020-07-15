@@ -7,7 +7,7 @@ import {
   StandardMaterial,
   Mesh,
   Space
-} from "babylonjs";
+} from "@babylonjs/core";
 import { TextBlock, AdvancedDynamicTexture } from "@babylonjs/gui/2D";
 import Util3d from "../Util3d/Util3d";
 
@@ -25,7 +25,7 @@ class DefaultScene {
     return gizmoManager;
   };
 
-  static createCamera = (scene, canvas, forEach) => {
+  static createCamera = (scene, canvas, forEach = camera => {}) => {
     const COLLISION_RADIUS = 1;
     const camera = Util3d.cameraBuilder(scene)
       .sphericalCoordinates(new Vector3(0, 0, 14))
@@ -33,13 +33,17 @@ class DefaultScene {
       .name("camera")
       .build();
     camera.attachControl(canvas, false);
-    camera.inertia = 0.85;
+    camera.inertia = 0.7;
     camera.collisionRadius = new Vector3(
       COLLISION_RADIUS,
       COLLISION_RADIUS,
       COLLISION_RADIUS
     );
+    camera.panningInertia = 0.5;
     camera.checkCollisions = true;
+    camera.panningSensibility = 0;
+    camera.lowerRadiusLimit = 2;
+
     forEach(camera);
     return camera;
   };
@@ -79,7 +83,7 @@ class DefaultScene {
     const text = new TextBlock();
     text.text = "";
     text.color = "white";
-    text.fontSize = 11;
+    text.fontSize = 17;
     text.left = -560;
     text.top = -145;
     advancedTexture.addControl(text);

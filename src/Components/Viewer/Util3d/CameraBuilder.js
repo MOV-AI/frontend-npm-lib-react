@@ -1,4 +1,4 @@
-import * as BABYLON from "babylonjs";
+import { ArcRotateCamera } from "@babylonjs/core";
 
 class CameraBuilder {
   constructor(scene) {
@@ -29,7 +29,7 @@ class CameraBuilder {
       if (x === null)
         throw `There are missing variables to build a camera, e.g ${x}`;
     });
-    return new BABYLON.ArcRotateCamera(
+    return new ArcRotateCamera(
       this._name,
       this._sphericalCoordinates.x,
       this._sphericalCoordinates.y,

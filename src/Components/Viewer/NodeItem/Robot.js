@@ -2,7 +2,7 @@ import Vec3 from "../Math/Vec3";
 import Util3d from "../Util3d/Util3d";
 import { MasterDB } from "mov.ai-core";
 import AssetNodeItem from "./AssetNodeItem";
-import { Axis, Space, Vector3, Quaternion, Color3 } from "babylonjs";
+import { Axis, Space, Vector3, Quaternion, Color3 } from "@babylonjs/core";
 
 class Robot extends AssetNodeItem {
   static ROBOT_MESH_NAME = "Tugbot.stl";
@@ -67,6 +67,12 @@ class Robot extends AssetNodeItem {
 
   getType = () => Robot.TYPE;
 
+  //========================================================================================
+  /*                                                                                      *
+   *                                   Static Functions                                   *
+   *                                                                                      */
+  //========================================================================================
+
   static TYPE = "Robot";
 
   static getDefaultAnimator = parentView => (robot, dt) => {
@@ -124,18 +130,11 @@ class Robot extends AssetNodeItem {
    * Side effect function
    */
   static transformMesh(mesh, scene) {
-    const thetaZ = Math.PI;
+    const thetaX = Math.PI / 2;
     const translate = 0.25;
     const boundScale = 1.9;
 
     const boundingSphere = mesh.getBoundingInfo().boundingSphere;
-    const pivotSphere = Util3d.createSphere(
-      scene,
-      new Color3(0.0, 0.0, 0.0),
-      0.25 * boundingSphere.radius,
-      `pivotSphere${mesh.name}`,
-      false
-    );
     mesh.position.set(
       -boundingSphere.center.x,
       -boundingSphere.center.y,
@@ -154,7 +153,7 @@ class Robot extends AssetNodeItem {
       1 / boundingSphere.radius
     ).toBabylon();
 
-    tfSphereMesh.addRotation(0, 0, thetaZ);
+    tfSphereMesh.addRotation(thetaX, 0, 0);
     tfSphereMesh.position.set(0, 0, translate);
     const spherePlaceHolder = Util3d.createSphere(
       scene,
@@ -165,8 +164,7 @@ class Robot extends AssetNodeItem {
     );
     spherePlaceHolder.visibility = 0.1;
 
-    mesh.parent = pivotSphere;
-    pivotSphere.parent = tfSphereMesh;
+    mesh.parent = tfSphereMesh;
     tfSphereMesh.parent = spherePlaceHolder;
     return spherePlaceHolder;
   }

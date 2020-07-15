@@ -5,51 +5,183 @@ import React from "react";
 import { Maybe } from "monet";
 import Constants from "../Utils/Constants";
 import {
-  Curve3,
   Observable,
   Color3,
   MeshBuilder,
-  StandardMaterial,
   Quaternion,
   Vector3
-} from "babylonjs";
+} from "@babylonjs/core";
 
 const RADIUS = Constants.RADIUS;
-const POINTS_DENSITY = 2;
 
-const piecewiseCurveDistance = curve => {
-  let distance = 0;
-  for (let i = 0; i < curve.length - 1; i++) {
-    const v = curve[i + 1].subtract(curve[i]);
-    distance += v.length();
+class Path extends NodeItem {
+  /**
+   * @param {*} mesh
+   * @param {*} localPath: is an array of 3-arrays of numbers of the local coordinates in relation to mesh.position and quaternion
+   * @param {*} keyPoints: are the keyPoints meshes array
+   * @param {*} splinePath: is an array of 3-arrays of numbers of the local coordinates in relation to mesh.position and quaternion
+   */
+  constructor(mesh, localPath, keyPoints, splinePath, keyValueMap = {}) {
+    super(mesh, keyValueMap);
+    // Array<Vector3> points in relation to its mean
+    this.localPath = localPath;
+    // Array<Meshes> representing key points of the curve
+    this.keyPoints = keyPoints;
+    // spline points from local path
+    this.splinePath = splinePath;
+    this.selectedKeyPointIndex = -1;
   }
-  return distance;
-};
 
-const getCurveOrientations = curve => {
-  const orientations = [];
-  for (let i = 0; i < curve.length - 1; i++) {
-    const v = curve[i + 1].subtract(curve[i]);
-    orientations.push(Math.atan2(v.y, v.x));
+  toDict() {
+    const dict = super.toDict();
+    dict.localPath = this.localPath;
+    dict.splinePath = this.splinePath;
+    return dict;
   }
-  orientations.push(orientations[orientations.length - 1]);
-  return orientations;
-};
 
-const getSplineFromCurve = curve => {
-  const distance = piecewiseCurveDistance(curve);
-  const nbPoints = Math.ceil(distance * POINTS_DENSITY);
-  const closed = false;
-  return {
-    points: Curve3.CreateCatmullRomSpline(curve, nbPoints, closed).getPoints()
-  };
-};
+  toForm() {
+    const schema = super.toForm();
+    if (this.selectedKeyPointIndex >= 0) {
+      schema.jsonSchema.properties["selectedKeyPoint"] = {
+        type: "object",
+        title: `KeyPoint ${this.selectedKeyPointIndex}`,
+        properties: {
+          x: {
+            type: "number",
+            title: "x"
+          },
+          y: {
+            type: "number",
+            title: "y"
+          },
+          z: {
+            type: "number",
+            title: "z"
+          }
+        }
+      };
 
-const splineObj2redis = splineObj => {
-  const orientations = getCurveOrientations(splineObj.points);
-  return splineObj.points.map((x, i) => {
-    return [x.x, x.y, orientations[i]];
-  });
+      schema.uiSchema["selectedKeyPoint"] = {
+        "ui:widget": "collapse"
+      };
+      schema.uiSchema["position"] = { "ui:widget": "hidden" };
+      schema.uiSchema["quaternion"] = { "ui:widget": "hidden" };
+      schema.uiSchema["color"] = { "ui:widget": "hidden" };
+      schema.uiSchema["annotations"] = { "ui:widget": "hidden" };
+      const selectedMesh = this.keyPoints[this.selectedKeyPointIndex];
+      const position = Util3d.getWorldCoordinates(
+        selectedMesh,
+        selectedMesh.position
+      ).toArray();
+      schema.data["selectedKeyPoint"] = {
+        x: position[0],
+        y: position[1],
+        z: position[2]
+      };
+      return schema;
+    }
+    return schema;
+  }
+
+  ofForm(form) {
+    super.ofForm(form);
+    if (this.selectedKeyPointIndex >= 0) {
+      const selectedKeyPoint = this.keyPoints[this.selectedKeyPointIndex];
+      const formPosition = form.selectedKeyPoint;
+      const newPosInWorldCoordinates = Vector3.FromArray(
+        [formPosition.x, formPosition.y, formPosition.z].map(Number.parseFloat)
+      );
+      const localPos = Util3d.getLocalCoordinatesFromWorld(
+        selectedKeyPoint,
+        newPosInWorldCoordinates
+      ).toArray();
+      selectedKeyPoint.position = new Vector3(
+        localPos[0],
+        localPos[1],
+        localPos[2]
+      );
+      selectedKeyPoint.observers.notifyObservers({
+        updatedPointMesh: selectedKeyPoint,
+        is2updateServer: false
+      });
+    }
+  }
+
+  ofDict(scene, dict = null, mainView = null) {
+    return Path.ofDict(scene, dict, mainView);
+  }
+
+  getType = () => Path.TYPE;
+
+  static TYPE = "Path";
+
+  static ofDict(scene, dict = null, mainView = null) {
+    if (!dict || !mainView)
+      throw "null dictionary describing path or null mainView";
+
+    const name = dict.name;
+    const curve = dict.localPath.map(z => Vec3.of(z).toBabylon());
+    const spline = Util3d.getSplineFromCurve(curve);
+    const { points } = spline;
+    let mesh = null;
+    //hack
+    if (points.length === 1) {
+      mesh = MeshBuilder.CreateLines(
+        name,
+        { points: points, updatable: true },
+        scene
+      );
+    } else {
+      mesh = Util3d.createTubeFromPoints(
+        scene,
+        points,
+        Color3.Gray(),
+        RADIUS / 8,
+        name
+      );
+    }
+    mesh.position = Vec3.of(dict.position).toBabylon();
+    mesh.material = Util3d.getMaterialFromColor(
+      Color3.FromArray(dict.color),
+      scene,
+      `PathMaterial${name}`
+    );
+    mesh.rotationQuaternion = Maybe.fromNull(dict.quaternion)
+      .map(quaternion =>
+        new Quaternion(
+          quaternion[1],
+          quaternion[2],
+          quaternion[3],
+          quaternion[0]
+        ).normalize()
+      )
+      .orSome(Quaternion.Identity());
+    const splinePath = Util3d.splineObj2redis(spline);
+    const keyPoints = createPlaceHolderKeyPoints(
+      scene,
+      { ...dict, mesh, splinePath },
+      mainView
+    );
+
+    const path2return = new Path(
+      mesh,
+      curve.map(point => [point.x, point.y, point.z]),
+      keyPoints,
+      splinePath,
+      dict.keyValueMap
+    );
+    mesh.onClick = getMeshOnClick(mainView, path2return);
+    return path2return;
+  }
+}
+
+export default Path;
+
+const getMeshOnClick = (mainView, nodeItem) => () => {
+  mainView.closeContextDial();
+  mainView
+    .getNodeFromTree(nodeItem.name)
+    .forEach(node => (node.item.selectedKeyPointIndex = -1));
 };
 
 function defaultKeyPointUpdate(scene, mainView, oldMesh, item) {
@@ -60,8 +192,6 @@ function defaultKeyPointUpdate(scene, mainView, oldMesh, item) {
     c.parent = item.mesh;
   });
   return item.keyPoints.map((k, i) => {
-    k.observers = new Observable();
-    k.observers.add(getKeyPointObserverFunction(scene, mainView));
     k.index = i;
     k.name = `${oldMesh.name}keyPointSpline${i}`;
     k.position = Vec3.of(item.localPath[i]).toBabylon();
@@ -85,42 +215,50 @@ function defaultKeyPointUpdate(scene, mainView, oldMesh, item) {
 function createNewMeshFromOldUsingNewPoints(
   newPoints,
   scene,
-  mesh,
+  oldMesh,
   item,
   mainView,
   keyPointUpdateFunction = defaultKeyPointUpdate
 ) {
   const average = Util3d.pointAverage(newPoints);
-  console.log(`Old average ${mesh.position}, average ${average}`)
   newPoints = newPoints.map(x => x.subtract(average));
 
-  const spline = getSplineFromCurve(newPoints);
-  const newMesh = MeshBuilder.CreateLines(
-    mesh.name,
-    { points: spline.points, updatable: true },
-    scene
+  const spline = Util3d.getSplineFromCurve(newPoints);
+  // const newMesh = MeshBuilder.CreateLines(
+  //   oldMesh.name,
+  //   { points: spline.points, updatable: true },
+  //   scene
+  // );
+
+  const newMesh = Util3d.createTubeFromPoints(
+    scene,
+    spline.points,
+    Color3.Gray(),
+    RADIUS / 8,
+    oldMesh.name
   );
 
-  newMesh.position = mesh.position;
-  newMesh.rotationQuaternion = mesh.rotationQuaternion;
+  newMesh.position = oldMesh.position;
+  newMesh.rotationQuaternion = oldMesh.rotationQuaternion;
   newMesh.locallyTranslate(average);
-  newMesh.material = mesh.material;
-  newMesh.visibility = mesh.visibility;
-  newMesh.parent = mesh.parent;
+  newMesh.material = oldMesh.material;
+  newMesh.visibility = oldMesh.visibility;
+  newMesh.parent = oldMesh.parent;
+  newMesh.onClick = oldMesh.onClick;
 
   item.localPath = newPoints.map(x => Vec3.ofBabylon(x).toArray());
-  item.splinePath = splineObj2redis(spline);
+  item.splinePath = Util3d.splineObj2redis(spline);
   item.mesh = newMesh;
 
-  item.keyPoints = keyPointUpdateFunction(scene, mainView, mesh, item);
+  item.keyPoints = keyPointUpdateFunction(scene, mainView, oldMesh, item);
 
-  // dispose old mesh
-  mesh.dispose();
+  oldMesh.dispose();
   return newPoints;
 }
 
 const getKeyPointObserverFunction = (scene, mainView) => {
   return ({ updatedPointMesh, is2updateServer }) => {
+    if (!updatedPointMesh.parent) return;
     mainView
       .getNodeFromTree(updatedPointMesh.parent.name)
       .forEach(pathTreeNode => {
@@ -138,8 +276,17 @@ const getKeyPointObserverFunction = (scene, mainView) => {
           mainView
         );
 
+        if (index > 0 && index < newPoints.length - 1) {
+          // we know by construction that this keyPoint has children
+          mainView.highlightMeshInScene([item.keyPoints[index]._children[0]]);
+        }
+
         if (is2updateServer) {
           mainView.updateNodeInServer(mesh.name);
+          mainView.getNodeFromTree(mesh.name).forEach(node => {
+            node.item.selectedKeyPointIndex = index;
+            mainView.setProperties(node.item.toForm());
+          });
         }
       });
   };
@@ -174,7 +321,6 @@ function onAddNewPointKeyPointUpdate(scene, mainView, oldMesh, item) {
   // used when new keypoint is added
   return createPlaceHolderKeyPoints(scene, item, mainView);
 }
-
 /**
  *
  * @param {*} scene
@@ -196,10 +342,7 @@ const addKeyPointInBetween = (scene, keyPointMesh, mainView, orientation) => {
 
     if (nextIndex < 0) {
       newPoints = [
-        oldPoints[0]
-          .scale(3)
-          .subtract(oldPoints[1])
-          .scale(0.5)
+        oldPoints[0].scale(3).subtract(oldPoints[1]).scale(0.5)
       ].concat(oldPoints);
     } else if (nextIndex > numberOfPoints - 1) {
       newPoints = oldPoints.concat([
@@ -241,14 +384,23 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
 
     if (curve.length !== 2) {
       actions.push({
-        icon: props => <i className="fas fa-times" {...props}></i>,
+        icon: props => <i className="fas fa-trash" {...props}></i>,
         action: parentView => {
           deleteKeyPoint(scene, keyPointMesh, parentView);
           parentView.closeContextDial();
         },
-        name: "Delete node"
+        name: "Delete node [DEL]"
       });
     }
+
+    actions.push({
+      icon: props => <i className="fas fa-less-than" {...props}></i>,
+      action: parentView => {
+        addKeyPointInBetween(scene, keyPointMesh, parentView, -1);
+        parentView.closeContextDial();
+      },
+      name: "Add previous"
+    });
 
     actions.push({
       icon: props => <i className="fas fa-greater-than" {...props}></i>,
@@ -257,14 +409,6 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
         parentView.closeContextDial();
       },
       name: "Add next"
-    });
-    actions.push({
-      icon: props => <i className="fas fa-less-than" {...props}></i>,
-      action: parentView => {
-        addKeyPointInBetween(scene, keyPointMesh, parentView, -1);
-        parentView.closeContextDial();
-      },
-      name: "Add previous"
     });
   });
 
@@ -287,7 +431,7 @@ const createPlaceHolderKeyPoints = (scene, item, mainView) => {
       return s;
     };
 
-    const keyPoint = i == 0 || i == curve.length - 1 ? sphere() : cone();
+    const keyPoint = i === 0 || i === curve.length - 1 ? sphere() : cone();
     keyPoint.parent = curveMesh;
     keyPoint.position = p;
     keyPoint.index = i;
@@ -306,86 +450,14 @@ const createPlaceHolderKeyPoints = (scene, item, mainView) => {
   return keyPoints;
 };
 
-class Path extends NodeItem {
-  /**
-   * @param {*} mesh
-   * @param {*} localPath: is an array of 3-arrays of numbers of the local coordinates in relation to mesh.position and quaternion
-   * @param {*} keyPoints: are the keyPoints meshes array
-   * @param {*} splinePath: is an array of 3-arrays of numbers of the local coordinates in relation to mesh.position and quaternion
-   */
-  constructor(mesh, localPath, keyPoints, splinePath, keyValueMap = {}) {
-    super(mesh, keyValueMap);
-    this.localPath = localPath;
-    this.keyPoints = keyPoints;
-    this.splinePath = splinePath;
-  }
-
-  toDict() {
-    const dict = super.toDict();
-    dict.localPath = this.localPath;
-    dict.splinePath = this.splinePath;
-    return dict;
-  }
-
-  getType = () => Path.TYPE;
-
-  static TYPE = "Path";
-
-  static ofDict(scene, dict = null, mainView = null) {
-    if (!dict || !mainView)
-      throw "null dictionary describing path or null mainView";
-
-    const name = dict.name;
-    const curve = dict.localPath.map(z => Vec3.of(z).toBabylon());
-    const middlePoint = Vec3.of(dict.position).toBabylon();
-    const spline = getSplineFromCurve(curve);
-
-    const mesh = MeshBuilder.CreateLines(
-      name,
-      { points: spline.points, updatable: true },
-      scene
-    );
-    mesh.position = middlePoint;
-
-    const material = new StandardMaterial(`PathMaterial${name}`, scene);
-    const color = new Color3(dict.color[0], dict.color[1], dict.color[2]);
-    material.diffuseColor = color;
-    material.emissiveColor = color;
-    mesh.material = material;
-    Maybe.fromNull(dict.quaternion).forEach(quaternion => {
-      const babylonQuaternion = new Quaternion(
-        quaternion[1],
-        quaternion[2],
-        quaternion[3],
-        quaternion[0]
-      );
-      mesh.rotationQuaternion = babylonQuaternion.normalize();
-    });
-
-    const splinePath = splineObj2redis(spline);
-    const keypoints = createPlaceHolderKeyPoints(
-      scene,
-      { ...dict, mesh, splinePath },
-      mainView
-    );
-
-    return new Path(
-      mesh,
-      curve.map(point => [point.x, point.y, point.z]),
-      keypoints,
-      splinePath,
-      dict.keyValueMap
-    );
-  }
-}
-
-export default Path;
-
 function getConeMesh(scene, color, curveMesh, i, spline, p) {
   return () => {
     const index = spline
       .map(z => p.subtract(z).length())
-      .findIndex(z => z < 1e-5);
+      .reduce((e, x, i) => (e.value < x ? e : { value: x, index: i }), {
+        value: Number.MAX_VALUE,
+        index: -1
+      }).index;
     const u = spline[index + 1]
       .subtract(spline[index])
       .normalize()

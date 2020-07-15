@@ -1,7 +1,7 @@
 import NodeItem from "./NodeItem";
-import * as BABYLON from "babylonjs";
 import { Maybe } from "monet";
 import Util3d from "../Util3d/Util3d";
+import { Color3 } from "@babylonjs/core";
 
 class Box extends NodeItem {
   static DEFAULT_SIZE = 0.5;
@@ -17,6 +17,10 @@ class Box extends NodeItem {
     return dict;
   }
 
+  ofDict(scene, dict = null, mainView = null) {
+    return Box.ofDict(scene, dict, mainView);
+  }
+
   getType = () => Box.TYPE;
 
   static TYPE = "Box";
@@ -24,18 +28,18 @@ class Box extends NodeItem {
   static ofDict(scene, dict = null, mainView = null) {
     const maybeDict = Maybe.fromNull(dict);
     const size = maybeDict
-      .flatMap(z => Maybe.fromNull(z.size))
+      .flatMap((z) => Maybe.fromNull(z.size))
       .orSome(Box.DEFAULT_SIZE);
     const name = maybeDict
-      .flatMap(z => Maybe.fromNull(z.name))
+      .flatMap((z) => Maybe.fromNull(z.name))
       .orSome(`Box${Math.floor(Math.random() * 1e3)}`);
     const keyValueMap = maybeDict
-      .flatMap(d => Maybe.fromNull(d.keyValueMap))
+      .flatMap((d) => Maybe.fromNull(d.keyValueMap))
       .orUndefined();
 
     const boxMesh = Util3d.createBox(
       scene,
-      new BABYLON.Color3(Math.random(), Math.random(), Math.random()),
+      new Color3(Math.random(), Math.random(), Math.random()),
       size,
       name
     );
