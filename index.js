@@ -14,6 +14,7 @@ import SceneViewer from "./src/Components/Viewer/SceneViewer";
 import Select from "./src/Components/Select";
 import { snackbar } from "./src/Components/Snackbar/Snackbar";
 import Themes from "./src/styles/Themes";
+import Style from "./src/styles/Style";
 
 export {
   Button,
@@ -31,5 +32,6 @@ export {
   Breadcrumb,
   SceneViewer,
   Select,
-  snackbar
+  snackbar,
+  Style
 };

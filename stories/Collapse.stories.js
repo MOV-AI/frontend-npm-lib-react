@@ -1,7 +1,7 @@
 import React from "react";
 import Collapse from "../src/Components/Collapse";
 import { List } from "@material-ui/core";
-import { Utils } from "mov.ai-core";
+import { Utils } from "mov-fe-lib-core";
 
 export default {
   title: "Collapse"

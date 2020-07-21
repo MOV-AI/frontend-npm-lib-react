@@ -1,6 +1,6 @@
 import Vec3 from "../Math/Vec3";
 import Util3d from "../Util3d/Util3d";
-import { MasterDB } from "mov.ai-core";
+import { MasterDB } from "mov-fe-lib-core";
 import AssetNodeItem from "./AssetNodeItem";
 import { Axis, Space, Vector3, Quaternion, Color3 } from "@babylonjs/core";
 

@@ -1,6 +1,6 @@
 import Action from "./Action";
 import React from "react";
-import { MasterDB } from "mov.ai-core";
+import { MasterDB } from "mov-fe-lib-core";
 import Constants from "../Utils/Constants";
 import { ACTIONS } from "../MainView/MainViewActions";
 import MeshLoader from "../Utils/MeshLoader";

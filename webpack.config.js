@@ -27,7 +27,7 @@ module.exports = {
               "@babel/plugin-proposal-json-strings",
               [
                 "@babel/plugin-transform-runtime",
-                { corejs: 3, useESModules: true, helpers: true }
+                { useESModules: true, helpers: true }
               ]
             ]
           }

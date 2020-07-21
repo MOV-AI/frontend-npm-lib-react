@@ -8,7 +8,7 @@ import GlobalRef from "../NodeItem/GlobalRef";
 import { Vector3 } from "@babylonjs/core";
 import DefaultScene from "../Utils/DefaultScene";
 import { ACTIONS } from "../MainView/MainViewActions";
-import { MasterDB } from "mov.ai-core";
+import { MasterDB } from "mov-fe-lib-core";
 import Constants from "../Utils/Constants";
 import MapLoader from "../AssetsManager/MapLoader";
 
