@@ -1,6 +1,6 @@
 import { Maybe } from "monet";
 import { ASSETS_TYPES, AssetsTypesFactory } from "../Utils/AssetsTypesFactory";
-import { MasterDB } from "mov.ai-core";
+import { MasterDB } from "mov-fe-lib-core";
 import MapLoader from "./MapLoader";
 
 /**

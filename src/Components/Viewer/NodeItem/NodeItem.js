@@ -1,6 +1,6 @@
 import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
-import { Utils } from "mov.ai-core";
+import { Utils } from "mov-fe-lib-core";
 import AnnotationManager from "../Utils/AnnotationManager";
 import { Quaternion, Color3, Vector3 } from "@babylonjs/core";
 import Clipboard from "../Utils/Clipboard";

@@ -3,7 +3,7 @@ import Vec3 from "../Math/Vec3";
 import Util3d from "../Util3d/Util3d";
 import { Maybe } from "monet";
 import React from "react";
-import { Utils } from "mov.ai-core";
+import { Utils } from "mov-fe-lib-core";
 import Constants from "../Utils/Constants";
 import {
   Vector3,

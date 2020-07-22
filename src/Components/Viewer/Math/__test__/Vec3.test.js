@@ -1,26 +1,37 @@
 import Vec3 from "../Vec3";
-import * as BABYLON from "babylonjs";
+import { Vector3 } from "@babylonjs/core";
 
 test("test vec add", () => {
   expect(
-    new Vec3([1, 0, 0]).add(new Vec3([0, 1, 0])).add(new Vec3([0, 0, 1]))
-  ).toCustomEqual(new Vec3([1, 1, 1]));
+    new Vec3([1, 0, 0])
+      .add(new Vec3([0, 1, 0]))
+      .add(new Vec3([0, 0, 1]))
+      .equals(new Vec3([1, 1, 1]))
+  ).toBeTruthy();
 });
 
 test("test vec sub", () => {
   expect(
-    new Vec3([1, 0, 0]).sub(new Vec3([0, 1, 0])).sub(new Vec3([0, 0, 1]))
-  ).toCustomEqual(new Vec3([1, -1, -1]));
+    new Vec3([1, 0, 0])
+      .sub(new Vec3([0, 1, 0]))
+      .sub(new Vec3([0, 0, 1]))
+      .equals(new Vec3([1, -1, -1]))
+  ).toBeTruthy();
 });
 
 test("test vec mul", () => {
   expect(
-    new Vec3([1, 1, 1]).mul(new Vec3([1, -1, 0])).add(new Vec3([2, 1, 1]))
-  ).toCustomEqual(new Vec3([2, -1, 0]));
+    new Vec3([1, 1, 1])
+      .mul(new Vec3([1, -1, 0]))
+      .add(new Vec3([2, 1, 1]))
+      .equals(new Vec3([2, -1, 0]))
+  ).toBeTruthy();
 });
 
 test("test vec scale", () => {
-  expect(new Vec3([1, 1, 1]).scale(10)).toCustomEqual(new Vec3([10, 10, 10]));
+  expect(
+    new Vec3([1, 1, 1]).scale(10).equals(new Vec3([10, 10, 10]))
+  ).toBeTruthy();
 });
 
 test("test vec length", () => {
@@ -28,9 +39,9 @@ test("test vec length", () => {
 });
 
 test("test vec creation of Babylon", () => {
-  expect(Vec3.ofBabylon(new BABYLON.Vector3(1, 1, 1))).toCustomEqual(
-    Vec3.of([1, 1, 1])
-  );
+  expect(
+    Vec3.ofBabylon(new Vector3(1, 1, 1)).equals(Vec3.of([1, 1, 1]))
+  ).toBeTruthy();
 });
 
 test("test vec to array", () => {
@@ -44,9 +55,9 @@ test("test vec normalize", () => {
 });
 
 test("test vec getOrthogonalBasis", () => {
-  const e_x = Vec3.of([1,0,0])
-  const basis = Vec3.orthogonalBasisFromVector(e_x)
-  expect(e_x.dot(basis.u)).toBeCloseTo(1, 3)
-  expect(e_x.dot(basis.v)).toBeCloseTo(0, 3)
-  expect(e_x.dot(basis.w)).toBeCloseTo(0, 3)
+  const e_x = Vec3.of([1, 0, 0]);
+  const basis = Vec3.orthogonalBasisFromVector(e_x);
+  expect(e_x.dot(basis.u)).toBeCloseTo(1, 3);
+  expect(e_x.dot(basis.v)).toBeCloseTo(0, 3);
+  expect(e_x.dot(basis.w)).toBeCloseTo(0, 3);
 });

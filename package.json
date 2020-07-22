@@ -54,22 +54,23 @@
     "react-dom": "^16.12.0"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.10.3",
+    "@babel/runtime": "^7.10.5",
+    "@babylonjs/core": "^4.1.0",
     "@babylonjs/gui": "^4.1.0",
+    "@babylonjs/loaders": "^4.1.0",
     "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
-    "@babylonjs/core": "^4.1.0",
-    "@babylonjs/loaders": "^4.1.0",
     "earcut": "^2.2.2",
     "lodash": "^4.17.15",
     "lodash.isequal": "^4.5.0",
-    "material-table": "^1.56.1",
+    "material-table": "^1.62.0",
     "monet": "^0.9.0",
-    "mov.ai-core": "file:../mov.ai-core",
+    "mov-fe-lib-core": "git+ssh://git@bitbucket.org/robosavvy/mov-fe-lib-core.git#test_config",
     "prop-types": "^15.7.2",
     "rbush": "^3.0.1",
-    "react-resize-detector": "^4.2.1"
+    "react-resize-detector": "^4.2.1",
+    "styled-components": "^5.1.1"
   },
   "proxy": {
     "/token-auth": "http://localhost/token-auth",

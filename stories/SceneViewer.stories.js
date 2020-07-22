@@ -1,6 +1,6 @@
 import React from "react";
 import SceneViewer from "../src/Components/Viewer/SceneViewer";
-import { Authentication } from "mov.ai-core";
+import { Authentication } from "mov-fe-lib-core";
 
 export default {
   title: "Scene Viewer"

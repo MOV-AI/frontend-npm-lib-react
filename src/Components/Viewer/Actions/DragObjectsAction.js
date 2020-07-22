@@ -4,7 +4,7 @@ import { Maybe } from "monet";
 import MouseKeysAction from "./MouseKeysAction";
 import React from "react";
 import { Vector3 } from "@babylonjs/core";
-import { UndoManager } from "mov.ai-core";
+import { UndoManager } from "mov-fe-lib-core";
 import Clipboard from "../Utils/Clipboard";
 
 class DragObjectsAction extends MouseKeysAction {
