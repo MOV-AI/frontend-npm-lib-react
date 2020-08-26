@@ -233,6 +233,10 @@ class SceneViewer extends Component {
    *                                                                                      */
   //========================================================================================
 
+  renderMenus = () => {
+    // to implement interface of MainView
+  };
+
   componentDidUpdate = prevProps => {
     const predicateAction = [
       {
