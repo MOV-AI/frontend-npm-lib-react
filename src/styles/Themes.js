@@ -214,4 +214,13 @@ const Themes = {
   )
 };
 
+Themes.getTheme = () => {
+  const theme = window.localStorage.getItem("movai.theme"); // dark or light
+  return theme ? theme : "dark";
+};
+
+Themes.setTheme = value => {
+  window.localStorage.setItem("movai.theme", value);
+};
+
 export default Themes;
