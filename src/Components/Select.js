@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import MaterialSelect from "@material-ui/core/Select";
 import PropTypes from "prop-types";
@@ -33,14 +32,13 @@ const Select = props => {
       style={props.style}
       hiddenLabel={props.label === undefined ? true : false}
     >
-      <InputLabel id="demo-simple-select-filled-label">
-        {props.label}
-      </InputLabel>
+      <InputLabel id="movai-react-select">{props.label}</InputLabel>
       <MaterialSelect
-        labelId="demo-simple-select-filled-label"
-        id="demo-simple-select-filled"
+        labelId="movai-react-select"
+        id={props.id}
         value={props.value}
         onChange={props.onChange}
+        inputProps={props.inputProps}
       >
         {noneOption}
         {props.options.map((element, index) => {
@@ -62,14 +60,17 @@ Select.propTypes = {
   label: PropTypes.string,
   variant: PropTypes.string,
   style: PropTypes.object,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  id: PropTypes.string,
+  inputProps: PropTypes.object
 };
 Select.defaultProps = {
   value: "option2",
   options: ["option1", "option2", "option3"],
   variant: "filled",
   noneOption: true,
-  onChange: evt => console.log(evt.target.value)
+  onChange: evt => console.log(evt.target.value),
+  id: "movai-react-select"
 };
 
 export default Select;
