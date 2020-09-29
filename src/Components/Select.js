@@ -61,7 +61,8 @@ Select.propTypes = {
   variant: PropTypes.string,
   style: PropTypes.object,
   onChange: PropTypes.func,
-  id: PropTypes.string
+  id: PropTypes.string,
+  inputProps: PropTypes.object
 };
 Select.defaultProps = {
   value: "option2",
