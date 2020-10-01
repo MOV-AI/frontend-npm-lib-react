@@ -7,16 +7,15 @@ import GraphEmbedding from "../Graph/GraphEmbedding";
 import Graph from "../Graph/Graph";
 import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
-import React from "react";
-import { get } from "lodash";
-const lodash = { get: get };
+import lodash from "lodash";
+import { UndoManager } from "mov-fe-lib-core";
 
 /**
  * One graph per scene
  */
 class GraphItem extends NodeItem {
   constructor(scene, mainView, name = GraphItem.NAME, keyValueMap = {}) {
-    const sceneId = scene._uid;
+    const sceneId = scene.getUniqueId();
     // super() must be called before using _this_.
     if (
       sceneId in graphItemInstances &&
@@ -314,6 +313,15 @@ class GraphItem extends NodeItem {
     });
   }
 
+  delCurveEdge(edge) {
+    const points = GraphItem.getCurveEdgePoints(edge, 0.75);
+    for (let k = 0; k < points.length - 1; k++) {
+      const [i, j] = [points[k], points[k + 1]];
+      this.delEdge(i, j);
+    }
+    return this;
+  }
+
   /**
    *
    * @param {*} i: Vector3
@@ -454,9 +462,9 @@ class GraphItem extends NodeItem {
       actions.push({
         icon: props => <i className="fas fa-trash" {...props}></i>,
         action: () => {
-          this.delVertex(vertexMesh.position);
-          this.mainView.closeContextDial();
-          this.mainView.updateNodeInServer(this.name);
+          this.mainView
+            .getUndoManager()
+            .doIt(this.getUndoDeleteVertex(vertexMesh));
         },
         name: "Delete Node [Del]"
       });
@@ -464,11 +472,55 @@ class GraphItem extends NodeItem {
     };
   }
 
+  getUndoDeleteVertex(vertexMesh) {
+    const p = vertexMesh.position;
+    const id = vertexMesh.vertexId;
+    const rVertex = this.graph.getVertexByIndex(id).some();
+    const isCurve = rVertex.isCurve;
+    const neigh = this.graph.getNeighbors(rVertex.position);
+    const simpleNeigh = neigh.filter(x => !x.isCurve);
+    const curveNeigh = neigh.filter(x => x.isCurve);
+    const curvedPaths = curveNeigh.map(v =>
+      this.graph.getCurvedPathFromVertex(v.position)
+    );
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        if (!isCurve)
+          simpleNeigh.forEach(v => {
+            this.delEdge(p, v.position);
+          });
+        curvedPaths.forEach(path => {
+          for (let i = 0; i < path.length - 1; i++) {
+            this.delEdge(path[i].position, path[i + 1].position);
+          }
+        });
+        this.mainView.closeContextDial();
+        this.mainView.updateNodeInServer(this.name);
+      })
+      .undoAction(() => {
+        if (!isCurve)
+          simpleNeigh.forEach(v => {
+            this.addEdge([p, v.position], [id, v.id]);
+          });
+        curvedPaths.forEach(path => {
+          for (let i = 0; i < path.length - 1; i++) {
+            const edge = [path[i], path[i + 1]];
+            const edgeIndexes = edge.map(({ id }) => id);
+            const edgePos = edge.map(({ position }) => position);
+            const edgeIsCurve = edge.map(({ isCurve }) => isCurve);
+            this.addEdge(edgePos, edgeIndexes, edgeIsCurve);
+          }
+        });
+        this.mainView.updateNodeInServer(this.name);
+      })
+      .build();
+  }
+
   highlightCurveEdge(vertexId) {
     const meshes = this.getCurvedNeighbors([vertexId]).map(
       ({ id }) => this.meshByVertexId[id]
     );
-    this.mainView.highlightMeshInScene(meshes);
+    this.mainView.highlightMeshesInScene(meshes);
   }
 
   delVertex(i) {
@@ -549,21 +601,88 @@ class GraphItem extends NodeItem {
   }
 
   /**
+   * Deletes colliding edge and create 2 new edge with the split
    *
    * @param {*} vertex: Vector3
    */
   resolveVertexEdgeCollision(vertex) {
     this.graph.getEdge(vertex).forEach(rEdge => {
-      const edge = rEdge.edge.map(v => v.position).map(Vec3.ofBabylon);
-      const e = edge[1].sub(edge[0]).normalize();
-      const x = Vec3.ofBabylon(vertex).sub(edge[0]);
-      const proj = e.scale(x.dot(e));
-
+      const edgeVec3 = rEdge.edge
+        .map(({ position }) => position)
+        .map(Vec3.ofBabylon);
       const edgeBabylon = rEdge.edge.map(v => v.position);
+
+      // compute intersection
+      const e = edgeVec3[1].sub(edgeVec3[0]).normalize();
+      const x = Vec3.ofBabylon(vertex).sub(edgeVec3[0]);
+      const proj = e.scale(x.dot(e));
+      const vertexInEdge = edgeVec3[0].add(proj).toBabylon();
+
+      // split operation
       this.delEdge(edgeBabylon[0], edgeBabylon[1]);
-      const vertexInEdge = edge[0].add(proj).toBabylon();
       this.addEdge([edgeBabylon[0], vertexInEdge]);
       this.addEdge([vertexInEdge, edgeBabylon[1]]);
+      //import features
+      this.importFeatures2Edge(rEdge, edgeBabylon[0], vertexInEdge);
+      this.importFeatures2Edge(rEdge, vertexInEdge, edgeBabylon[1]);
+
+      this.graph.getEdge(edgeBabylon[0], vertexInEdge).forEach(leftEdge => {
+        this.graph.getEdge(vertexInEdge, edgeBabylon[1]).forEach(rightEdge => {
+          this.mainView
+            .getUndoManager()
+            .addIt(
+              this.getUndoResolveVertexEdgeCollision(rEdge, leftEdge, rightEdge)
+            );
+        });
+      });
+    });
+  }
+
+  getUndoResolveVertexEdgeCollision(oldEdge, leftEdge, rightEdge) {
+    const oldEdgePositions = oldEdge.edge.map(({ position }) => position);
+    const oldEdgeIndex = oldEdge.edge.map(({ id }) => id);
+    const leftEdgePositions = leftEdge.edge.map(({ position }) => position);
+    const leftEdgeIndex = leftEdge.edge.map(({ id }) => id);
+    const rightEdgePositions = rightEdge.edge.map(({ position }) => position);
+    const rightEdgeIndex = rightEdge.edge.map(({ id }) => id);
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        // split operation
+        this.delEdge(...oldEdgePositions);
+        this.addEdge(leftEdgePositions, leftEdgeIndex);
+        this.addEdge(rightEdgePositions, rightEdgeIndex);
+
+        //import features
+        this.importFeatures2Edge(oldEdge, ...leftEdgePositions);
+        this.importFeatures2Edge(oldEdge, ...rightEdgePositions);
+      })
+      .undoAction(() => {
+        // split operation
+        this.delEdge(...leftEdgePositions);
+        this.delEdge(...rightEdgePositions);
+        this.addEdge(oldEdgePositions, oldEdgeIndex);
+
+        //import features
+        this.importFeatures2Edge(oldEdge, ...oldEdgePositions);
+      })
+      .build();
+  }
+
+  /**
+   * Copy feature data of rEdgeWithData to edge (i,j)
+   * @param {*} rEdgeWithData
+   * @param {*} i
+   * @param {*} j
+   */
+  importFeatures2Edge(rEdgeWithData, i, j) {
+    this.graph.getEdge(i, j).forEach(({ edge }) => {
+      const [uId, vId] = edge.map(({ id }) => id);
+      this.graph
+        .getEdgeByIndex(uId, vId)
+        .forEach(rEdgePlus => rEdgePlus.importFeatures(rEdgeWithData));
+      this.graph
+        .getEdgeByIndex(vId, uId)
+        .forEach(rEdgeMinus => rEdgeMinus.importFeatures(rEdgeWithData));
     });
   }
 
@@ -627,26 +746,69 @@ class GraphItem extends NodeItem {
 
   getOnClickEdge = edgeMesh => () => {
     const actions = [];
-    const edgePos = edgeMesh.edgeIndexes.map(
-      i => this.meshByVertexId[i].position
-    );
+
     actions.push({
       icon: props => <i className="fas fa-trash" {...props}></i>,
       action: () => {
-        this.delEdge(...edgePos);
-        edgeMesh.edgeIndexes.forEach(i =>
-          this.graph
-            .getVertexByIndex(i)
-            .filter(({ isCurve }) => isCurve)
-            .forEach(({ position }) => this.delVertex(position))
-        );
-        this.mainView.closeContextDial();
-        this.mainView.updateNodeInServer(this.name);
+        this.mainView.getUndoManager().doIt(this.getUndoDeleteEdge(edgeMesh));
       },
       name: "Delete Edge [Del]"
     });
     this.mainView.setContextActions(actions);
   };
+
+  getUndoDeleteEdge(edgeMesh) {
+    const { edgeIndexes } = edgeMesh;
+    const edgeVertex = edgeIndexes
+      .map(i => this.graph.getVertexByIndex(i))
+      .map(maybeV => maybeV.some());
+    const edgeIsCurve = edgeVertex.some(v => v.isCurve);
+    return edgeIsCurve
+      ? this.getUndoDelCurveEdge(edgeVertex)
+      : this.getUndoDelLineEdge(edgeVertex);
+  }
+
+  getUndoDelCurveEdge(edgeVertex) {
+    // there should be at least one vertex is curve
+    const curvedVertex = edgeVertex.filter(v => v.isCurve)[0].position;
+    const curvePath = this.graph.getCurvedPathFromVertex(curvedVertex);
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        for (let i = 0; i < curvePath.length - 1; i++) {
+          this.delEdge(curvePath[i].position, curvePath[i + 1].position);
+        }
+        this.mainView.closeContextDial();
+        this.mainView.updateNodeInServer(this.name);
+      })
+      .undoAction(() => {
+        for (let i = 0; i < curvePath.length - 1; i++) {
+          const edge = [curvePath[i], curvePath[i + 1]];
+          const edgeIndexes = edge.map(({ id }) => id);
+          const edgePos = edge.map(({ position }) => position);
+          const edgeIsCurve = edge.map(({ isCurve }) => isCurve);
+          this.addEdge(edgePos, edgeIndexes, edgeIsCurve);
+        }
+        this.mainView.updateNodeInServer(this.name);
+      })
+      .build();
+  }
+
+  getUndoDelLineEdge(edgeVertex) {
+    const edgeIndexes = edgeVertex.map(({ id }) => id);
+    const edgePos = edgeVertex.map(({ position }) => position);
+    const edgeIsCurve = edgeVertex.map(({ isCurve }) => isCurve);
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        this.delEdge(...edgePos);
+        this.mainView.closeContextDial();
+        this.mainView.updateNodeInServer(this.name);
+      })
+      .undoAction(() => {
+        this.addEdge(edgePos, edgeIndexes, edgeIsCurve);
+        this.mainView.updateNodeInServer(this.name);
+      })
+      .build();
+  }
 
   //========================================================================================
   /*                                                                                      *

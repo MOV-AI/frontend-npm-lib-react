@@ -24,7 +24,7 @@ function getParentNodeRecursive(tree, predicate, parent) {
 }
 
 function compareTreesRecursive(treeA, treeB, nodeEquality) {
-  if (treeA.length == treeB.length) {
+  if (treeA.length === treeB.length) {
     let ans = true;
     for (let i = 0; i < treeA.length; i++) {
       const nodeA = treeA[i];
@@ -43,14 +43,20 @@ function compareTreesRecursive(treeA, treeB, nodeEquality) {
 }
 
 function mapRecursive(tree, newTree, map) {
-  for (let i = 0; i < tree.length; i++) {
-    const node = tree[i];
+  tree.forEach(nod => {
+    const node = { ...nod };
     const mappedNode = map(node);
-    mappedNode.children = [];
-    mapRecursive(node.children, mappedNode.children, map);
+    mappedNode.children = mapRecursive(node.children, [], map);
     newTree.push(mappedNode);
-  }
+  });
   return newTree;
+}
+
+function forEachRecursive(tree = [], forEach = () => {}) {
+  tree.forEach(node => {
+    forEach(node);
+    forEachRecursive(node.children, forEach);
+  });
 }
 
 function expand(node) {
@@ -63,14 +69,28 @@ function filterTree(tree = [], predicate = node => true) {
   let result = [];
   tree.forEach(nod => {
     const node = { ...nod };
-    if (predicate(node)) result.push(expand(node));
-    else if (node.children) {
+    if (predicate(node)) {
+      const expanded = expand(node);
+      expanded.children = filterTree(expanded.children, predicate);
+      result.push(expanded);
+    } else if (node.children) {
       const children = filterTree(node.children, predicate);
       if (children.length !== 0) {
         node.children = children;
         result.push(expand(node));
       }
     }
+  });
+  return result;
+}
+
+function flatten(tree = [], predicate = node => true) {
+  if (!tree || tree.length === 0) return [];
+  let result = [];
+  tree.forEach(nod => {
+    const node = { ...nod };
+    if (predicate(node)) result.push(node);
+    result = result.concat(flatten(node.children, predicate));
   });
   return result;
 }
@@ -114,7 +134,20 @@ class TreeObject {
   }
 
   filter(predicate = node => true) {
-    return filterTree(this.tree, predicate);
+    return new TreeObject(filterTree(this.tree, predicate));
+  }
+
+  /**
+   *
+   * @param {*} predicate: node => Boolean
+   * @returns Array with flattened tree while filtering values with predicate
+   */
+  flatten(predicate = node => true) {
+    return flatten(this.tree, predicate);
+  }
+
+  forEach(map) {
+    forEachRecursive(this.tree, map);
   }
 }
 

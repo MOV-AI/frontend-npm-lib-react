@@ -8,14 +8,13 @@ import { Engine, Scene } from "@babylonjs/core";
 import React, { useEffect, useRef, useState } from "react";
 import ReactResizeDetector from "react-resize-detector";
 import PropTypes from "prop-types";
-
 const FLEX_STYLE = {
   display: "flex",
   flexDirection: "column",
-  flexGrow: 1,
+  flexGrow: 1
 };
 
-const BaseViewer = (props) => {
+const BaseViewer = props => {
   const reactCanvas = useRef(null);
   const {
     antialias,
@@ -49,7 +48,7 @@ const BaseViewer = (props) => {
       if (scene.isReady()) {
         props.onSceneReady(scene);
       } else {
-        scene.onReadyObservable.addOnce((scene) => props.onSceneReady(scene));
+        scene.onReadyObservable.addOnce(scene => props.onSceneReady(scene));
       }
       if (!is2render) return;
       engine.runRenderLoop(() => {
@@ -66,7 +65,10 @@ const BaseViewer = (props) => {
   }, [reactCanvas]);
 
   const onResize = (width, height) => {
-    setSize({ width, height });
+    setSize({
+      width,
+      height: height <= window.innerHeight ? height : window.innerHeight * 0.85
+    });
     scene && scene.getEngine().resize();
   };
 
@@ -92,13 +94,13 @@ BaseViewer.propTypes = {
   onSceneReady: PropTypes.func,
   onRender: PropTypes.func,
   is2render: PropTypes.bool,
-  sceneFactory: PropTypes.func,
+  sceneFactory: PropTypes.func
 };
 
 BaseViewer.defaultProps = {
   antialias: true,
-  onSceneReady: (scene) => {},
-  is2render: true,
+  onSceneReady: scene => {},
+  is2render: true
 };
 
 export default BaseViewer;

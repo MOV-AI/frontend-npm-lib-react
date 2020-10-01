@@ -1,24 +1,42 @@
 import GlobalRef from "../NodeItem/GlobalRef";
-import Box from "../NodeItem/Box";
-import KeyPoint from "../NodeItem/KeyPoint";
-import Path from "../NodeItem/Path";
-import Wall from "../NodeItem/Wall";
-import BoxRegion from "../NodeItem/BoxRegion";
-import PolygonRegion from "../NodeItem/PolygonRegion";
 import { Maybe } from "monet";
 import { ASSETS_TYPES } from "../Utils/AssetsTypesFactory";
-import GraphItem from "../NodeItem/GraphItem";
+import NODE_ITEM_FACTORY_MAP from "./NodeItemFactoryMap";
 
-const NODE_ITEM_FACTORY_MAP = {
-  GlobalRef: GlobalRef,
-  Box: Box,
-  KeyPoint: KeyPoint,
-  Path: Path,
-  Wall: Wall,
-  BoxRegion: BoxRegion,
-  PolygonRegion: PolygonRegion,
-  GraphItem: GraphItem
-};
+class MainViewRetriever {
+  static importScene(mainView, serverScene = [], parent = null) {
+    console.log("Importing scene...", mainView, serverScene);
+    if (serverScene.length > 0) {
+      importSceneRecursive(mainView, serverScene, parent);
+    } else {
+      importDefaultScene(mainView);
+    }
+    console.log("End Importing scene");
+  }
+
+  static importNodeItem(mainView, nodeDict, parent, is2addInServer = false) {
+    const nodeItemClass = NODE_ITEM_FACTORY_MAP[nodeDict.type]; //retrieve default export
+    if (nodeItemClass) {
+      mainView.getSceneMemory().forEach(({ scene }) => {
+        const nodeItem = nodeItemClass.ofDict(scene, nodeDict, mainView);
+        // pseudo lazy migration of isVisible prop
+        const isVisible =
+          nodeDict.isVisible === undefined ? true : nodeDict.isVisible;
+        nodeItem.mesh.setEnabled(isVisible);
+        mainView.getNodeFromTree(parent).forEach(treeNode => {
+          nodeItem.mesh.parent = treeNode.item.mesh;
+        });
+        mainView.addNodeItem2Tree(
+          nodeItem,
+          parent,
+          is2addInServer,
+          isVisible,
+          false
+        );
+      });
+    }
+  }
+}
 
 function isAsset(nodeDict) {
   return nodeDict.type in ASSETS_TYPES;
@@ -28,11 +46,11 @@ function importAsset(mainView, nodeDict, parent) {
   const assetName = Maybe.fromNull(nodeDict.assetName).orSome(nodeDict.name);
   const assetActionMap = mainView.getAssetsActionMap();
   // legacy
-  const retrievedAction = Maybe.fromNull(assetActionMap[assetName]).orSome(
-    assetActionMap[assetName.split(".")[0]]
+  const retrievedAction = Maybe.fromNull(assetActionMap[assetName]).orLazy(
+    () => assetActionMap[assetName.split(".")[0]]
   );
   if (!retrievedAction) {
-    console.log(`Action ${assetName}, has not found, keep importing...`);
+    console.warn(`Action ${assetName}, has not found, keep importing...`);
     return;
   }
   retrievedAction.memory["parentObj"] = { parent: parent };
@@ -40,22 +58,9 @@ function importAsset(mainView, nodeDict, parent) {
   retrievedAction.memory["assetName"] = assetName;
   retrievedAction.memory["name"] = nodeDict.name;
   retrievedAction.memory["isImport"] = true;
+  retrievedAction.memory["isVisible"] =
+    nodeDict.isVisible === undefined ? true : nodeDict.isVisible;
   retrievedAction.action(mainView);
-}
-
-function importNodeItem(mainView, nodeDict, parent) {
-  const nodeItemClass = NODE_ITEM_FACTORY_MAP[nodeDict.type]; //retrieve default export
-  if (nodeItemClass) {
-    mainView.getSceneMemory().forEach(memory => {
-      const scene = memory.scene;
-      const nodeItem = nodeItemClass.ofDict(scene, nodeDict, mainView);
-      nodeItem.mesh.setEnabled(nodeDict.isVisible);
-      mainView.getNodeFromTree(parent).forEach(treeNode => {
-        nodeItem.mesh.parent = treeNode.item.mesh;
-      });
-      mainView.addNodeItem2Tree(nodeItem, parent, false, nodeDict.isVisible);
-    });
-  }
 }
 
 function importSceneRecursive(mainView, arrayTree, parent = null) {
@@ -68,7 +73,7 @@ function importSceneRecursive(mainView, arrayTree, parent = null) {
     if (isAsset(node.item)) {
       importAsset(mainView, node.item, parent);
     } else {
-      importNodeItem(mainView, node.item, parent);
+      MainViewRetriever.importNodeItem(mainView, node.item, parent);
     }
     if (node.children.length > 0) {
       importSceneRecursive(mainView, node.children, node.name);
@@ -76,24 +81,12 @@ function importSceneRecursive(mainView, arrayTree, parent = null) {
   });
 }
 
-function importDefaultScene(mainView, isNewScene) {
+function importDefaultScene(mainView) {
   mainView.getSceneMemory().forEach(memory => {
     const scene = memory.scene;
-    const send2server = !isNewScene;
+    const send2server = true;
     mainView.addNodeItem2Tree(GlobalRef.ofDict(scene), null, send2server);
   });
-}
-
-class MainViewRetriever {
-  static importScene(mainView, serverScene = [], isNewScene = false) {
-    console.log("Importing scene...", mainView, serverScene);
-    if (serverScene.length > 0) {
-      importSceneRecursive(mainView, serverScene);
-    } else {
-      importDefaultScene(mainView, isNewScene);
-    }
-    console.log("End Importing scene");
-  }
 }
 
 export default MainViewRetriever;
