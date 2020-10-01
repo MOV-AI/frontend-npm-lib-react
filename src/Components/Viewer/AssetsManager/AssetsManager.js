@@ -16,7 +16,6 @@ class AssetsManager {
     this.observers = [];
     this.afterLoad = [];
     this.finishInitialSubscribers = 0;
-    this.retrieveAssetsFromDb();
   }
 
   //========================================================================================
@@ -29,17 +28,22 @@ class AssetsManager {
 
   getAssetsActionMap = () => this.assetsActionMap;
 
-  addAfterLoad = afterLoad => {
+  load() {
+    this.retrieveAssetsFromDb();
+    return this;
+  }
+
+  addAfterLoad(afterLoad) {
     this.afterLoad.push(afterLoad);
     return this;
-  };
+  }
 
   addObserver(observer) {
     this.observers.push(observer);
     return this;
   }
 
-  signalObservers = () => this.observers.forEach(obs => obs());
+  signalObservers = () => this.observers.forEach(obs => obs(this));
 
   addAsset(assetKey, asset) {
     try {
@@ -48,6 +52,12 @@ class AssetsManager {
     } catch (e) {
       console.log("Caught exception while adding asset", e);
     }
+  }
+
+  delAsset(assetKey) {
+    if (assetKey in this.assets) delete this.assets[assetKey];
+    if (assetKey in this.assetsActionMap) delete this.assetsActionMap[assetKey];
+    this.signalObservers();
   }
 
   //========================================================================================
@@ -64,38 +74,8 @@ class AssetsManager {
           Name: "*",
           RobotName: "*"
         },
-        data => {
-          // console.log("UPDATE ROBOTS", data);
-        },
-        data => {
-          ofNull(data.value)
-            .flatMap(maybeGet("Robot"))
-            .forEach(r => {
-              Object.keys(r).forEach(id => this.addRobot(id, r[id].RobotName));
-            });
-          this.finishSub("RobotName");
-        }
-      ),
-    () =>
-      MasterDB.subscribe(
-        {
-          Scope: "Robot",
-          Name: "*",
-          Parameter: "tf"
-        },
-        data => {
-          // console.log("UPDATE ROBOTS", data);
-        },
-        data => {
-          ofNull(data.value)
-            .flatMap(maybeGet("Robot"))
-            .forEach(r => {
-              Object.keys(r).forEach(id =>
-                this.addRobot(id, null, r[id].Parameter.tf.Value)
-              );
-            });
-          this.finishSub("Robot tf");
-        }
+        this.getRobotNameUpdate(),
+        this.getRobotNameSub()
       ),
     () =>
       MasterDB.subscribe(
@@ -135,7 +115,7 @@ class AssetsManager {
   finishSub = place => {
     console.log("FINISH SUB ", place, this.finishInitialSubscribers);
     if (++this.finishInitialSubscribers > this.subs.length - 1) {
-      this.afterLoad.forEach(f => f());
+      this.afterLoad.forEach(f => f(this));
     }
   };
 
@@ -145,26 +125,63 @@ class AssetsManager {
    *                                                                                      */
   //========================================================================================
 
-  addRobot(id, name = null, tf = null) {
+  deleteRobot = id => {
+    this.delAsset(this.robots[id].name);
+    if (id in this.robots) delete this.robots[id];
+  };
+
+  addRobot(id, name = null) {
     if (!(id in this.robots)) {
       this.robots[id] = {
         id: id,
-        name: null,
-        tf: null
+        name: null
       };
     }
     ofNull(name).forEach(name => (this.robots[id].name = name));
-    ofNull(tf).forEach(tf => (this.robots[id].tf = tf));
     if (Object.values(this.robots[id]).every(x => x !== null)) {
       const localRobot = this.robots[id];
-      localRobot.tf.name = localRobot.name;
       this.addAsset(localRobot.name, {
         name: localRobot.name,
         id: id,
         type: ASSETS_TYPES.Robot,
-        robotTree: localRobot.tf
+        robotTree: {
+          name: localRobot.name,
+          position: { x: 0, y: 0, z: 0 },
+          orientation: {
+            w: 1,
+            x: 0,
+            y: 0,
+            z: 0
+          },
+          child: []
+        }
       });
     }
+  }
+
+  getRobotNameSub(getter = ({ value }) => value) {
+    return data => {
+      ofNull(getter(data))
+        .flatMap(maybeGet("Robot"))
+        .forEach(r =>
+          Object.keys(r).forEach(id => this.addRobot(id, r[id].RobotName))
+        );
+      this.finishSub("RobotName");
+    };
+  }
+
+  getRobotNameUpdate() {
+    const actionMap = {
+      del: data =>
+        ofNull(data.key)
+          .flatMap(maybeGet("Robot"))
+          .forEach(r => Object.keys(r).forEach(this.deleteRobot)),
+      set: this.getRobotNameSub(({ key }) => key)
+    };
+    return data => {
+      console.log("Robot NAME UPDATE", data);
+      actionMap[data.event](data);
+    };
   }
 
   //========================================================================================
