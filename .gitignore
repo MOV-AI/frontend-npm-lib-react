@@ -24,3 +24,6 @@ yarn-error.log*
 
 #Jetbrains
 .idea
+
+#storybook
+storybook-static

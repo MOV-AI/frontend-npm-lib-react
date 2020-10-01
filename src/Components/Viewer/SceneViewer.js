@@ -14,6 +14,7 @@ import GraphItem from "./NodeItem/GraphItem";
 import DefaultMouseEvents from "./Utils/DefaultMouseEvents";
 import Util3d from "./Util3d/Util3d";
 import Vec3 from "./Math/Vec3";
+import ReactResizeDetector from "react-resize-detector";
 
 //========================================================================================
 /*                                                                                      *

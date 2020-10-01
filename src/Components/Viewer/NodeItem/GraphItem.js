@@ -7,6 +7,7 @@ import GraphEmbedding from "../Graph/GraphEmbedding";
 import Graph from "../Graph/Graph";
 import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
+import React from "react";
 import lodash from "lodash";
 import { UndoManager } from "mov-fe-lib-core";
 

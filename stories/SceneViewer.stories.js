@@ -6,7 +6,7 @@ export default {
   title: "Scene Viewer"
 };
 
-const CRED = { user: "pedro", pass: "abcd" };
+const CRED = { user: "movai", pass: "movai" };
 
 export const basicScene = () => {
   const [auth, setAuth] = React.useState(false);
