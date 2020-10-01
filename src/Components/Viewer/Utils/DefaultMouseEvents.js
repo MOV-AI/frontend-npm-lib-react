@@ -52,7 +52,7 @@ function animateCamera(camera, v) {
       T: new Date().getTime()
     })
     .nextState(s => {
-      const { camera, time, T } = s;
+      const { camera, time } = s;
       const dt = 0.1; //(new Date().getTime() - T) / 1000;
       const vdt = v.scale(dt);
       camera.position = camera.position.add(vdt);

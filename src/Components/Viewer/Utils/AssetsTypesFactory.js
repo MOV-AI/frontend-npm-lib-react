@@ -6,11 +6,11 @@ import AddMeshAction from "../Actions/AddMeshAction";
 export const ASSETS_TYPES = {
   Map: "Map",
   Robot: "Robot",
-  Mesh: "Mesh",
+  Mesh: "Mesh"
 };
 
 export const AssetsTypesFactory = {
-  Map: (map) => new AddMapAction(map.name, map.loader),
-  Robot: (robot) => new RobotAction(robot, Robot.getSocketAnimator),
-  Mesh: (mesh) => new AddMeshAction(mesh),
+  Map: map => new AddMapAction(map.name, map.loader),
+  Robot: robot => new RobotAction(robot, Robot.getSocketAnimator),
+  Mesh: mesh => new AddMeshAction(mesh)
 };

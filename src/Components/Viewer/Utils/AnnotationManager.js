@@ -6,7 +6,6 @@ class AnnotationManager {
     instance = this;
     this.annotations = {};
     this.observers = [];
-    this.retrieveAnnotationsFromDb();
   }
 
   //========================================================================================
@@ -17,12 +16,17 @@ class AnnotationManager {
 
   getAnnotations = () => this.annotations;
 
+  load() {
+    this.retrieveAnnotationsFromDb();
+    return this;
+  }
   /**
    *
    * @param {*} lambda: AnnotationManager -> {}
    */
   pushObserver(lambda) {
     this.observers.push(lambda);
+    return this;
   }
 
   //========================================================================================
@@ -41,8 +45,10 @@ class AnnotationManager {
           set: annotation => this.addAnnotation(annotation)
         };
         const annotation = data.key.Annotation;
-        actionMap[data.event](annotation);
-        this.observers.forEach(f => f(this));
+        if (data.event in actionMap) {
+          actionMap[data.event](annotation);
+          this.observers.forEach(f => f(this));
+        }
       },
       data => {
         console.log("Annotation start", data);

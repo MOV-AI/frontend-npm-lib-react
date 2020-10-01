@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The Mov.AI's frontend library for React.",
   "main": "./dist/index.js",
+  "proxy": "http://localhost:5004",
   "scripts": {
     "test": "jest",
     "build": "webpack --mode=production",

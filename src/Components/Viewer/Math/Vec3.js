@@ -1,5 +1,5 @@
-import Mat3 from "./Mat3";
 import { Vector3 } from "@babylonjs/core";
+import Vec2 from "./Vec2";
 
 /**
  * Class that describes immutable 3-vectors
@@ -8,35 +8,35 @@ class Vec3 {
   //no for's because performance
   constructor(array) {
     if (array.constructor !== Array || array.length < 3)
-      throw `${array} is not a valid 3-vector`;
+      throw new Error(`${array} is not a valid 3-vector`);
     this.vec3 = [...array];
   }
 
-  getX() {
+  get x() {
     return this.vec3[0];
   }
 
-  getY() {
+  get y() {
     return this.vec3[1];
   }
 
-  getZ() {
+  get z() {
     return this.vec3[2];
   }
 
   add(x) {
-    return this.binaryOp(x, (a, b) => a + b);
+    return this.op(x, (a, b) => a + b);
   }
 
   sub(x) {
-    return this.binaryOp(x, (a, b) => a - b);
+    return this.op(x, (a, b) => a - b);
   }
 
   mul(x) {
-    return this.binaryOp(x, (a, b) => a * b);
+    return this.op(x, (a, b) => a * b);
   }
 
-  binaryOp(x, operation) {
+  op(x, operation) {
     const ans = [];
     ans[0] = operation(this.vec3[0], x.vec3[0]);
     ans[1] = operation(this.vec3[1], x.vec3[1]);
@@ -45,7 +45,7 @@ class Vec3 {
   }
 
   scale(r) {
-    return this.map((x) => x * r);
+    return this.map(x => x * r);
   }
 
   dot(x) {
@@ -66,7 +66,7 @@ class Vec3 {
 
   normalize = () => {
     const l = this.length();
-    if (l === 0) throw "You can't normalize a zero norm vector";
+    if (l === 0) throw new Error("You can't normalize a zero norm vector");
     return this.scale(1 / l);
   };
 
@@ -76,6 +76,10 @@ class Vec3 {
 
   toArray() {
     return this.vec3;
+  }
+
+  toVec2() {
+    return new Vec2(this.x, this.y);
   }
 
   equals(v) {
@@ -97,12 +101,20 @@ class Vec3 {
     return this.reduce((a, b) => Math.min(a, b), Number.MAX_VALUE);
   }
 
+  someNaNOrInfinite() {
+    return this.vec3.some(x => isNaN(x) || !isFinite(x));
+  }
+
   static ofBabylon(babylon) {
     return new Vec3([babylon.x, babylon.y, babylon.z]);
   }
 
   static of(array) {
     return array ? new Vec3(array) : new Vec3([0, 0, 0]);
+  }
+
+  static fromArray(array) {
+    return Vec3.of(array);
   }
 
   static random() {
@@ -114,21 +126,21 @@ class Vec3 {
    * @param {*} u: Vec3
    */
   static orthogonalBasisFromVector(u) {
-    const identityMatrix = Mat3.eye();
+    const identityMatrix = [Vec3.e1, Vec3.e2, Vec3.e3];
     //choose pivot
     let pivot = 0;
     for (let i = 0; i < 3; i++) {
-      if (u.vec3[i] != 0) {
+      if (u.vec3[i] !== 0) {
         pivot = i;
         break;
       }
     }
-    let v = identityMatrix.mat3[(pivot + 1) % 3].add(
-      identityMatrix.mat3[pivot].scale(-u.vec3[(pivot + 1) % 3] / u.vec3[pivot])
+    let v = identityMatrix[(pivot + 1) % 3].add(
+      identityMatrix[pivot].scale(-u.vec3[(pivot + 1) % 3] / u.vec3[pivot])
     );
     v = v.normalize();
-    let w = identityMatrix.mat3[(pivot + 2) % 3].add(
-      identityMatrix.mat3[pivot].scale(-u.vec3[(pivot + 2) % 3] / u.vec3[pivot])
+    let w = identityMatrix[(pivot + 2) % 3].add(
+      identityMatrix[pivot].scale(-u.vec3[(pivot + 2) % 3] / u.vec3[pivot])
     );
     w = w.normalize();
     w = w.sub(v.scale(v.dot(w)));
@@ -137,6 +149,9 @@ class Vec3 {
 
   static ONES = Vec3.of([1, 1, 1]);
   static ZERO = Vec3.of([0, 0, 0]);
+  static e1 = new Vec3([1, 0, 0]);
+  static e2 = new Vec3([0, 1, 0]);
+  static e3 = new Vec3([0, 0, 1]);
 }
 
 export default Vec3;

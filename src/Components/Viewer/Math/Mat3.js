@@ -6,9 +6,9 @@ class Mat3 {
     const v = [v1, v2, v3];
     for (let i = 0; i < v.length; i++) {
       if (v[i].constructor !== Array || v[i].length < 3)
-        throw "One of the inputs is not a array";
+        throw Error("One of the inputs is not a array");
     }
-    this.mat3 = v.map((x) => new Vec3(x));
+    this.mat3 = v.map(x => new Vec3(x));
   }
 
   /**

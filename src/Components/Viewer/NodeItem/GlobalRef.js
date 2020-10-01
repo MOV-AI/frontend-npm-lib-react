@@ -9,11 +9,10 @@ const THETA = -Math.PI / 2;
 const ROS_ORIGIN = {
   position: [0, 0, 0],
   scaling: [1, -1, 1],
-  quaternion: [Math.cos(THETA / 2), Math.sin(THETA / 2), 0, 0],
+  quaternion: [Math.cos(THETA / 2), Math.sin(THETA / 2), 0, 0]
 };
 
 class GlobalRef extends NodeItem {
-  // this class can't be a singleton, because of Babylonjs's strange behaviour
   constructor(mesh, keyValueMap = {}) {
     super(mesh, keyValueMap);
   }
@@ -21,7 +20,7 @@ class GlobalRef extends NodeItem {
   toForm() {
     const form = super.toForm();
     form.uiSchema.name = {
-      "ui:disabled": true,
+      "ui:disabled": true
     };
     return form;
   }
@@ -52,7 +51,7 @@ class GlobalRef extends NodeItem {
     return new GlobalRef(
       globalRefMesh,
       Maybe.fromNull(dict)
-        .flatMap((d) => Maybe.fromNull(d.keyValueMap))
+        .flatMap(d => Maybe.fromNull(d.keyValueMap))
         .orUndefined()
     );
   }
@@ -96,14 +95,14 @@ class GlobalRef extends NodeItem {
         quaternion[2],
         quaternion[3],
         quaternion[0]
-      ),
+      )
     });
-    const scaling = Vec3.of(ROS_ORIGIN.scaling).map((z) => 1 / z);
+    const scaling = Vec3.of(ROS_ORIGIN.scaling).map(z => 1 / z);
     const pos = Vec3.of(ROS_ORIGIN.position);
     const result = scaling.mul(
       rotationMatrix.dotVec(Vec3.ofBabylon(x).sub(pos))
     );
-    return result.map((z) => (Math.abs(z) < 1e-5 ? 0 : z)).toBabylon();
+    return result.map(z => (Math.abs(z) < 1e-5 ? 0 : z)).toBabylon();
   }
 
   /**
@@ -123,14 +122,14 @@ class GlobalRef extends NodeItem {
         quaternion[2],
         quaternion[3],
         quaternion[0]
-      ),
+      )
     });
     const scaling = Vec3.of(ROS_ORIGIN.scaling);
     const pos = Vec3.of(ROS_ORIGIN.position);
     const result = rotationMatrix
       .prodVec(scaling.mul(Vec3.ofBabylon(x)))
       .add(pos);
-    return result.map((z) => (Math.abs(z) < 1e-5 ? 0 : z)).toBabylon();
+    return result.map(z => (Math.abs(z) < 1e-5 ? 0 : z)).toBabylon();
   }
 }
 

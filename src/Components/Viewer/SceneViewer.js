@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import BaseViewer from "./BaseViewer/BaseViewer";
 import PropTypes from "prop-types";
-import { HighlightLayer, Vector3 } from "@babylonjs/core";
+import { HighlightLayer } from "@babylonjs/core";
 import { Maybe } from "monet";
 import MainViewRetriever from "./MainView/MainViewRetriever";
 import DefaultScene from "./Utils/DefaultScene";
@@ -70,7 +70,7 @@ class SceneViewer extends Component {
   };
 
   deleteNodeFromTreeUsingName = () => {
-    throw "Delete Node in viewer Exception";
+    throw new Error("Delete Node in viewer Exception");
   };
 
   updateNodeInServer = (name, oldName = null) => {
@@ -163,7 +163,6 @@ class SceneViewer extends Component {
       );
     });
   }
-
   onResize = (w, h) => {
     if (w == 0 && h == 0) return;
     this.getSceneMemory().forEach(({ mouseLocationText }) => {
@@ -171,7 +170,6 @@ class SceneViewer extends Component {
       mouseLocationText.top = -h / 2 + h / 30;
     });
   };
-
   //========================================================================================
   /*                                                                                      *
    *                                    Scene functions                                   *
@@ -181,22 +179,19 @@ class SceneViewer extends Component {
   retrieveSceneFromServer = (afterLoading = () => {}) => {
     SceneServerUtils.retrieveScene(this.sceneName, data => {
       MainViewRetriever.importScene(this, data.result);
-      // TODO : check why we need the hack below
+      // TODO: check why we need the hack below
       setTimeout(afterLoading);
     });
   };
 
-  getAssets = (afterLoading = () => {}) => {
-    const assetManager = AssetsManager.getInstance();
-    assetManager.addAfterLoad(afterLoading);
-    // In the case the assets are already loaded
-    if (Object.values(assetManager.getAssets()).length > 0) {
-      afterLoading();
-    }
+  loadAssets = () => {
+    AssetsManager.getInstance().load();
   };
 
-  loadScene = () =>
-    this.getAssets(() => this.retrieveSceneFromServer(this.renderScene));
+  loadScene = () => {
+    this.loadAssets();
+    this.retrieveSceneFromServer(this.renderScene);
+  };
 
   renderScene = () => {
     this.getSceneMemory().forEach(({ engine, scene }) =>
@@ -248,7 +243,7 @@ class SceneViewer extends Component {
         action: this.setCameraToTarget
       }
     ];
-    predicateAction.map(({ propVar, action }) => {
+    predicateAction.forEach(({ propVar, action }) => {
       if (propVar(this.props) !== propVar(prevProps)) {
         action();
       }

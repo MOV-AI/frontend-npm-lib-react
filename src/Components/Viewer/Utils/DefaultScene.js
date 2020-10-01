@@ -10,12 +10,10 @@ import {
 } from "@babylonjs/core";
 import { TextBlock, AdvancedDynamicTexture } from "@babylonjs/gui/2D";
 import Util3d from "../Util3d/Util3d";
+// import "@babylonjs/core/Debug/debugLayer";
+// import "@babylonjs/inspector";
 
 class DefaultScene {
-  constructor() {
-    // empty
-  }
-
   static createGizmo = scene => {
     const gizmoManager = new RotationGizmo(new UtilityLayerRenderer(scene));
     gizmoManager.xGizmo.dragBehavior.detach();
@@ -71,6 +69,7 @@ class DefaultScene {
     scene.clearColor = Color3.Black;
     scene.collisionsEnabled = true;
     scene._uid = scene.getUniqueId();
+    // scene.debugLayer.show();
     return scene;
   };
 

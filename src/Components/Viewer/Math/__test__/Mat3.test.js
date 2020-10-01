@@ -9,19 +9,19 @@ test("test matrix creation from Babylon", () => {
   const value = Mat3.ofBabylonMatrix(localRotationMatrix).map(x =>
     Math.abs(x) < 0.01 ? 0 : x
   );
-  expect(value.equals(new Mat3([0, 0, 1], [0, 1, 0], [-1, 0, 0]))).toBeTruthy();
+  expect(value).toCustomEqual(new Mat3([0, 0, 1], [0, 1, 0], [-1, 0, 0]));
 });
 
 test("test matrix prod with vec", () => {
   const value = Mat3.of([0, 0, 1], [1, 0, 0], [0, 1, 0]).prodVec(
     Vec3.of([1, 2, 3])
   );
-  expect(value.equals(Vec3.of([2, 3, 1]))).toBeTruthy();
+  expect(value).toCustomEqual(Vec3.of([2, 3, 1]));
 });
 
 test("test matrix transpose prod with vec", () => {
   const value = Mat3.of([0, 0, 1], [1, 0, 0], [0, 1, 0]).dotVec(
     Vec3.of([1, 2, 3])
   );
-  expect(value.equals(Vec3.of([3, 1, 2]))).toBeTruthy();
+  expect(value).toCustomEqual(Vec3.of([3, 1, 2]));
 });
