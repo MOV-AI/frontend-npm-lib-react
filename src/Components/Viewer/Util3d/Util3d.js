@@ -7,8 +7,7 @@ import PositionalLightBuilder from "./PositionalLightBuilder";
 import ReferentialBuilder from "./ReferentialBuilder";
 import GroundBuilder from "./GroundBuilder";
 import DirectionalLightBuilder from "./DirectionalLightBuilder";
-import Box from "../NodeItem/Box";
-import * as earcut from "earcut";
+import earcut from "earcut";
 import {
   Vector3,
   Color3,
@@ -22,6 +21,7 @@ import {
   Curve3
 } from "@babylonjs/core";
 import GlobalRef from "../NodeItem/GlobalRef";
+import Box from "../NodeItem/Box";
 
 class Util3d {
   static getWorldCoordinates(mesh, localPosition) {
@@ -93,6 +93,25 @@ class Util3d {
     );
   }
 
+  /**
+   *
+   * @param {*} parentView: MainView
+   */
+  static toLocalCoordinates = parentView => {
+    const rootMesh = parentView.getRootNode().item.mesh;
+    return arrayOfVector3 => {
+      const transform = p =>
+        Util3d.computeLocalCoordinatesFromMesh(
+          { parent: rootMesh },
+          Vec3.ofBabylon(p)
+        ).toBabylon();
+      if (Array.isArray(arrayOfVector3)) {
+        return arrayOfVector3.map(transform);
+      }
+      return transform(arrayOfVector3);
+    };
+  };
+
   static getRotationMatrix(mesh) {
     const localRotationMatrix = new Matrix();
     const maybeQuaternion = Maybe.fromNull(mesh.rotationQuaternion);
@@ -139,7 +158,7 @@ class Util3d {
     // choose pivot
     let pivot = 0;
     for (let i = 0; i < 3; i++) {
-      if (uArray[i] != 0) {
+      if (uArray[i] !== 0) {
         pivot = i;
         break;
       }
@@ -284,7 +303,7 @@ class Util3d {
     return new CameraBuilder(scene);
   }
 
-  static guizoManagerBuilder(scene) {
+  static gizmoManagerBuilder(scene) {
     return new GizmoManagerBuilder(scene);
   }
 
@@ -301,12 +320,12 @@ class Util3d {
    */
   static getGroundPosition = function (scene, ground) {
     // Use a predicate to get position on the ground
-    const pickinfo = scene.pick(
+    const pickInfo = scene.pick(
       scene.pointerX,
       scene.pointerY,
       mesh => mesh === ground
     );
-    if (pickinfo.hit) return Maybe.some(pickinfo.pickedPoint);
+    if (pickInfo.hit) return Maybe.some(pickInfo.pickedPoint);
     return Maybe.none();
   };
 
@@ -379,7 +398,7 @@ class Util3d {
     vec3Poly.forEach((a, i) => {
       const modi = (i + 1) % n;
       const edge = vec3Poly[modi].sub(vec3Poly[i]);
-      orientation += Vec3.of([-a.getY(), a.getX(), a.getZ()]).dot(edge);
+      orientation += Vec3.of([-a.y, a.x, a.z]).dot(edge);
     });
     return orientation / 2;
   }
@@ -389,14 +408,14 @@ class Util3d {
    * Returns the average
    */
   static pointAverage(arrayOfPoints) {
-    if (!arrayOfPoints || arrayOfPoints.length == 0) return Vector3.Zero();
+    if (!arrayOfPoints || arrayOfPoints.length === 0) return Vector3.Zero();
     return arrayOfPoints
       .reduce((e, x) => e.add(x), Vector3.Zero())
       .scale(1 / arrayOfPoints.length);
   }
 
   static pointAverageVec3(arrayOfPoints) {
-    if (!arrayOfPoints || arrayOfPoints.length == 0) return Vec3.ZERO;
+    if (!arrayOfPoints || arrayOfPoints.length === 0) return Vec3.ZERO;
     return arrayOfPoints
       .reduce((e, x) => e.add(x), Vec3.ZERO)
       .scale(1 / arrayOfPoints.length);
@@ -438,8 +457,7 @@ class Util3d {
     return orientations;
   };
 
-  static getSplineFromCurve = curve => {
-    const nbPoints = Math.ceil(curve.length);
+  static getSplineFromCurve = (curve, nbPoints = 7) => {
     const closed = false;
     return {
       points: Curve3.CreateCatmullRomSpline(curve, nbPoints, closed).getPoints()
