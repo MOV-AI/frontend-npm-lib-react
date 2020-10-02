@@ -1,5 +1,6 @@
 import Button from "./src/Components/Button";
-import AbstractModal from "./src/Components/AbstractModal";
+import AbstractModal from "./src/Components/Modal/AbstractModal";
+import ConfirmAlertModal from "./src/Components/Modal/ConfirmAlertModal";
 import Drawer from "./src/Components/Drawer";
 import Collapse from "./src/Components/Collapse";
 import VerticalBar from "./src/Components/VerticalBar";
@@ -19,6 +20,7 @@ import Style from "./src/styles/Style";
 export {
   Button,
   AbstractModal,
+  ConfirmAlertModal,
   Drawer,
   Collapse,
   VerticalBar,
