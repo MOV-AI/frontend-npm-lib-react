@@ -322,6 +322,7 @@ SceneViewer.defaultProps = {
 
 function getErrorSolutionList(errorList) {
   // different from ide version
+  console.log("SceneViewer: Got errors", errorList);
   return !errorList ? (
     []
   ) : (
