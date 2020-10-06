@@ -321,14 +321,12 @@ SceneViewer.defaultProps = {
 };
 
 function getErrorSolutionList(errorList) {
-  // different from ide version
-  console.log("SceneViewer: Got errors", errorList);
   return !errorList ? (
     []
   ) : (
     <ul>
       {errorList.map(({ cause, solution }, i) => {
-        return <li key={"error" + i} text={`${cause}, ${solution}`}></li>;
+        return <li key={"error" + i}>{`${cause}, ${solution}`}</li>;
       })}
     </ul>
   );
