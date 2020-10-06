@@ -15,6 +15,7 @@ import DefaultMouseEvents from "./Utils/DefaultMouseEvents";
 import Util3d from "./Util3d/Util3d";
 import Vec3 from "./Math/Vec3";
 import ReactResizeDetector from "react-resize-detector";
+import ConfirmAlertModal from "../Modal/ConfirmAlertModal";
 
 //========================================================================================
 /*                                                                                      *
@@ -25,6 +26,7 @@ import ReactResizeDetector from "react-resize-detector";
 class SceneViewer extends Component {
   constructor(props) {
     super(props);
+    this.state = { errorList: [] };
     this.sceneName = props.sceneName.Value;
     this.sceneMemory = Maybe.none();
     this.objectTree = [];
@@ -163,13 +165,15 @@ class SceneViewer extends Component {
       );
     });
   }
+
   onResize = (w, h) => {
-    if (w == 0 && h == 0) return;
+    if (w === 0 && h === 0) return;
     this.getSceneMemory().forEach(({ mouseLocationText }) => {
       mouseLocationText.left = -w / 2 + w / 17;
       mouseLocationText.top = -h / 2 + h / 30;
     });
   };
+
   //========================================================================================
   /*                                                                                      *
    *                                    Scene functions                                   *
@@ -178,9 +182,9 @@ class SceneViewer extends Component {
 
   retrieveSceneFromServer = (afterLoading = () => {}) => {
     SceneServerUtils.retrieveScene(this.sceneName, data => {
-      MainViewRetriever.importScene(this, data.result);
-      // TODO: check why we need the hack below
-      setTimeout(afterLoading);
+      const errorList = MainViewRetriever.importScene(this, data.result);
+      this.setState({ errorList });
+      afterLoading();
     });
   };
 
@@ -256,6 +260,8 @@ class SceneViewer extends Component {
   };
 
   render() {
+    const { errorList } = this.state;
+    const resetErrorList = () => this.setState({ errorList: [] });
     return (
       <div style={{ display: "flex", flexGrow: 1 }}>
         <BaseViewer
@@ -263,6 +269,19 @@ class SceneViewer extends Component {
           is2render={false}
           sceneFactory={DefaultScene.createScene}
         />
+        <ConfirmAlertModal
+          onSubmit={resetErrorList}
+          onCancel={resetErrorList}
+          open={errorList?.length > 0}
+          title={"Scene Viewer"}
+          message={"An error occurred while loading the scene"}
+          submitText={"OK"}
+          submitColor={"primary"}
+          cancelText={"Cancel"}
+          cancelColor={"secondary"}
+        >
+          {getErrorSolutionList(errorList)}
+        </ConfirmAlertModal>
         <ReactResizeDetector
           handleWidth
           handleHeight
@@ -300,5 +319,18 @@ SceneViewer.defaultProps = {
   sceneName: { Value: "Pedro" },
   focusObject: { Value: "" }
 };
+
+function getErrorSolutionList(errorList) {
+  // different from ide version
+  return !errorList ? (
+    []
+  ) : (
+    <ul>
+      {errorList.map(({ cause, solution }, i) => {
+        return <li key={"error" + i} text={`${cause}, ${solution}`}></li>;
+      })}
+    </ul>
+  );
+}
 
 export default SceneViewer;

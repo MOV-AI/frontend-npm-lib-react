@@ -6,12 +6,14 @@ import NODE_ITEM_FACTORY_MAP from "./NodeItemFactoryMap";
 class MainViewRetriever {
   static importScene(mainView, serverScene = [], parent = null) {
     console.log("Importing scene...", mainView, serverScene);
+    const errors = [];
     if (serverScene.length > 0) {
-      importSceneRecursive(mainView, serverScene, parent);
+      importSceneRecursive(mainView, serverScene, parent, errors);
     } else {
       importDefaultScene(mainView);
     }
     console.log("End Importing scene");
+    return errors;
   }
 
   static importNodeItem(mainView, nodeDict, parent, is2addInServer = false) {
@@ -42,7 +44,8 @@ function isAsset(nodeDict) {
   return nodeDict.type in ASSETS_TYPES;
 }
 
-function importAsset(mainView, nodeDict, parent) {
+function importAsset(mainView, nodeDict, parent, errors) {
+  const assetType = nodeDict.type;
   const assetName = Maybe.fromNull(nodeDict.assetName).orSome(nodeDict.name);
   const assetActionMap = mainView.getAssetsActionMap();
   // legacy
@@ -50,7 +53,10 @@ function importAsset(mainView, nodeDict, parent) {
     () => assetActionMap[assetName.split(".")[0]]
   );
   if (!retrievedAction) {
-    console.warn(`Action ${assetName}, has not found, keep importing...`);
+    errors.push({
+      cause: `Asset of type ${assetType} with name ${assetName}, was not found`,
+      solution: `please upload ${assetType} ${assetName}`
+    });
     return;
   }
   retrievedAction.memory["parentObj"] = { parent: parent };
@@ -63,7 +69,7 @@ function importAsset(mainView, nodeDict, parent) {
   retrievedAction.action(mainView);
 }
 
-function importSceneRecursive(mainView, arrayTree, parent = null) {
+function importSceneRecursive(mainView, arrayTree, parent = null, errors = []) {
   if (!arrayTree) return;
   const sortArrayTree = arrayTree.sort((a, b) => {
     if (a.item.type === "GlobalRef") return -1;
@@ -71,12 +77,12 @@ function importSceneRecursive(mainView, arrayTree, parent = null) {
   });
   sortArrayTree.forEach(node => {
     if (isAsset(node.item)) {
-      importAsset(mainView, node.item, parent);
+      importAsset(mainView, node.item, parent, errors);
     } else {
       MainViewRetriever.importNodeItem(mainView, node.item, parent);
     }
     if (node.children.length > 0) {
-      importSceneRecursive(mainView, node.children, node.name);
+      importSceneRecursive(mainView, node.children, node.name, errors);
     }
   });
 }
