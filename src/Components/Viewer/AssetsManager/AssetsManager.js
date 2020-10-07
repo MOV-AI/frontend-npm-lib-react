@@ -28,10 +28,10 @@ class AssetsManager {
 
   getAssetsActionMap = () => this.assetsActionMap;
 
-  load() {
-    this.retrieveAssetsFromDb();
+  load = async () => {
+    await this.retrieveAssetsFromDb();
     return this;
-  }
+  };
 
   addAfterLoad(afterLoad) {
     this.afterLoad.push(afterLoad);
@@ -51,6 +51,7 @@ class AssetsManager {
       this.assetsActionMap[assetKey] = AssetsTypesFactory[asset.type](asset);
     } catch (e) {
       console.log("Caught exception while adding asset", e);
+      throw Error(`Caught exception while adding asset ${e}`);
     }
   }
 
@@ -67,7 +68,7 @@ class AssetsManager {
   //========================================================================================
 
   subs = [
-    () =>
+    resolve =>
       MasterDB.subscribe(
         {
           Scope: "Robot",
@@ -75,9 +76,9 @@ class AssetsManager {
           RobotName: "*"
         },
         this.getRobotNameUpdate(),
-        this.getRobotNameSub()
+        this.getRobotNameSub(({ value }) => value, resolve)
       ),
-    () =>
+    resolve =>
       MasterDB.subscribe(
         {
           Scope: "Package",
@@ -88,22 +89,24 @@ class AssetsManager {
         this.getMapUpdater(({ key }) => key, this.signalObservers),
         this.getMapSubscriber(
           ({ value }) => value,
-          () => this.finishSub("Maps")
+          () => this.finishSub("Maps", resolve)
         )
       ),
-    () =>
+    resolve =>
       MasterDB.subscribe(
         { Scope: "Package", File: "*", Name: "meshes", FileLabel: "*" },
         this.getMeshUpdater(),
         this.getMeshSubscriber(
           ({ value }) => value,
-          () => this.finishSub("Meshes")
+          () => this.finishSub("Meshes", resolve)
         )
       )
   ];
 
   retrieveAssetsFromDb() {
-    this.subs.forEach(f => f());
+    return new Promise((re, rej) => {
+      this.subs.forEach(f => f(re));
+    });
   }
 
   //========================================================================================
@@ -112,10 +115,11 @@ class AssetsManager {
    *                                                                                      */
   //========================================================================================
 
-  finishSub = place => {
+  finishSub = (place, resolve) => {
     console.log("FINISH SUB ", place, this.finishInitialSubscribers);
     if (++this.finishInitialSubscribers > this.subs.length - 1) {
       this.afterLoad.forEach(f => f(this));
+      resolve(true);
     }
   };
 
@@ -159,14 +163,14 @@ class AssetsManager {
     }
   }
 
-  getRobotNameSub(getter = ({ value }) => value) {
+  getRobotNameSub(getter, resolve) {
     return data => {
       ofNull(getter(data))
         .flatMap(maybeGet("Robot"))
         .forEach(r =>
           Object.keys(r).forEach(id => this.addRobot(id, r[id].RobotName))
         );
-      this.finishSub("RobotName");
+      this.finishSub("RobotName", resolve);
     };
   }
 

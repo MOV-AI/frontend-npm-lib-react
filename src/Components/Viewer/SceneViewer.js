@@ -188,12 +188,12 @@ class SceneViewer extends Component {
     });
   };
 
-  loadAssets = () => {
-    AssetsManager.getInstance().load();
+  loadAssets = async () => {
+    await AssetsManager.getInstance().load();
   };
 
-  loadScene = () => {
-    this.loadAssets();
+  loadScene = async () => {
+    await this.loadAssets();
     this.retrieveSceneFromServer(this.renderScene);
   };
 
