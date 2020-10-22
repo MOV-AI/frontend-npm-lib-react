@@ -2,15 +2,17 @@ const path = require("path");
 var nodeExternals = require("webpack-node-externals");
 
 module.exports = {
+  watch: true,
   entry: "./index.js",
   output: {
     path: path.resolve("./"),
     filename: "dist/index.js",
-    library: "Movai",
+    library: "MovaiReact",
     libraryTarget: "umd"
   },
-  target: "node", // in order to ignore built-in modules like path, fs, etc.
-  externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
+  target: "web",
+  devtool: "source-map",
+  externals: [nodeExternals()],
   module: {
     rules: [
       {
