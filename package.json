@@ -1,9 +1,14 @@
 {
   "name": "mov-fe-lib-react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The Mov.AI's frontend library for React.",
   "main": "./dist/index.js",
-  "proxy": "http://localhost:5004",
+  "proxy": {
+    "/token-auth": "http://localhost/token-auth",
+    "/ws/subscriber": "http://localhost/ws/subscriber",
+    "/api/v1": "http://localhost/api/v1",
+    "Tugbot.STL": "http://localhost/Tugbot.STL"
+  },
   "scripts": {
     "test": "jest",
     "build": "webpack --mode=production",
@@ -72,11 +77,5 @@
     "rbush": "^3.0.1",
     "react-resize-detector": "^4.2.1",
     "styled-components": "^5.1.1"
-  },
-  "proxy": {
-    "/token-auth": "http://localhost/token-auth",
-    "/ws/subscriber": "http://localhost/ws/subscriber",
-    "/api/v1": "http://localhost/api/v1",
-    "Tugbot.STL": "http://localhost/Tugbot.STL"
   }
 }
