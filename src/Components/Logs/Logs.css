@@ -1,0 +1,70 @@
+.flow-action {
+  display: flex;
+  background: transparent;
+  width: 35px;
+  height: 35px;
+  margin: 6px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.5s;
+}
+
+.flow-action:hover {
+  background: rgba(11, 106, 138, 0.2);
+  cursor: pointer;
+}
+
+.robot-logs-container {
+  display: flex;
+  flex-direction: column;
+  height: 1px;
+  flex-grow: 1;
+}
+
+.tree-grow-overflow {
+  flex-grow: 0.5;
+  overflow-y: auto;
+  min-height: 0;
+  height: 100%;
+}
+
+.logs-grow-overflow {
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0;
+  height: 100%;
+}
+
+.saving {
+  /* font-size: 40px; */
+  margin: 0;
+}
+
+.saving span {
+  font-size: 15px;
+  animation-name: blink;
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+.saving span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.saving span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
