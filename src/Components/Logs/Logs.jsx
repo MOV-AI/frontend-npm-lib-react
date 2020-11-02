@@ -103,8 +103,6 @@ class Logs extends Component {
         { key: 0, label: "ui" }
       ])}${getRequestMessage(this.state.messageRegex)}`;
 
-      console.log("vicente dynamicURL", dynamicURL);
-
       MasterDB.get(dynamicURL, (res, e) => {
         if (res === undefined) rej();
         re(res.data);
