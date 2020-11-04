@@ -16,6 +16,7 @@ import Select from "./src/Components/Select";
 import { snackbar } from "./src/Components/Snackbar/Snackbar";
 import Themes from "./src/styles/Themes";
 import Style from "./src/styles/Style";
+import Logs from "./src/Components/Logs/Logs";
 
 export {
   Button,
@@ -35,5 +36,6 @@ export {
   SceneViewer,
   Select,
   snackbar,
-  Style
+  Style,
+  Logs
 };
