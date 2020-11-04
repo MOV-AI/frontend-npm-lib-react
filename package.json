@@ -14,7 +14,7 @@
     "build": "webpack --mode=production",
     "buildDev": "webpack --mode=development",
     "clean": "rm -rf node_modules/ package-lock.json",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 3001",
     "build-storybook": "build-storybook"
   },
   "repository": {
@@ -76,6 +76,7 @@
     "prop-types": "^15.7.2",
     "rbush": "^3.0.1",
     "react-resize-detector": "^4.2.1",
+    "react-virtualized": "^9.22.2",
     "styled-components": "^5.1.1"
   }
 }
