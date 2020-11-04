@@ -7,7 +7,9 @@ import {
   getRequestTags,
   getRequestMessage,
   filterByFromToDates,
-  findsUniqueKey
+  findsUniqueKey,
+  getJustDateFromServer,
+  getJustTimeFromServer
 } from "./utils/Utils";
 import LogsTable from "./LogsTable/LogsTable";
 import { isEqual } from "lodash";
@@ -276,12 +278,12 @@ Logs.defaultProps = {
       label: "Date",
       dataKey: "time",
       width: 100,
-      render: time => time
+      render: time => getJustDateFromServer(time)
     },
     Time: {
       label: "Time",
       dataKey: "time",
-      render: time => time,
+      render: time => getJustTimeFromServer(time),
       width: 100
     },
     Level: {
