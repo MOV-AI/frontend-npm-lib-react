@@ -283,8 +283,8 @@ Logs.defaultProps = {
     Time: {
       label: "Time",
       dataKey: "time",
-      render: time => getJustTimeFromServer(time),
-      width: 100
+      width: 100,
+      render: time => getJustTimeFromServer(time)
     },
     Level: {
       label: "Level",
