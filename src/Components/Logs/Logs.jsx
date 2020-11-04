@@ -200,6 +200,7 @@ class Logs extends Component {
             }}
             advancedMode={this.state.advancedMode}
             handleAdvancedMode={evt => {
+              // Toggle advanced mode, set tag to ui by default and change the levels
               this.setState({
                 advancedMode: !this.state.advancedMode,
                 levelsList: this.state.advancedMode
