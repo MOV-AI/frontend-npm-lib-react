@@ -6,7 +6,8 @@ import {
   getRequestLevels,
   getRequestTags,
   getRequestMessage,
-  filterByFromToDates
+  filterByFromToDates,
+  findsUniqueKey
 } from "./utils/Utils";
 import LogsTable from "./LogsTable/LogsTable";
 import { isEqual } from "lodash";
@@ -22,9 +23,27 @@ class Logs extends Component {
     selectedFromDate: null,
     selectedToDate: null,
     columns: ["Time", "Robot", "Message"],
-    height: 0 //LogsTable height
+    tags: [{ key: 0, label: "ui" }],
+    height: 0, //LogsTable height
+    levelsList: [
+      { value: "INFO", label: "Robot Status" },
+      { value: "ERROR", label: "Alerts" }
+    ]
   };
   logsTimeout = undefined;
+
+  simpleLevelsList = [
+    { value: "INFO", label: "Robot Status" },
+    { value: "ERROR", label: "Alerts" }
+  ];
+
+  advancedLevelsList = [
+    { value: "INFO", label: "Info" },
+    { value: "WARNING", label: "Warnings" },
+    { value: "DEBUG", label: "Debug" },
+    { value: "ERROR", label: "Error" },
+    { value: "CRITICAL", label: "Critical" }
+  ];
 
   resizeHandler() {
     const height = this.divElement.clientHeight;
@@ -73,7 +92,7 @@ class Logs extends Component {
     ).then(dataArrays => {
       this.setState(prevState => {
         const finalArray = dataArrays.reduce((all, dataArray) => {
-          dataArray.forEach(data => all.push(data));
+          dataArray && dataArray.forEach(data => all.push(data));
           return all;
         }, []);
         this.logsTimeout = setTimeout(
@@ -98,10 +117,10 @@ class Logs extends Component {
         robotSelected.ip
       }/api/v1/logs/?${getRequestLevels(
         this.state.levels,
-        this.props.levelsList
-      )}&limit=${this.state.limit}${getRequestTags([
-        { key: 0, label: "ui" }
-      ])}${getRequestMessage(this.state.messageRegex)}`;
+        this.state.levelsList
+      )}&limit=${this.state.limit}${getRequestTags(
+        this.state.tags
+      )}${getRequestMessage(this.state.messageRegex)}`;
 
       MasterDB.get(dynamicURL, (res, e) => {
         if (res === undefined) rej();
@@ -133,7 +152,7 @@ class Logs extends Component {
             selectedRobots={this.state.selectedRobots}
             updateRobotSelection={this.updateRobotSelection}
             levels={this.state.levels}
-            levelsList={this.props.levelsList}
+            levelsList={this.state.levelsList}
             handleLevels={event => {
               this.setState({ levels: event.target.value });
             }}
@@ -150,6 +169,21 @@ class Logs extends Component {
             handleColumns={event => {
               this.setState({ columns: event.target.value });
             }}
+            tags={this.state.tags}
+            handleAddTag={tagText => {
+              const { tags } = this.state;
+              // Don't add tag if it's empty or duplicate
+              if (
+                tagText !== "" &&
+                tags.findIndex(elem => elem.label === tagText) < 0
+              ) {
+                tags.push({
+                  key: findsUniqueKey(tags, "key"),
+                  label: tagText
+                });
+                this.setState({ tags });
+              }
+            }}
             handleDeleteTag={tagToDelete => {
               const { tags } = this.state;
               const filteredTags = tags.filter(
@@ -163,6 +197,18 @@ class Logs extends Component {
             selectedToDate={this.state.selectedToDate}
             handleDateChange={(newDate, keyToChange) => {
               this.setState({ [keyToChange]: newDate });
+            }}
+            advancedMode={this.state.advancedMode}
+            handleAdvancedMode={evt => {
+              this.setState({
+                advancedMode: !this.state.advancedMode,
+                levelsList: this.state.advancedMode
+                  ? this.simpleLevelsList
+                  : this.advancedLevelsList,
+                tags: this.state.advancedMode
+                  ? [{ key: 0, label: "ui" }]
+                  : this.state.tags
+              });
             }}
           ></LogsFilterBar>
           <div
@@ -185,7 +231,7 @@ class Logs extends Component {
                 this.state.selectedToDate
               )}
               height={this.state.height}
-              levelsList={this.props.levelsList}
+              levelsList={this.state.levelsList}
             ></LogsTable>
           </div>
         </div>
@@ -197,7 +243,6 @@ class Logs extends Component {
 Logs.propTypes = {
   robotsData: PropTypes.array,
   robotStates: PropTypes.object,
-  logsList: PropTypes.array,
   columnList: PropTypes.object
 };
 Logs.defaultProps = {
@@ -225,13 +270,6 @@ Logs.defaultProps = {
     okay: "okay",
     off: "off"
   },
-  logsList: [
-    { value: "INFO", label: "Robot Status" },
-    // { value: "WARNING", label: "Warnings" },
-    // { value: "DEBUG", label: "Debug" },
-    { value: "ERROR", label: "Alerts" }
-    // { value: "CRITICAL", label: "Critical" }
-  ],
   columnList: {
     Date: {
       label: "Date",

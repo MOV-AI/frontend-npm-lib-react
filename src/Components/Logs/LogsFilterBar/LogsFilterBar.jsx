@@ -3,9 +3,12 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
-import { TextField } from "@material-ui/core";
+import { FormControlLabel, Switch, TextField } from "@material-ui/core";
 import ResetSearch from "@material-ui/icons/Close";
 import FiltersIcon from "./FiltersIcon/FiltersIcon";
+import LabelIcon from "@material-ui/icons/Label";
+import Chip from "@material-ui/core/Chip";
+import AddIcon from "@material-ui/icons/Add";
 import TodayIcon from "@material-ui/icons/Today";
 import { Typography } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
@@ -92,6 +95,7 @@ const useStyles = makeStyles(theme => ({
 
 const LogsFilterBar = props => {
   const classes = useStyles();
+  const [tagText, setTagText] = React.useState("");
 
   const handleRobotChange = event => {
     const arrayEvent = event?.target?.value;
@@ -214,6 +218,56 @@ const LogsFilterBar = props => {
     );
   };
 
+  const getTags = () => {
+    return (
+      <FiltersIcon
+        icon={<LabelIcon></LabelIcon>}
+        title="Tags"
+        isActive={props.tags.length > 0}
+      >
+        <div className={classes.tagsContainer}>
+          <TextField
+            className={classes.addTagText}
+            value={tagText}
+            onChange={evt => setTagText(evt.target.value)}
+            onKeyUp={event => {
+              // User pressed Enter
+              if (event.keyCode === 13) {
+                props.handleAddTag(tagText);
+              }
+            }}
+            label="Add Tag"
+            // placeholder="Tag"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment>
+                  <IconButton onClick={() => props.handleAddTag(tagText)}>
+                    <AddIcon />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            size="small"
+          />
+          <div className={classes.tagsList}>
+            {props.tags.map(data => {
+              return (
+                <li key={data.key}>
+                  <Chip
+                    label={data.label}
+                    onDelete={() => props.handleDeleteTag(data)}
+                    className={classes.chip}
+                    size="small"
+                  />
+                </li>
+              );
+            })}
+          </div>
+        </div>
+      </FiltersIcon>
+    );
+  };
+
   const getTimeFilters = () => {
     return (
       <FiltersIcon
@@ -264,6 +318,16 @@ const LogsFilterBar = props => {
         icon={<SettingsIcon></SettingsIcon>}
         title={props.t("Configuration")}
       >
+        {/* Advanced/Simple Mode */}
+        <FormControlLabel
+          control={
+            <Switch
+              checked={props.advancedMode}
+              onChange={props.handleAdvancedMode}
+            />
+          }
+          label={props.advancedMode ? "Advanced" : "Simple"}
+        />
         <div className={classes.filtersButton}>
           {/* Limit Input */}
           <Typography
@@ -313,7 +377,7 @@ const LogsFilterBar = props => {
               input={<Input />}
               renderValue={selected =>
                 selected
-                  .map(elem => get(props, `columnList${elem}.label`, ""))
+                  .map(elem => get(props, `columnList[${elem}].label`, ""))
                   .join(`, `)
               }
               MenuProps={MenuProps}
@@ -340,6 +404,8 @@ const LogsFilterBar = props => {
       {getSearchInput()}
       {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
       {getLevels()}
+      {/* Tags */}
+      {props.advancedMode && getTags()}
       {getTimeFilters()}
       <div style={{ flexGrow: 1 }}></div>
       {getSettings()}
@@ -376,6 +442,8 @@ LogsFilterBar.propTypes = {
   handleDateChange: PropTypes.func,
   selectedRobots: PropTypes.array,
   updateRobotSelection: PropTypes.func,
+  advancedMode: PropTypes.bool,
+  handleAdvancedMode: PropTypes.func,
   t: PropTypes.func
 };
 
@@ -396,6 +464,8 @@ LogsFilterBar.defaultProps = {
   handleDateChange: () => {},
   selectedRobots: [],
   updateRobotSelection: () => {},
+  advancedMode: false,
+  handleAdvancedMode: () => {},
   t: string => string
 };
 
