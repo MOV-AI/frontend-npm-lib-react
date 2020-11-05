@@ -1,0 +1,16 @@
+import { Meta, Story, ArgsTable } from "@storybook/addon-docs/blocks";
+import Button from "../src/Components/Button";
+
+<Meta title="Button" component={Button} />
+
+# Button
+
+Some **markdown** description, or whatever you want.
+
+<Story name="basic" height="400px">
+  <Button>Label</Button>
+</Story>
+
+## ArgsTable
+
+<ArgsTable of={Button} />
