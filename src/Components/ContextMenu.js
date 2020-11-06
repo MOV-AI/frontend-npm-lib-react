@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
-const ContextMenu = (props) => {
+const ContextMenu = props => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
+  const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -17,12 +17,12 @@ const ContextMenu = (props) => {
   return (
     <div>
       {React.cloneElement(props.element, {
-        onClick: (evt) => {
+        onClick: evt => {
           if (props.element.props.onClick !== undefined) {
             props.element.props.onClick(); // If user defined a onClick
           }
           handleClick(evt); // opens the contextMenu
-        },
+        }
       })}
       <Menu
         id="simple-menu"
@@ -32,7 +32,6 @@ const ContextMenu = (props) => {
         onClose={handleClose}
       >
         {props.menuList.reduce((result, item, index) => {
-          console.log("item", item);
           if (item && typeof item !== "function") {
             result.push(
               <MenuItem
@@ -60,7 +59,7 @@ ContextMenu.propTypes = {
   navigationList: PropTypes.array,
   lowerElement: PropTypes.node.isRequired,
   width: PropTypes.string,
-  backgroundColor: PropTypes.string,
+  backgroundColor: PropTypes.string
 };
 ContextMenu.defaultProps = {
   element: <div>Ahaha</div>,
@@ -68,12 +67,12 @@ ContextMenu.defaultProps = {
     {
       onClick: () => console.log("clicked 1"),
       element: "Profile",
-      onClose: true,
-    },
+      onClose: true
+    }
   ],
   lowerElement: <div></div>,
   width: "68px",
-  backgroundColor: "#424242",
+  backgroundColor: "#424242"
 };
 
 export default ContextMenu;
