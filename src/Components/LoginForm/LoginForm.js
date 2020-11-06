@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import Typography from "@material-ui/core/Typography";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import logo from "./movai_red.svg";
@@ -17,8 +15,7 @@ const styles = theme => ({
   root: {
     padding: theme.spacing(4, 4),
     borderRadius: 10
-  },
-  version: { fontSize: "10px", opacity: 0.9 }
+  }
 });
 
 class LoginForm extends Component {
