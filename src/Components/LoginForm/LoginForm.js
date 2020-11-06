@@ -44,7 +44,6 @@ class LoginForm extends Component {
           error: true,
           errorMessage: apiResponse.error
         });
-        this.props.setLoggedIn(false);
       }
     } catch (e) {
       this.props.setLoggedIn(false);
