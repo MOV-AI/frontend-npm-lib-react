@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import logo from "./movai_red.svg";
+import defaultLogo from "./movai_red.svg";
 import Paper from "@material-ui/core/Paper";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -10,6 +10,7 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import { withStyles } from "@material-ui/core/styles";
 import { Authentication } from "mov-fe-lib-core";
+import PropTypes from "prop-types";
 
 const styles = theme => ({
   root: {
@@ -51,7 +52,7 @@ class LoginForm extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, logo } = this.props;
 
     return (
       <Grid
@@ -64,7 +65,7 @@ class LoginForm extends Component {
         <Paper elevation={10} className={classes.root}>
           <Grid item>
             <img
-              src={logo}
+              src={logo ? logo : defaultLogo}
               className="center"
               alt="logo"
               style={{
@@ -132,5 +133,9 @@ class LoginForm extends Component {
     );
   }
 }
+
+LoginForm.propTypes = {
+  logs: PropTypes.any // expects a svg element
+};
 
 export default withStyles(styles, { withTheme: true })(LoginForm);

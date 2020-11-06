@@ -17,6 +17,7 @@ import { snackbar } from "./src/Components/Snackbar/Snackbar";
 import Themes from "./src/styles/Themes";
 import Style from "./src/styles/Style";
 import Logs from "./src/Components/Logs/Logs";
+import LoginForm from "./src/Components/LoginForm/LoginForm";
 
 export {
   Button,
@@ -37,5 +38,6 @@ export {
   Select,
   snackbar,
   Style,
-  Logs
+  Logs,
+  LoginForm
 };

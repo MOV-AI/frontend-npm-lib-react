@@ -47,7 +47,7 @@ export const loginForm = () => {
 };
 
 loginForm.story = {
-  name: "Logs"
+  name: "Login Form"
 };
 
 export default {
