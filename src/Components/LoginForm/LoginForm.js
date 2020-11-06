@@ -46,7 +46,10 @@ class LoginForm extends Component {
         });
       }
     } catch (e) {
-      this.props.setLoggedIn(false);
+      this.setState({
+        error: true,
+        errorMessage: e
+      });
     }
   };
 
