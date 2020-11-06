@@ -135,7 +135,12 @@ class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
-  logs: PropTypes.any // expects a svg element
+  logs: PropTypes.any, // expects a svg element
+  setLoggedIn: PropTypes.func
+};
+
+LoginForm.defaultProps = {
+  setLoggedIn: loggedIn => console.log(loggedIn)
 };
 
 export default withStyles(styles, { withTheme: true })(LoginForm);
