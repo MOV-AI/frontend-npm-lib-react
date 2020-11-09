@@ -23,7 +23,7 @@ Button.propTypes = {
   style: PropTypes.object,
   onClick: PropTypes.func,
   color: PropTypes.string,
-  variant: PropTypes.string,
+  variant: PropTypes.string.isRequired,
   size: PropTypes.string,
   startIcon: PropTypes.element,
   children: PropTypes.node.isRequired,
