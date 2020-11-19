@@ -60,7 +60,7 @@ const ProfileMenu = props => {
     
       ProfileMenu.defaultProps = {
         name: "User",
-        version: "v.1.0.2020",
+        version: "v.1.1.2020",
         extraItems: [{label: "Profile", func: () => console.log("Click MOV.AI ProfileMenu")}],
         style: {},
         onClick: () => console.log("Click MOV.AI ProfileMenu"),

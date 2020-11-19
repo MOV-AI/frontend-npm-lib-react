@@ -41,5 +41,5 @@ export {
   Style,
   Logs,
   LoginForm,
-  ProfileMenu
+  ProfileMenu,
 };
