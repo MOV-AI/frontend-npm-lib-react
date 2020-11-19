@@ -10,10 +10,21 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "normal",
-    fontSize: "16px",
+    fontSize: "14px",
     marginLeft: 0,
     marginRight: 0,
   },
+  colorSwitchBase: {
+    color: grey[300],
+    "&$colorChecked": {
+      color: green[500],
+      "& + $colorBar": {
+        backgroundColor: green[500]
+      }
+    }
+  },
+  colorBar: {},
+  colorChecked: {}
 }));
 
 const Toggle = (props) => {
@@ -27,6 +38,11 @@ const Toggle = (props) => {
           color={props.color}
           disabled={props.disabled}
           hidden={props.hidden}
+          classes={{
+            switchBase: classes.colorSwitchBase,
+            checked: classes.colorChecked,
+            track: classes.colorBar
+          }}
         />
       }
       labelPlacement={props.labelPlacement}
