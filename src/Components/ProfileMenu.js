@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
   menuSpacing: {
-      padding: theme.spacingMenuX.small
+    //   padding: theme.spacingMenuX.small
     }
 }));
 
@@ -37,7 +37,7 @@ const ProfileMenu = props => {
                 onClose={handleClose}
                 className={classes.menuSpacing}
             >
-                <div>Hello, {props.userName}</div>
+                <div>Hello, {props.userName}.</div>
                 {props.extraItems?.map((item) => (
                     <MenuItem onClick={() => item.func}>{item.label}</MenuItem>
                 ))}
@@ -59,11 +59,11 @@ const ProfileMenu = props => {
         extraItems: PropTypes.array,
         style: PropTypes.object,
         handleLogout: PropTypes.func
-        // interface ExtraItems {
+        // interface ExtraItem {
         //     func: (e: event) => boolean,
         //     label: string,
         // }
-        // extraItems?: ExtraItems[]
+        // extraItems?: ExtraItem[]
       };
     
       ProfileMenu.defaultProps = {
