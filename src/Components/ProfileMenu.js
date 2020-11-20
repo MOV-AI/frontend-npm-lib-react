@@ -9,7 +9,11 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
   menuSpacing: {
-    //   padding: theme.spacingMenuX.small
+    // padding: theme.spacingMenuX.small
+        padding: "12px 16px"
+    },
+    cursorDefault: {
+        cursor: 'default'
     }
 }));
 
@@ -35,20 +39,19 @@ const ProfileMenu = props => {
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                className={classes.menuSpacing}
             >
-                <div>Hello, {props.userName}.</div>
+                <div className={classes.menuSpacing}>Hello, {props.userName}.</div>
                 {props.extraItems?.map((item) => (
-                    <MenuItem onClick={() => item.func}>{item.label}</MenuItem>
+                    <MenuItem className={classes.cursorDefault} onClick={() => item.func}>{item.label}</MenuItem>
                 ))}
-                <MenuItem>Dark Theme 
+                <div className={classes.menuSpacing}>Dark Theme 
                     <Toggle
                         onToggle={() => props.handleToggleTheme()}
                         toggle={props.isDarkTheme}
                     ></Toggle>
-                </MenuItem>
+                </div>
                 <MenuItem onClick={props.handleLogout}>Logout</MenuItem>
-                <div>{props.version}</div>
+                <div className={classes.menuSpacing}>{props.version}</div>
             </Menu>
         </div>
     );
