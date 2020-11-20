@@ -31,6 +31,11 @@ const themeFactory = particular => ({
 const Themes = {
   dark: createMuiTheme(
     themeFactory({
+      /* math tests */
+      spacingMenuX: {
+        small: "4px"
+      },
+      /* */
       label: "dark",
       backgroundColor:
         "linear-gradient(114.01deg, #212121 0%, #050505 100.43%)",
@@ -123,6 +128,11 @@ const Themes = {
   ),
   light: createMuiTheme(
     themeFactory({
+      /* math tests */
+      spacingMenuX: {
+        small: "4px"
+      },
+      /* */
       label: "light",
       backgroundColor:
         "linear-gradient(122.19deg, #FFFFFF 2.58%, #FFFFFF 76.23%)", // it was white before

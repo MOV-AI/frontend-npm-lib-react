@@ -12,5 +12,12 @@ export default {
 export const profileMenu = args => <ProfileMenu {...args}>Simple</ProfileMenu>;
 
 profileMenu.story = {
-    name: "profile menu"
+    userName: "New user",
+    version: "v.1.1.2020",
+    extraItems: [{label: "Profile", func: () => console.log("Click MOV.AI ProfileMenu")}],
+    style: {},
+    onClick: () => console.log("Click MOV.AI ProfileMenu"),
+    color: "default", // default, inherit, primary or secondary
+    variant: "contained", // text, outlined, contained
+    size: "medium", // small, medium, large
 };

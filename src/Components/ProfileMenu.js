@@ -2,23 +2,31 @@ import React from "react";
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import PropTypes from "prop-types";
 import SettingsIcon from '@material-ui/icons/Settings';
+import PropTypes from "prop-types";
 import Toggle from './Toggle';
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(theme => ({
+  menuSpacing: {
+      padding: theme.spacingMenuX.small
+    }
+}));
 
 const ProfileMenu = props => {
+     const classes = useStyles();
      const [anchorEl, setAnchorEl] = React.useState(null);
 
      const handleClick = (event) => {
          setAnchorEl(event.currentTarget);
      };
 
-      const handleClose = () => {
+     const handleClose = () => {
           setAnchorEl(null);
-      };
-
-    return (
-        <div>
+     };
+      
+      return (
+          <div>
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
                 <SettingsIcon />
             </Button>
@@ -27,8 +35,9 @@ const ProfileMenu = props => {
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                className={classes.menuSpacing}
             >
-                <div>Hello, {props.name}</div>
+                <div>Hello, {props.userName}</div>
                 {props.extraItems?.map((item) => (
                     <MenuItem onClick={() => item.func}>{item.label}</MenuItem>
                 ))}
@@ -45,31 +54,24 @@ const ProfileMenu = props => {
     );
 };
     ProfileMenu.propTypes = {
-        name: PropTypes.string,
+        userName: PropTypes.string,
         version: PropTypes.string,
         extraItems: PropTypes.array,
         style: PropTypes.object,
-        onClick: PropTypes.func,
-        color: PropTypes.string,
-        variant: PropTypes.string.isRequired,
-        size: PropTypes.string,
-        startIcon: PropTypes.element,
-        children: PropTypes.node.isRequired,
-        disabled: PropTypes.bool
+        handleLogout: PropTypes.func
+        // interface ExtraItems {
+        //     func: (e: event) => boolean,
+        //     label: string,
+        // }
+        // extraItems?: ExtraItems[]
       };
     
       ProfileMenu.defaultProps = {
-        name: "User",
+        userName: "User",
         version: "v.1.1.2020",
-        extraItems: [{label: "Profile", func: () => console.log("Click MOV.AI ProfileMenu")}],
         style: {},
-        onClick: () => console.log("Click MOV.AI ProfileMenu"),
-        color: "default", // default, inherit, primary or secondary
-        variant: "contained", // text, outlined, contained
-        size: "medium", // small, medium, large
-        startIcon: undefined,
-        children: <div></div>,
-        disabled: false
+        extraItems: [],
+        handleLogout: () => console.log('handle')
       };
 
 export default ProfileMenu;
