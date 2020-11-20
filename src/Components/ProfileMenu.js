@@ -1,5 +1,5 @@
 import React from "react";
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -14,6 +14,10 @@ const useStyles = makeStyles(theme => ({
     },
     cursorDefault: {
         cursor: 'default'
+    },
+    version: {
+        textAlign: 'end',
+        fontSize: '14px'
     }
 }));
 
@@ -31,36 +35,38 @@ const ProfileMenu = props => {
       
       return (
           <div>
-            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+            <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
                 <SettingsIcon />
-            </Button>
+            </IconButton>
             <Menu id="simple-menu"     
                 anchorEl={anchorEl}  
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <div className={classes.menuSpacing}>Hello, {props.userName}.</div>
+                <div className={classes.menuSpacing}>{props.welcomeLabel}, {props.userName}</div>
                 {props.extraItems?.map((item) => (
-                    <MenuItem className={classes.cursorDefault} onClick={() => item.func}>{item.label}</MenuItem>
+                    <MenuItem onClick={() => item.func}>{item.label}</MenuItem>
                 ))}
-                <div className={classes.menuSpacing}>Dark Theme 
+                <div className={(classes.menuSpacing + ' ' + classes.cursorDefault)}>{props.darkThemeLabel} 
                     <Toggle
                         onToggle={() => props.handleToggleTheme()}
                         toggle={props.isDarkTheme}
                     ></Toggle>
                 </div>
-                <MenuItem onClick={props.handleLogout}>Logout</MenuItem>
-                <div className={classes.menuSpacing}>{props.version}</div>
+                <MenuItem onClick={props.handleLogout}>{props.logoutLabel}</MenuItem>
+                <div className={classes.menuSpacing + ' ' + classes.version}>{props.version}</div>
             </Menu>
         </div>
     );
 };
     ProfileMenu.propTypes = {
+        welcomeLabel: PropTypes.string,
         userName: PropTypes.string,
+        darkThemeLabel: PropTypes.string,
+        logoutLabel: PropTypes.string,
         version: PropTypes.string,
         extraItems: PropTypes.array,
-        style: PropTypes.object,
         handleLogout: PropTypes.func
         // interface ExtraItem {
         //     func: (e: event) => boolean,
@@ -70,9 +76,11 @@ const ProfileMenu = props => {
       };
     
       ProfileMenu.defaultProps = {
+        welcomeLabel: "Hello",
         userName: "User",
+        darkThemeLabel: "Dark Theme",
+        logoutLabel: "Logout",
         version: "v.1.1.2020",
-        style: {},
         extraItems: [],
         handleLogout: () => console.log('handle')
       };
