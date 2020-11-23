@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   accountArea: {
-    padding: props.unsetAccountAreaPadding ? "unset" : "17px",
+    padding: props => (props.unsetAccountAreaPadding ? "unset" : "17px"),
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center"
