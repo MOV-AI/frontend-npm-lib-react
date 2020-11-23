@@ -38,6 +38,7 @@ const Toggle = (props) => {
           color={props.color}
           disabled={props.disabled}
           hidden={props.hidden}
+          size={props.size}
           classes={{
             switchBase: classes.colorSwitchBase,
             checked: classes.colorChecked,

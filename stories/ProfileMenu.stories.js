@@ -1,5 +1,7 @@
 import React from "react";
 import ProfileMenu from "../src/Components/ProfileMenu";
+import Themes from "../src/styles/Themes";
+import { ThemeProvider } from "@material-ui/styles";
 
 
 export default {
@@ -9,7 +11,12 @@ export default {
     }
 };
 
-export const profileMenu = args => <ProfileMenu {...args}>Simple</ProfileMenu>;
+export const profileMenu = args => { 
+    return (
+        <ThemeProvider theme={Themes["dark"]}>
+            <ProfileMenu {...args}>Simple</ProfileMenu>
+        </ThemeProvider>
+    )};
 
 profileMenu.story = {
     userName: "New user",

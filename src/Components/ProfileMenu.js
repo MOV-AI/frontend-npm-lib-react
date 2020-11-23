@@ -6,20 +6,25 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import PropTypes from "prop-types";
 import Toggle from './Toggle';
 import { makeStyles } from "@material-ui/core/styles";
+import Divider from '@material-ui/core/Divider';
 
-const useStyles = makeStyles(theme => ({
-  menuSpacing: {
-    // padding: theme.spacingMenuX.small
-        padding: "12px 16px"
+const useStyles = makeStyles(theme => {
+  console.log("math theme", theme.spacing)
+  return  {
+  menuItemSpacing: {
+        // "& > *": {
+            padding: theme.spacing(1.25, 2),
+            minHeight: '16px'
+        // }
     },
     cursorDefault: {
         cursor: 'default'
     },
-    version: {
+    profileMenuFooter: {
         textAlign: 'end',
         fontSize: '14px'
     }
-}));
+}});
 
 const ProfileMenu = props => {
      const classes = useStyles();
@@ -44,18 +49,21 @@ const ProfileMenu = props => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <div className={classes.menuSpacing}>{props.welcomeLabel}, {props.userName}</div>
+                <div className={classes.menuItemSpacing}>{props.welcomeLabel}, {props.userName}</div>
+                <Divider variant="middle" />
                 {props.extraItems?.map((item) => (
-                    <MenuItem onClick={() => item.func}>{item.label}</MenuItem>
+                    <MenuItem  className={classes.menuItemSpacing} onClick={() => item.func}>{item.label}</MenuItem>
                 ))}
-                <div className={(classes.menuSpacing + ' ' + classes.cursorDefault)}>{props.darkThemeLabel} 
+                <div className={(classes.menuItemSpacing + ' ' + classes.cursorDefault)}>{props.darkThemeLabel} 
                     <Toggle
                         onToggle={() => props.handleToggleTheme()}
                         toggle={props.isDarkTheme}
+                        size={"small"}
                     ></Toggle>
                 </div>
-                <MenuItem onClick={props.handleLogout}>{props.logoutLabel}</MenuItem>
-                <div className={classes.menuSpacing + ' ' + classes.version}>{props.version}</div>
+                <MenuItem className={classes.menuItemSpacing} onClick={props.handleLogout}>{props.logoutLabel}</MenuItem>
+                <Divider variant="middle" />
+                <div className={classes.menuItemSpacing + ' ' + classes.profileMenuFooter}>{props.version}</div>
             </Menu>
         </div>
     );
