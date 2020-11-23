@@ -1,9 +1,12 @@
 import { createMuiTheme } from "@material-ui/core/styles";
+import "fontsource-cabin";
+import "fontsource-roboto";
+import "fontsource-noto-sans";
 
 const themeFactory = particular => ({
   ...particular,
   typography: {
-    fontFamily: "Roboto",
+    fontFamily: "Avenir",
     h1: {
       fontFamily: "Avenir"
     },
@@ -25,6 +28,9 @@ const themeFactory = particular => ({
     body1: {
       fontFamily: "Roboto"
     }
+  },
+  cursorDefault: {
+    cursor: "default"
   }
 });
 
@@ -123,6 +129,20 @@ const Themes = {
   ),
   light: createMuiTheme(
     themeFactory({
+      font: {
+        Roboto: {
+          fontFamily: "Roboto"
+        },
+        Avenir: {
+          fontFamily: "Avenir"
+        },
+        Cabin: {
+          fontFamily: "Cabin"
+        },
+        NotoSans: {
+          fontFamily: "Noto Sans"
+        }
+      },
       label: "light",
       backgroundColor:
         "linear-gradient(122.19deg, #FFFFFF 2.58%, #FFFFFF 76.23%)", // it was white before
