@@ -12,13 +12,14 @@ import { Typography } from "@material-ui/core";
 const useStyles = makeStyles(theme => {
   return {
     menuItemSpacing: {
+      fontSize: "18px",
+      minHeight: "18px",
       padding: theme.spacing(1.25, 2),
-      minHeight: "16px",
       ...theme.cursorDefault
     },
     profileMenuFooter: {
-      textAlign: "end",
-      fontSize: "12px"
+      fontSize: "14px",
+      textAlign: "end"
     }
   };
 });
@@ -70,7 +71,7 @@ const ProfileMenu = props => {
             <Toggle
               onToggle={() => props.handleToggleTheme()}
               toggle={props.isDarkTheme}
-              size={"small"}
+              // size={"small"}
             ></Toggle>
           </div>
           <MenuItem
