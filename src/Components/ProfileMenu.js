@@ -71,7 +71,6 @@ const ProfileMenu = props => {
             <Toggle
               onToggle={() => props.handleToggleTheme()}
               toggle={props.isDarkTheme}
-              // size={"small"}
             ></Toggle>
           </div>
           <MenuItem
@@ -101,11 +100,6 @@ ProfileMenu.propTypes = {
   version: PropTypes.string,
   extraItems: PropTypes.array,
   handleLogout: PropTypes.func
-  // interface ExtraItem {
-  //     func: (e: event) => boolean,
-  //     label: string,
-  // }
-  // extraItems?: ExtraItem[]
 };
 
 ProfileMenu.defaultProps = {

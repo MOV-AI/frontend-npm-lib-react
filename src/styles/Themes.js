@@ -135,12 +135,6 @@ const Themes = {
         },
         Avenir: {
           fontFamily: "Avenir"
-        },
-        Cabin: {
-          fontFamily: "Cabin"
-        },
-        NotoSans: {
-          fontFamily: "Noto Sans"
         }
       },
       label: "light",
