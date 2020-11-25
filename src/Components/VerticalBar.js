@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   accountArea: {
-    padding: "17px",
+    padding: props => (props.unsetAccountAreaPadding ? "unset" : "17px"),
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center"
@@ -55,14 +55,16 @@ VerticalBar.propTypes = {
   navigationList: PropTypes.array,
   lowerElement: PropTypes.node.isRequired,
   width: PropTypes.string,
-  backgroundColor: PropTypes.string
+  backgroundColor: PropTypes.string,
+  unsetAccountAreaPadding: PropTypes.bool
 };
 VerticalBar.defaultProps = {
   upperElement: <div></div>,
   navigationList: [<div></div>],
   lowerElement: <div></div>,
   width: "68px",
-  backgroundColor: "#424242"
+  backgroundColor: "#424242",
+  unsetAccountAreaPadding: false
 };
 
 export default VerticalBar;

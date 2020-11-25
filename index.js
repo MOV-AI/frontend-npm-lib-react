@@ -18,6 +18,7 @@ import Themes from "./src/styles/Themes";
 import Style from "./src/styles/Style";
 import Logs from "./src/Components/Logs/Logs";
 import LoginForm from "./src/Components/LoginForm/LoginForm";
+import ProfileMenu from "./src/Components/ProfileMenu";
 
 export {
   Button,
@@ -39,5 +40,6 @@ export {
   snackbar,
   Style,
   Logs,
-  LoginForm
+  LoginForm,
+  ProfileMenu,
 };

@@ -24,7 +24,8 @@ import {
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
-import { isEqual, get } from "lodash";
+import _isEqual from "lodash/isEqual";
+import _get from "lodash/get";
 
 const useStyles = makeStyles(theme => ({
   filterBarContainer: {
@@ -377,7 +378,7 @@ const LogsFilterBar = props => {
               input={<Input />}
               renderValue={selected =>
                 selected
-                  .map(elem => get(props, `columnList[${elem}].label`, ""))
+                  .map(elem => _get(props, `columnList[${elem}].label`, ""))
                   .join(`, `)
               }
               MenuProps={MenuProps}
@@ -471,7 +472,7 @@ LogsFilterBar.defaultProps = {
 
 //The function returns true when the compared props equal, preventing the component from re-rendering
 function arePropsEqual(prevProps, nextProps) {
-  return isEqual(prevProps, nextProps);
+  return _isEqual(prevProps, nextProps);
 }
 
 export default memo(LogsFilterBar, arePropsEqual);

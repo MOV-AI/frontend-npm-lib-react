@@ -12,7 +12,7 @@ import {
   getJustTimeFromServer
 } from "./utils/Utils";
 import LogsTable from "./LogsTable/LogsTable";
-import { isEqual } from "lodash";
+import _isEqual from "lodash/isEqual";
 import PropTypes from "prop-types";
 
 class Logs extends Component {
@@ -59,7 +59,7 @@ class Logs extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (isEqual(prevProps.robotsData, this.props.robotsData)) return;
+    if (_isEqual(prevProps.robotsData, this.props.robotsData)) return;
     this.setSelectedRobots(
       this.props.robotsData.map(elem => ({ ...elem, isSelected: true }))
     );
