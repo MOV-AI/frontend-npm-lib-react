@@ -12,7 +12,7 @@ import {
   getJustTimeFromServer
 } from "./utils/Utils";
 import LogsTable from "./LogsTable/LogsTable";
-import { _isEqual } from "lodash/isEqual";
+import _isEqual from "lodash/isEqual";
 import PropTypes from "prop-types";
 
 class Logs extends Component {

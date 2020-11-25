@@ -24,8 +24,8 @@ import {
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
-import { _isEqual } from "lodash/isEqual";
-import { _get } from "lodash/get";
+import _isEqual from "lodash/isEqual";
+import _get from "lodash/get";
 
 const useStyles = makeStyles(theme => ({
   filterBarContainer: {
