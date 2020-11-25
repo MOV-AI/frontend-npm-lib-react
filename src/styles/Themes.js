@@ -1,7 +1,5 @@
 import { createMuiTheme } from "@material-ui/core/styles";
-import "fontsource-cabin";
 import "fontsource-roboto";
-import "fontsource-noto-sans";
 
 const themeFactory = particular => ({
   ...particular,
