@@ -99,7 +99,8 @@ ProfileMenu.propTypes = {
   logoutLabel: PropTypes.string,
   version: PropTypes.string,
   extraItems: PropTypes.array,
-  handleLogout: PropTypes.func
+  handleLogout: PropTypes.func,
+  handleToggleTheme: PropTypes.func
 };
 
 ProfileMenu.defaultProps = {
@@ -109,7 +110,8 @@ ProfileMenu.defaultProps = {
   logoutLabel: "Logout",
   version: "v.1.1.2020",
   extraItems: [],
-  handleLogout: () => console.log("handle")
+  handleLogout: () => console.log("logout"),
+  handleToggleTheme: () => console.log("toggle")
 };
 
 export default ProfileMenu;
