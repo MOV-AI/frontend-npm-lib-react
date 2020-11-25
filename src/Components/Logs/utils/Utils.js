@@ -1,5 +1,5 @@
 import React from "react";
-import lodash from "lodash";
+import _isEmpty from "lodash/isEmpty";
 
 // export const levels = [
 //   { value: "INFO", label: i18n.t("Robot Status") },
@@ -138,7 +138,7 @@ export function getRequestLevels(levelsArray, levelsList) {
 export function getRequestTags(tagsArray) {
   let res = "";
 
-  if (lodash.isEmpty(tagsArray)) {
+  if (_isEmpty(tagsArray)) {
     return res;
   }
 

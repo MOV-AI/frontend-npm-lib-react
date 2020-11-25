@@ -9,9 +9,9 @@ import {
   Color3,
   Observable,
   StandardMaterial,
-  Quaternion,
+  Quaternion
 } from "@babylonjs/core";
-import isEqual from "lodash.isequal";
+import _isEqual from "lodash/isEqual";
 
 class BoxRegion extends NodeItem {
   constructor(mesh, corners, keyPoints, keyValueMap = {}) {
@@ -38,13 +38,13 @@ class BoxRegion extends NodeItem {
           properties: {
             x: {
               type: "number",
-              title: "x",
+              title: "x"
             },
             y: {
               type: "number",
-              title: "y",
-            },
-          },
+              title: "y"
+            }
+          }
         },
         size: {
           type: "object",
@@ -52,31 +52,31 @@ class BoxRegion extends NodeItem {
           properties: {
             scaleX: {
               type: "number",
-              title: "scale-X",
+              title: "scale-X"
             },
             scaleY: {
               type: "number",
-              title: "scale-Y",
-            },
-          },
-        },
-      },
+              title: "scale-Y"
+            }
+          }
+        }
+      }
     };
     schema.uiSchema["dimensions"] = { "ui:widget": "collapse" };
     // global ref coordinates
     const worldCorners = this.keyPoints
-      .map((x) => Util3d.getWorldCoordinates(x, x.position))
-      .map((x) => x.toArray());
+      .map(x => Util3d.getWorldCoordinates(x, x.position))
+      .map(x => x.toArray());
     schema.data["dimensions"] = {
       lower: {
         x: worldCorners[0][0],
-        y: worldCorners[0][1],
+        y: worldCorners[0][1]
       },
       size: {
         // TODO: warning, doesn't take into account possible scaling
         scaleX: this.corners[1][0] - this.corners[0][0],
-        scaleY: this.corners[1][1] - this.corners[0][1],
-      },
+        scaleY: this.corners[1][1] - this.corners[0][1]
+      }
     };
     return schema;
   }
@@ -84,7 +84,7 @@ class BoxRegion extends NodeItem {
   ofForm(form) {
     const oldForm = this.toForm();
     const oldDimensions = oldForm.data.dimensions;
-    if (isEqual(oldDimensions, form.dimensions)) {
+    if (_isEqual(oldDimensions, form.dimensions)) {
       super.ofForm(form);
     } else {
       this.ofFormDimensions(form);
@@ -107,16 +107,16 @@ class BoxRegion extends NodeItem {
     );
     const newLocalDimensions = [
       form.dimensions.size.scaleX,
-      form.dimensions.size.scaleY,
+      form.dimensions.size.scaleY
     ].map(Number.parseFloat);
     const localLowerPosition = Util3d.getLocalCoordinatesFromWorld(
       this.keyPoints[0],
       newLowerPositionInWorldCoordinates
     ).toArray();
-    const notify = (i) =>
+    const notify = i =>
       this.keyPoints[i].observers.notifyObservers({
         updatedPointMesh: this.keyPoints[i],
-        is2updateServer: false,
+        is2updateServer: false
       });
     this.keyPoints[0].position = new Vector3(
       localLowerPosition[0],
@@ -148,7 +148,7 @@ class BoxRegion extends NodeItem {
 
     mesh.visibility = 0.25;
 
-    Maybe.fromNull(dict.quaternion).forEach((quaternion) => {
+    Maybe.fromNull(dict.quaternion).forEach(quaternion => {
       const babylonQuaternion = new Quaternion(
         quaternion[1],
         quaternion[2],
@@ -160,7 +160,7 @@ class BoxRegion extends NodeItem {
 
     const keyPoints = createPlaceHolderKeyPoints(
       scene,
-      dict.corners.map((x) => Vec3.of(x).toBabylon()),
+      dict.corners.map(x => Vec3.of(x).toBabylon()),
       mesh,
       mainView
     );
@@ -181,7 +181,7 @@ const FACES = [
   [1, 2, 6],
   [6, 5, 1],
   [0, 3, 7],
-  [7, 4, 0],
+  [7, 4, 0]
 ];
 
 /**
@@ -189,14 +189,14 @@ const FACES = [
  */
 function createBoxRegionMesh(boxRegion, name, scene) {
   // centered corners vec
-  const corners = boxRegion.corners.map((x) => Vec3.of(x).toBabylon());
+  const corners = boxRegion.corners.map(x => Vec3.of(x).toBabylon());
   const d = corners[1].subtract(corners[0]);
   const middlePoint = Vec3.of(boxRegion.position).toBabylon();
   const shape = [
     corners[0],
     corners[0].add(Axis.X.scale(d.x)),
     corners[0].add(new Vector3(d.x, d.y, 0)),
-    corners[0].add(Axis.Y.scale(d.y)),
+    corners[0].add(Axis.Y.scale(d.y))
   ];
   const h = new Vector3(0, 0, d.z);
   const boxRegionMesh = {
@@ -208,9 +208,9 @@ function createBoxRegionMesh(boxRegion, name, scene) {
       shape[0].add(h),
       shape[1].add(h),
       shape[2].add(h),
-      shape[3].add(h),
+      shape[3].add(h)
     ],
-    faces: FACES,
+    faces: FACES
   };
   const mesh = Util3d.meshFromPositionAndFaces(
     name,
@@ -223,11 +223,9 @@ function createBoxRegionMesh(boxRegion, name, scene) {
 }
 
 function createNewMeshFromOldUsingNewBox(newBox, scene, mesh, item) {
-  const average = Util3d.pointAverageVec3(
-    newBox.corners.map((x) => Vec3.of(x))
-  );
+  const average = Util3d.pointAverageVec3(newBox.corners.map(x => Vec3.of(x)));
   newBox.position = average.toArray();
-  newBox.corners = newBox.corners.map((x) => Vec3.of(x).sub(average).toArray());
+  newBox.corners = newBox.corners.map(x => Vec3.of(x).sub(average).toArray());
 
   const newMesh = createBoxRegionMesh(newBox, mesh.name, scene);
   newMesh.position = mesh.position;
@@ -241,7 +239,7 @@ function createNewMeshFromOldUsingNewBox(newBox, scene, mesh, item) {
   item.corners = newBox.corners;
 
   const childrenCopy = [...mesh._children];
-  childrenCopy.forEach((c) => {
+  childrenCopy.forEach(c => {
     mesh.removeChild(c);
     c.parent = newMesh;
   });
@@ -256,7 +254,7 @@ const getKeyPointObserverFunction = (mainView, scene) => {
   return ({ updatedPointMesh, is2updateServer }) => {
     mainView
       .getNodeFromTree(updatedPointMesh.parent.name)
-      .forEach((boxRegionTreeNode) => {
+      .forEach(boxRegionTreeNode => {
         const index = updatedPointMesh.index;
         const item = boxRegionTreeNode.item;
         const mesh = item.mesh;
@@ -264,7 +262,7 @@ const getKeyPointObserverFunction = (mainView, scene) => {
 
         let newBox = {
           position: Vec3.ofBabylon(mesh.position).toArray(),
-          corners: item.corners,
+          corners: item.corners
         };
         newBox.corners[index] = Vec3.ofBabylon(
           updatedPointMesh.position
@@ -275,7 +273,7 @@ const getKeyPointObserverFunction = (mainView, scene) => {
 
         if (is2updateServer) {
           mainView.updateNodeInServer(name);
-          mainView.getNodeFromTree(name).forEach((node) => {
+          mainView.getNodeFromTree(name).forEach(node => {
             mainView.setProperties(node.item.toForm());
           });
         }

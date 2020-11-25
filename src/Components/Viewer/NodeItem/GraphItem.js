@@ -8,7 +8,7 @@ import Graph from "../Graph/Graph";
 import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
 import React from "react";
-import lodash from "lodash";
+import _get from "lodash/get";
 import { UndoManager } from "mov-fe-lib-core";
 
 /**
@@ -154,13 +154,13 @@ class GraphItem extends NodeItem {
           })
           .orSome(form),
       ofForm: form => {
-        let position = lodash.get(form, "positionVertex", vertexMesh.position);
+        let position = _get(form, "positionVertex", vertexMesh.position);
         position = [position.x, position.y, position.z].map(Number.parseFloat);
         this.graph
           .getVertex(vertexMesh.position)
           .forEach(
             rVertex =>
-              (rVertex.keyValueMap = { ...lodash.get(form, "annotations", {}) })
+              (rVertex.keyValueMap = { ..._get(form, "annotations", {}) })
           );
         this.updateVertexPosition(
           vertexMesh.vertexId,
@@ -237,7 +237,7 @@ class GraphItem extends NodeItem {
           index => this.meshByVertexId[index].position
         );
         const edgePosition = Util3d.pointAverage(edgePositions);
-        let newEdgePosition = lodash.get(form, "positionEdge", edgePosition);
+        let newEdgePosition = _get(form, "positionEdge", edgePosition);
         newEdgePosition = [
           newEdgePosition.x,
           newEdgePosition.y,
@@ -253,7 +253,7 @@ class GraphItem extends NodeItem {
         );
 
         const updateEdgeFromForm = rEdge => {
-          rEdge.keyValueMap = { ...lodash.get(form, "annotations", {}) };
+          rEdge.keyValueMap = { ..._get(form, "annotations", {}) };
           rEdge.weight = Number.parseFloat(form.weight);
         };
         this.graph

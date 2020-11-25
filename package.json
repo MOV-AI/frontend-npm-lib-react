@@ -1,6 +1,6 @@
 {
   "name": "mov-fe-lib-react",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The Mov.AI's frontend library for React.",
   "main": "./dist/index.js",
   "proxy": {
@@ -76,7 +76,6 @@
     "fontsource-noto-sans": "^3.0.10",
     "fontsource-roboto": "^3.0.3",
     "lodash": "^4.17.15",
-    "lodash.isequal": "^4.5.0",
     "material-table": "^1.62.0",
     "monet": "^0.9.0",
     "mov-fe-lib-core": "git+ssh://git@bitbucket.org/robosavvy/mov-fe-lib-core.git",
