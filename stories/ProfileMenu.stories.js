@@ -82,7 +82,7 @@ profileMenu.story = {
   userName: "User",
   darkThemeLabel: "Dark Theme",
   logoutLabel: "Logout",
-  version: "v.1.1.2020",
+  version: "",
   extraItems: [],
   handleLogout: () => console.log("logout"),
   handleToggleTheme: () => console.log("toggle")
