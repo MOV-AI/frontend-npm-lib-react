@@ -1,27 +1,28 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 import "fontsource-roboto";
+import "fontsource-open-sans";
 
 const themeFactory = particular => ({
   ...particular,
   typography: {
-    fontFamily: "Avenir",
+    fontFamily: "Open Sans",
     h1: {
-      fontFamily: "Avenir"
+      fontFamily: "Open Sans"
     },
     h2: {
-      fontFamily: "Avenir"
+      fontFamily: "Open Sans"
     },
     h3: {
-      fontFamily: "Avenir"
+      fontFamily: "Open Sans"
     },
     h4: {
-      fontFamily: "Avenir"
+      fontFamily: "Open Sans"
     },
     h5: {
-      fontFamily: "Avenir"
+      fontFamily: "Open Sans"
     },
     h6: {
-      fontFamily: "Avenir"
+      fontFamily: "Open Sans"
     },
     body1: {
       fontFamily: "Roboto"
@@ -131,8 +132,8 @@ const Themes = {
         Roboto: {
           fontFamily: "Roboto"
         },
-        Avenir: {
-          fontFamily: "Avenir"
+        OpenSans: {
+          fontFamily: "Open Sans"
         }
       },
       label: "light",
