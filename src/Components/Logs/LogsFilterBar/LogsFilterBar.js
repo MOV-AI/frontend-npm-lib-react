@@ -335,7 +335,7 @@ const LogsFilterBar = props => {
             component="div"
             style={{
               fontSize: "1rem",
-              fontFamily: "Avenir",
+              fontFamily: "Open Sans",
               fontWeight: 500
             }}
           >
@@ -362,7 +362,7 @@ const LogsFilterBar = props => {
             component="div"
             style={{
               fontSize: "1rem",
-              fontFamily: "Avenir",
+              fontFamily: "Open Sans",
               fontWeight: 500
             }}
           >

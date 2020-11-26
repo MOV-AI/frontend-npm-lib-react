@@ -118,7 +118,7 @@ class FilterIcon extends Component {
                 component="div"
                 style={{
                   fontSize: "24px",
-                  fontFamily: "Avenir",
+                  fontFamily: "Open Sans",
                   fontWeight: 500
                 }}
               >

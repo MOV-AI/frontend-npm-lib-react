@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   link: {
     fontSize: "24px",
     fontWeight: 800,
-    fontFamily: "Avenir",
+    fontFamily: "Open Sans",
     "&:hover": {
       cursor: "pointer",
       textDecoration: "underline"
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   lastLabel: {
     fontSize: "24px",
     fontWeight: 800,
-    fontFamily: "Avenir"
+    fontFamily: "Open Sans"
   }
 }));
 
