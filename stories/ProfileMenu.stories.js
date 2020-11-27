@@ -57,6 +57,10 @@ export default {
       description: "function to logout",
       type: "function"
     },
+    isDarkTheme: {
+      description: "Inform if dark theme is activated",
+      type: "boolean"
+    },
     handleToggleTheme: {
       description: "function to change theme",
       type: "function"

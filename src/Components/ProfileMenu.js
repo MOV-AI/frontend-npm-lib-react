@@ -5,7 +5,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PropTypes from "prop-types";
 import Toggle from "./Toggle";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Divider from "@material-ui/core/Divider";
 import { Typography } from "@material-ui/core";
 
@@ -27,7 +27,6 @@ const useStyles = makeStyles(theme => {
 const ProfileMenu = props => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const theme = useTheme();
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -99,6 +98,7 @@ ProfileMenu.propTypes = {
   logoutLabel: PropTypes.string,
   version: PropTypes.string,
   extraItems: PropTypes.array,
+  isDarkTheme: PropTypes.bool,
   handleLogout: PropTypes.func,
   handleToggleTheme: PropTypes.func
 };
@@ -110,6 +110,7 @@ ProfileMenu.defaultProps = {
   logoutLabel: "Logout",
   version: "",
   extraItems: [],
+  isDarkTheme: true,
   handleLogout: () => console.log("logout"),
   handleToggleTheme: () => console.log("toggle")
 };
