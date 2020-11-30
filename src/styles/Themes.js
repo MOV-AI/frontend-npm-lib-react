@@ -30,6 +30,9 @@ const themeFactory = particular => ({
   },
   cursorDefault: {
     cursor: "default"
+  },
+  cursorPointer: {
+    cursor: "pointer"
   }
 });
 
