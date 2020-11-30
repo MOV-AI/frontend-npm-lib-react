@@ -73,7 +73,7 @@ const ProfileMenu = props => {
             ></Toggle>
           </div>
           <MenuItem
-            className={classes.menuItemSpacing}
+            className={(classes.menuItemSpacing, classes.cursorPointer)}
             onClick={props.handleLogout}
           >
             {props.logoutLabel}
