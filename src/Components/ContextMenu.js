@@ -4,6 +4,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
 const ContextMenu = props => {
+  const { style } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
@@ -15,7 +16,7 @@ const ContextMenu = props => {
   };
 
   return (
-    <div>
+    <div style={style}>
       {React.cloneElement(props.element, {
         onClick: evt => {
           if (props.element.props.onClick !== undefined) {
@@ -72,7 +73,8 @@ ContextMenu.defaultProps = {
   ],
   lowerElement: <div></div>,
   width: "68px",
-  backgroundColor: "#424242"
+  backgroundColor: "#424242",
+  style: {}
 };
 
 export default ContextMenu;
