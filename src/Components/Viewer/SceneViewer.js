@@ -15,7 +15,7 @@ import DefaultMouseEvents from "./Utils/DefaultMouseEvents";
 import Util3d from "./Util3d/Util3d";
 import Vec3 from "./Math/Vec3";
 import ReactResizeDetector from "react-resize-detector";
-import { ConfirmAlertModal } from "mov-fe-lib-react";
+import ConfirmAlertModal from "../Modal/ConfirmAlertModal";
 import { UndoManager } from "mov-fe-lib-core";
 
 //========================================================================================
