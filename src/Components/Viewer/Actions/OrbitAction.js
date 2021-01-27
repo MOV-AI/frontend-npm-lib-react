@@ -4,17 +4,11 @@ import React from "react";
 
 class OrbitAction extends MouseKeysAction {
   constructor() {
-    if (instance) return instance;
     super();
     this.key = "orbit";
     this.name = "Orbit [ESC]";
     this.maybeSelectedMesh = Maybe.none();
     this.icon = props => <i className="fas fa-globe" {...props}></i>;
-    instance = this;
-  }
-
-  static getInstance() {
-    return new OrbitAction();
   }
 
   action = parentView => {
@@ -26,9 +20,7 @@ class OrbitAction extends MouseKeysAction {
 
   onPointerMove = (evt, parentView) => {};
 
-  onPointerUp = parentView => {};
+  onPointerUp = (evt, parentView) => {};
 }
-
-let instance = null;
 
 export default OrbitAction;

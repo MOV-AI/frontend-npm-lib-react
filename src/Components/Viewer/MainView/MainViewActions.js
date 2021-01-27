@@ -3,20 +3,25 @@ import AddKeyPointAction from "../Actions/AddKeyPointAction";
 import BoxRegionAction from "../Actions/BoxRegionAction";
 import DrawPathAction from "../Actions/DrawPathAction";
 import PolygonRegionAction from "../Actions/PolygonRegionAction";
-// import DrawWallAction from "../Actions/DrawWallAction";
-// import RobotAction from "../Actions/RobotAction";
 import OrbitAction from "../Actions/OrbitAction";
 import DrawGraphAction from "../Actions/DrawGraphAction";
+import MeasureAction from "../Actions/MeasureAction";
+// import RobotAction from "../Actions/RobotAction";
+// import DrawWallAction from "../Actions/DrawWallAction";
 
-export const ACTIONS = {
-  orbit: OrbitAction.getInstance(),
-  dragObjects: DragObjectsAction.getInstance(),
-  drawPath: DrawPathAction.getInstance(),
-  drawBoxRegion: BoxRegionAction.getInstance(),
-  addKeyPoint: AddKeyPointAction.getInstance(),
-  drawRegion: PolygonRegionAction.getInstance(),
-  drawGraph: DrawGraphAction.getInstance(),
-  // drawWalls: DrawWallAction.getInstance()
+/**
+ * Order Matters
+ */
+export const ACTIONS = () => ({
+  measure: new MeasureAction(),
+  drawGraph: new DrawGraphAction(),
+  drawRegion: new PolygonRegionAction(),
+  addKeyPoint: new AddKeyPointAction(),
+  drawBoxRegion: new BoxRegionAction(),
+  drawPath: new DrawPathAction(),
+  dragObjects: new DragObjectsAction(),
+  orbit: new OrbitAction()
+  // drawWalls: new DrawWallAction()
   // addRobot: new RobotAction({
   //   id: "Test",
   //   name: "Test",
@@ -44,4 +49,4 @@ export const ACTIONS = {
   //     ]
   //   }
   // })
-};
+});

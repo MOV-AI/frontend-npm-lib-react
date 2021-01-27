@@ -5,17 +5,16 @@ import Vec3 from "../Math/Vec3";
 import Util3d from "../Util3d/Util3d";
 import React from "react";
 import { Color3 } from "@babylonjs/core";
+import { UndoManager } from "mov-fe-lib-core";
 
 class BoxRegionAction extends MouseKeysAction {
   constructor() {
-    if (instance) return instance;
     super();
     this.key = "drawBoxRegion";
-    this.name = "Draw Box Region [B]";
+    this.name = "Draw Box Region [3]";
     this.maybeMousePos = Maybe.none();
     this.tempMesh = null;
     this.icon = props => <i className="fas fa-square" {...props} />;
-    instance = this;
   }
 
   action = parentView => {
@@ -57,7 +56,7 @@ class BoxRegionAction extends MouseKeysAction {
     });
   };
 
-  onPointerUp = parentView => {
+  onPointerUp = (evt, parentView) => {
     parentView.getSceneMemory().forEach(memory => {
       const scene = memory.scene;
       const camera = memory.camera;
@@ -65,9 +64,10 @@ class BoxRegionAction extends MouseKeysAction {
       const maybeCurrent = Util3d.getGroundPosition(scene, ground);
       maybeCurrent.forEach(current => {
         this.maybeMousePos.forEach(oldMousePos => {
+          if (current.subtract(oldMousePos).length() < 1e-2) return;
           this.tempMesh.dispose();
           const name = `BoxRegion${Math.floor(Math.random() * 1e3)}`;
-          this.createBoxRegion(
+          const boxMesh = this.createBoxRegion(
             [oldMousePos, current],
             name,
             scene,
@@ -75,13 +75,33 @@ class BoxRegionAction extends MouseKeysAction {
             true
           );
           parentView.setPropertiesWithName(name);
+          parentView
+            .getUndoManager()
+            .addIt(
+              this.getUndoAbleAction(
+                [oldMousePos, current],
+                boxMesh,
+                scene,
+                parentView
+              )
+            );
         });
       });
       this.maybeMousePos = Maybe.none();
       camera.attachControl(memory.canvas, true);
-      parentView.renderMenus();
     });
   };
+
+  getUndoAbleAction(points, mesh, scene, parentView) {
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        this.createBoxRegion(points, mesh.name, scene, parentView, true);
+      })
+      .undoAction(() => {
+        parentView.deleteNodeFromTreeUsingName(mesh.name);
+      })
+      .build();
+  }
 
   createBoxRegion = (
     region,
@@ -95,10 +115,7 @@ class BoxRegionAction extends MouseKeysAction {
     const rootMesh = parentView.getRootNode().item.mesh;
 
     const localRegion = region.map(r =>
-      Util3d.computeLocalCoordinatesFromMesh(
-        { parent: rootMesh },
-        Vec3.ofBabylon(r)
-      )
+      Util3d.getLocalCoordFromWorld({ parent: rootMesh }, Vec3.ofBabylon(r))
     );
 
     localRegion[1] = localRegion[1].add(Vec3.of([0, 0, height]));
@@ -121,14 +138,7 @@ class BoxRegionAction extends MouseKeysAction {
     }
     return boxRegionItem.mesh;
   };
-
-  static getInstance() {
-    return new BoxRegionAction();
-  }
 }
 
-let instance = null;
-
 const TEMP_BOX_REGION_NAME = "temp_box_region";
-
 export default BoxRegionAction;

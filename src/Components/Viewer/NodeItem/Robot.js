@@ -1,8 +1,9 @@
 import Vec3 from "../Math/Vec3";
 import Util3d from "../Util3d/Util3d";
-import { MasterDB } from "mov-fe-lib-core";
+import { WSSub } from "mov-fe-lib-core";
 import AssetNodeItem from "./AssetNodeItem";
 import { Axis, Space, Vector3, Quaternion, Color3 } from "@babylonjs/core";
+import lodash from "lodash";
 
 class Robot extends AssetNodeItem {
   static ROBOT_MESH_NAME = "Tugbot.stl";
@@ -11,6 +12,13 @@ class Robot extends AssetNodeItem {
     super(meshTree.mesh, assetName, keyValueMap);
     this.requestAnimationFrameId = null;
     this.meshTree = meshTree;
+    this.timeSinceLastUpdate = 0;
+    this.isOnline = true;
+    this.speed = Vector3.Zero();
+    this.qSpeed = Quaternion.Zero();
+    this.newPos = Vector3.Zero();
+    this.newOri = Quaternion.Identity();
+    this.db = new WSSub();
   }
 
   toDict() {
@@ -42,7 +50,7 @@ class Robot extends AssetNodeItem {
 
   dispose() {
     super.dispose();
-    MasterDB.unsubscribe({
+    this.db.unsubscribe({
       Scope: "Robot",
       Name: this.meshTree.id,
       Parameter: "tf"
@@ -67,6 +75,19 @@ class Robot extends AssetNodeItem {
 
   getType = () => Robot.TYPE;
 
+  toOffline() {
+    if (this.mesh.isDisposed()) return;
+    this.mesh._children[0]._children[0].visibility = 0.1;
+    this.speed = Vector3.Zero();
+    this.qSpeed = Quaternion.Zero();
+    this.isOnline = false;
+  }
+
+  toOnline() {
+    if (this.mesh.isDisposed()) return;
+    this.mesh._children[0]._children[0].visibility = 1;
+    this.isOnline = true;
+  }
   //========================================================================================
   /*                                                                                      *
    *                                   Static Functions                                   *
@@ -74,6 +95,8 @@ class Robot extends AssetNodeItem {
   //========================================================================================
 
   static TYPE = "Robot";
+
+  static TIME_2_BE_OFFLINE_IN_SEC = 10;
 
   static getDefaultAnimator = parentView => (robot, dt) => {
     const mesh = robot.mesh;
@@ -83,48 +106,77 @@ class Robot extends AssetNodeItem {
       .toBabylon();
     mesh.position = mesh.position.add(vel.scale(dt));
     mesh.rotate(Axis.Z, (-Math.PI / 2) * dt, Space.LOCAL);
-    if (Math.random() < 0.01) parentView.updateNodeInServer(mesh.name);
   };
 
   static updateRobotMeshTree(newRobotTf, robot) {
-    robot.mesh.position = new Vector3(
+    const lastPosition = robot.mesh.position;
+    const lastOrientation = robot.mesh.rotationQuaternion;
+    const newPosition = new Vector3(
       newRobotTf.position.x,
       newRobotTf.position.y,
       newRobotTf.position.z
     );
-    const quaternion = new Quaternion(
+    const newOrientation = new Quaternion(
       newRobotTf.orientation.x,
       newRobotTf.orientation.y,
       newRobotTf.orientation.z,
       newRobotTf.orientation.w
-    );
-    robot.mesh.rotationQuaternion = quaternion.normalize();
+    ).normalize();
+
+    const dtReciprocal = 1 / robot.timeSinceLastUpdate;
+    robot.speed = newPosition.subtract(lastPosition).scale(dtReciprocal);
+    robot.qSpeed = newOrientation.subtract(lastOrientation).scale(dtReciprocal);
+    robot.newPos = newPosition;
+    robot.newOri = newOrientation;
+    robot.timeSinceLastUpdate = 0;
   }
 
   static getSocketAnimator = (robot, parentView) => {
-    MasterDB.subscribe(
+    robot.db.subscribe(
       { Scope: "Robot", Name: robot.meshTree.id, Parameter: "tf" },
       data => {
-        const tf = data.key.Robot[robot.meshTree.id].Parameter.tf.Value;
-        if (tf) {
-          console.log("ROBOT TF UPDATE...", tf);
-          Robot.updateRobotMeshTree(tf, robot);
-          console.log("Updating robot ", robot);
-          if (Math.random() < 0.01) parentView.updateNodeInServer(robot.name);
-        }
+        const tf = lodash.get(
+          data,
+          `key.Robot.${robot.meshTree.id}.Parameter.tf.Value`,
+          undefined
+        );
+        if (tf) Robot.updateRobotMeshTree(tf, robot);
       },
       data => {
-        console.log("ROBOT INIT SUB...", data.value);
-        const tf = data.value.Robot[robot.meshTree.id].Parameter.tf.Value;
-        Robot.updateRobotMeshTree(tf, robot);
-        console.log("Updating robot ", robot);
-        parentView.updateNodeInServer(robot.name);
+        const tf = lodash.get(
+          data,
+          `key.Robot.${robot.meshTree.id}.Parameter.tf.Value`,
+          undefined
+        );
+        if (tf) Robot.updateRobotMeshTree(tf, robot);
       }
     );
     return (robot2Animate, dt) => {
-      // empty animation
+      const epsilon = 1e-2;
+      const n = 1 / epsilon;
+      const biasedCoin = robot2Animate.timeSinceLastUpdate % n; // Math.random() < epsilon
+      robot2Animate.timeSinceLastUpdate += dt;
+      if (Vec3.ofBabylon(robot2Animate.speed).someNaNOrInfinite()) return;
+      if (Vec3.ofBabylon(robot2Animate.qSpeed).someNaNOrInfinite()) return;
+      robot2Animate.mesh.position = biasedCoin
+        ? robot2Animate.newPos
+        : robot2Animate.mesh.position.add(robot2Animate.speed.scale(dt));
+      robot2Animate.mesh.rotationQuaternion = biasedCoin
+        ? robot2Animate.newOri
+        : robot2Animate.mesh.rotationQuaternion
+            .add(robot.qSpeed.scale(dt))
+            .normalize();
+      Robot.setOnOffLine(robot2Animate);
     };
   };
+
+  static setOnOffLine(robot) {
+    if (robot.timeSinceLastUpdate > Robot.TIME_2_BE_OFFLINE_IN_SEC) {
+      robot.toOffline();
+    } else {
+      if (!robot.isOnline) robot.toOnline();
+    }
+  }
 
   /**
    * Side effect function
@@ -200,7 +252,7 @@ class Robot extends AssetNodeItem {
       mesh.parent = parent;
     }
     meshTree["children"] = node.child.map(child => {
-      this.createRobotMeshTreeRecursive(
+      return this.createRobotMeshTreeRecursive(
         child,
         Util3d.referentialBuilder(scene)
           .boxParams({ isVisible: false, size: 0.1 })
@@ -285,7 +337,9 @@ class RobotBuilder {
 
     variables.forEach(x => {
       if (x === null)
-        throw `There are missing variables to build a robot, e.g ${x}`;
+        throw new Error(
+          `There are missing variables to build a robot, e.g ${x}`
+        );
     });
 
     this._meshTree.id = this._id;

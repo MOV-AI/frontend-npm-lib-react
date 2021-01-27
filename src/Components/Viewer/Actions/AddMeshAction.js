@@ -1,13 +1,13 @@
 import Action from "./Action";
 import React from "react";
-import { MasterDB } from "mov-fe-lib-core";
-import Constants from "../Utils/Constants";
 import { ACTIONS } from "../MainView/MainViewActions";
 import MeshLoader from "../Utils/MeshLoader";
 import { Maybe } from "monet";
 import Mesh from "../NodeItem/Mesh";
 import { Vector3, Quaternion, Color3, StandardMaterial } from "@babylonjs/core";
+import { UndoManager } from "mov-fe-lib-core";
 
+//
 class AddMeshAction extends Action {
   constructor(mesh) {
     super();
@@ -20,33 +20,82 @@ class AddMeshAction extends Action {
     super.action(parentView);
     console.log(`Mesh ${this.key} : ${this.name}`, this.memory);
     this.addMesh(parentView);
-    parentView.setSelectedAction(ACTIONS.dragObjects);
+    parentView.setSelectedAction(ACTIONS().dragObjects);
   }
 
   addMesh = parentView => {
     parentView.getSceneMemory().forEach(memory => {
-      const scene = memory.scene;
+      const { scene } = memory;
       const actionMemoryClone = { ...this.memory };
-      MeshLoader.of(scene)
-        .load(this.key)
-        .then(this.transformMesh(parentView, scene, actionMemoryClone))
-        .then(this.addMesh2Scene(parentView, scene, actionMemoryClone));
+      const isImport = this.getIsImport(actionMemoryClone);
+      const finalName = this.getFinalNameFromMemory(
+        actionMemoryClone,
+        isImport
+      );
+      if (isImport) {
+        this.loadMesh(
+          parentView,
+          scene,
+          actionMemoryClone,
+          isImport,
+          finalName
+        );
+      } else {
+        parentView
+          .getUndoManager()
+          .doIt(
+            this.getUndoAbleAction(
+              parentView,
+              scene,
+              actionMemoryClone,
+              isImport,
+              finalName
+            )
+          );
+      }
     });
     this.memory["isImport"] = false;
   };
 
-  transformMesh = (parentView, scene, memory) => mesh => {
+  getIsImport(memory) {
+    return ofNull(memory["isImport"]).orSome(false);
+  }
+
+  getFinalNameFromMemory(memory, isImport) {
+    return ofNull(memory["nodeItemDict"])
+      .flatMap(d => (isImport ? some(d.name) : none()))
+      .orSome(`${this.name}${Math.floor(Math.random() * 100)}`);
+  }
+
+  getUndoAbleAction(parentView, scene, actionMemory, isImport, finalName) {
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        this.loadMesh(parentView, scene, actionMemory, isImport, finalName);
+      })
+      .undoAction(() => {
+        parentView.deleteNodeFromTreeUsingName(finalName);
+      })
+      .build();
+  }
+
+  loadMesh(parentView, scene, actionMemory, isImport, finalName) {
+    MeshLoader.of(scene)
+      .load(this.key)
+      .then(this.transformMesh(parentView, scene, actionMemory, isImport))
+      .then(this.addMesh2Scene(parentView, actionMemory, isImport, finalName));
+  }
+
+  transformMesh = (parentView, scene, actionMemory, isImport) => mesh => {
     const parentMesh = this.getParentMesh(parentView);
     mesh.parent = parentMesh;
     mesh.createNormals();
-    const isImport = Maybe.fromNull(memory["isImport"]).orSome(false);
-    const maybeDict = Maybe.fromNull(memory["nodeItemDict"]);
+    const maybeDict = ofNull(actionMemory["nodeItemDict"]);
     mesh.position = maybeDict
-      .flatMap(d => (isImport ? Maybe.some(d.position) : Maybe.none()))
+      .flatMap(d => (isImport ? some(d.position) : none()))
       .map(Vector3.FromArray)
       .orSome(Vector3.Zero());
     mesh.rotationQuaternion = maybeDict
-      .flatMap(d => (isImport ? Maybe.some(d.quaternion) : Maybe.none()))
+      .flatMap(d => (isImport ? some(d.quaternion) : none()))
       .map(
         quaternion =>
           new Quaternion(
@@ -59,7 +108,7 @@ class AddMeshAction extends Action {
       .orSome(Quaternion.Identity());
     const material = new StandardMaterial(`Mesh${mesh.name}`, scene);
     const color = maybeDict
-      .flatMap(d => (isImport ? Maybe.some(d.color) : Maybe.none()))
+      .flatMap(d => (isImport ? some(d.color) : none()))
       .map(Color3.FromArray)
       .orSome(Color3.Gray());
     material.diffuseColor = color;
@@ -68,19 +117,14 @@ class AddMeshAction extends Action {
     return mesh;
   };
 
-  addMesh2Scene = (parentView, scene, memory) => mesh => {
+  addMesh2Scene = (parentView, actionMemory, isImport, finalName) => mesh => {
     const parentMesh = this.getParentMesh(parentView);
-    const isImport = Maybe.fromNull(memory["isImport"]).orSome(false);
-    const finalName = Maybe.fromNull(memory["nodeItemDict"])
-      .flatMap(d => (isImport ? Maybe.some(d.name) : Maybe.none()))
-      .orSome(`${this.name}${Math.floor(Math.random() * 100)}`);
     mesh.name = finalName;
-
     const meshItem = new Mesh(
       mesh,
       this.name,
-      Maybe.fromNull(memory["nodeItemDict"])
-        .flatMap(x => (isImport ? Maybe.some(x.keyValueMap) : Maybe.none()))
+      ofNull(actionMemory["nodeItemDict"])
+        .flatMap(x => (isImport ? some(x.keyValueMap) : none()))
         .orSome({})
     );
 
@@ -89,7 +133,7 @@ class AddMeshAction extends Action {
   };
 
   getParentMesh = parentView => {
-    return Maybe.fromNull(this.memory["parentObj"])
+    return ofNull(this.memory["parentObj"])
       .map(parentObj => parentObj.parent)
       .flatMap(parentName => parentView.getNodeFromTree(parentName))
       .map(treeNode => treeNode.item.mesh)
@@ -115,4 +159,7 @@ class AddMeshAction extends Action {
   };
 }
 
+const ofNull = Maybe.fromNull;
+const none = Maybe.none;
+const some = Maybe.some;
 export default AddMeshAction;

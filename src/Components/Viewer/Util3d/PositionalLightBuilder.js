@@ -27,7 +27,9 @@ class PositionalLightBuilder {
     const variables = Object.values(this);
     variables.forEach(x => {
       if (x === null)
-        throw `There are missing variables to build a light, e.g ${x}`;
+        throw new Error(
+          `There are missing variables to build a light, e.g ${x}`
+        );
     });
     const light = new PointLight(this._name, this._position, this._scene);
     light.intensity = this._intensity;

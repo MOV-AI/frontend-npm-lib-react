@@ -3,8 +3,10 @@ import RBush from "rbush";
 import Constants from "../Utils/Constants";
 import { Maybe } from "monet";
 import Vec3 from "../Math/Vec3";
-import Util3d from "../Util3d/Util3d";
 
+/**
+ * Will be Deprecated
+ */
 export default class GraphEmbedding {
   constructor() {
     this.graph = new Graph();
@@ -33,14 +35,10 @@ export default class GraphEmbedding {
    * @param {*} iIndex: integer representing index of vertex i (can be undefined)
    *
    */
-  addVertex(i, iIndex, isCurve = false) {
+  addVertex(i, iIndex = undefined) {
     const maybeVertexI = this.getVertex(i);
     maybeVertexI.orElseRun(() => {
-      const vertexI = new RVertex(
-        i,
-        iIndex ? iIndex : this.vertexGenerator++,
-        isCurve
-      );
+      const vertexI = new RVertex(i, iIndex ? iIndex : this.vertexGenerator++);
       this.rTreeVertices.insert(vertexI);
       this.graph.addVertex(vertexI.id);
       this.graph.setVertexProp(vertexI.id, {
@@ -138,7 +136,7 @@ export default class GraphEmbedding {
 
   getVertexByIndex = index => {
     return this.graph
-      .getVertexProp(index)
+      .getVertex(index)
       .flatMap(vertexProp =>
         Maybe.fromNull(vertexProp[GraphEmbedding.NAMESPACES.vertex])
       );
@@ -154,7 +152,7 @@ export default class GraphEmbedding {
     const neighbors = [];
     this.getVertex(i).forEach(rVertex => {
       this.graph.getNeighbors(rVertex.id).forEach(jId => {
-        this.graph.getVertexProp(jId).forEach(vProp => {
+        this.graph.getVertex(jId).forEach(vProp => {
           neighbors.push(vProp[GraphEmbedding.NAMESPACES.vertex]);
         });
       });
@@ -163,13 +161,13 @@ export default class GraphEmbedding {
   }
 
   updateVertex(vertexIndex, position) {
-    this.graph.getVertexProp(vertexIndex).forEach(prop => {
+    this.graph.getVertex(vertexIndex).forEach(prop => {
       const rVertex = prop[GraphEmbedding.NAMESPACES.vertex];
       rVertex.position = position;
       this.rTreeVertices.remove(rVertex);
       this.rTreeVertices.insert(rVertex);
       this.graph.getNeighbors(vertexIndex).forEach(j => {
-        this.graph.getEdgeProp(vertexIndex, j).forEach(propEdge => {
+        this.graph.getEdge(vertexIndex, j).forEach(propEdge => {
           const rEdge = propEdge[GraphEmbedding.NAMESPACES.edge];
           this.rTreeEdges.remove(rEdge, (a, b) => a.equals(b));
           // rEdge has a pointer to the already altered rVertex
@@ -199,7 +197,7 @@ export default class GraphEmbedding {
 
   getEdgeByIndex(iIndex, jIndex) {
     return this.graph
-      .getEdgeProp(iIndex, jIndex)
+      .getEdge(iIndex, jIndex)
       .map(edgeProp => edgeProp[GraphEmbedding.NAMESPACES.edge]);
   }
 
@@ -248,39 +246,6 @@ export default class GraphEmbedding {
     return this.graph.getEdges();
   }
 
-  /**
-   *
-   * @param {*} data: {adjMap, vertices, edges}
-   */
-  importData(data) {
-    const { adjMap } = data;
-    // add vertices data
-    // add edges data
-    const vertices = { ...data.vertices };
-    const edges = { ...data.edges };
-    Object.keys(adjMap).forEach(i => {
-      Object.keys(adjMap[i]).forEach(j => {
-        const dataVertexI = vertices[i];
-        const dataVertexJ = vertices[j];
-        const dataEdgeIJ = edges[Graph.edgeKey(i, j)];
-        this.graph.getVertexProp(i).forEach(prop => {
-          prop[GraphEmbedding.NAMESPACES.vertex].keyValueMap =
-            dataVertexI.keyValueMap;
-        });
-        this.graph.getVertexProp(j).forEach(prop => {
-          prop[GraphEmbedding.NAMESPACES.vertex].keyValueMap =
-            dataVertexJ.keyValueMap;
-        });
-        this.graph.getEdgeProp(i, j).forEach(prop => {
-          const rEdge = prop[GraphEmbedding.NAMESPACES.edge];
-          rEdge.keyValueMap = dataEdgeIJ.keyValueMap;
-          rEdge.weight = dataEdgeIJ.weight;
-        });
-      });
-    });
-    this.vertexGenerator = data.vertexGenerator;
-  }
-
   //========================================================================================
   /*                                                                                      *
    *                                   Static Functions                                   *
@@ -297,20 +262,27 @@ export default class GraphEmbedding {
  * Should be Immutable vertex object
  */
 class RVertex {
-  constructor(vertexPosition, vertexId, isCurve, keyValueMap = {}) {
+  constructor(vertexPosition, vertexId, keyValueMap = {}) {
     this.position = vertexPosition;
     this.id = vertexId;
-    this.keyValueMap = keyValueMap;
-    this.isCurve = isCurve;
+    this.props = {};
   }
 
-  toBBox() {
+  getProps() {
+    return this.props;
+  }
+
+  setProps(props) {
+    this.props = props;
+  }
+
+  toBBox(epsilon = Constants.RADIUS / 4) {
     const { position } = this;
     return {
-      minX: position.x - Constants.RADIUS / 4,
-      minY: position.y - Constants.RADIUS / 4,
-      maxX: position.x + Constants.RADIUS / 4,
-      maxY: position.y + Constants.RADIUS / 4
+      minX: position.x - epsilon,
+      minY: position.y - epsilon,
+      maxX: position.x + epsilon,
+      maxY: position.y + epsilon
     };
   }
 
@@ -327,6 +299,7 @@ class RTreeVertices extends RBush {
   compareMinX(a, b) {
     return a.position.x - b.position.x;
   }
+
   compareMinY(a, b) {
     return a.position.y - b.position.y;
   }
@@ -337,6 +310,15 @@ class REdge {
     this.edge = [rVertexI, rVertexJ];
     this.keyValueMap = keyValueMap;
     this.weight = 1.0;
+    this.props = {};
+  }
+
+  getProps() {
+    return this.props;
+  }
+
+  setProps(props) {
+    this.props = props;
   }
 
   equals(b) {
@@ -348,26 +330,34 @@ class REdge {
       .every(x => x);
   }
 
-  toBBox() {
+  toBBox(epsilon = Constants.RADIUS / 4) {
     const { edge } = this;
     return {
       minX: edge.reduce(
-        (e, v) => Math.min(e, v.position.x - Constants.RADIUS / 4),
+        (e, v) => Math.min(e, v.position.x - epsilon),
         Number.MAX_VALUE
       ),
       minY: edge.reduce(
-        (e, v) => Math.min(e, v.position.y - Constants.RADIUS / 4),
+        (e, v) => Math.min(e, v.position.y - epsilon),
         Number.MAX_VALUE
       ),
       maxX: edge.reduce(
-        (e, v) => Math.max(e, v.position.x + Constants.RADIUS / 4),
+        (e, v) => Math.max(e, v.position.x + epsilon),
         Number.MIN_VALUE
       ),
       maxY: edge.reduce(
-        (e, v) => Math.max(e, v.position.y + Constants.RADIUS / 4),
+        (e, v) => Math.max(e, v.position.y + epsilon),
         Number.MIN_VALUE
       )
     };
+  }
+
+  importFeatures(rEdge, edgeMeshes) {
+    this.weight = rEdge.weight;
+    this.keyValueMap = { ...rEdge.keyValueMap };
+    const [iMesh, jMesh] = edgeMeshes;
+    this.props.belongsSrc = iMesh;
+    this.props.belongsTrg = jMesh;
   }
 
   static of(vertexPosI, vertexPosJ) {

@@ -12,6 +12,7 @@ import {
   StandardMaterial,
   Quaternion
 } from "@babylonjs/core";
+import { UndoManager } from "mov-fe-lib-core";
 
 const RADIUS = Constants.RADIUS;
 const positiveMod = Utils.mod;
@@ -46,7 +47,7 @@ class PolygonRegion extends NodeItem {
 
   static ofDict(scene, dict = null, mainView = null) {
     if (!dict || !mainView)
-      throw "null dictionary describing polygon or null mainView";
+      throw new Error("null dictionary describing polygon or null mainView");
 
     const polygon = dict.localPolygon.map(z => Vec3.of(z).toBabylon());
     const middlePoint = Vec3.of(dict.position).toBabylon();
@@ -90,6 +91,214 @@ class PolygonRegion extends NodeItem {
       dict.keyValueMap
     );
   }
+
+  /**
+   * Create new mesh from old, has side effects
+   *
+   * @param {*} newPoints: Vector3
+   * @param {*} scene: Scene
+   * @param {*} item: PathItem
+   * @param {*} mainView: MainView
+   * @param {*} keyPointUpdateFunction: (scene, mainView, mesh, item) => Array<Mesh>
+   */
+  static createNewMeshFromOldUsingNewPoints(
+    newPoints,
+    scene,
+    item,
+    mainView,
+    keyPointUpdateFunction = defaultKeyPointUpdate
+  ) {
+    const { mesh: oldMesh } = item;
+    const average = Util3d.pointAverage(newPoints);
+    newPoints = newPoints.map(x => x.subtract(average));
+
+    // average in parent coord
+    const rotMat3 = Util3d.getRotationMatrix(oldMesh);
+    const scaleVec3 = Vec3.ofBabylon(oldMesh.scaling);
+    const averageInParentCoord = rotMat3
+      .prodVec(Vec3.ofBabylon(average).mul(scaleVec3))
+      .toBabylon();
+
+    // update mesh
+    const newMesh = createExtrudedPolygonMesh(
+      scene,
+      newPoints,
+      item.height,
+      oldMesh.name
+    );
+
+    newMesh.parent = oldMesh.parent;
+    newMesh.rotationQuaternion = oldMesh.rotationQuaternion;
+    newMesh.position = averageInParentCoord.add(oldMesh.position);
+
+    newMesh.material = oldMesh.material;
+    newMesh.visibility = oldMesh.visibility;
+    newMesh.onClick = oldMesh.onClick;
+    newMesh.getMouseContextActions = oldMesh.getMouseContextActions;
+    newMesh.nodeItem = oldMesh.nodeItem;
+    newMesh.observers = oldMesh.observers;
+    if (!!oldMesh.graphVertex) newMesh.graphVertex = oldMesh.graphVertex;
+
+    item.localPolygon = newPoints.map(x => Vec3.ofBabylon(x).toArray());
+    item.mesh = newMesh;
+    item.keyPoints = keyPointUpdateFunction(scene, mainView, oldMesh, item);
+
+    oldMesh.dispose();
+    return newPoints;
+  }
+
+  static deleteKeyPoint(scene, keyPointMesh, mainView) {
+    const index = keyPointMesh.index;
+    const name = keyPointMesh.parent.name;
+    mainView.getNodeFromTree(name).forEach(({ item }) => {
+      const { mesh } = item;
+      const copyPosition = { ...mesh.position };
+      let newPoints = item.localPolygon.map(x => Vec3.of(x).toBabylon());
+      mainView
+        .getUndoManager()
+        .doIt(
+          PolygonRegion.getUndoDeleteKeyPoint(
+            name,
+            index,
+            copyPosition,
+            newPoints,
+            scene,
+            item,
+            mainView
+          )
+        );
+    });
+  }
+
+  static getUndoDeleteKeyPoint(
+    name,
+    index,
+    copyPosition,
+    newPoints,
+    scene,
+    item,
+    mainView
+  ) {
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        const copyPoints = [...newPoints];
+        copyPoints.splice(index, 1);
+        PolygonRegion.createNewMeshFromOldUsingNewPoints(
+          copyPoints,
+          scene,
+          item,
+          mainView,
+          PolygonRegion.onAddNewPointKeyPointUpdate
+        );
+        mainView.updateNodeInServer(name);
+      })
+      .undoAction(() => {
+        const copyPoints = [...newPoints];
+        item.mesh.position = copyPosition;
+        PolygonRegion.createNewMeshFromOldUsingNewPoints(
+          copyPoints,
+          scene,
+          item,
+          mainView,
+          PolygonRegion.onAddNewPointKeyPointUpdate
+        );
+        mainView.updateNodeInServer(name);
+      })
+      .build();
+  }
+
+  static onAddNewPointKeyPointUpdate(scene, mainView, oldMesh, item) {
+    // used when new keypoint is added
+    return createPlaceHolderKeyPoints(
+      scene,
+      item.localPolygon.map(x => Vec3.of(x).toBabylon()),
+      item.mesh,
+      mainView
+    );
+  }
+
+  /**
+   *
+   * @param {*} scene
+   * @param {*} keyPointMesh
+   * @param {*} curveMesh
+   * @param {*} mainView
+   * @param {*} orientation: it belongs to the set {-1,1}, represents orientation
+   */
+  static addKeyPointInBetween = (
+    scene,
+    keyPointMesh,
+    mainView,
+    orientation
+  ) => {
+    const index = keyPointMesh.index;
+    const name = keyPointMesh.parent.name;
+    mainView.getNodeFromTree(name).forEach(({ item }) => {
+      const copyPosition = { ...item.mesh.position };
+      const points = item.localPolygon.map(x => Vec3.of(x).toBabylon());
+      mainView
+        .getUndoManager()
+        .doIt(
+          PolygonRegion.getUndoAddKeyPointInBetween(
+            name,
+            index,
+            orientation,
+            item,
+            points,
+            copyPosition,
+            scene,
+            mainView
+          )
+        );
+    });
+  };
+
+  static getUndoAddKeyPointInBetween(
+    name,
+    index,
+    orientation,
+    item,
+    points,
+    copyPosition,
+    scene,
+    mainView
+  ) {
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        const numberOfPoints = points.length;
+        const nextIndex = positiveMod(index + orientation, numberOfPoints);
+        let newPoints = [];
+        const specialIndex = index + Math.max(0, orientation);
+        for (let i = 0; i < specialIndex; i++) {
+          newPoints.push(points[i]);
+        }
+        newPoints.push(points[nextIndex].add(points[index]).scale(0.5));
+        for (let i = specialIndex; i < numberOfPoints; i++) {
+          newPoints.push(points[i]);
+        }
+        PolygonRegion.createNewMeshFromOldUsingNewPoints(
+          newPoints,
+          scene,
+          item,
+          mainView,
+          PolygonRegion.onAddNewPointKeyPointUpdate
+        );
+        mainView.updateNodeInServer(name);
+      })
+      .undoAction(() => {
+        const copyPoints = [...points];
+        item.mesh.position = copyPosition;
+        PolygonRegion.createNewMeshFromOldUsingNewPoints(
+          copyPoints,
+          scene,
+          item,
+          mainView,
+          PolygonRegion.onAddNewPointKeyPointUpdate
+        );
+        mainView.updateNodeInServer(name);
+      })
+      .build();
+  }
 }
 
 /**
@@ -108,11 +317,11 @@ const stitchingBoundaries = polygon => {
   return orientation > 0 ? ans : ans.map(reverseOrientation);
 };
 
-const reverseOrientation = triangleIndice => {
+const reverseOrientation = triangleIndex => {
   const ans = [];
-  ans.push(triangleIndice[1]);
-  ans.push(triangleIndice[0]);
-  ans.push(triangleIndice[2]);
+  ans.push(triangleIndex[1]);
+  ans.push(triangleIndex[0]);
+  ans.push(triangleIndex[2]);
   return ans;
 };
 
@@ -129,12 +338,10 @@ const createExtrudedPolygonMesh = (scene, polygon, height, name) => {
     positions: [],
     faces: []
   };
-
   polygonRegionMesh.positions = [...polygon];
   for (let i = 0; i < polygon.length; i++) {
     polygonRegionMesh.positions.push(polygon[i].add(h));
   }
-
   const n = polygon.length;
   const lowerTriangulation = Util3d.triangulatePolygon(polygon);
   const upperTriangulation = Util3d.triangulatePolygon(
@@ -142,13 +349,10 @@ const createExtrudedPolygonMesh = (scene, polygon, height, name) => {
   )
     .map(x => x.map(z => z + n))
     .map(reverseOrientation);
-
   const stitchTriangulation = stitchingBoundaries(polygon);
-
   polygonRegionMesh.faces = lowerTriangulation
     .concat(upperTriangulation)
     .concat(stitchTriangulation);
-
   const mesh = Util3d.meshFromPositionAndFaces(
     name,
     scene,
@@ -162,8 +366,8 @@ function defaultKeyPointUpdate(scene, mainView, oldMesh, item) {
   // used when keypoint is updated or deleted
   const childrenCopy = [...oldMesh._children];
   childrenCopy.forEach(c => {
-    oldMesh.removeChild(c);
     c.parent = item.mesh;
+    console.log("Moving parents of child", c.name);
   });
 
   return item.keyPoints.map((k, i) => {
@@ -174,39 +378,6 @@ function defaultKeyPointUpdate(scene, mainView, oldMesh, item) {
     k.position = Vec3.of(item.localPolygon[i]).toBabylon();
     return k;
   });
-}
-
-function createNewMeshFromOldUsingNewPoints(
-  newPoints,
-  scene,
-  mesh,
-  item,
-  mainView,
-  keyPointUpdateFunction = defaultKeyPointUpdate
-) {
-  const average = Util3d.pointAverage(newPoints);
-  newPoints = newPoints.map(x => x.subtract(average));
-  // update mesh
-  const newMesh = createExtrudedPolygonMesh(
-    scene,
-    newPoints,
-    item.height,
-    mesh.name
-  );
-  newMesh.position = mesh.position;
-  newMesh.rotationQuaternion = mesh.rotationQuaternion;
-  newMesh.locallyTranslate(average);
-  newMesh.material = mesh.material;
-  newMesh.visibility = mesh.visibility;
-  newMesh.parent = mesh.parent;
-
-  item.localPolygon = newPoints.map(x => Vec3.ofBabylon(x).toArray());
-  item.mesh = newMesh;
-
-  item.keyPoints = keyPointUpdateFunction(scene, mainView, mesh, item);
-  // dispose old mesh
-  mesh.dispose();
-  return newPoints;
 }
 
 const getKeyPointObserverFunction = (scene, mainView) => {
@@ -221,124 +392,64 @@ const getKeyPointObserverFunction = (scene, mainView) => {
         const name = mesh.name;
         let newPoints = item.localPolygon.map(x => Vec3.of(x).toBabylon());
         newPoints[index] = updatedPointMesh.position;
-        createNewMeshFromOldUsingNewPoints(
+        PolygonRegion.createNewMeshFromOldUsingNewPoints(
           newPoints,
           scene,
-          mesh,
           item,
           mainView
         );
-
         if (is2updateServer) {
           mainView.updateNodeInServer(name);
         }
+        // signal observers
+        Maybe.fromNull(item.mesh.observers).forEach(obs => {
+          //side effect update absolute position
+          item.mesh.getAbsolutePosition();
+          obs.notifyObservers({
+            updatedPointMesh: item.mesh,
+            is2updateServer: is2updateServer,
+            displacement: Vector3.Zero()
+          });
+        });
+        Maybe.fromNull(item.mesh.graphVertex).forEach(({ vertexObs }) => {
+          item.mesh.getAbsolutePosition();
+          vertexObs({
+            updatedPointMesh: item.mesh,
+            is2updateServer: is2updateServer,
+            displacement: Vector3.Zero()
+          });
+        });
       });
   };
 };
 
-function onAddNewPointKeyPointUpdate(scene, mainView, oldMesh, item) {
-  // used when new keypoint is added
-  return createPlaceHolderKeyPoints(
-    scene,
-    item.localPolygon.map(x => Vec3.of(x).toBabylon()),
-    item.mesh,
-    mainView
-  );
-}
-
-/**
- *
- * @param {*} scene
- * @param {*} keyPointMesh
- * @param {*} curveMesh
- * @param {*} mainView
- * @param {*} orientation: it belongs to the set {-1,1}, represents orientation
- */
-const addKeyPointInBetween = (scene, keyPointMesh, mainView, orientation) => {
-  const index = keyPointMesh.index;
-  const name = keyPointMesh.parent.name;
-  mainView.getNodeFromTree(name).forEach(pathTreeNode => {
-    const item = pathTreeNode.item;
-    const numberOfPoints = item.localPolygon.length;
-    const nextIndex = positiveMod(index + orientation, numberOfPoints);
-    const mesh = item.mesh;
-    const oldPoints = item.localPolygon.map(x => Vec3.of(x).toBabylon());
-
-    let newPoints = [];
-    const specialIndex = index + Math.max(0, orientation);
-
-    for (let i = 0; i < specialIndex; i++) {
-      newPoints.push(oldPoints[i]);
-    }
-
-    newPoints.push(oldPoints[nextIndex].add(oldPoints[index]).scale(0.5));
-
-    for (let i = specialIndex; i < numberOfPoints; i++) {
-      newPoints.push(oldPoints[i]);
-    }
-
-    createNewMeshFromOldUsingNewPoints(
-      newPoints,
-      scene,
-      mesh,
-      item,
-      mainView,
-      onAddNewPointKeyPointUpdate
-    );
-
-    // mainView.updateNodeInServer(name);
-  });
-};
-
-const deleteKeyPoint = (scene, keyPointMesh, mainView) => {
-  const index = keyPointMesh.index;
-  const name = keyPointMesh.parent.name;
-  mainView.getNodeFromTree(name).forEach(pathTreeNode => {
-    const item = pathTreeNode.item;
-    const mesh = item.mesh;
-
-    let newPoints = item.localPolygon.map(x => Vec3.of(x).toBabylon());
-
-    newPoints.splice(index, 1);
-    item.keyPoints.splice(index, 1)[0].dispose();
-
-    createNewMeshFromOldUsingNewPoints(newPoints, scene, mesh, item, mainView);
-
-    mainView.updateNodeInServer(name);
-  });
-};
-
 const getKeyPointActions = (scene, keyPointMesh, mainView) => {
   const actions = [];
-
   mainView.getNodeFromTree(keyPointMesh.parent.name).forEach(pathTreeNode => {
     const item = pathTreeNode.item;
     const polygon = item.localPolygon;
-
     if (polygon.length > 3) {
       actions.push({
         icon: props => <i className="fas fa-trash" {...props}></i>,
         action: parentView => {
-          deleteKeyPoint(scene, keyPointMesh, parentView);
+          PolygonRegion.deleteKeyPoint(scene, keyPointMesh, parentView);
           parentView.closeContextDial();
         },
         name: "Delete node [DEL]"
       });
     }
-
     actions.push({
       icon: props => <i className="fas fa-less-than" {...props}></i>,
       action: parentView => {
-        addKeyPointInBetween(scene, keyPointMesh, parentView, -1);
+        PolygonRegion.addKeyPointInBetween(scene, keyPointMesh, parentView, -1);
         parentView.closeContextDial();
       },
       name: "Add previous"
     });
-
     actions.push({
       icon: props => <i className="fas fa-greater-than" {...props}></i>,
       action: parentView => {
-        addKeyPointInBetween(scene, keyPointMesh, parentView, 1);
+        PolygonRegion.addKeyPointInBetween(scene, keyPointMesh, parentView, 1);
         parentView.closeContextDial();
       },
       name: "Add next"

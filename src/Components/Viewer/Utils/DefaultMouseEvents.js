@@ -5,7 +5,7 @@ import { Animator } from "./Animator";
 export default class DefaultMouseEvents {
   static onPointerDown = mainView => evt => {
     mainView.mousePosClick = mainView
-      .getMouseCoordinatesFromRoot()
+      .getMouseCoordsFromRoot()
       .orSome(Vector3.Zero());
     mainView.mousePosMove = mainView.mousePosClick;
     mainView.sceneMemory.forEach(({ camera, canvas }) => {
@@ -23,7 +23,7 @@ export default class DefaultMouseEvents {
 
   static onPointerMove = mainView => evt => {
     mainView.sceneMemory.forEach(({ mouseLocationText, camera }) => {
-      mainView.getMouseCoordinatesFromRoot().forEach(currentLocal => {
+      mainView.getMouseCoordsFromRoot().forEach(currentLocal => {
         setMouseLocationTxt(mouseLocationText, currentLocal);
         const panCamera = () => {
           const v = currentLocal.subtract(mainView.mousePosMove);

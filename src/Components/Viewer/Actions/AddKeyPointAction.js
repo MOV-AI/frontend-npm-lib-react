@@ -2,38 +2,29 @@ import Util3d from "../Util3d/Util3d";
 import KeyPoint from "../NodeItem/KeyPoint";
 import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
-import React from "react";
 import MouseKeysAction from "./MouseKeysAction";
-import { Color3, Axis } from "@babylonjs/core";
-
-let instance = null;
-
-const TEMP_KEY_POINT_NAME = "temp_key_point";
+import React from "react";
+import { Color3, Axis, Vector3 } from "@babylonjs/core";
+import { UndoManager } from "mov-fe-lib-core";
 
 class AddKeyPointAction extends MouseKeysAction {
   constructor() {
-    if (instance) return instance;
     super();
     this.key = "addKeyPoint";
-    this.name = "Add Key Point [K]";
+    this.name = "Add Key Point [4]";
     this.maybeMousePos = Maybe.none();
     this.tempMesh = null;
     this.icon = props => <i className="fas fa-map-marker" {...props}></i>;
-    instance = this;
   }
 
-  static getInstance() {
-    return new AddKeyPointAction();
-  }
-
-  createKeyPoint = (
+  createKeyPoint(
     position,
     name,
     scene,
     parentView,
     is2addInServer = true,
     color = Color3.Gray()
-  ) => {
+  ) {
     const rootMesh = parentView.getRootNode().item.mesh;
 
     const keyPoint = KeyPoint.ofDict(scene, {
@@ -43,7 +34,7 @@ class AddKeyPointAction extends MouseKeysAction {
     const mesh = keyPoint.mesh;
     mesh.parent = rootMesh;
 
-    const localPosition = Util3d.computeLocalCoordinatesFromMesh(
+    const localPosition = Util3d.getLocalCoordFromWorld(
       { parent: rootMesh },
       Vec3.ofBabylon(position)
     ).toBabylon();
@@ -56,7 +47,7 @@ class AddKeyPointAction extends MouseKeysAction {
       parentView.addNodeItem2Tree(keyPoint, rootMesh.name, is2addInServer);
     }
     return mesh;
-  };
+  }
 
   action = parentView => {
     super.action(parentView);
@@ -96,17 +87,14 @@ class AddKeyPointAction extends MouseKeysAction {
     });
   };
 
-  onPointerUp = parentView => {
-    parentView.getSceneMemory().forEach(memory => {
-      const scene = memory.scene;
-      const camera = memory.camera;
-      const ground = memory.ground;
+  onPointerUp = (evt, parentView) => {
+    parentView.getSceneMemory().forEach(({ scene, camera, ground, canvas }) => {
       const maybeCurrent = Util3d.getGroundPosition(scene, ground);
       maybeCurrent.forEach(current => {
         this.maybeMousePos.forEach(oldMousePos => {
           if (this.tempMesh) this.tempMesh.dispose();
           const name = `KeyPoint${Math.floor(Math.random() * 1e3)}`;
-          this.createKeyPoint(
+          const keyPoint = this.createKeyPoint(
             current,
             name,
             scene,
@@ -115,12 +103,36 @@ class AddKeyPointAction extends MouseKeysAction {
             new Color3(Math.random(), Math.random(), Math.random())
           );
           parentView.setPropertiesWithName(name);
+          parentView
+            .getUndoManager()
+            .addIt(this.getUndoAbleAction(keyPoint, scene, parentView));
         });
       });
       this.maybeMousePos = Maybe.none();
-      camera.attachControl(memory.canvas, true);
+      camera.attachControl(canvas, true);
     });
   };
+
+  getUndoAbleAction(mesh, scene, parentView) {
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        const keyPoint = this.createKeyPoint(
+          Vector3.Zero(),
+          mesh.name,
+          scene,
+          parentView,
+          true,
+          mesh.material.diffuseColor
+        );
+        keyPoint.position = mesh.position;
+        parentView.updateNodeInServer(mesh.name);
+      })
+      .undoAction(() => {
+        parentView.deleteNodeFromTreeUsingName(mesh.name);
+      })
+      .build();
+  }
 }
 
+const TEMP_KEY_POINT_NAME = "temp_key_point";
 export default AddKeyPointAction;

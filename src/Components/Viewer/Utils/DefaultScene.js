@@ -10,8 +10,8 @@ import {
 } from "@babylonjs/core";
 import { TextBlock, AdvancedDynamicTexture } from "@babylonjs/gui/2D";
 import Util3d from "../Util3d/Util3d";
-// import "@babylonjs/core/Debug/debugLayer";
-// import "@babylonjs/inspector";
+import "@babylonjs/core/Debug/debugLayer";
+import "@babylonjs/inspector";
 
 class DefaultScene {
   static createGizmo = scene => {
@@ -41,7 +41,6 @@ class DefaultScene {
     camera.checkCollisions = true;
     camera.panningSensibility = 0;
     camera.lowerRadiusLimit = 2;
-
     forEach(camera);
     return camera;
   };
@@ -69,7 +68,11 @@ class DefaultScene {
     scene.clearColor = Color3.Black;
     scene.collisionsEnabled = true;
     scene._uid = scene.getUniqueId();
-    // scene.debugLayer.show();
+    // scene.debugLayer.show({
+    //   embedMode: true,
+    //   globalRoot: document.body,
+    //   overlay: true
+    // });
     return scene;
   };
 

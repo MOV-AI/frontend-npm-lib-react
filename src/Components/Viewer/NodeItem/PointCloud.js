@@ -2,8 +2,8 @@ import NodeItem from "./NodeItem";
 import { Mesh, StandardMaterial, Color3, VertexData } from "@babylonjs/core";
 import { Maybe } from "monet";
 import { Utils, MasterDB } from "mov-fe-lib-core";
-
 const ofNull = Utils.ofNull;
+
 class PointCloud extends NodeItem {
   /**
    *
@@ -75,7 +75,9 @@ class PointCloud extends NodeItem {
 
   static ofDict(scene, dict = null, mainView = null) {
     if (!dict || !mainView)
-      throw "null dictionary describing point cloud or null mainView";
+      throw new Error(
+        "null dictionary describing point cloud or null mainView"
+      );
 
     const pointCloudMesh = new Mesh(`cloudPoint${dict.name}`, scene);
     const mat = new StandardMaterial(`cloudPoint${dict.name}Material`, scene);

@@ -4,20 +4,17 @@ import Path from "../NodeItem/Path";
 import MouseKeysAction from "./MouseKeysAction";
 import React from "react";
 import { Color3 } from "@babylonjs/core";
+import { UndoManager } from "mov-fe-lib-core";
+import { selectOneAction } from "../Utils/Utils";
+import GraphItem from "../NodeItem/GraphItem";
 
 class DrawPathAction extends MouseKeysAction {
   constructor() {
-    if (instance) return instance;
     super();
     this.key = "drawPath";
-    this.name = "Draw Path [P]";
+    this.name = "Draw Path [2]";
     this.mouseCurve = [];
     this.icon = props => <i className="fas fa-bezier-curve" {...props}></i>;
-    instance = this;
-  }
-
-  static getInstance() {
-    return new DrawPathAction();
   }
 
   action = parentView => {
@@ -33,34 +30,56 @@ class DrawPathAction extends MouseKeysAction {
       maybeMousePos.forEach(mousePos => {
         camera.detachControl(canvas);
         this.mouseCurve.push(mousePos);
-        const drawPathPoints =
-          this.mouseCurve.length === 1
-            ? [this.mouseCurve[0], this.mouseCurve[0]]
-            : this.mouseCurve;
-
-        this.createCurve(
-          drawPathPoints,
-          TEMP_PATH_NAME,
-          scene,
-          parentView,
-          false
-        );
-        parentView.setContextActions(
-          this.getDrawPathContextAction(camera, canvas, scene)
-        );
+        parentView
+          .getUndoManager()
+          .doIt(
+            this.getUndoAbleClickAction(
+              this.mouseCurve,
+              scene,
+              parentView,
+              memory
+            )
+          );
       });
     });
   };
+
+  getUndoAbleClickAction(keyPoints, scene, parentView, { camera, canvas }) {
+    const kps = [...keyPoints];
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        const finalKps = kps.length === 1 ? [kps[0], kps[0]] : kps;
+        parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false, false);
+        this.createCurve(finalKps, TEMP_PATH_NAME, scene, parentView, false);
+        if (kps.length <= 2) {
+          parentView.setContextActions(
+            this.getDrawPathContextAction(camera, canvas, scene)
+          );
+        }
+        this.mouseCurve = kps;
+      })
+      .undoAction(() => {
+        parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME);
+        const reducedKps = kps.slice(0, kps.length - 1);
+        const finalKps =
+          reducedKps.length === 1 ? [reducedKps[0], reducedKps[0]] : reducedKps;
+        reducedKps.length > 0 &&
+          this.createCurve(finalKps, TEMP_PATH_NAME, scene, parentView, false);
+        this.mouseCurve = reducedKps;
+      })
+      .build();
+  }
 
   onPointerMove = (evt, parentView) => {
     // empty
   };
 
-  onPointerUp = parentView => {
+  onPointerUp = (evt, parentView) => {
     // empty
   };
 
-  onKeyDown = (evt, parentView) => {
+  onKeyUp = (evt, parentView) => {
+    const defaultAction = () => super.onKeyUp(evt, parentView);
     parentView.getSceneMemory().forEach(memory => {
       const { scene, camera, canvas } = memory;
       const contextActions = this.getDrawPathContextAction(
@@ -68,25 +87,40 @@ class DrawPathAction extends MouseKeysAction {
         canvas,
         scene
       );
-      const keyCodeActionMap = {
-        Enter: () => contextActions[1].action(parentView),
-        Delete: () => contextActions[0].action(parentView),
-        Backspace: () => contextActions[0].action(parentView),
-        Escape: () => {
-          if (this.mouseCurve.length === 0) {
-            super.onKeyDown(evt, parentView);
+      selectOneAction(
+        [
+          {
+            predicate: e => e.code === "Enter" || e.code === "NumpadEnter",
+            action: () => contextActions[1].action(parentView)
+          },
+          {
+            predicate: e => e.code === "Delete" || e.code === "Backspace",
+            action: () => contextActions[0].action(parentView)
+          },
+          {
+            predicate: e => e.code === "Escape",
+            action: () => {
+              if (this.mouseCurve.length === 0) {
+                super.onKeyUp(evt, parentView);
+              }
+              contextActions[0].action(parentView);
+            }
           }
-          contextActions[0].action(parentView);
-        }
-      };
-      if (evt.code in keyCodeActionMap) {
-        keyCodeActionMap[evt.code]();
-      } else {
-        super.onKeyDown(evt, parentView);
-      }
+        ],
+        defaultAction
+      )(evt);
     });
   };
 
+  /**
+   *
+   * @param {*} curve: Array<Vector3>
+   * @param {*} name: String
+   * @param {*} scene: Scene
+   * @param {*} parentView: MainView
+   * @param {*} is2addInServer: Boolean
+   * @param {*} color: Color3
+   */
   createCurve = (
     curve,
     name,
@@ -96,13 +130,7 @@ class DrawPathAction extends MouseKeysAction {
     color = Color3.Gray()
   ) => {
     const rootMesh = parentView.getRootNode().item.mesh;
-
-    const localCurve = curve.map(w =>
-      Util3d.computeLocalCoordinatesFromMesh(
-        { parent: rootMesh },
-        Vec3.ofBabylon(w)
-      ).toBabylon()
-    );
+    const localCurve = Util3d.toGlobalCoord(parentView)(curve);
     const middlePoint = Util3d.pointAverage(localCurve);
     const centeredCurve = localCurve.map(w => w.subtract(middlePoint));
 
@@ -117,7 +145,14 @@ class DrawPathAction extends MouseKeysAction {
       parentView
     );
     pathItem.mesh.parent = rootMesh;
-    parentView.addNodeItem2Tree(pathItem, rootMesh.name, is2addInServer);
+    parentView.addNodeItem2Tree(
+      pathItem,
+      rootMesh.name,
+      is2addInServer,
+      true,
+      is2addInServer
+    );
+    return pathItem;
   };
 
   getDrawPathContextAction = (camera, canvas, scene) => {
@@ -137,20 +172,66 @@ class DrawPathAction extends MouseKeysAction {
         icon: props => <i className="fas fa-check" {...props}></i>,
         action: parentView => {
           camera.attachControl(canvas, true);
-          parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false);
-          const name = `Path${Math.floor(Math.random() * 1e3)}`;
-          this.createCurve(this.mouseCurve, name, scene, parentView, true);
-          this.mouseCurve = [];
-          parentView.setPropertiesWithName(name);
-          parentView.closeContextDial();
+          parentView
+            .getUndoManager()
+            .doIt(
+              this.getUndoAbleEnterAction(this.mouseCurve, scene, parentView)
+            );
         },
         name: "Create Path [Enter]"
       });
     }
     return ans;
   };
+
+  getUndoAbleEnterAction(keyPoints, scene, parentView) {
+    const kps = [...keyPoints];
+    const name = `Path${Math.floor(Math.random() * 1e3)}`;
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false);
+        const pathItem = this.createCurve(kps, name, scene, parentView, true);
+        this.mouseCurve = [];
+        parentView.setPropertiesWithName(name);
+        parentView.closeContextDial();
+        const keyPointMeshes = pathItem.keyPoints;
+        DrawPathAction.addEdgesInKeyPoints(keyPointMeshes, scene, parentView);
+      })
+      .undoAction(() => {
+        this.deleteEdgeInKeyPoints(name, parentView);
+        parentView.deleteNodeFromTreeUsingName(name);
+        this.createCurve(kps, TEMP_PATH_NAME, scene, parentView, false);
+        this.mouseCurve = kps;
+      })
+      .build();
+  }
+
+  deleteEdgeInKeyPoints(pathName, parentView) {
+    parentView.getGraph().forEach(({ item: graph }) => {
+      parentView.getNodeFromTree(pathName).forEach(({ item: pathItem }) => {
+        const keyPointMeshes = pathItem.keyPoints;
+        const edgeMeshes = [
+          keyPointMeshes[0],
+          keyPointMeshes[keyPointMeshes.length - 1]
+        ];
+        graph.delEdge(...edgeMeshes);
+        parentView.updateNodeInServer(graph.name);
+      });
+    });
+  }
+
+  static addEdgesInKeyPoints(keyPointMeshes, scene, parentView) {
+    GraphItem.createGraphItemIfNone(scene, parentView);
+    parentView.getGraph().forEach(({ item: graph }) => {
+      const edgeMeshes = [
+        keyPointMeshes[0],
+        keyPointMeshes[keyPointMeshes.length - 1]
+      ];
+      graph.addEdge(...edgeMeshes);
+      parentView.updateNodeInServer(graph.name);
+    });
+  }
 }
 
-let instance = null;
 const TEMP_PATH_NAME = "temp_curve";
 export default DrawPathAction;

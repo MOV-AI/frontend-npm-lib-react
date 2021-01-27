@@ -42,7 +42,7 @@ class TreeNodeBuilder {
     this._title = null;
     this._item = {};
     this._children = [];
-    this._expanded = true;
+    this._expanded = false;
     this._isVisible = true;
   }
 
@@ -74,7 +74,9 @@ class TreeNodeBuilder {
   build() {
     Object.values(this).forEach(value => {
       if (value === null)
-        throw `There are missing variables to build a TreeNode, e.g ${value}`;
+        throw new Error(
+          `There are missing variables to build a TreeNode, e.g ${value}`
+        );
     });
     return new TreeNode(
       this._title,

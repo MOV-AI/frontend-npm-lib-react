@@ -1,11 +1,10 @@
+import Clipboard from "../Utils/Clipboard";
 import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
-import { Utils } from "mov-fe-lib-core";
-import AnnotationManager from "../Utils/AnnotationManager";
+import { capitalize } from "lodash";
 import { Quaternion, Color3, Vector3 } from "@babylonjs/core";
-import Clipboard from "../Utils/Clipboard";
-
-const { capitalize } = Utils;
+import AnnotationManager from "../Utils/AnnotationManager";
+import GlobalRef from "./GlobalRef";
 
 class NodeItem {
   constructor(mesh, keyValueMap = {}) {
@@ -14,8 +13,6 @@ class NodeItem {
     this.mesh.getMouseContextActions = this.getMouseContextActions;
     this.mesh.nodeItem = this;
     this.keyValueMap = keyValueMap;
-    //Hack to load annotations
-    AnnotationManager.getInstance();
   }
 
   dispose() {
@@ -26,8 +23,8 @@ class NodeItem {
     return {
       name: this.name,
       type: this.getType(),
-      position: Vec3.ofBabylon(this.mesh.position).toArray(),
-      quaternion: Maybe.fromNull(this.mesh.rotationQuaternion)
+      position: Vec3.ofBabylon(this.mesh?.position).toArray(),
+      quaternion: Maybe.fromNull(this.mesh?.rotationQuaternion)
         .map(x => [x.w, x.x, x.y, x.z])
         .orLazy(() => {
           const q = Quaternion.RotationYawPitchRoll(
@@ -37,7 +34,7 @@ class NodeItem {
           );
           return [q.w, q.x, q.y, q.z];
         }),
-      color: Maybe.fromNull(this.mesh.material)
+      color: Maybe.fromNull(this.mesh?.material)
         .flatMap(x => Maybe.fromNull(x.diffuseColor).map(z => [z.r, z.g, z.b]))
         .orSome([0, 0, 0]),
       keyValueMap: this.keyValueMap,
@@ -162,16 +159,15 @@ class NodeItem {
     this.name = form.name;
     this.mesh.name = form.name;
 
-    Maybe.fromNull(form.position).forEach(position => {
-      this.mesh.position = new Vector3(position.x, position.y, position.z);
+    Maybe.fromNull(form?.position).forEach(position => {
+      const pos = [position.x, position.y, position.z].map(Number.parseFloat);
+      this.mesh.position = Vector3.FromArray(pos);
     });
-    Maybe.fromNull(form.quaternion).forEach(quaternion => {
-      this.mesh.rotationQuaternion = new Quaternion(
-        quaternion.x,
-        quaternion.y,
-        quaternion.z,
-        quaternion.w
-      ).normalize();
+    Maybe.fromNull(form?.quaternion).forEach(quaternion => {
+      const quat = [quaternion.x, quaternion.y, quaternion.z, quaternion.w].map(
+        Number.parseFloat
+      );
+      this.mesh.rotationQuaternion = Quaternion.FromArray(quat).normalize();
     });
     if (this.mesh.material) {
       this.mesh.material.diffuseColor = Color3.FromHexString(form.color);
@@ -182,42 +178,52 @@ class NodeItem {
 
   getType = () => NodeItem.TYPE;
 
-  getMouseContextActions(mainView) {
+  getMouseContextActions = mainView => {
     return [
       {
         title: "Copy",
-        onClick: () =>
-          // mousePosFromRoot : Vector3
-          Clipboard.copy((mousePosFromRoot, someMainView) =>
-            // "this" comes from the mesh
-            someMainView.getSceneMemory().forEach(({ scene }) => {
-              const { item: rootItem } = someMainView.getRootNode();
-              const item = this.nodeItem;
-              const copyDict = item.toDict();
-              copyDict.name += "*";
-              const newPosArray = Vec3.ofBabylon(mousePosFromRoot).toArray();
-              // preserves z-coordinate
-              newPosArray[2] = copyDict.position[2];
-              copyDict.position = newPosArray;
-              const copiedNodeItem = item.ofDict(scene, copyDict, someMainView);
-              const { mesh: copiedMesh } = copiedNodeItem;
-              copiedMesh.parent = rootItem.mesh;
-              someMainView.addNodeItem2Tree(copiedNodeItem);
-            })
-          )
+        onClick: () => Clipboard.copy(this.getCopyFunction())
       },
       {
         title: "Delete",
-        onClick: () => mainView.deleteNodeFromTreeUsingName(this.name)
+        onClick: () =>
+          mainView
+            .getNodeFromTree(this.name)
+            .forEach(node => mainView.onDeleteNode(node, false))
       }
     ];
+  };
+
+  getCopyFunction(isForceUpdate = true) {
+    // mousePosFromRoot : Vector3
+    return (mousePosFromRoot, someMainView) =>
+      someMainView.getSceneMemory().map(({ scene }) => {
+        const { item: rootItem } = someMainView.getRootNode();
+        const copyDict = this.toDict();
+        copyDict.name += "_copy" + Math.floor(100 * Math.random());
+        const newPosArray = Vec3.ofBabylon(mousePosFromRoot).toArray();
+        // preserves z-coordinate
+        newPosArray[2] = copyDict.position[2];
+        copyDict.position = newPosArray;
+        const copiedNodeItem = this.ofDict(scene, copyDict, someMainView);
+        const { mesh: copiedMesh } = copiedNodeItem;
+        copiedMesh.parent = rootItem.mesh;
+        someMainView.addNodeItem2Tree(
+          copiedNodeItem,
+          GlobalRef.NAME,
+          true,
+          true,
+          isForceUpdate
+        );
+        return copiedNodeItem;
+      });
   }
 
   static TYPE = "NodeItem";
 
   // side-effect function
   static mapDict2Mesh(dict, mesh) {
-    if (!mesh) throw "can't map a null mesh";
+    if (!mesh) throw new Error("can't map a null mesh");
     Maybe.fromNull(dict).forEach(someDict => {
       Maybe.fromNull(dict.name).forEach(name => (mesh.name = name));
       Maybe.fromNull(someDict.position).forEach(

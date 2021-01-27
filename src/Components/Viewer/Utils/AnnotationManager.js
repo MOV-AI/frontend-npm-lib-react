@@ -5,7 +5,7 @@ class AnnotationManager {
     if (instance) return instance;
     instance = this;
     this.annotations = {};
-    this.observers = [];
+    this.observersBySceneId = {};
   }
 
   //========================================================================================
@@ -22,11 +22,24 @@ class AnnotationManager {
   }
   /**
    *
+   * @param {*} scene: Scene
    * @param {*} lambda: AnnotationManager -> {}
    */
-  pushObserver(lambda) {
-    this.observers.push(lambda);
+  pushObserver(scene, lambda) {
+    const sceneId = scene._uid;
+
+    if (!(sceneId in this.observersBySceneId)) {
+      this.observersBySceneId[sceneId] = [];
+    }
+    this.observersBySceneId[sceneId].push(lambda);
     return this;
+  }
+
+  clearObserver(scene) {
+    const sceneId = scene._uid;
+    if (sceneId in this.observersBySceneId) {
+      delete this.observersBySceneId[sceneId];
+    }
   }
 
   //========================================================================================
@@ -47,7 +60,9 @@ class AnnotationManager {
         const annotation = data.key.Annotation;
         if (data.event in actionMap) {
           actionMap[data.event](annotation);
-          this.observers.forEach(f => f(this));
+          Object.keys(this.observersBySceneId).forEach(k =>
+            this.observersBySceneId[k].forEach(f => f(this))
+          );
         }
       },
       data => {

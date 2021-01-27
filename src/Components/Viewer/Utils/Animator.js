@@ -51,7 +51,7 @@ class AnimatorBuilder {
     const someAreEmpty = [this._state, this._next, this._end].some(
       x => x === null || x === undefined
     );
-    if (someAreEmpty) throw "Animator properties are missing";
+    if (someAreEmpty) throw new Error("Animator properties are missing");
     return new Animator(this._state, this._next, this._end);
   }
 }
