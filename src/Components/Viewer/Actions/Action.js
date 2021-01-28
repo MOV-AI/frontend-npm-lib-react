@@ -8,10 +8,12 @@ class Action {
       memory.gizmoManager.attachedMesh = null;
       memory.camera.attachControl(memory.canvas, true);
     });
-    parentView.highlightNodeInTree && parentView.highlightNodeInTree();
-    parentView.highlightNodeInScene && parentView.highlightNodeInScene();
     parentView.closeContextDial && parentView.closeContextDial();
     parentView.setContextActionIndex && parentView.setContextActionIndex();
+  }
+
+  onChange(parentView) {
+    // to be overwritten by children
   }
 }
 

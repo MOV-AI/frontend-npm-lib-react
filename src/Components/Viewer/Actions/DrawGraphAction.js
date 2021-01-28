@@ -2,26 +2,24 @@ import MouseKeysAction from "./MouseKeysAction";
 import React from "react";
 import Util3d from "../Util3d/Util3d";
 import { Color3 } from "@babylonjs/core";
-import Vec3 from "../Math/Vec3";
 import GraphItem from "../NodeItem/GraphItem";
 import Constants from "../Utils/Constants";
+import { UndoManager } from "mov-fe-lib-core";
+import { selectOneAction } from "../Utils/Utils";
+import Path from "../NodeItem/Path";
+import { Maybe } from "monet";
+import GlobalRef from "../NodeItem/GlobalRef";
 
 class DrawGraphAction extends MouseKeysAction {
   constructor() {
-    if (instance) return instance;
     super();
     this.key = "drawGraph";
-    this.name = "Draw Graph [C]";
+    this.name = "Draw Graph [6]";
     this.icon = props => <i className="fas fa-project-diagram" {...props}></i>;
 
-    this.mouseCurve = [];
     this.previewMeshes = [];
-    this.mode = MODES.line;
-    instance = this;
-  }
-
-  static getInstance() {
-    return new DrawGraphAction();
+    this.firstMousePos = undefined;
+    this.firstClickedMesh = undefined;
   }
 
   //========================================================================================
@@ -33,60 +31,53 @@ class DrawGraphAction extends MouseKeysAction {
   action = parentView => {
     super.action(parentView);
     parentView.setSelectedAction(this);
-    const contextActions = this.getContextActions();
-    parentView.setContextActions(contextActions);
-    parentView.setContextActionIndex(
-      contextActions.findIndex(ca => ca.mode === this.mode)
-    );
   };
 
   onPointerDown = (evt, parentView) => {
     if (!(evt.buttons === 1)) return;
     this.mousePosConsumer(parentView)((mousePos, memory) => {
-      const handlePointerDownByMode = {
-        [MODES.line]: this.onPointerDownLine,
-        [MODES.curve]: this.onPointerDownCurve
-      };
-      handlePointerDownByMode[this.mode](mousePos, memory, parentView);
+      const { scene, ground } = memory;
+      const maybeMesh = Util3d.pickMesh(scene, ground).filter(
+        this.isConnectableMesh(parentView)
+      );
+      maybeMesh.forEach(possibleMesh => {
+        parentView.highlightMeshesInScene([possibleMesh], Color3.Green());
+        this.onPointerDownLine(mousePos, possibleMesh, memory, parentView);
+      });
+      maybeMesh.orElseRun(() => {
+        // no mesh found
+        parentView.highlightMeshesInScene();
+        this.resetPreview();
+      });
     });
   };
 
   onPointerMove = (evt, parentView) => {
     this.mousePosConsumer(parentView)((mousePos, memory) => {
       const { scene, ground } = memory;
-      Util3d.pickMesh(scene, ground).cata(
-        () => parentView.highlightMeshInScene(),
-        pickedMesh =>
-          parentView.highlightMeshInScene([pickedMesh], Color3.Green())
-      );
-      if (this.mouseCurve.length === 0) return;
-      const handlePointerMoveByMode = {
-        [MODES.line]: this.onPointerMoveLine,
-        [MODES.curve]: this.onPointerMoveCurve
-      };
-      handlePointerMoveByMode[this.mode](mousePos, memory, parentView);
+      Util3d.pickMesh(scene, ground)
+        .filter(this.isConnectableMesh(parentView))
+        .cata(
+          () => parentView.highlightMeshesInScene(),
+          pickedMesh =>
+            parentView.highlightMeshesInScene([pickedMesh], Color3.Green())
+        );
+      if (!this.firstMousePos) return;
+      this.onPointerMoveLine(mousePos, memory, parentView);
     });
   };
 
-  onPointerUp = parentView => {
-    parentView
-      .getGraph()
-      .forEach(graphNode =>
-        parentView.setPropertiesWithName(graphNode.item.name)
-      );
-  };
+  onPointerUp = (evt, parentView) => {};
 
-  onKeyDown = (evt, parentView) => {
-    const keyCodeActionMap = {
-      Delete: () => this.escapeAction(evt, parentView),
-      Backspace: () => this.escapeAction(evt, parentView),
-      Escape: () => this.escapeAction(evt, parentView)
-    };
-    if (evt.code in keyCodeActionMap) {
-      keyCodeActionMap[evt.code]();
-    } else {
-      super.onKeyDown(evt, parentView);
-    }
+  onKeyUp = (evt, parentView) => {
+    const escapeAction = () => this.resetPreview();
+    const predicateActionList = [
+      {
+        predicate: e => ["Backspace", "Delete", "Escape"].includes(e.code),
+        action: escapeAction
+      }
+    ];
+    selectOneAction(predicateActionList)(evt);
   };
 
   //========================================================================================
@@ -95,12 +86,11 @@ class DrawGraphAction extends MouseKeysAction {
    *                                                                                      */
   //========================================================================================
 
-  escapeAction = (evt, parentView) => {
-    if (this.mouseCurve.length > 0) {
+  resetPreview = () => {
+    if (!!this.firstMousePos) {
       this.deletePreviewMeshes();
-      this.mouseCurve = [];
-    } else {
-      super.onKeyDown(evt, parentView);
+      this.firstMousePos = undefined;
+      this.firstClickedMesh = undefined;
     }
   };
 
@@ -111,50 +101,56 @@ class DrawGraphAction extends MouseKeysAction {
 
   mousePosConsumer = parentView => lambda => {
     parentView.getSceneMemory().forEach(memory => {
-      const scene = memory.scene;
-      const ground = memory.ground;
+      const { scene, ground } = memory;
       const maybeCurrent = Util3d.getGroundPosition(scene, ground);
       maybeCurrent.forEach(mousePos => lambda(mousePos, memory));
     });
   };
 
-  createGraphItemIfNone = (scene, parentView) =>
-    parentView.getGraph().orElseRun(() => {
-      const graphItem = new GraphItem(scene, parentView);
-      graphItem.mesh.parent = parentView.getRootNode().item.mesh;
-      parentView.addNodeItem2Tree(graphItem);
-    });
+  /**
+   * returns a predicate(mesh => boolean) that tells if a mesh is connectable by an edge
+   * @param {*} parentView
+   */
+  isConnectableMesh = parentView => mesh => {
+    return parentView
+      .getNodeFromTree(mesh.name)
+      .cata(
+        () => {
+          // mesh is not a nodeItem, check if mesh parent is a path and is beginning or end of path
+          const parentName = mesh?.parent?.name || "";
+          return parentView
+            .getNodeFromTree(parentName)
+            .filter(({ item }) => item.getType() === Path.TYPE)
+            .filter(({ item }) => {
+              const index = mesh.index;
+              return index === 0 || index === item.keyPoints.length - 1;
+            });
+        },
+        ({ item }) => {
+          // mesh is a nodeItem, check if not path
+          return Maybe.some(mesh).filter(
+            _ =>
+              item.getType() !== Path.TYPE && item.getType() !== GlobalRef.TYPE
+          );
+        }
+      )
+      .orSome(false);
+  };
 
-  getContextActions() {
-    return [
-      {
-        icon: props => (
-          <i className="fas fa-grip-lines-vertical" {...props}></i>
-        ),
-        action: parentView => {
-          parentView.setContextActionIndex(0);
-          this.mode = MODES.line;
-          this.mouseCurve = [];
-          this.previewMeshes.forEach(mesh => mesh.dispose());
-          this.previewMeshes = [];
-        },
-        name: "Line Mode",
-        mode: MODES.line
-      },
-      {
-        icon: props => <i className="fas fa-bezier-curve" {...props}></i>,
-        action: parentView => {
-          parentView.setContextActionIndex(1);
-          this.mode = MODES.curve;
-          this.mouseCurve = [];
-          this.previewMeshes.forEach(mesh => mesh.dispose());
-          this.previewMeshes = [];
-        },
-        name: "Curve Mode",
-        mode: MODES.curve
-      }
-    ];
-  }
+  belongsToPath = parentView => mesh => {
+    const parentName = mesh?.parent?.name || "";
+    return parentView
+      .getNodeFromTree(parentName)
+      .filter(({ item }) => item.getType() === Path.TYPE)
+      .map(({ item }) => item.name);
+  };
+
+  belongs2SamePath = parentView => (meshI, meshJ) => {
+    const belongsToPath = this.belongsToPath(parentView);
+    return belongsToPath(meshI)
+      .flatMap(nameI => belongsToPath(meshJ).map(nameJ => nameI === nameJ))
+      .orSome(false);
+  };
 
   //========================================================================================
   /*                                                                                      *
@@ -162,22 +158,42 @@ class DrawGraphAction extends MouseKeysAction {
    *                                                                                      */
   //========================================================================================
 
-  onPointerDownLine = (mousePos, memory, parentView) => {
-    const { camera, canvas, scene } = memory;
-    camera.detachControl(canvas);
-    if (this.mouseCurve.length === 0) {
-      this.mouseCurve.push(mousePos);
+  onPointerDownLine = (mousePos, clickedMesh, memory, parentView) => {
+    const { scene } = memory;
+    if (!this.firstMousePos) {
+      this.firstMousePos = mousePos;
+      this.firstClickedMesh = clickedMesh;
     } else {
-      //mouseCurve.length > 0
-      this.createEdge(
-        [this.mouseCurve[0], mousePos],
-        scene,
-        parentView,
-        graphItem => edge => graphItem.addEdge(edge)
-      );
-      this.mouseCurve = [];
-      camera.attachControl(canvas, true);
+      //firstMousePos exists
+      if (
+        this.belongs2SamePath(parentView)(clickedMesh, this.firstClickedMesh)
+      ) {
+        this.resetPreview();
+      } else {
+        parentView
+          .getUndoManager()
+          .doIt(
+            this.getUndoAbleLineEdge(
+              [this.firstClickedMesh, clickedMesh],
+              scene,
+              parentView,
+              clickedMesh
+            )
+          );
+      }
     }
+  };
+
+  getUndoAbleLineEdge = (edgeMeshes, scene, parentView) => {
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        this.createEdge(edgeMeshes, scene, parentView);
+        this.resetPreview();
+      })
+      .undoAction(() => {
+        this.deleteEdge(edgeMeshes, parentView);
+      })
+      .build();
   };
 
   onPointerMoveLine = (mousePos, memory, parentView) => {
@@ -185,87 +201,24 @@ class DrawGraphAction extends MouseKeysAction {
     const visibility = 0.25;
     const { scene } = memory;
     const rootMesh = parentView.getRootNode().item.mesh;
-    const edgeEmbedding = toLocalCoordinates(parentView)([
-      this.mouseCurve[0],
+    const edgeEmbedding = toGlobalCoord(parentView)([
+      this.firstMousePos,
       mousePos
     ]);
     this.deletePreviewMeshes();
-    this.previewMeshes = GraphItem.getEdgeWithVertexMeshes(
-      scene,
-      edgeEmbedding,
-      Color3.Blue(),
-      Constants.RADIUS / 2
-    );
+    this.previewMeshes = [
+      GraphItem.getEdgeMesh(
+        scene,
+        edgeEmbedding,
+        Color3.Blue(),
+        Constants.RADIUS / 4
+      )
+    ];
     this.previewMeshes.forEach(mesh => {
       mesh.visibility = visibility;
       mesh.parent = rootMesh;
+      mesh.isPickable = false;
     });
-  };
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                      Curved Edge                                     *
-   *                                                                                      */
-  //========================================================================================
-
-  onPointerDownCurve = (mousePos, memory, parentView) => {
-    const { camera, canvas, scene } = memory;
-    camera.detachControl(canvas);
-    if (this.mouseCurve.length <= 1) {
-      this.mouseCurve.push(mousePos);
-    } else {
-      //mouseCurve.length > 1
-      this.createEdge(
-        [this.mouseCurve[0], this.mouseCurve[1], mousePos],
-        scene,
-        parentView,
-        graphItem => edge => graphItem.addCurveEdge(edge)
-      );
-      this.mouseCurve = [];
-      camera.attachControl(canvas, true);
-    }
-  };
-
-  onPointerMoveCurve = (mousePos, memory, parentView) => {
-    if (this.mouseCurve.length < 2) {
-      this.onPointerMoveLine(mousePos, memory, parentView);
-    } else {
-      // mouse curve >= 2
-      const visibility = 0.25;
-      const { scene } = memory;
-      const rootMesh = parentView.getRootNode().item.mesh;
-      const edgeEmbedding = toLocalCoordinates(parentView)([
-        ...this.mouseCurve,
-        mousePos
-      ]);
-      this.deletePreviewMeshes();
-      this.previewMeshes = GraphItem.getCurveEdgeWithVertexMeshes(
-        scene,
-        edgeEmbedding,
-        Color3.Green(),
-        Constants.RADIUS / 2
-      )
-        .concat(
-          GraphItem.getEdgeWithVertexMeshes(
-            scene,
-            [edgeEmbedding[0], edgeEmbedding[1]],
-            Color3.Blue(),
-            Constants.RADIUS / 2
-          )
-        )
-        .concat(
-          GraphItem.getEdgeWithVertexMeshes(
-            scene,
-            [edgeEmbedding[1], edgeEmbedding[2]],
-            Color3.Blue(),
-            Constants.RADIUS / 2
-          )
-        );
-      this.previewMeshes.forEach(mesh => {
-        mesh.visibility = visibility;
-        mesh.parent = rootMesh;
-      });
-    }
   };
 
   //========================================================================================
@@ -274,33 +227,23 @@ class DrawGraphAction extends MouseKeysAction {
    *                                                                                      */
   //========================================================================================
 
-  createEdge = (edgeInWorldCoordinate, scene, parentView, drawMethod) => {
-    const edge = toLocalCoordinates(parentView)(edgeInWorldCoordinate);
-    this.createGraphItemIfNone(scene, parentView);
+  createEdge = (edgeMeshes, scene, parentView) => {
+    GraphItem.createGraphItemIfNone(scene, parentView);
     parentView.getGraph().forEach(graphNode => {
       const { item: graphItem } = graphNode;
-      drawMethod(graphItem)(edge);
+      graphItem.addEdge(...edgeMeshes);
       parentView.updateNodeInServer(graphItem.name);
     });
-    this.deletePreviewMeshes();
+  };
+
+  deleteEdge = (edgeMeshes, parentView) => {
+    parentView.getGraph().forEach(graphNode => {
+      const { item: graphItem } = graphNode;
+      graphItem.delEdge(...edgeMeshes);
+      parentView.updateNodeInServer(graphItem.name);
+    });
   };
 }
 
-let instance = null;
-const MODES = {
-  line: "line",
-  curve: "curve",
-  free: "free"
-};
-
-const toLocalCoordinates = parentView => {
-  const rootMesh = parentView.getRootNode().item.mesh;
-  return arrayOfVector3 =>
-    arrayOfVector3.map(p =>
-      Util3d.computeLocalCoordinatesFromMesh(
-        { parent: rootMesh },
-        Vec3.ofBabylon(p)
-      ).toBabylon()
-    );
-};
+const toGlobalCoord = Util3d.toGlobalCoord;
 export default DrawGraphAction;

@@ -88,7 +88,7 @@ class TreeServerUtils {
   //========================================================================================
 
   updateNodeInServer = (name, objectTree, oldName = null) => {
-    console.log("updateNodeInServer!", this.sceneName);
+    console.log("updateNodeInServer!", name, this.sceneName);
     this.getNodeFromTree(name, objectTree).forEach(node => {
       const parentName = this.getParentFromChild(name, objectTree)
         .map(x => x.title)
@@ -98,7 +98,7 @@ class TreeServerUtils {
         "updateNode",
         [TreeNode.toDict(node), parentName, oldName, this.sceneName],
         data => {
-          console.log("Update node with success?", data.success);
+          console.log("Update node with success?", data.success, data.error);
         }
       );
     });

@@ -6,24 +6,16 @@ import MouseKeysAction from "./MouseKeysAction";
 import React from "react";
 import { Color3 } from "@babylonjs/core";
 
-let instance = null;
-
 const TEMP_WALL_NAME = "temp_wall";
 
 class DrawWallAction extends MouseKeysAction {
   constructor() {
-    if (instance) return instance;
     super();
     this.key = "drawWall";
     this.name = "Draw wall [W]";
     this.maybeMousePos = Maybe.none();
     this.tempMesh = null;
     this.icon = props => <i className="fas fa-arrows-alt-h" {...props}></i>;
-    instance = this;
-  }
-
-  static getInstance() {
-    return new DrawWallAction();
   }
 
   action = parentView => {
@@ -67,7 +59,7 @@ class DrawWallAction extends MouseKeysAction {
     });
   };
 
-  onPointerUp = parentView => {
+  onPointerUp = (evt, parentView) => {
     parentView.getSceneMemory().forEach(memory => {
       const scene = memory.scene;
       const camera = memory.camera;

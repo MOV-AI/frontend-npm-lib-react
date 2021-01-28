@@ -4,7 +4,7 @@ import Button from "../src/Components/Button";
 import CropFree from "@material-ui/icons/CropFreeOutlined";
 
 export default {
-  title: "Context Menu",
+  title: "Context Menu"
 };
 
 export const simple = () => {
@@ -16,15 +16,16 @@ export const simple = () => {
 };
 
 simple.story = {
-  name: "Default Context Menu",
+  name: "Default Context Menu"
 };
 
 export const button = () => {
   return (
     <div style={{ height: "100vh" }}>
       <ContextMenu
+        style={{ display: "flex" }}
         element={
-          <Button variant="outlined" color="primary">
+          <Button style={{ flexGrow: 1 }} variant="outlined" color="primary">
             Open
           </Button>
         }
@@ -32,7 +33,7 @@ export const button = () => {
           {
             onClick: () => console.log("clicked 1"),
             element: "Profile",
-            onClose: true,
+            onClose: true
           },
           {
             onClick: () => console.log("clicked 2"),
@@ -42,12 +43,12 @@ export const button = () => {
                 AHAHAHA
               </div>
             ),
-            onClose: false,
+            onClose: false
           },
           {
             onClick: () => console.log("clicked 3"),
-            element: "AHaha",
-          },
+            element: "AHaha"
+          }
         ]}
       ></ContextMenu>
     </div>
@@ -55,7 +56,7 @@ export const button = () => {
 };
 
 simple.story = {
-  name: "Default Context Menu",
+  name: "Default Context Menu"
 };
 
 export const undefined = () => {
@@ -72,15 +73,15 @@ export const undefined = () => {
           {
             onClick: () => console.log("clicked 2"),
             element: "AHAHAHA",
-            onClose: false,
+            onClose: false
           },
           false,
           {
             onClick: () => console.log("clicked 2"),
             element: "BBBB",
-            onClose: false,
+            onClose: false
           },
-          null,
+          null
         ]}
       ></ContextMenu>
     </div>
@@ -88,5 +89,5 @@ export const undefined = () => {
 };
 
 undefined.story = {
-  name: "Undefined and false",
+  name: "Undefined and false"
 };

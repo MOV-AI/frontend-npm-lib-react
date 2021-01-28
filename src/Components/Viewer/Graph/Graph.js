@@ -48,8 +48,9 @@ class Graph {
   addEdge(i, j) {
     this.addVertex(i);
     this.addVertex(j);
-    this.#edges[Graph.edgeKey(i, j)] = {};
-    this.#edges[Graph.edgeKey(j, i)] = {};
+    const edgeProps = {};
+    this.#edges[Graph.edgeKey(i, j)] = edgeProps;
+    this.#edges[Graph.edgeKey(j, i)] = edgeProps;
     this.#adjMap[i][j] = true;
     this.#adjMap[j][i] = true;
     return this;
@@ -64,10 +65,17 @@ class Graph {
       delete this.#adjMap[i][j];
       delete this.#adjMap[j][i];
     }
+    // remove vertex if have no neighbors
+    [i, j].forEach(id => {
+      const neighbors = this.getNeighbors(id);
+      if (neighbors.length === 0) {
+        this.delVertex(id);
+      }
+    });
   }
 
   hasEdge(i, j) {
-    return this.getEdgeProp(i, j).isSome();
+    return this.getEdge(i, j).isSome();
   }
 
   getNeighbors(i) {
@@ -75,7 +83,7 @@ class Graph {
     return [];
   }
 
-  getEdgeProp(i, j) {
+  getEdge(i, j) {
     const edgeKey = Graph.edgeKey(i, j);
     if (edgeKey in this.#edges) {
       return Maybe.some(this.#edges[edgeKey]);
@@ -83,26 +91,11 @@ class Graph {
     return Maybe.none();
   }
 
-  setEdgeProp(i, j, props) {
-    const edgeKey = Graph.edgeKey(i, j);
-    if (edgeKey in this.#edges) {
-      this.#edges[edgeKey] = props;
-    }
-    return this;
-  }
-
-  getVertexProp(i) {
+  getVertex(i) {
     if (i in this.#vertices) {
       return Maybe.some(this.#vertices[i]);
     }
     return Maybe.none();
-  }
-
-  setVertexProp(i, props) {
-    if (i in this.#vertices) {
-      this.#vertices[i] = props;
-    }
-    return this;
   }
 
   getEdges() {
@@ -115,18 +108,6 @@ class Graph {
 
   getAdjMap() {
     return this.#adjMap;
-  }
-
-  setAdjacentMap(adjMap) {
-    this.#adjMap = adjMap;
-  }
-
-  setVertices(vertices) {
-    this.#vertices = vertices;
-  }
-
-  setEdges(edges) {
-    this.#edges = edges;
   }
 
   static edgeKey = (i, j) => `${i}_${j}`;

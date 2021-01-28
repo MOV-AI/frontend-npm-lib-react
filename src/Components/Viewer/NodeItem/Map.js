@@ -25,39 +25,39 @@ class Map extends AssetNodeItem {
         type: "object",
         properties: {
           oldName: {
-            type: "string",
+            type: "string"
           },
           name: {
             type: "string",
-            title: "Name",
+            title: "Name"
           },
           type: {
             type: "string",
-            title: "Type",
+            title: "Type"
           },
           assetName: {
             type: "string",
-            title: "Asset Name",
-          },
-        },
+            title: "Asset Name"
+          }
+        }
       },
       uiSchema: {
         type: {
-          "ui:disabled": true,
+          "ui:disabled": true
         },
         assetName: {
-          "ui:disabled": true,
+          "ui:disabled": true
         },
         oldName: {
-          "ui:widget": "hidden",
-        },
+          "ui:widget": "hidden"
+        }
       },
       data: {
         oldName: info.name,
         name: info.name,
         type: info.type,
-        assetName: info.assetName,
-      },
+        assetName: info.assetName
+      }
     };
     return schema;
   }

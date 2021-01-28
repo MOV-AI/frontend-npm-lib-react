@@ -98,6 +98,10 @@ class Vec2 {
     return new Vec2(x, y);
   }
 
+  static ofBabylon(vector3) {
+    return new Vec2(vector3.x, vector3.y);
+  }
+
   static ZERO = new Vec2(0, 0);
   static e1 = new Vec2(1, 0);
   static e2 = new Vec2(0, 1);

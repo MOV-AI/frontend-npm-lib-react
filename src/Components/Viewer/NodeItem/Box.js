@@ -28,13 +28,13 @@ class Box extends NodeItem {
   static ofDict(scene, dict = null, mainView = null) {
     const maybeDict = Maybe.fromNull(dict);
     const size = maybeDict
-      .flatMap((z) => Maybe.fromNull(z.size))
+      .flatMap(z => Maybe.fromNull(z.size))
       .orSome(Box.DEFAULT_SIZE);
     const name = maybeDict
-      .flatMap((z) => Maybe.fromNull(z.name))
+      .flatMap(z => Maybe.fromNull(z.name))
       .orSome(`Box${Math.floor(Math.random() * 1e3)}`);
     const keyValueMap = maybeDict
-      .flatMap((d) => Maybe.fromNull(d.keyValueMap))
+      .flatMap(d => Maybe.fromNull(d.keyValueMap))
       .orUndefined();
 
     const boxMesh = Util3d.createBox(

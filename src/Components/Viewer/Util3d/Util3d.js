@@ -24,8 +24,17 @@ import GlobalRef from "../NodeItem/GlobalRef";
 import Box from "../NodeItem/Box";
 
 class Util3d {
-  static getWorldCoordinates(mesh, localPosition) {
-    if (mesh.parent && mesh.parent.name === GlobalRef.NAME)
+  /**
+   *
+   * @param {*} mesh
+   * @param {*} localPosition: Vector3
+   * @returns Vec3
+   */
+  static getGlobalCoordinates(mesh, localPosition) {
+    if (
+      (mesh.parent && mesh.parent.name === GlobalRef.NAME) ||
+      mesh.name === GlobalRef.NAME
+    )
       return Vec3.ofBabylon(localPosition);
     const meshParent = mesh.parent;
     const meshParentPos = Vec3.ofBabylon(meshParent.position);
@@ -34,7 +43,7 @@ class Util3d {
     return meshParentRotMat
       .prodVec(
         meshParentScaling.mul(
-          Util3d.getWorldCoordinates(mesh.parent, localPosition)
+          Util3d.getGlobalCoordinates(mesh.parent, localPosition)
         )
       )
       .add(meshParentPos);
@@ -47,22 +56,29 @@ class Util3d {
   /**
    *
    * @param {*} mesh
-   * @param {*} worldPosition: Vector3
+   * @param {*} worldPosition: Vector3 from GlobalRef coordinate frame
    */
-  static getLocalCoordinatesFromWorld(mesh, worldPosition) {
-    if (mesh.parent && mesh.parent.name === GlobalRef.NAME)
+  static getLocalCoordFromGlobal(mesh, worldPosition, withTranslation = true) {
+    if (
+      (mesh.parent && mesh.parent.name === GlobalRef.NAME) ||
+      mesh.name === GlobalRef.NAME
+    )
       return Vec3.ofBabylon(worldPosition);
     const meshParent = mesh.parent;
-    const meshParentPos = Vec3.ofBabylon(meshParent.position);
+    const meshParentPos = withTranslation
+      ? Vec3.ofBabylon(meshParent.position)
+      : Vec3.ZERO;
     const meshParentRotMat = Util3d.getRotationMatrix(meshParent);
     const meshParentScaling = Vec3.ofBabylon(meshParent.scaling);
     return meshParentScaling
       .map(z => 1 / z)
       .mul(
         meshParentRotMat.dotVec(
-          Util3d.getLocalCoordinatesFromWorld(meshParent, worldPosition).sub(
-            meshParentPos
-          )
+          Util3d.getLocalCoordFromGlobal(
+            meshParent,
+            worldPosition,
+            withTranslation
+          ).sub(meshParentPos)
         )
       );
   }
@@ -70,15 +86,19 @@ class Util3d {
   /**
    *
    * @param {*} mesh
-   * @param {*} worldPosition: Vec3
+   * @param {*} worldPosition: Vec3 from World(Babylon) coordinate frame
+   *
+   * @returns localPosition: Vec3
    */
-  static computeLocalCoordinatesFromMesh(mesh, worldPosition) {
-    /// WARNING: very similar with getLocalCoordinatesFromWorld
+  static getLocalCoordFromWorld(mesh, worldPosition, withTranslation = true) {
+    /// WARNING: very similar with getLocalCoordFromGlobal
     if (!mesh.parent) {
       return worldPosition;
     }
     const meshParent = mesh.parent;
-    const meshParentPos = Vec3.ofBabylon(meshParent.position);
+    const meshParentPos = withTranslation
+      ? Vec3.ofBabylon(meshParent.position)
+      : Vec3.ZERO;
     const meshParentRotMat = Util3d.getRotationMatrix(meshParent);
     const meshParentScaling = Vec3.ofBabylon(meshParent.scaling);
     // assume scaling != 0
@@ -86,22 +106,24 @@ class Util3d {
 
     return inverseScaling.mul(
       meshParentRotMat.dotVec(
-        Util3d.computeLocalCoordinatesFromMesh(meshParent, worldPosition).sub(
-          meshParentPos
-        )
+        Util3d.getLocalCoordFromWorld(
+          meshParent,
+          worldPosition,
+          withTranslation
+        ).sub(meshParentPos)
       )
     );
   }
 
   /**
-   *
+   * World to Global coords
    * @param {*} parentView: MainView
    */
-  static toLocalCoordinates = parentView => {
+  static toGlobalCoord = parentView => {
     const rootMesh = parentView.getRootNode().item.mesh;
     return arrayOfVector3 => {
       const transform = p =>
-        Util3d.computeLocalCoordinatesFromMesh(
+        Util3d.getLocalCoordFromWorld(
           { parent: rootMesh },
           Vec3.ofBabylon(p)
         ).toBabylon();
@@ -114,7 +136,7 @@ class Util3d {
 
   static getRotationMatrix(mesh) {
     const localRotationMatrix = new Matrix();
-    const maybeQuaternion = Maybe.fromNull(mesh.rotationQuaternion);
+    const maybeQuaternion = Maybe.fromNull(mesh?.rotationQuaternion);
     maybeQuaternion.forEach(quaternion =>
       quaternion.toRotationMatrix(localRotationMatrix)
     );
@@ -278,7 +300,8 @@ class Util3d {
         path: points,
         radius: radius,
         sideOrientation: Mesh.DOUBLESIDE,
-        updatable: true
+        updatable: true,
+        cap: Mesh.CAP_ALL
       },
       scene
     );
@@ -316,7 +339,7 @@ class Util3d {
    *
    * @param {Scene} scene Babylon scene
    * @param {Ground} ground a Babylon mesh that represents the ground
-   * @returns {Maybe} a maybe 3-vector representing the mouse ground intersection
+   * @returns {Maybe} a maybe Vector3 representing the mouse ground intersection
    */
   static getGroundPosition = function (scene, ground) {
     // Use a predicate to get position on the ground

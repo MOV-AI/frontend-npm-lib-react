@@ -13,9 +13,10 @@ class AssetsManager {
     this.assets = {};
     this.assetsActionMap = {};
     this.robots = {};
-    this.observers = [];
+    this.observersBySceneId = {};
     this.afterLoad = [];
     this.finishInitialSubscribers = 0;
+    this.isLoading = true;
   }
 
   //========================================================================================
@@ -38,17 +39,26 @@ class AssetsManager {
     return this;
   }
 
-  addObserver(observer) {
-    this.observers.push(observer);
+  addObserver(scene, observer) {
+    const sceneId = scene._uid;
+    if (!(sceneId in this.observersBySceneId)) {
+      this.observersBySceneId[sceneId] = [];
+    }
+    this.observersBySceneId[sceneId].push(observer);
     return this;
   }
 
-  signalObservers = () => this.observers.forEach(obs => obs(this));
+  signalObservers = () => {
+    Object.keys(this.observersBySceneId).forEach(k => {
+      this.observersBySceneId[k].forEach(obs => obs(this));
+    });
+  };
 
   addAsset(assetKey, asset) {
     try {
       this.assets[assetKey] = asset;
       this.assetsActionMap[assetKey] = AssetsTypesFactory[asset.type](asset);
+      if (!this.isLoading) this.signalObservers();
     } catch (e) {
       console.log("Caught exception while adding asset", e);
       throw Error(`Caught exception while adding asset ${e}`);
@@ -59,6 +69,14 @@ class AssetsManager {
     if (assetKey in this.assets) delete this.assets[assetKey];
     if (assetKey in this.assetsActionMap) delete this.assetsActionMap[assetKey];
     this.signalObservers();
+  }
+
+  clearObserver(scene) {
+    const sceneId = scene._uid;
+    if (sceneId in this.observersBySceneId) {
+      console.log("Clear asset observer", sceneId);
+      delete this.observersBySceneId[sceneId];
+    }
   }
 
   //========================================================================================
@@ -76,7 +94,10 @@ class AssetsManager {
           RobotName: "*"
         },
         this.getRobotNameUpdate(),
-        this.getRobotNameSub(({ value }) => value, resolve)
+        this.getRobotNameSub(
+          ({ value }) => value,
+          () => this.finishSub("RobotName", resolve)
+        )
       ),
     resolve =>
       MasterDB.subscribe(
@@ -86,7 +107,7 @@ class AssetsManager {
           Name: "maps",
           FileLabel: "*"
         },
-        this.getMapUpdater(({ key }) => key, this.signalObservers),
+        this.getMapUpdater(({ key }) => key),
         this.getMapSubscriber(
           ({ value }) => value,
           () => this.finishSub("Maps", resolve)
@@ -119,6 +140,8 @@ class AssetsManager {
     console.log("FINISH SUB ", place, this.finishInitialSubscribers);
     if (++this.finishInitialSubscribers > this.subs.length - 1) {
       this.afterLoad.forEach(f => f(this));
+      this.afterLoad = [];
+      this.isLoading = false;
       resolve(true);
     }
   };
@@ -163,14 +186,14 @@ class AssetsManager {
     }
   }
 
-  getRobotNameSub(getter, resolve) {
+  getRobotNameSub(getter, after = () => {}) {
     return data => {
       ofNull(getter(data))
         .flatMap(maybeGet("Robot"))
         .forEach(r =>
           Object.keys(r).forEach(id => this.addRobot(id, r[id].RobotName))
         );
-      this.finishSub("RobotName", resolve);
+      after();
     };
   }
 
@@ -204,19 +227,17 @@ class AssetsManager {
       });
   };
 
-  getMapUpdater = (dataGetter, after = () => {}) => {
+  getMapUpdater = dataGetter => {
     const actionMap = {
       del: data => {
         this.getMapFileData(dataGetter, data).forEach(f => {
           let filename = Object.keys(f)[0];
           filename = filename.split(".")[0];
-          delete this.assets[filename];
-          delete this.assetsActionMap[filename];
+          this.delAsset(filename);
         });
-        after();
       },
-      set: this.getMapSubscriber(dataGetter, after),
-      subscribe: this.getMapSubscriber(dataGetter, after)
+      set: this.getMapSubscriber(dataGetter),
+      subscribe: this.getMapSubscriber(dataGetter)
     };
     return data => {
       console.log("MAP UPDATE", data);
@@ -260,13 +281,11 @@ class AssetsManager {
       del: data => {
         this.getMeshFileData(d => d.key, data).forEach(f => {
           let filename = Object.keys(f)[0];
-          delete this.assets[filename];
-          delete this.assetsActionMap[filename];
+          this.delAsset(filename);
         });
-        this.signalObservers();
       },
-      set: this.getMeshSubscriber(d => d.key, this.signalObservers),
-      subscribe: this.getMeshSubscriber(d => d.key, this.signalObservers)
+      set: this.getMeshSubscriber(d => d.key),
+      subscribe: this.getMeshSubscriber(d => d.key)
     };
     return data => actionMap[data.event](data);
   };

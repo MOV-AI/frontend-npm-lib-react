@@ -27,7 +27,9 @@ class CameraBuilder {
     const variables = Object.values(this);
     variables.forEach(x => {
       if (x === null)
-        throw `There are missing variables to build a camera, e.g ${x}`;
+        throw new Error(
+          `There are missing variables to build a camera, e.g ${x}`
+        );
     });
     return new ArcRotateCamera(
       this._name,

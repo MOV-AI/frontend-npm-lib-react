@@ -29,7 +29,7 @@ class Wall extends NodeItem {
   static TYPE = "Wall";
 
   static ofDict(scene, dict = null, mainView = null) {
-    if (!dict) throw "null dictionary describing wall";
+    if (!dict) throw new Error("null dictionary describing wall");
     const name = Maybe.fromNull(dict.name).orSome(
       `Wall${Math.floor(Math.random() * 1e3)}`
     );
@@ -126,6 +126,8 @@ function createNewMeshFromOldUsingNewPoints(newWall, scene, mesh, item) {
   newMesh.material = mesh.material;
   newMesh.visibility = mesh.visibility;
   newMesh.parent = mesh.parent;
+  newMesh.getMouseContextActions = mesh.getMouseContextActions;
+  newMesh.nodeItem = mesh.nodeItem;
 
   item.mesh = newMesh;
   item.localWall = newWall.localWall;

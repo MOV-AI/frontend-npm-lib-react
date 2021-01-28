@@ -157,3 +157,10 @@ test("test mapped tree", () => {
     mappedTree.equals(mappedForest, (a, b) => a.title === b.title)
   ).toBeTruthy();
 });
+
+test("for each tree", () => {
+  const T = new TreeObject(forest);
+  T.forEach(n => (n.batata = 1));
+  expect(T.tree.every(x => x.batata === 1)).toBeTruthy();
+  expect(T.tree[0].children.every(x => x.batata === 1)).toBeTruthy();
+});

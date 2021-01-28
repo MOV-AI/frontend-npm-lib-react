@@ -8,9 +8,9 @@ import GlobalRef from "../NodeItem/GlobalRef";
 import { Vector3 } from "@babylonjs/core";
 import DefaultScene from "../Utils/DefaultScene";
 import { ACTIONS } from "../MainView/MainViewActions";
-import { MasterDB } from "mov-fe-lib-core";
-import Constants from "../Utils/Constants";
 import MapLoader from "../AssetsManager/MapLoader";
+import { UndoManager } from "mov-fe-lib-core";
+import AssetsManager from "../AssetsManager/AssetsManager";
 
 class AddMapAction extends Action {
   constructor(name, mapLoader) {
@@ -19,13 +19,12 @@ class AddMapAction extends Action {
     this.key = `addMap${name}`;
     this.mapLoader = mapLoader;
     this.icon = props => <i {...props} className="fas fa-map"></i>;
+    this.firstTimeLoad = true;
   }
 
   addMap(parentView) {
-    const rootNodeMaybe = Maybe.fromNull(parentView.getRootNode());
     parentView.getSceneMemory().forEach(async memory => {
-      const scene = memory.scene;
-      const camera = memory.camera;
+      const { scene, camera } = memory;
       const {
         textureSrc,
         resolution,
@@ -46,13 +45,12 @@ class AddMapAction extends Action {
         Vec3.of(origin)
       );
 
-      rootNodeMaybe.forEach(rootNode => {
-        const parent = rootNode.item.mesh.parent;
-        parent.position = GlobalRef.inverseCoordinates(originPos.toBabylon());
-        camera.setTarget(
-          new Vector3(parent.position.x, parent.position.y, parent.position.z)
-        );
-      });
+      const rootNode = parentView.getRootNode();
+      const parent = rootNode.item.mesh.parent;
+      parent.position = GlobalRef.inverseCoordinates(originPos.toBabylon());
+      camera.setTarget(
+        new Vector3(parent.position.x, parent.position.y, parent.position.z)
+      );
 
       const map = new Map(
         mesh,
@@ -61,28 +59,65 @@ class AddMapAction extends Action {
         Maybe.fromNull(this.memory["assetName"]).orSome(this.name)
       );
 
+      const isVisible = Maybe.fromNull(this.memory["isVisible"]).orSome(true);
       const is2sendServer = Maybe.fromNull(this.memory["isImport"])
         .map(x => !x)
         .orSome(true);
-      parentView.addNodeItem2Tree(map, null, is2sendServer);
+
+      mesh.setEnabled(isVisible);
+      parentView.addNodeItem2Tree(map, null, is2sendServer, isVisible);
       memory.ground.dispose();
       memory.ground = DefaultScene.createMeshGround(scene, width, height);
+      this.memory["isImport"] = false;
     });
   }
 
   action(parentView) {
     super.action(parentView);
     const maybeNode = parentView.getNodeFromTree(this.name);
-    maybeNode.forEach(node => {});
     maybeNode.orElseRun(() => {
-      if (parentView.getObjectTree().length < 2) {
-        return this.addMap(parentView);
+      const isImport = this.memory["isImport"];
+      // you shouldn't be able to undo when importing a scene. isImport prevents removing the map when you undo.
+      // firstTimeLoad condition to prevent adding a map when fast map switch
+      if (isImport && this.firstTimeLoad) {
+        this.addMap(parentView);
+        this.firstTimeLoad = false;
       } else {
-        // empty
+        parentView.getUndoManager().doIt(this.getUndoAction(parentView));
       }
     });
-    parentView.setSelectedAction(ACTIONS.orbit);
+    parentView.setSelectedAction(ACTIONS().orbit);
   }
+
+  getUndoAction(parentView) {
+    if (parentView.getObjectTree().length < 2) {
+      return UndoManager.actionBuilder()
+        .doAction(() => {
+          this.addMap(parentView);
+        })
+        .undoAction(() => {
+          const name = parentView.getObjectTree()[1].title;
+          parentView.deleteNodeFromTreeUsingName(name);
+        })
+        .build();
+    } else {
+      const oldMapName = parentView.getObjectTree()[1].title;
+      const newMapName = this.name;
+      return UndoManager.actionBuilder()
+        .doAction(() => {
+          this.switchMaps(oldMapName, newMapName, parentView);
+        })
+        .undoAction(() => {
+          parentView.deleteNodeFromTreeUsingName(newMapName);
+          Maybe.fromNull(
+            AssetsManager.getInstance().getAssetsActionMap()[oldMapName]
+          ).forEach(a => a.action(parentView));
+        })
+        .build();
+    }
+  }
+
+  switchMaps(oldMapName, newMapName, parentView) {}
 
   getType = () => AddMapAction.TYPE;
 

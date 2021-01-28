@@ -5,6 +5,7 @@ import React from "react";
 import PointCloud from "../NodeItem/PointCloud";
 import { ACTIONS } from "../MainView/MainViewActions";
 import MeshLoader from "../Utils/MeshLoader";
+import { UndoManager } from "mov-fe-lib-core";
 
 class RobotAction extends Action {
   constructor(
@@ -13,9 +14,9 @@ class RobotAction extends Action {
       Robot.getDefaultAnimator(parentView)
   ) {
     super();
-    this.robot = robot;
     this.key = `robotAction${robot.name}`;
     this.name = robot.name;
+    this.robot = robot;
     this.robotAnimatorFactory = robotAnimatorFactory;
     this.icon = props => <i className="fas fa-robot" {...props}></i>;
   }
@@ -26,34 +27,55 @@ class RobotAction extends Action {
     parentView
       .getNodeFromTree(this.robot.name)
       .orElseRun(() => this.addRobot(parentView));
-    parentView.setSelectedAction(ACTIONS.dragObjects);
+    parentView.setSelectedAction(ACTIONS().dragObjects);
   };
 
   addRobot(parentView) {
     parentView.getSceneMemory().forEach(memory => {
-      const scene = memory.scene;
+      const { scene } = memory;
       const actionMemoryClone = { ...this.memory };
-      MeshLoader.of(scene)
-        .load(Robot.ROBOT_MESH_NAME, mesh => Robot.transformMesh(mesh, scene))
-        .then(mesh =>
-          this.createRobotFromMesh(mesh, scene, parentView, actionMemoryClone)
-        );
+      const isImport = actionMemoryClone["isImport"];
+      if (isImport) this.loadRobot(scene, parentView, actionMemoryClone);
+      else {
+        parentView
+          .getUndoManager()
+          .doIt(this.getUndoAbleAction(parentView, scene, actionMemoryClone));
+      }
     });
     this.memory["isImport"] = false;
   }
 
+  getUndoAbleAction(parentView, scene, actionMemoryClone) {
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        this.loadRobot(scene, parentView, actionMemoryClone);
+      })
+      .undoAction(() => {
+        parentView.deleteNodeFromTreeUsingName(this.name);
+      })
+      .build();
+  }
+
+  loadRobot(scene, parentView, actionMemoryClone) {
+    MeshLoader.of(scene)
+      .load(Robot.ROBOT_MESH_NAME, mesh => Robot.transformMesh(mesh, scene))
+      .then(mesh =>
+        this.createRobotFromMesh(mesh, scene, parentView, actionMemoryClone)
+      );
+  }
+
   createRobotFromMesh(mesh, scene, parentView, memory) {
     const parentMesh = this.getParentMesh(parentView);
+    const isImport = Maybe.fromNull(memory.isImport).orSome(false);
+    const isVisible = Maybe.fromNull(memory.isVisible).orSome(true);
+    mesh.setEnabled(isVisible);
 
     const robot = this.getRobot(scene, mesh, parentMesh);
     robot.animate(this.robotAnimatorFactory(robot, parentView));
-    const isImport = Maybe.fromNull(memory["isImport"]).orSome(false);
-    parentView.addNodeItem2Tree(robot, parentMesh.name, !isImport);
+    parentView.addNodeItem2Tree(robot, parentMesh.name, !isImport, isVisible);
 
     const cloudPoint = this.getCloudPoint(scene, parentView, robot);
-    parentView.addNodeItem2Tree(cloudPoint, robot.name, false);
-
-    parentView.renderMenus();
+    parentView.addNodeItem2Tree(cloudPoint, robot.name, false, isVisible);
   }
 
   getRobot = (scene, mesh, parentMesh) => {

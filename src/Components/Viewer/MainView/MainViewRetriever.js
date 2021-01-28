@@ -4,11 +4,22 @@ import { ASSETS_TYPES } from "../Utils/AssetsTypesFactory";
 import NODE_ITEM_FACTORY_MAP from "./NodeItemFactoryMap";
 
 class MainViewRetriever {
-  static importScene(mainView, serverScene = [], parent = null) {
+  static importScene(
+    mainView,
+    serverScene = [],
+    parent = null,
+    is2addInServer = false
+  ) {
     console.log("Importing scene...", mainView, serverScene);
     const errors = [];
     if (serverScene.length > 0) {
-      importSceneRecursive(mainView, serverScene, parent, errors);
+      importSceneRecursive(
+        mainView,
+        serverScene,
+        parent,
+        errors,
+        is2addInServer
+      );
     } else {
       importDefaultScene(mainView);
     }
@@ -69,27 +80,48 @@ function importAsset(mainView, nodeDict, parent, errors) {
   retrievedAction.action(mainView);
 }
 
-function importSceneRecursive(mainView, arrayTree, parent = null, errors = []) {
+function importSceneRecursive(
+  mainView,
+  arrayTree,
+  parent = null,
+  errors = [],
+  is2addInServer = false
+) {
   if (!arrayTree) return;
   const sortArrayTree = arrayTree.sort((a, b) => {
-    if (a.item.type === "GlobalRef") return -1;
+    // global ref is first
+    if (a.item.type === NODE_ITEM_FACTORY_MAP.GlobalRef.TYPE) return -1;
+    if (b.item.type === NODE_ITEM_FACTORY_MAP.GlobalRef.TYPE) return 1;
+    // graphItem is last
+    if (a.item.type === NODE_ITEM_FACTORY_MAP.GraphItem.TYPE) return 1;
+    if (b.item.type === NODE_ITEM_FACTORY_MAP.GraphItem.TYPE) return -1;
     return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
   });
   sortArrayTree.forEach(node => {
     if (isAsset(node.item)) {
       importAsset(mainView, node.item, parent, errors);
     } else {
-      MainViewRetriever.importNodeItem(mainView, node.item, parent);
+      MainViewRetriever.importNodeItem(
+        mainView,
+        node.item,
+        parent,
+        is2addInServer
+      );
     }
     if (node.children.length > 0) {
-      importSceneRecursive(mainView, node.children, node.name, errors);
+      importSceneRecursive(
+        mainView,
+        node.children,
+        node.name,
+        errors,
+        is2addInServer
+      );
     }
   });
 }
 
 function importDefaultScene(mainView) {
-  mainView.getSceneMemory().forEach(memory => {
-    const scene = memory.scene;
+  mainView.getSceneMemory().forEach(({ scene }) => {
     const send2server = true;
     mainView.addNodeItem2Tree(GlobalRef.ofDict(scene), null, send2server);
   });

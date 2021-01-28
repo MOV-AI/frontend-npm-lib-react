@@ -4,10 +4,6 @@ import { Maybe } from "monet";
 import { MeshBuilder, StandardMaterial } from "@babylonjs/core";
 
 class KeyPoint extends NodeItem {
-  constructor(mesh, keyValueMap) {
-    super(mesh, keyValueMap);
-  }
-
   ofDict(scene, dict = null, mainView = null) {
     return KeyPoint.ofDict(scene, dict, mainView);
   }
@@ -18,7 +14,7 @@ class KeyPoint extends NodeItem {
 
   static ofDict(scene, dict = null, mainView = null) {
     const name = Maybe.fromNull(dict)
-      .map((x) => x.name)
+      .map(x => x.name)
       .orSome(`KeyPoint${Math.floor(Math.random() * 1e3)}`);
 
     const mesh = MeshBuilder.CreatePolyhedron(
@@ -53,7 +49,7 @@ const TRIANGULAR_ANTIPRISM = {
     [0, 1.414214, 0],
     [-1.414214, 0, 0],
     [0, -1.414214, 0],
-    [0, 0, -1.414214],
+    [0, 0, -1.414214]
   ],
   face: [
     [0, 1, 2],
@@ -63,8 +59,8 @@ const TRIANGULAR_ANTIPRISM = {
     [1, 4, 5],
     [1, 5, 2],
     [2, 5, 3],
-    [3, 5, 4],
-  ],
+    [3, 5, 4]
+  ]
 };
 
 export default KeyPoint;

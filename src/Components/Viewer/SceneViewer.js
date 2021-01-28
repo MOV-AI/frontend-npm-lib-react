@@ -16,6 +16,7 @@ import Util3d from "./Util3d/Util3d";
 import Vec3 from "./Math/Vec3";
 import ReactResizeDetector from "react-resize-detector";
 import ConfirmAlertModal from "../Modal/ConfirmAlertModal";
+import { UndoManager } from "mov-fe-lib-core";
 
 //========================================================================================
 /*                                                                                      *
@@ -30,6 +31,7 @@ class SceneViewer extends Component {
     this.sceneName = props.sceneName.Value;
     this.sceneMemory = Maybe.none();
     this.objectTree = [];
+    this.undoManager = new UndoManager();
   }
 
   //========================================================================================
@@ -57,6 +59,8 @@ class SceneViewer extends Component {
       x => GraphItem.TYPE === x.item.getType()
     );
   }
+
+  getUndoManager = () => this.undoManager;
 
   //========================================================================================
   /*                                                                                      *
@@ -152,12 +156,12 @@ class SceneViewer extends Component {
     DefaultMouseEvents.onPointerMove(this)(evt);
   };
 
-  getMouseCoordinatesFromRoot() {
+  getMouseCoordsFromRoot() {
     return this.sceneMemory.flatMap(({ scene, ground }) => {
       const maybeCurrent = Util3d.getGroundPosition(scene, ground);
       return maybeCurrent.flatMap(current =>
         Maybe.fromNull(this.getRootNode()).map(rootNode =>
-          Util3d.computeLocalCoordinatesFromMesh(
+          Util3d.getLocalCoordFromWorld(
             rootNode.item.mesh,
             Vec3.ofBabylon(current)
           ).toBabylon()
@@ -189,7 +193,10 @@ class SceneViewer extends Component {
   };
 
   loadAssets = async () => {
-    await AssetsManager.getInstance().load();
+    const assetManager = AssetsManager.getInstance();
+    if (Object.values(assetManager.getAssets()).length === 0) {
+      await assetManager.load();
+    }
   };
 
   loadScene = async () => {
@@ -218,7 +225,7 @@ class SceneViewer extends Component {
       ground: DefaultScene.createMeshGround(scene),
       gizmoManager: DefaultScene.createGizmo(scene),
       highlightLayer: {
-        hl: new HighlightLayer("hl1", scene),
+        layer: new HighlightLayer("hl1", scene),
         lastHlMeshes: []
       },
       mouseLocationText: mouseLocationText

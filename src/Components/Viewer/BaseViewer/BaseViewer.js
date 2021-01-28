@@ -13,9 +13,9 @@ const FLEX_STYLE = {
   flexDirection: "column",
   flexGrow: 1
 };
+// import EngineSingleton from "../Util3d/EngineSingleton";
 
 const BaseViewer = props => {
-  const reactCanvas = useRef(null);
   const {
     antialias,
     engineOptions,
@@ -27,10 +27,41 @@ const BaseViewer = props => {
     sceneFactory,
     ...rest
   } = props;
-
+  const reactCanvas = useRef(null);
   const [loaded, setLoaded] = useState(false);
   const [scene, setScene] = useState(null);
   const [size, setSize] = useState({ width: 100, height: 100 });
+
+  const setUpScene = engine => {
+    const scene = sceneFactory
+      ? sceneFactory(engine)
+      : new Scene(engine, sceneOptions);
+    setScene(scene);
+    if (scene.isReady()) {
+      onSceneReady(scene);
+    } else {
+      scene.onReadyObservable.addOnce(scene => onSceneReady(scene));
+    }
+    return scene;
+  };
+
+  const onResize = (width, height) => {
+    setSize({
+      width,
+      height
+    });
+    scene && scene.getEngine().resize();
+  };
+
+  const renderScene = (engine, nScene) => {
+    if (!is2render) return;
+    engine.runRenderLoop(() => {
+      if (typeof onRender === "function") {
+        onRender(nScene);
+      }
+      nScene && nScene.render();
+    });
+  };
 
   useEffect(() => {
     if (!loaded) {
@@ -41,36 +72,17 @@ const BaseViewer = props => {
         engineOptions,
         adaptToDeviceRatio
       );
-      const scene = sceneFactory
-        ? sceneFactory(engine)
-        : new Scene(engine, sceneOptions);
-      setScene(scene);
-      if (scene.isReady()) {
-        props.onSceneReady(scene);
-      } else {
-        scene.onReadyObservable.addOnce(scene => props.onSceneReady(scene));
-      }
-      if (!is2render) return;
-      engine.runRenderLoop(() => {
-        if (typeof onRender === "function") {
-          onRender(scene);
-        }
-        scene.render();
-      });
+      // const engine = new EngineSingleton(reactCanvas.current).engine;
+      const newScene = setUpScene(engine);
+      renderScene(engine, newScene);
     }
 
     return () => {
-      if (scene !== null) scene.dispose();
+      console.log("Disposing engine and scene");
+      scene && scene.dispose();
+      scene && scene.getEngine() && scene.getEngine().dispose();
     };
-  }, [reactCanvas]);
-
-  const onResize = (width, height) => {
-    setSize({
-      width,
-      height: height <= window.innerHeight ? height : window.innerHeight * 0.85
-    });
-    scene && scene.getEngine().resize();
-  };
+  }, [reactCanvas, loaded, scene]);
 
   loaded && reactCanvas.current.focus();
   return (
@@ -100,7 +112,8 @@ BaseViewer.propTypes = {
 BaseViewer.defaultProps = {
   antialias: true,
   onSceneReady: scene => {},
-  is2render: true
+  is2render: true,
+  engineOptions: { preserveDrawingBuffer: true, stencil: true }
 };
 
 export default BaseViewer;

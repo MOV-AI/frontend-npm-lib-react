@@ -11,6 +11,7 @@ import {
   Quaternion,
   Vector3
 } from "@babylonjs/core";
+import { UndoManager } from "mov-fe-lib-core";
 
 const RADIUS = Constants.RADIUS;
 
@@ -20,8 +21,18 @@ class Path extends NodeItem {
    * @param {*} localPath: is an array of 3-arrays of numbers of the local coordinates in relation to mesh.position and quaternion
    * @param {*} keyPoints: are the keyPoints meshes array
    * @param {*} splinePath: is an array of 3-arrays of numbers of the local coordinates in relation to mesh.position and quaternion
+   * @param {*} mainView: MainView
+   * @param {*} keyValueMap: annotations
    */
-  constructor(mesh, localPath, keyPoints, splinePath, keyValueMap = {}) {
+  constructor(
+    mesh,
+    localPath,
+    keyPoints,
+    splinePath,
+    mainView,
+    weight = 1,
+    keyValueMap = {}
+  ) {
     super(mesh, keyValueMap);
     // Array<Vector3> points in relation to its mean
     this.localPath = localPath;
@@ -30,12 +41,15 @@ class Path extends NodeItem {
     // spline points from local path
     this.splinePath = splinePath;
     this.selectedKeyPointIndex = -1;
+    this.mainView = mainView;
+    this.weight = weight;
   }
 
   toDict() {
     const dict = super.toDict();
     dict.localPath = this.localPath;
     dict.splinePath = this.splinePath;
+    dict.weight = this.weight;
     return dict;
   }
 
@@ -69,7 +83,7 @@ class Path extends NodeItem {
       schema.uiSchema["color"] = { "ui:widget": "hidden" };
       schema.uiSchema["annotations"] = { "ui:widget": "hidden" };
       const selectedMesh = this.keyPoints[this.selectedKeyPointIndex];
-      const position = Util3d.getWorldCoordinates(
+      const position = Util3d.getGlobalCoordinates(
         selectedMesh,
         selectedMesh.position
       ).toArray();
@@ -78,8 +92,28 @@ class Path extends NodeItem {
         y: position[1],
         z: position[2]
       };
+
       return schema;
     }
+    // re-order attributes
+    const props = { ...schema.jsonSchema.properties };
+    const newSchema = {
+      type: "object",
+      properties: {
+        oldName: props.oldName,
+        name: props.name,
+        type: props.type,
+        weight: {
+          type: "number",
+          title: "Weight"
+        },
+        position: props.position,
+        quaternion: props.quaternion,
+        color: props.color
+      }
+    };
+    schema.jsonSchema = newSchema;
+    schema.data["weight"] = this.weight;
     return schema;
   }
 
@@ -91,7 +125,7 @@ class Path extends NodeItem {
       const newPosInWorldCoordinates = Vector3.FromArray(
         [formPosition.x, formPosition.y, formPosition.z].map(Number.parseFloat)
       );
-      const localPos = Util3d.getLocalCoordinatesFromWorld(
+      const localPos = Util3d.getLocalCoordFromGlobal(
         selectedKeyPoint,
         newPosInWorldCoordinates
       ).toArray();
@@ -104,11 +138,47 @@ class Path extends NodeItem {
         updatedPointMesh: selectedKeyPoint,
         is2updateServer: false
       });
+      return;
     }
+    this.weight = Number(form.weight);
+    this.updatePathEdgeWithForm(this.weight, this.keyValueMap);
+  }
+
+  updatePathEdgeWithForm(weight, annotations) {
+    this.mainView.getGraph().forEach(({ item: graphItem }) => {
+      const { graph } = graphItem;
+      const first = this.keyPoints[0];
+      const last = this.keyPoints[this.keyPoints.length - 1];
+      const edge = [first, last]
+        .filter(v => !!v?.graphVertex?.vertex)
+        .map(v => v.graphVertex.vertex);
+      if (edge.length < 2) return;
+      const edgeIds = edge.map(v => v.id);
+      graph.getEdge(...edgeIds).forEach(({ data: edgeData }) => {
+        edgeData.weight = weight;
+        edgeData.keyValueMap = annotations;
+      });
+      this.mainView.updateNodeInServer(graphItem.name);
+    });
   }
 
   ofDict(scene, dict = null, mainView = null) {
     return Path.ofDict(scene, dict, mainView);
+  }
+
+  getCopyFunction(isForceUpdate = true) {
+    // mousePosFromRoot : Vector3
+    return (mousePosFromRoot, someMainView) => {
+      return super
+        .getCopyFunction(isForceUpdate)(mousePosFromRoot, someMainView)
+        .map(copiedPath => {
+          const kp = copiedPath?.keyPoints;
+          if (kp !== undefined && isPathOnGraph(this)) {
+            Path.updateGraph(someMainView, kp, copiedPath, true);
+          }
+          return copiedPath;
+        });
+    };
   }
 
   getType = () => Path.TYPE;
@@ -117,14 +187,14 @@ class Path extends NodeItem {
 
   static ofDict(scene, dict = null, mainView = null) {
     if (!dict || !mainView)
-      throw "null dictionary describing path or null mainView";
+      throw new Error("null dictionary describing path or null mainView");
 
     const name = dict.name;
     const curve = dict.localPath.map(z => Vec3.of(z).toBabylon());
     const spline = Util3d.getSplineFromCurve(curve);
     const { points } = spline;
     let mesh = null;
-    //hack
+    //hack for creating 1 point curves
     if (points.length === 1) {
       mesh = MeshBuilder.CreateLines(
         name,
@@ -162,16 +232,267 @@ class Path extends NodeItem {
       { ...dict, mesh, splinePath },
       mainView
     );
-
     const path2return = new Path(
       mesh,
       curve.map(point => [point.x, point.y, point.z]),
       keyPoints,
       splinePath,
+      mainView,
+      dict.weight,
       dict.keyValueMap
     );
     mesh.onClick = getMeshOnClick(mainView, path2return);
+    mesh.observers = new Observable();
+    mesh.observers.add(getMeshObserver(keyPoints));
     return path2return;
+  }
+
+  /**
+   * Create new mesh from old, has side effects
+   *
+   * @param {*} newPoints: Vector3
+   * @param {*} scene: Scene
+   * @param {*} item: PathItem
+   * @param {*} mainView: MainView
+   * @param {*} keyPointUpdateFunction: (scene, mainView, mesh, item) => Array<Mesh>
+   */
+  static createNewMeshFromOldUsingNewPoints(
+    newPoints,
+    scene,
+    item,
+    mainView,
+    keyPointUpdateFunction = defaultKeyPointUpdate
+  ) {
+    const { mesh: oldMesh } = item;
+    const average = Util3d.pointAverage(newPoints);
+    newPoints = newPoints.map(x => x.subtract(average));
+
+    const spline = Util3d.getSplineFromCurve(newPoints);
+    const newMesh = Util3d.createTubeFromPoints(
+      scene,
+      spline.points,
+      Color3.Gray(),
+      RADIUS / 8,
+      oldMesh.name
+    );
+
+    // average in parent coord
+    const rotMat3 = Util3d.getRotationMatrix(oldMesh);
+    const scaleVec3 = Vec3.ofBabylon(oldMesh.scaling);
+    const averageInParentCoord = rotMat3
+      .prodVec(Vec3.ofBabylon(average).mul(scaleVec3))
+      .toBabylon();
+
+    newMesh.parent = oldMesh.parent;
+    newMesh.rotationQuaternion = oldMesh.rotationQuaternion;
+    newMesh.position = averageInParentCoord.add(oldMesh.position);
+
+    newMesh.material = oldMesh.material;
+    newMesh.visibility = oldMesh.visibility;
+    newMesh.onClick = oldMesh.onClick;
+    newMesh.getMouseContextActions = oldMesh.getMouseContextActions;
+    newMesh.nodeItem = oldMesh.nodeItem;
+    newMesh.observers = oldMesh.observers;
+    item.localPath = newPoints.map(x => Vec3.ofBabylon(x).toArray());
+    item.splinePath = Util3d.splineObj2redis(spline);
+    item.mesh = newMesh;
+    const oldKeyPoints = item.keyPoints;
+    item.keyPoints = keyPointUpdateFunction(scene, mainView, oldMesh, item);
+    // update observer that triggers keypoints observers
+    item.mesh.observers.clear();
+    item.mesh.observers.add(getMeshObserver(item.keyPoints));
+
+    Path.updateGraph(
+      mainView,
+      oldKeyPoints,
+      item,
+      oldKeyPoints.length !== item.keyPoints.length
+    );
+
+    oldMesh.dispose();
+    return item;
+  }
+
+  static deleteKeyPoint(scene, keyPointMesh, mainView) {
+    const index = keyPointMesh.index;
+    const name = keyPointMesh.parent.name;
+    mainView.getNodeFromTree(name).forEach(({ item }) => {
+      const { mesh } = item;
+      const copyPosition = { ...mesh.position };
+      let newPoints = item.localPath.map(x => Vec3.of(x).toBabylon());
+      mainView
+        .getUndoManager()
+        .doIt(
+          Path.getUndoDeleteKeyPoint(
+            name,
+            index,
+            copyPosition,
+            newPoints,
+            scene,
+            item,
+            mainView
+          )
+        );
+    });
+  }
+
+  static getUndoDeleteKeyPoint(
+    name,
+    index,
+    copyPosition,
+    newPoints,
+    scene,
+    item,
+    mainView
+  ) {
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        const copyPoints = [...newPoints];
+        copyPoints.splice(index, 1);
+        Path.createNewMeshFromOldUsingNewPoints(
+          copyPoints,
+          scene,
+          item,
+          mainView,
+          Path.onAddNewPointKeyPointUpdate
+        );
+        mainView.updateNodeInServer(name);
+      })
+      .undoAction(() => {
+        const copyPoints = [...newPoints];
+        item.mesh.position = copyPosition;
+        Path.createNewMeshFromOldUsingNewPoints(
+          copyPoints,
+          scene,
+          item,
+          mainView,
+          Path.onAddNewPointKeyPointUpdate
+        );
+        mainView.updateNodeInServer(name);
+      })
+      .build();
+  }
+
+  static onAddNewPointKeyPointUpdate(scene, mainView, oldMesh, item) {
+    // used when new keypoint is added
+    return createPlaceHolderKeyPoints(scene, item, mainView);
+  }
+
+  /**
+   *
+   * @param {*} scene
+   * @param {*} keyPointMesh
+   * @param {*} curveMesh
+   * @param {*} mainView
+   * @param {*} orientation: it belongs to the set {-1,1}, represents orientation
+   */
+  static addKeyPointInBetween(scene, keyPointMesh, mainView, orientation) {
+    const index = keyPointMesh.index;
+    const name = keyPointMesh.parent.name;
+    mainView.getNodeFromTree(name).forEach(({ item }) => {
+      const points = item.localPath.map(x => Vec3.of(x).toBabylon());
+      const copyPosition = { ...item.mesh.position };
+      mainView
+        .getUndoManager()
+        .doIt(
+          Path.getUndoAddKeyPointInBetween(
+            name,
+            index,
+            orientation,
+            item,
+            points,
+            copyPosition,
+            scene,
+            mainView
+          )
+        );
+    });
+  }
+
+  static getUndoAddKeyPointInBetween(
+    name,
+    index,
+    orientation,
+    item,
+    points,
+    copyPosition,
+    scene,
+    mainView
+  ) {
+    return UndoManager.actionBuilder()
+      .doAction(() => {
+        const nextIndex = index + orientation;
+        const numberOfPoints = item.localPath.length;
+        let newPoints = [];
+        const oldPoints = [...points];
+        if (nextIndex < 0) {
+          newPoints = [
+            oldPoints[0].scale(3).subtract(oldPoints[1]).scale(0.5)
+          ].concat(oldPoints);
+        } else if (nextIndex > numberOfPoints - 1) {
+          newPoints = oldPoints.concat([
+            oldPoints[numberOfPoints - 1]
+              .scale(3)
+              .subtract(oldPoints[numberOfPoints - 2])
+              .scale(0.5)
+          ]);
+        } else {
+          const specialIndex = index + Math.max(0, orientation);
+          for (let i = 0; i < specialIndex; i++) {
+            newPoints.push(oldPoints[i]);
+          }
+          newPoints.push(oldPoints[nextIndex].add(oldPoints[index]).scale(0.5));
+          for (let i = specialIndex; i < numberOfPoints; i++) {
+            newPoints.push(oldPoints[i]);
+          }
+        }
+
+        Path.createNewMeshFromOldUsingNewPoints(
+          newPoints,
+          scene,
+          item,
+          mainView,
+          Path.onAddNewPointKeyPointUpdate
+        );
+
+        mainView.updateNodeInServer(name);
+      })
+      .undoAction(() => {
+        const copyPoints = [...points];
+        item.mesh.position = copyPosition;
+        Path.createNewMeshFromOldUsingNewPoints(
+          copyPoints,
+          scene,
+          item,
+          mainView,
+          Path.onAddNewPointKeyPointUpdate
+        );
+
+        mainView.updateNodeInServer(name);
+      })
+      .build();
+  }
+
+  /**
+   *
+   * @param {*} mainView: MainView
+   * @param {*} oldKpMeshes: Mesh
+   * @param {*} pathItem: PathItem
+   * @param {*} isTopologyChange: boolean
+   */
+  static updateGraph(mainView, oldKpMeshes, pathItem, isTopologyChange) {
+    if (!isTopologyChange) return;
+    mainView.getGraph().forEach(({ item: graph }) => {
+      //naive algorithm, delete all vertices
+      oldKpMeshes.forEach(kp => {
+        graph.delVertex(kp, false);
+      });
+      // add final edge
+      const keyPoints = pathItem.keyPoints;
+      const edgeMeshes = [keyPoints[0], keyPoints[keyPoints.length - 1]];
+      graph.addEdge(...edgeMeshes);
+      mainView.updateNodeInServer(graph.name);
+    });
   }
 }
 
@@ -184,8 +505,24 @@ const getMeshOnClick = (mainView, nodeItem) => () => {
     .forEach(node => (node.item.selectedKeyPointIndex = -1));
 };
 
+const getMeshObserver = keypoints => ({
+  updatedPointMesh,
+  is2updateServer,
+  displacement
+}) => {
+  keypoints.forEach(k => {
+    if (!!k.graphVertex) {
+      k.graphVertex.vertexObs({
+        updatedPointMesh: k,
+        is2updateServer,
+        displacement
+      });
+    }
+  });
+};
+
 function defaultKeyPointUpdate(scene, mainView, oldMesh, item) {
-  // used when keypoint is updated
+  // used when key point is updated
   const childrenCopy = [...oldMesh._children];
   const spline = item.splinePath.map(z => new Vector3(z[0], z[1], 0));
   childrenCopy.forEach(c => {
@@ -196,6 +533,7 @@ function defaultKeyPointUpdate(scene, mainView, oldMesh, item) {
     k.name = `${oldMesh.name}keyPointSpline${i}`;
     k.position = Vec3.of(item.localPath[i]).toBabylon();
     k.rotationQuaternion = Quaternion.Identity();
+    if (!!oldMesh.graphVertex) k.graphVertex = oldMesh.graphVertex;
     if (i > 0 && i < item.keyPoints.length - 1) {
       k._children.forEach(kChild => kChild.dispose());
       const c = getConeMesh(
@@ -212,75 +550,26 @@ function defaultKeyPointUpdate(scene, mainView, oldMesh, item) {
   });
 }
 
-function createNewMeshFromOldUsingNewPoints(
-  newPoints,
-  scene,
-  oldMesh,
-  item,
-  mainView,
-  keyPointUpdateFunction = defaultKeyPointUpdate
-) {
-  const average = Util3d.pointAverage(newPoints);
-  newPoints = newPoints.map(x => x.subtract(average));
-
-  const spline = Util3d.getSplineFromCurve(newPoints);
-  // const newMesh = MeshBuilder.CreateLines(
-  //   oldMesh.name,
-  //   { points: spline.points, updatable: true },
-  //   scene
-  // );
-
-  const newMesh = Util3d.createTubeFromPoints(
-    scene,
-    spline.points,
-    Color3.Gray(),
-    RADIUS / 8,
-    oldMesh.name
-  );
-
-  newMesh.position = oldMesh.position;
-  newMesh.rotationQuaternion = oldMesh.rotationQuaternion;
-  newMesh.locallyTranslate(average);
-  newMesh.material = oldMesh.material;
-  newMesh.visibility = oldMesh.visibility;
-  newMesh.parent = oldMesh.parent;
-  newMesh.onClick = oldMesh.onClick;
-
-  item.localPath = newPoints.map(x => Vec3.ofBabylon(x).toArray());
-  item.splinePath = Util3d.splineObj2redis(spline);
-  item.mesh = newMesh;
-
-  item.keyPoints = keyPointUpdateFunction(scene, mainView, oldMesh, item);
-
-  oldMesh.dispose();
-  return newPoints;
-}
-
 const getKeyPointObserverFunction = (scene, mainView) => {
-  return ({ updatedPointMesh, is2updateServer }) => {
+  return ({ updatedPointMesh, is2updateServer, displacement }) => {
     if (!updatedPointMesh.parent) return;
     mainView
       .getNodeFromTree(updatedPointMesh.parent.name)
-      .forEach(pathTreeNode => {
-        const index = updatedPointMesh.index;
-        const item = pathTreeNode.item;
-        const mesh = item.mesh;
+      .forEach(({ item }) => {
+        const { index } = updatedPointMesh;
+        const { mesh } = item;
         let newPoints = item.localPath.map(x => Vec3.of(x).toBabylon());
         newPoints[index] = updatedPointMesh.position;
-
-        createNewMeshFromOldUsingNewPoints(
+        Path.createNewMeshFromOldUsingNewPoints(
           newPoints,
           scene,
-          mesh,
           item,
           mainView
         );
-
         if (index > 0 && index < newPoints.length - 1) {
           // we know by construction that this keyPoint has children
-          mainView.highlightMeshInScene([item.keyPoints[index]._children[0]]);
+          mainView.highlightMeshesInScene([item.keyPoints[index]._children[0]]);
         }
-
         if (is2updateServer) {
           mainView.updateNodeInServer(mesh.name);
           mainView.getNodeFromTree(mesh.name).forEach(node => {
@@ -290,89 +579,6 @@ const getKeyPointObserverFunction = (scene, mainView) => {
         }
       });
   };
-};
-
-const deleteKeyPoint = (scene, keyPointMesh, mainView) => {
-  const index = keyPointMesh.index;
-  const name = keyPointMesh.parent.name;
-  mainView.getNodeFromTree(name).forEach(pathTreeNode => {
-    const item = pathTreeNode.item;
-    const mesh = item.mesh;
-
-    let newPoints = item.localPath.map(x => Vec3.of(x).toBabylon());
-
-    newPoints.splice(index, 1);
-    item.keyPoints.splice(index, 1)[0].dispose();
-
-    createNewMeshFromOldUsingNewPoints(
-      newPoints,
-      scene,
-      mesh,
-      item,
-      mainView,
-      onAddNewPointKeyPointUpdate
-    );
-
-    mainView.updateNodeInServer(name);
-  });
-};
-
-function onAddNewPointKeyPointUpdate(scene, mainView, oldMesh, item) {
-  // used when new keypoint is added
-  return createPlaceHolderKeyPoints(scene, item, mainView);
-}
-/**
- *
- * @param {*} scene
- * @param {*} keyPointMesh
- * @param {*} curveMesh
- * @param {*} mainView
- * @param {*} orientation: it belongs to the set {-1,1}, represents orientation
- */
-const addKeyPointInBetween = (scene, keyPointMesh, mainView, orientation) => {
-  const index = keyPointMesh.index;
-  const name = keyPointMesh.parent.name;
-  mainView.getNodeFromTree(name).forEach(pathTreeNode => {
-    const nextIndex = index + orientation;
-    const item = pathTreeNode.item;
-    const numberOfPoints = item.localPath.length;
-    const mesh = item.mesh;
-    let newPoints = [];
-    const oldPoints = item.localPath.map(x => Vec3.of(x).toBabylon());
-
-    if (nextIndex < 0) {
-      newPoints = [
-        oldPoints[0].scale(3).subtract(oldPoints[1]).scale(0.5)
-      ].concat(oldPoints);
-    } else if (nextIndex > numberOfPoints - 1) {
-      newPoints = oldPoints.concat([
-        oldPoints[numberOfPoints - 1]
-          .scale(3)
-          .subtract(oldPoints[numberOfPoints - 2])
-          .scale(0.5)
-      ]);
-    } else {
-      const specialIndex = index + Math.max(0, orientation);
-      for (let i = 0; i < specialIndex; i++) {
-        newPoints.push(oldPoints[i]);
-      }
-      newPoints.push(oldPoints[nextIndex].add(oldPoints[index]).scale(0.5));
-      for (let i = specialIndex; i < numberOfPoints; i++) {
-        newPoints.push(oldPoints[i]);
-      }
-    }
-
-    createNewMeshFromOldUsingNewPoints(
-      newPoints,
-      scene,
-      mesh,
-      item,
-      mainView,
-      onAddNewPointKeyPointUpdate
-    );
-
-    mainView.updateNodeInServer(name);
-  });
 };
 
 const getKeyPointActions = (scene, keyPointMesh, mainView) => {
@@ -386,7 +592,7 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
       actions.push({
         icon: props => <i className="fas fa-trash" {...props}></i>,
         action: parentView => {
-          deleteKeyPoint(scene, keyPointMesh, parentView);
+          Path.deleteKeyPoint(scene, keyPointMesh, parentView);
           parentView.closeContextDial();
         },
         name: "Delete node [DEL]"
@@ -396,7 +602,7 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
     actions.push({
       icon: props => <i className="fas fa-less-than" {...props}></i>,
       action: parentView => {
-        addKeyPointInBetween(scene, keyPointMesh, parentView, -1);
+        Path.addKeyPointInBetween(scene, keyPointMesh, parentView, -1);
         parentView.closeContextDial();
       },
       name: "Add previous"
@@ -405,7 +611,7 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
     actions.push({
       icon: props => <i className="fas fa-greater-than" {...props}></i>,
       action: parentView => {
-        addKeyPointInBetween(scene, keyPointMesh, parentView, 1);
+        Path.addKeyPointInBetween(scene, keyPointMesh, parentView, 1);
         parentView.closeContextDial();
       },
       name: "Add next"
@@ -482,4 +688,11 @@ function getSphereMesh(scene, color, curveMesh, i) {
       `${curveMesh.name}keyPointSpline${i}`,
       true
     );
+}
+
+function isPathOnGraph(pathItem) {
+  return [
+    pathItem.keyPoints[0]?.graphVertex,
+    pathItem.keyPoints[pathItem.keyPoints.length - 1]?.graphVertex
+  ].every(v => !!v);
 }

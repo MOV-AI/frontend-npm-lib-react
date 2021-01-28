@@ -11,7 +11,7 @@ import {
   StandardMaterial,
   Quaternion
 } from "@babylonjs/core";
-import _isEqual from "lodash/isEqual";
+import isEqual from "lodash.isequal";
 
 class BoxRegion extends NodeItem {
   constructor(mesh, corners, keyPoints, keyValueMap = {}) {
@@ -65,7 +65,7 @@ class BoxRegion extends NodeItem {
     schema.uiSchema["dimensions"] = { "ui:widget": "collapse" };
     // global ref coordinates
     const worldCorners = this.keyPoints
-      .map(x => Util3d.getWorldCoordinates(x, x.position))
+      .map(x => Util3d.getGlobalCoordinates(x, x.position))
       .map(x => x.toArray());
     schema.data["dimensions"] = {
       lower: {
@@ -84,7 +84,7 @@ class BoxRegion extends NodeItem {
   ofForm(form) {
     const oldForm = this.toForm();
     const oldDimensions = oldForm.data.dimensions;
-    if (_isEqual(oldDimensions, form.dimensions)) {
+    if (isEqual(oldDimensions, form.dimensions)) {
       super.ofForm(form);
     } else {
       this.ofFormDimensions(form);
@@ -109,21 +109,26 @@ class BoxRegion extends NodeItem {
       form.dimensions.size.scaleX,
       form.dimensions.size.scaleY
     ].map(Number.parseFloat);
-    const localLowerPosition = Util3d.getLocalCoordinatesFromWorld(
+    let localLowerPosition = Util3d.getLocalCoordFromGlobal(
       this.keyPoints[0],
       newLowerPositionInWorldCoordinates
     ).toArray();
-    const notify = i =>
+    const notify = (i, update = false) =>
       this.keyPoints[i].observers.notifyObservers({
         updatedPointMesh: this.keyPoints[i],
-        is2updateServer: false
+        is2updateServer: update
       });
+
     this.keyPoints[0].position = new Vector3(
       localLowerPosition[0],
       localLowerPosition[1],
       this.keyPoints[0].position.z
     );
     notify(0);
+    localLowerPosition = Util3d.getLocalCoordFromGlobal(
+      this.keyPoints[0],
+      newLowerPositionInWorldCoordinates
+    ).toArray();
     this.keyPoints[1].position = new Vector3(
       localLowerPosition[0] + newLocalDimensions[0],
       localLowerPosition[1] + newLocalDimensions[1],
@@ -133,7 +138,7 @@ class BoxRegion extends NodeItem {
   }
 
   static ofDict(scene, dict = null, mainView = null) {
-    if (!dict) throw "null dictionary describing Box region";
+    if (!dict) throw new Error("null dictionary describing Box region");
     const name = Maybe.fromNull(dict.name).orSome(
       `BoxRegion${Math.floor(Math.random() * 1e3)}`
     );
@@ -146,7 +151,7 @@ class BoxRegion extends NodeItem {
     material.backFaceCulling = false;
     mesh.material = material;
 
-    mesh.visibility = 0.25;
+    mesh.visibility = VISIBILITY;
 
     Maybe.fromNull(dict.quaternion).forEach(quaternion => {
       const babylonQuaternion = new Quaternion(
@@ -227,20 +232,30 @@ function createNewMeshFromOldUsingNewBox(newBox, scene, mesh, item) {
   newBox.position = average.toArray();
   newBox.corners = newBox.corners.map(x => Vec3.of(x).sub(average).toArray());
 
+  // average in parent coord
+  const rotMat3 = Util3d.getRotationMatrix(mesh);
+  const scaleVec3 = Vec3.ofBabylon(mesh.scaling);
+  const averageInParentCoord = rotMat3
+    .prodVec(average.mul(scaleVec3))
+    .toBabylon();
+
   const newMesh = createBoxRegionMesh(newBox, mesh.name, scene);
-  newMesh.position = mesh.position;
-  newMesh.rotationQuaternion = mesh.rotationQuaternion;
-  newMesh.locallyTranslate(average.toBabylon());
-  newMesh.material = mesh.material;
-  newMesh.visibility = mesh.visibility;
   newMesh.parent = mesh.parent;
+  newMesh.rotationQuaternion = mesh.rotationQuaternion;
+  newMesh.position = averageInParentCoord.add(mesh.position);
+
+  newMesh.material = mesh.material;
+  newMesh.visibility = VISIBILITY;
+  newMesh.getMouseContextActions = mesh.getMouseContextActions;
+  newMesh.nodeItem = mesh.nodeItem;
+  newMesh.observers = mesh.observers;
+  if (!!mesh.graphVertex) newMesh.graphVertex = mesh.graphVertex;
 
   item.mesh = newMesh;
   item.corners = newBox.corners;
 
   const childrenCopy = [...mesh._children];
   childrenCopy.forEach(c => {
-    mesh.removeChild(c);
     c.parent = newMesh;
   });
   item.keyPoints.forEach((k, j) => {
@@ -259,7 +274,6 @@ const getKeyPointObserverFunction = (mainView, scene) => {
         const item = boxRegionTreeNode.item;
         const mesh = item.mesh;
         const name = mesh.name;
-
         let newBox = {
           position: Vec3.ofBabylon(mesh.position).toArray(),
           corners: item.corners
@@ -267,16 +281,29 @@ const getKeyPointObserverFunction = (mainView, scene) => {
         newBox.corners[index] = Vec3.ofBabylon(
           updatedPointMesh.position
         ).toArray();
-
         createNewMeshFromOldUsingNewBox(newBox, scene, mesh, item);
-        mainView.addGizmo();
-
+        mainView.addGizmo2Name();
         if (is2updateServer) {
           mainView.updateNodeInServer(name);
           mainView.getNodeFromTree(name).forEach(node => {
             mainView.setProperties(node.item.toForm());
           });
         }
+        // signal box region observers
+        Maybe.fromNull(item.mesh.observers).forEach(obs => {
+          obs.notifyObservers({
+            updatedPointMesh: item.mesh,
+            is2updateServer: is2updateServer,
+            displacement: Vector3.Zero()
+          });
+        });
+        Maybe.fromNull(item.mesh.graphVertex).forEach(({ vertexObs }) => {
+          vertexObs({
+            updatedPointMesh: item.mesh,
+            is2updateServer: is2updateServer,
+            displacement: Vector3.Zero()
+          });
+        });
       });
   };
 };
@@ -309,4 +336,5 @@ const createPlaceHolderKeyPoints = (
   return keyPoints;
 };
 
+const VISIBILITY = 0.25;
 export default BoxRegion;

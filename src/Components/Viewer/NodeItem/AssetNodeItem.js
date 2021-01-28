@@ -11,6 +11,10 @@ class AssetNodeItem extends NodeItem {
     ans.assetName = this.assetName;
     return ans;
   }
+
+  getCopyFunction = () => {
+    return (mousePosFromRoot, someMainView) => {};
+  };
 }
 
 export default AssetNodeItem;
