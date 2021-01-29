@@ -27,10 +27,19 @@ class Logs extends Component {
     columns: ["Time", "Robot", "Message"],
     tags: [{ key: 0, label: "ui" }],
     height: 0, //LogsTable height
-    levelsList: [
-      { value: "INFO", label: "Robot Status" },
-      { value: "ERROR", label: "Alerts" }
-    ]
+    levelsList: this.props.advancedMode
+      ? [
+          { value: "INFO", label: "Info" },
+          { value: "WARNING", label: "Warnings" },
+          { value: "DEBUG", label: "Debug" },
+          { value: "ERROR", label: "Error" },
+          { value: "CRITICAL", label: "Critical" }
+        ]
+      : [
+          { value: "INFO", label: "Robot Status" },
+          { value: "ERROR", label: "Alerts" }
+        ],
+    advancedMode: this.props.advancedMode
   };
   logsTimeout = undefined;
 
@@ -169,7 +178,11 @@ class Logs extends Component {
             columns={this.state.columns}
             columnList={this.props.columnList}
             handleColumns={event => {
-              this.setState({ columns: event.target.value });
+              // make sure columns are always with the same order
+              const columns = Object.keys(this.props.columnList).filter(elem =>
+                event.target.value.includes(elem)
+              );
+              this.setState({ columns });
             }}
             tags={this.state.tags}
             handleAddTag={tagText => {
@@ -246,7 +259,8 @@ class Logs extends Component {
 Logs.propTypes = {
   robotsData: PropTypes.array,
   robotStates: PropTypes.object,
-  columnList: PropTypes.object
+  columnList: PropTypes.object,
+  advancedMode: PropTypes.bool
 };
 Logs.defaultProps = {
   robotsData: [
@@ -306,7 +320,8 @@ Logs.defaultProps = {
       dataKey: "message",
       width: 100
     }
-  }
+  },
+  advancedMode: false
 };
 
 export default Logs;
