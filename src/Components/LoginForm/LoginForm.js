@@ -25,7 +25,8 @@ class LoginForm extends Component {
     password: "",
     remember: false,
     error: false,
-    errorMessage: ""
+    errorMessage: "",
+    capsLockOn: false
   };
 
   sendCreds = async () => {
@@ -52,6 +53,13 @@ class LoginForm extends Component {
       });
     }
   };
+
+  checkCapsLock = (event) => {
+    if(event.key === 'CapsLock' && this.state.capsLockOn)
+      this.setState({ capsLockOn: false });
+    else
+      this.setState({ capsLockOn: event.getModifierState('CapsLock') });
+  }
 
   render() {
     const { classes, logo } = this.props;
@@ -111,7 +119,8 @@ class LoginForm extends Component {
                   onChange={event =>
                     this.setState({ password: event.target.value })
                   }
-                  onKeyPress={event => {
+                  onKeyUp={event => {
+                    this.checkCapsLock(event);
                     if (event.key === "Enter") {
                       this.sendCreds();
                     }
@@ -120,6 +129,11 @@ class LoginForm extends Component {
                 {this.state.error && (
                   <FormHelperText id="component-error-text">
                     {this.state.errorMessage}
+                  </FormHelperText>
+                )}
+                {this.state.capsLockOn && (
+                  <FormHelperText id="component-warning-text">
+                    Warning: Caps lock is ON!
                   </FormHelperText>
                 )}
               </FormControl>
