@@ -52,7 +52,7 @@ const ProfileMenu = props => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <Typography variant="body1">
+        <Typography component="div" variant="body1">
           <div className={classes.menuItemSpacing}>
             {props.welcomeLabel}, {props.userName}
           </div>
