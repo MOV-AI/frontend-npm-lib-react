@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import BaseViewer from "./BaseViewer/BaseViewer";
 import PropTypes from "prop-types";
-import { HighlightLayer } from "@babylonjs/core";
+import { HighlightLayer, Vector3 } from "@babylonjs/core";
 import { Maybe } from "monet";
 import MainViewRetriever from "./MainView/MainViewRetriever";
 import DefaultScene from "./Utils/DefaultScene";
@@ -32,6 +32,12 @@ class SceneViewer extends Component {
     this.sceneMemory = Maybe.none();
     this.objectTree = [];
     this.undoManager = new UndoManager();
+    // camera properties
+    this.isPanned = false;
+    this.isRotated = false;
+    this.targetPos = undefined;
+    this.cameraSpeed = Vector3.Zero();
+    this.time = new Date().getTime() * 1e-3;
   }
 
   //========================================================================================
@@ -80,7 +86,6 @@ class SceneViewer extends Component {
   };
 
   updateNodeInServer = (name, oldName = null) => {
-    if (this.props.focusObject.Value === name) this.setCameraToTarget();
     TreeServerUtils.ofScene(this.sceneName).updateNodeInServer(
       name,
       [...this.objectTree],
@@ -108,20 +113,21 @@ class SceneViewer extends Component {
 
   setCameraToTarget = () => {
     this.sceneMemory.forEach(({ camera }) => {
-      const focusObject = this.props.focusObject.Value;
-      this.getNodeFromTree(focusObject).cata(
-        () => {
-          console.log(
-            "Set Camera",
-            this.getRootNode().item.mesh._absolutePosition
-          );
-          camera.setTarget(
-            this.getRootNode().item.mesh._absolutePosition.clone()
-          );
-        },
+      const focusObject = this.isPanned ? "" : this.props.focusObject.Value;
+      this.getNodeFromTree(focusObject).forEach(
         x => {
           console.log("Set Camera, Found Object", x.item.mesh);
-          camera.setTarget(x.item.mesh._absolutePosition.clone());
+          const dt = new Date().getTime() * 1e-3 - this.time;
+          this.time = new Date().getTime() * 1e-3;
+          const pos = x.item.mesh._absolutePosition.clone();
+          this.cameraSpeed = !this.targetPos ? Vector3.Zero() : pos.subtract(this.targetPos);
+          this.targetPos = pos;  
+          camera.setTarget(pos);
+          camera.position = camera.position.add(this.cameraSpeed.scale(dt))
+          camera.beta = this.isRotated ? camera.beta : 0;
+          // move target object for debug
+          // const p = x.item.mesh.position;
+          // x.item.mesh.position = p.add(new Vector3(p.x, p.y, 0).scale(1e-2)); 
         }
       );
     });
@@ -145,6 +151,7 @@ class SceneViewer extends Component {
   }
 
   onPointerDown = evt => {
+    this.isRotated = true;
     DefaultMouseEvents.onPointerDown(this)(evt);
   };
 
@@ -153,6 +160,7 @@ class SceneViewer extends Component {
   };
 
   onPointerMove = evt => {
+    if(evt.buttons === 4) this.isPanned = true;
     DefaultMouseEvents.onPointerMove(this)(evt);
   };
 
@@ -206,9 +214,12 @@ class SceneViewer extends Component {
 
   renderScene = () => {
     this.getSceneMemory().forEach(({ engine, scene }) =>
-      engine.runRenderLoop(() => scene.render())
+      engine.runRenderLoop(() => {
+        this.time = new Date().getTime() * 1e-3;
+        scene.render()
+        this.setCameraToTarget();
+      })
     );
-    this.setCameraToTarget();
   };
 
   onSceneReady = scene => {
@@ -251,7 +262,11 @@ class SceneViewer extends Component {
       },
       {
         propVar: x => x.focusObject.Value,
-        action: this.setCameraToTarget
+        action:() => {
+          this.isPanned = false;
+          this.isRotated = false;
+          this.setCameraToTarget()
+        } 
       }
     ];
     predicateAction.forEach(({ propVar, action }) => {
@@ -270,7 +285,7 @@ class SceneViewer extends Component {
     const { errorList } = this.state;
     const resetErrorList = () => this.setState({ errorList: [] });
     return (
-      <div style={{ display: "flex", flexGrow: 1 }}>
+      <div style={{ display: "flex", flexGrow: 1, maxHeight: "100%" }}>
         <BaseViewer
           onSceneReady={this.onSceneReady}
           is2render={false}
