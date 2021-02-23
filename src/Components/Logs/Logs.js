@@ -100,20 +100,22 @@ class Logs extends Component {
         .filter(robot => robot.robotState !== this.props.robotStates.off) // If robot is offline doesn't bother making the request
         .filter(robot => robot.isSelected)
         .map(robot => this.getRobotLogData(robot))
-    ).then(dataArrays => {
-      this.setState(prevState => {
-        const finalArray = dataArrays.reduce((all, dataArray) => {
-          dataArray && dataArray.forEach(data => all.push(data));
-          return all;
-        }, []);
-        this.logsTimeout = setTimeout(
-          this.getLogs,
-          3000,
-          prevState.selectedRobots
-        );
-        return { logsData: finalArray.sort((a, b) => b.time - a.time) };
-      });
-    });
+    )
+      .then(dataArrays => {
+        this.setState(prevState => {
+          const finalArray = dataArrays.reduce((all, dataArray) => {
+            dataArray && dataArray.forEach(data => all.push(data));
+            return all;
+          }, []);
+          this.logsTimeout = setTimeout(
+            this.getLogs,
+            3000,
+            prevState.selectedRobots
+          );
+          return { logsData: finalArray.sort((a, b) => b.time - a.time) };
+        });
+      })
+      .catch(e => console.log("vicente e", e));
   };
 
   getRobotLogData = robotSelected => {
@@ -124,9 +126,9 @@ class Logs extends Component {
       //   re([]);
       // }, 2000);
 
-      const dynamicURL = `http://${
-        robotSelected.ip
-      }/api/v1/logs/?${getRequestLevels(
+      if (!robotSelected.ip) re([]);
+
+      const dynamicURL = `http://${undefined}/api/v1/logs/?${getRequestLevels(
         this.state.levels,
         this.state.levelsList
       )}&limit=${this.state.limit}${getRequestTags(
@@ -134,8 +136,7 @@ class Logs extends Component {
       )}${getRequestMessage(this.state.messageRegex)}`;
 
       MasterDB.get(dynamicURL, (res, e) => {
-        if (res === undefined) rej();
-        re(res.data);
+        re(res?.data || []);
         // clearTimeout(timeoutHandle);
       });
     }).catch(() => console.log("Failed getRobotLogData"));

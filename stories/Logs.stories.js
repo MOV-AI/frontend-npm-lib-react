@@ -41,6 +41,16 @@ export const logStory = () => {
     <div style={{ height: "100vh" }}>
       <ThemeProvider theme={Themes["light"]}>
         <Logs
+          robotData={[
+            {
+              name: "robot",
+              id: "032cf6207ff34ad0a68cc45034f61b41",
+              timestamp: 1604334778.6494586,
+              robotState: "okay",
+              battery: 78,
+              ip: undefined
+            }
+          ]}
           robotStates={{
             error: "error",
             temp: "temp",
