@@ -100,22 +100,20 @@ class Logs extends Component {
         .filter(robot => robot.robotState !== this.props.robotStates.off) // If robot is offline doesn't bother making the request
         .filter(robot => robot.isSelected)
         .map(robot => this.getRobotLogData(robot))
-    )
-      .then(dataArrays => {
-        this.setState(prevState => {
-          const finalArray = dataArrays.reduce((all, dataArray) => {
-            dataArray && dataArray.forEach(data => all.push(data));
-            return all;
-          }, []);
-          this.logsTimeout = setTimeout(
-            this.getLogs,
-            3000,
-            prevState.selectedRobots
-          );
-          return { logsData: finalArray.sort((a, b) => b.time - a.time) };
-        });
-      })
-      .catch(e => console.log("vicente e", e));
+    ).then(dataArrays => {
+      this.setState(prevState => {
+        const finalArray = dataArrays.reduce((all, dataArray) => {
+          dataArray && dataArray.forEach(data => all.push(data));
+          return all;
+        }, []);
+        this.logsTimeout = setTimeout(
+          this.getLogs,
+          3000,
+          prevState.selectedRobots
+        );
+        return { logsData: finalArray.sort((a, b) => b.time - a.time) };
+      });
+    });
   };
 
   getRobotLogData = robotSelected => {
