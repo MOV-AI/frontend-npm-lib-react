@@ -126,21 +126,22 @@ class Logs extends Component {
       //   re([]);
       // }, 2000);
 
-      if (!robotSelected.ip) re([]);
+      if (robotSelected.ip) {
+        const dynamicURL = `http://${
+          robotSelected.ip
+        }/api/v1/logs/?${getRequestLevels(
+          this.state.levels,
+          this.state.levelsList
+        )}&limit=${this.state.limit}${getRequestTags(
+          this.state.tags
+        )}${getRequestMessage(this.state.messageRegex)}`;
 
-      const dynamicURL = `http://${
-        robotSelected.ip
-      }/api/v1/logs/?${getRequestLevels(
-        this.state.levels,
-        this.state.levelsList
-      )}&limit=${this.state.limit}${getRequestTags(
-        this.state.tags
-      )}${getRequestMessage(this.state.messageRegex)}`;
-
-      MasterDB.get(dynamicURL, (res, e) => {
-        re(res?.data || []);
-        // clearTimeout(timeoutHandle);
-      });
+        MasterDB.get(dynamicURL, (res, e) => {
+          re(res?.data || []);
+          // clearTimeout(timeoutHandle);
+        });
+      }
+      re([]);
     }).catch(() => console.log("Failed getRobotLogData"));
   };
 
