@@ -140,8 +140,9 @@ class Logs extends Component {
           re(res?.data || []);
           // clearTimeout(timeoutHandle);
         });
+      } else {
+        re([]);
       }
-      re([]);
     }).catch(() => console.log("Failed getRobotLogData"));
   };
 
