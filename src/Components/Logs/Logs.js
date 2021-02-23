@@ -121,10 +121,10 @@ class Logs extends Component {
   getRobotLogData = robotSelected => {
     return new Promise((re, rej) => {
       // Failsafe timer to prevent the promise all from hanging
-      // const timeoutHandle = setTimeout(() => {
-      //   console.error("MOV.AI: One of the promises reached timeout");
-      //   re([]);
-      // }, 2000);
+      const timeoutHandle = setTimeout(() => {
+        console.error("MOV.AI: One of the promises reached timeout");
+        re([]);
+      }, 2000);
 
       if (robotSelected.ip) {
         const dynamicURL = `http://${
@@ -138,7 +138,7 @@ class Logs extends Component {
 
         MasterDB.get(dynamicURL, (res, e) => {
           re(res?.data || []);
-          // clearTimeout(timeoutHandle);
+          clearTimeout(timeoutHandle);
         });
       } else {
         re([]);
