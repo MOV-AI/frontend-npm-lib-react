@@ -19,13 +19,13 @@ class Logs extends Component {
   state = {
     selectedRobots: [],
     levels: ["INFO", "ERROR"],
-    limit: 10,
+    limit: 50,
     logsData: [],
     messageRegex: "",
     selectedFromDate: null,
     selectedToDate: null,
     columns: ["Time", "Robot", "Message"],
-    tags: [{ key: 0, label: "ui" }],
+    tags: this.props.advancedMode ? [] : [{ key: 0, label: "ui" }],
     height: 0, //LogsTable height
     levelsList: this.props.advancedMode
       ? [
@@ -62,16 +62,22 @@ class Logs extends Component {
   }
 
   componentDidMount() {
-    this.setSelectedRobots(
-      this.props.robotsData.map(elem => ({ ...elem, isSelected: true }))
-    );
+    this.updateSelectedRobots();
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (_isEqual(prevProps.robotsData, this.props.robotsData)) return;
-    this.setSelectedRobots(
-      this.props.robotsData.map(elem => ({ ...elem, isSelected: true }))
-    );
+    this.updateSelectedRobots();
+  }
+
+  updateSelectedRobots = () => {
+    if(
+      this.props.robotsData.length 
+      && this.props.robotsData.filter(robot => robot.ip).length
+    )
+      this.setSelectedRobots(
+        this.props.robotsData.map(elem => ({ ...elem, isSelected: true }))
+      );
   }
 
   componentWillUnmount() {
@@ -90,6 +96,7 @@ class Logs extends Component {
   };
 
   setSelectedRobots = selectedRobots => {
+    clearTimeout(this.logsTimeout);
     this.setState({ selectedRobots });
     this.getLogs(selectedRobots);
   };
@@ -218,14 +225,14 @@ class Logs extends Component {
             }}
             advancedMode={this.state.advancedMode}
             handleAdvancedMode={evt => {
-              // Toggle advanced mode, set tag to ui by default and change the levels
+              // Toggle advanced mode: change the levels
               this.setState({
                 advancedMode: !this.state.advancedMode,
                 levelsList: this.state.advancedMode
                   ? this.simpleLevelsList
                   : this.advancedLevelsList,
                 tags: this.state.advancedMode
-                  ? [{ key: 0, label: "ui" }]
+                  ? []
                   : this.state.tags
               });
             }}

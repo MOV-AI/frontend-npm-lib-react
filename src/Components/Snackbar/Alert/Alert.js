@@ -90,8 +90,6 @@ const Alert = props => {
     ...other
   } = props;
 
-  console.log("action", action);
-
   return (
     <div
       className={clsx(

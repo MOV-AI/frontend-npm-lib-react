@@ -105,7 +105,7 @@ const LogsFilterBar = props => {
   };
   const getRobotSelector = () => {
     return (
-      <div>
+      <div className={classes.toggleContainer}>
         <svg
           width="20"
           height="18"
