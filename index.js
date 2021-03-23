@@ -19,6 +19,7 @@ import Style from "./src/styles/Style";
 import Logs from "./src/Components/Logs/Logs";
 import LoginForm from "./src/Components/LoginForm/LoginForm";
 import ProfileMenu from "./src/Components/ProfileMenu";
+import FilterIcon from "./src/Components/Logs/LogsFilterBar/FiltersIcon/FiltersIcon";
 
 export {
   Button,
@@ -40,6 +41,7 @@ export {
   snackbar,
   Style,
   Logs,
+  FilterIcon,
   LoginForm,
   ProfileMenu,
 };
