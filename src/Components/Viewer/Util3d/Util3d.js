@@ -34,8 +34,9 @@ class Util3d {
     if (
       (mesh.parent && mesh.parent.name === GlobalRef.NAME) ||
       mesh.name === GlobalRef.NAME
-    )
+    ) {
       return Vec3.ofBabylon(localPosition);
+    }
     const meshParent = mesh.parent;
     const meshParentPos = Vec3.ofBabylon(meshParent.position);
     const meshParentRotMat = Util3d.getRotationMatrix(meshParent);
@@ -47,6 +48,29 @@ class Util3d {
         )
       )
       .add(meshParentPos);
+  }
+
+  /**
+   *
+   * @param {*} mesh
+   * @param {*} x: Vector3 in mesh local coord
+   * @returns Vector3
+   */
+  static getGlobalCoord(mesh, x) {
+    if (
+      (mesh.parent && mesh.parent.name === GlobalRef.NAME) ||
+      mesh.name === GlobalRef.NAME
+    ) {
+      return x;
+    }
+    const meshParent = mesh.parent;
+    const meshParentPos = Vec3.ofBabylon(meshParent.position);
+    const meshParentRotMat = Util3d.getRotationMatrix(meshParent);
+    const meshParentScaling = Vec3.ofBabylon(meshParent.scaling);
+    const childPos = meshParentRotMat
+      .prodVec(meshParentScaling.mul(Vec3.ofBabylon(x)))
+      .add(meshParentPos);
+    return Util3d.getGlobalCoord(meshParent, childPos.toBabylon());
   }
 
   static getBabylonCoordinates(positionInWorld) {
