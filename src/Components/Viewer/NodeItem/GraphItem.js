@@ -145,6 +145,16 @@ class GraphItem extends NodeItem {
     };
   }
 
+  /**
+   * @override nodeItem delVertex()
+   * Delete all vertex from tree nodes
+   */
+  delVertex() {
+    // Iterate though all nodes under the root node and delete its vertexes
+    const root = this.mainView.getRootNode();
+    this.delVertexRecursively(root?.children);
+  }
+
   //========================================================================================
   /*                                                                                      *
    *                                   Graph Operations                                   *
@@ -192,7 +202,7 @@ class GraphItem extends NodeItem {
     return this.graph.hasEdge(i, j);
   }
 
-  delVertex(iMesh, is2updateServer = true) {
+  delVertexFromMesh(iMesh, is2updateServer = true) {
     const { graph } = this;
     const i = this.getVertexIdFromMesh(iMesh);
     graph.getVertex(i).forEach(_ => {
@@ -208,6 +218,7 @@ class GraphItem extends NodeItem {
         );
       // delete itself
       graph.delVertex(i);
+      iMesh.graphVertex = undefined;
       if (is2updateServer) this.mainView.updateNodeInServer(this.name);
     });
   }
@@ -241,6 +252,19 @@ class GraphItem extends NodeItem {
    *                                    Private Methods                                   *
    *                                                                                      */
   //========================================================================================
+
+  /**
+   * Delete vertex from nodeTree children
+   * @param {*} nodeTree: List of nodes (initially root.children)
+   */
+  delVertexRecursively(nodeTree = []) {
+    nodeTree.forEach(node => {
+      if(node.item.getType() !== GraphItem.TYPE) {
+        node.item.delVertex();
+        this.delVertexRecursively(node.children);
+      }
+    });
+  }
 
   /**
    *
@@ -281,7 +305,7 @@ class GraphItem extends NodeItem {
     if (mesh !== undefined) {
       mesh.graphVertex = {
         vertex: vData,
-        delVertex: () => this.delVertex(mesh),
+        delVertex: () => this.delVertexFromMesh(mesh),
         vertexObs: this.getVertexMeshObs(vData)
       };
     }
@@ -330,9 +354,12 @@ class GraphItem extends NodeItem {
   }
 
   getEdgeMesh(iVertexD, jVertexD) {
+    const edgeGlobalCoord = [iVertexD, jVertexD].map(({ mesh }) => {
+      return Util3d.getGlobalCoord(mesh, mesh.position);
+    });
     const edgeMesh = GraphItem.getEdgeMesh(
       this.scene,
-      [iVertexD.position, jVertexD.position],
+      edgeGlobalCoord,
       Color3.Yellow()
     );
     edgeMesh.parent = this.mesh;

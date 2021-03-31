@@ -1,7 +1,7 @@
 import Clipboard from "../Utils/Clipboard";
 import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
-import { capitalize } from "lodash";
+import _capitalize from "lodash/capitalize";
 import { Quaternion, Color3, Vector3 } from "@babylonjs/core";
 import AnnotationManager from "../Utils/AnnotationManager";
 import GlobalRef from "./GlobalRef";
@@ -200,7 +200,7 @@ class NodeItem {
       someMainView.getSceneMemory().map(({ scene }) => {
         const { item: rootItem } = someMainView.getRootNode();
         const copyDict = this.toDict();
-        copyDict.name += "_copy" + Math.floor(100 * Math.random());
+        copyDict.name += "_copy" + Clipboard.getUID();
         const newPosArray = Vec3.ofBabylon(mousePosFromRoot).toArray();
         // preserves z-coordinate
         newPosArray[2] = copyDict.position[2];
@@ -218,6 +218,23 @@ class NodeItem {
         return copiedNodeItem;
       });
   }
+
+  delVertex() {
+    let delVertex = this.mesh.graphVertex?.delVertex;
+    if (!delVertex) {
+      const childrenWithDelVertex = (this.mesh?._children || [])
+        .filter(childMesh => !!childMesh.graphVertex)
+        .map(childMesh => childMesh.graphVertex.delVertex);
+      delVertex = () => childrenWithDelVertex.forEach(del => del());
+    }
+    delVertex();
+  }
+
+  //========================================================================================
+  /*                                                                                      *
+   *                           Static attributes/methods                                  *
+   *                                                                                      */
+  //========================================================================================
 
   static TYPE = "NodeItem";
 
@@ -265,16 +282,27 @@ class NodeItem {
     };
     schema.data["annotations"] = { ...keyValueMap };
     const annotations = AnnotationManager.getAnnotations();
-    Object.keys(annotations).forEach(annotation => {
-      if (annotations[annotation].labels.length > 0) {
+
+    ["safety", "behaviour", "localization", "navigation"].forEach(
+      annotation => {
+        // if (annotations[annotation].labels.length > 0) {
         schema.jsonSchema.properties.annotations.properties[annotation] = {
-          title: capitalize(annotation),
-          type: "string",
-          enumNames: annotations[annotation].labels,
-          enum: annotations[annotation].names
+          title: _capitalize(annotation),
+          type: "string"
         };
+        schema.uiSchema.annotations[annotation] = {
+          "ui:widget": "selectScopeModal",
+          "ui:options": {
+            scopeList: "Annotation",
+            name: _capitalize(annotation),
+            filter: e => {
+              return annotations[annotation].names.includes(e.name);
+            }
+          }
+        };
+        // }
       }
-    });
+    );
   }
 }
 
