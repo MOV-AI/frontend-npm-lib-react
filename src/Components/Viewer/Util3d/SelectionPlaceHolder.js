@@ -1,4 +1,4 @@
-import { uniqBy } from "lodash";
+import _uniqBy from "lodash/uniqBy";
 import Util3d from "../Util3d/Util3d";
 import KeyPoint from "../NodeItem/KeyPoint";
 import {
@@ -39,7 +39,7 @@ class SelectionPlaceHolder {
     arrayOfMeshes = Array.isArray(arrayOfMeshes)
       ? arrayOfMeshes
       : [arrayOfMeshes];
-    this.arrayOfMeshes = uniqBy(
+    this.arrayOfMeshes = _uniqBy(
       this.arrayOfMeshes.concat(arrayOfMeshes),
       mesh => mesh.name
     );

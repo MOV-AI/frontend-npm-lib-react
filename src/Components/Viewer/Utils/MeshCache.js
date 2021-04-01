@@ -48,6 +48,7 @@ class MeshCache {
         );
         const cloneMesh = mesh.clone(`${key}${this.count++}`);
         console.log("#Mesh:", cloneMesh);
+        cloneMesh.setEnabled(true);
         return cloneMesh;
       })
       .orNull();

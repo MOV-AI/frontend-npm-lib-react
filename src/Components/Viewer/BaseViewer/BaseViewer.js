@@ -63,6 +63,7 @@ const BaseViewer = props => {
     });
   };
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (!loaded) {
       setLoaded(true);
@@ -83,10 +84,11 @@ const BaseViewer = props => {
       scene && scene.getEngine() && scene.getEngine().dispose();
     };
   }, [reactCanvas, loaded, scene]);
+  /* eslint-enable react-hooks/exhaustive-deps */
+  // loaded && reactCanvas.current.focus();
 
-  loaded && reactCanvas.current.focus();
   return (
-    <div style={{ ...FLEX_STYLE }}>
+    <div style={{ ...FLEX_STYLE, maxHeight: "100%" }}>
       <canvas
         ref={reactCanvas}
         width={size.width}

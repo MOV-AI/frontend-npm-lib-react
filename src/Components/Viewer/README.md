@@ -206,3 +206,7 @@ The client sends action( e.g add BoxRegion, Change Position of a key point, etc.
 - World Referential: BabylonJs Referential
 - Global Referential: Global Referential
 - Mesh Referential: Local Referential
+
+# Lazy Migrations
+
+- Pose migration in BE

@@ -1,9 +1,9 @@
 import Vec3 from "../Math/Vec3";
 import Util3d from "../Util3d/Util3d";
-import { WSSub } from "mov-fe-lib-core";
+import { Database } from "mov-fe-lib-core";
 import AssetNodeItem from "./AssetNodeItem";
 import { Axis, Space, Vector3, Quaternion, Color3 } from "@babylonjs/core";
-import lodash from "lodash";
+import _get from "lodash/get";
 
 class Robot extends AssetNodeItem {
   static ROBOT_MESH_NAME = "Tugbot.stl";
@@ -18,7 +18,7 @@ class Robot extends AssetNodeItem {
     this.qSpeed = Quaternion.Zero();
     this.newPos = Vector3.Zero();
     this.newOri = Quaternion.Identity();
-    this.db = new WSSub();
+    this.db = new Database();
   }
 
   toDict() {
@@ -135,7 +135,7 @@ class Robot extends AssetNodeItem {
     robot.db.subscribe(
       { Scope: "Robot", Name: robot.meshTree.id, Parameter: "tf" },
       data => {
-        const tf = lodash.get(
+        const tf = _get(
           data,
           `key.Robot.${robot.meshTree.id}.Parameter.tf.Value`,
           undefined
@@ -143,7 +143,7 @@ class Robot extends AssetNodeItem {
         if (tf) Robot.updateRobotMeshTree(tf, robot);
       },
       data => {
-        const tf = lodash.get(
+        const tf = _get(
           data,
           `key.Robot.${robot.meshTree.id}.Parameter.tf.Value`,
           undefined

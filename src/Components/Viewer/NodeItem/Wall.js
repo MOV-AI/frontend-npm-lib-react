@@ -4,7 +4,9 @@ import { Maybe } from "monet";
 import Util3d from "../Util3d/Util3d";
 import Constants from "../Utils/Constants";
 import { Vector3, Color3, Observable, StandardMaterial } from "@babylonjs/core";
-
+/**
+ * Will be deprecated
+ */
 class Wall extends NodeItem {
   constructor(mesh, localWall, size, keyPoints = {}, keyValueMap = {}) {
     super(mesh, keyValueMap);

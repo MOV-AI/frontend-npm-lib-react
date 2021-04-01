@@ -109,7 +109,8 @@ class Path extends NodeItem {
         },
         position: props.position,
         quaternion: props.quaternion,
-        color: props.color
+        color: props.color,
+        annotations: props.annotations
       }
     };
     schema.jsonSchema = newSchema;
@@ -485,7 +486,7 @@ class Path extends NodeItem {
     mainView.getGraph().forEach(({ item: graph }) => {
       //naive algorithm, delete all vertices
       oldKpMeshes.forEach(kp => {
-        graph.delVertex(kp, false);
+        graph.delVertexFromMesh(kp, false);
       });
       // add final edge
       const keyPoints = pathItem.keyPoints;
@@ -572,10 +573,7 @@ const getKeyPointObserverFunction = (scene, mainView) => {
         }
         if (is2updateServer) {
           mainView.updateNodeInServer(mesh.name);
-          mainView.getNodeFromTree(mesh.name).forEach(node => {
-            node.item.selectedKeyPointIndex = index;
-            mainView.setProperties(node.item.toForm());
-          });
+          mainView.setProperties(item.toForm());
         }
       });
   };
@@ -648,9 +646,13 @@ const createPlaceHolderKeyPoints = (scene, item, mainView) => {
     keyPoint.observers.add(getKeyPointObserverFunction(scene, mainView));
   });
 
-  keyPoints.forEach(x => {
-    x.onClick = () => {
-      mainView.setContextActions(getKeyPointActions(scene, x, mainView));
+  keyPoints.forEach(kp => {
+    kp.onClick = () => {
+      mainView.setContextActions(getKeyPointActions(scene, kp, mainView));
+      mainView.getNodeFromTree(kp.parent.name).forEach(node => {
+        node.item.selectedKeyPointIndex = kp.index;
+        mainView.setProperties(node.item.toForm());
+      });
     };
   });
   return keyPoints;
