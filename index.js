@@ -20,11 +20,13 @@ import Logs from "./src/Components/Logs/Logs";
 import LoginForm from "./src/Components/LoginForm/LoginForm";
 import ProfileMenu from "./src/Components/ProfileMenu";
 import FilterIcon from "./src/Components/Logs/LogsFilterBar/FiltersIcon/FiltersIcon";
+import SelectScopeModal from "./src/Components/Modal/SelectScopeModal";
 
 export {
   Button,
   AbstractModal,
   ConfirmAlertModal,
+  SelectScopeModal,
   Drawer,
   Collapse,
   VerticalBar,
@@ -43,5 +45,5 @@ export {
   Logs,
   FilterIcon,
   LoginForm,
-  ProfileMenu,
+  ProfileMenu
 };
