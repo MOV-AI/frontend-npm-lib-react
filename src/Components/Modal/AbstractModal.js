@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "../Button";
+import CloseIcon from "@material-ui/icons/Close";
 import {
   Card,
   Typography,
   CardContent,
   Divider,
-  // Button,
+  Button,
   CardActions,
   Modal
 } from "@material-ui/core";
@@ -16,7 +16,17 @@ const style = {
   position: "absolute",
   overflow: "auto",
   display: "flex",
-  flexDirection: "column"
+  flexDirection: "column",
+  maxHeight: "98%",
+  maxWidth: "50%"
+};
+
+const closeButtonStyle = {
+  cursor: "pointer",
+  position: "absolute",
+  color: "white",
+  top: 15,
+  right: 15
 };
 
 const AbstractModal = props => {
@@ -48,48 +58,50 @@ const AbstractModal = props => {
       <Card
         style={{
           ...style,
-          width: props.width,
-          height: props.height,
-          minWidth: "260px",
-          minHeight: "280px"
+          minWidth: props.width,
+          minHeight: props.height
         }}
       >
         <CardContent
           style={{
             flexGrow: 1,
-            display: "flex",
-            flexDirection: "column",
-            minHeight: 0
+            maxHeight: "calc(100% - 70px)",
+            overflowY: "auto"
           }}
         >
+          <Typography variant="h5">{props.title}</Typography>
           <Typography
-            variant="h5"
-            style={{
-              padding: "12px 0px 12px 6px",
-              fontWeight: 600
-            }}
+            component="div"
+            style={closeButtonStyle}
+            onClick={() => props.onCancel()}
+            onMouseEnter={evt => (evt.target.style.color = "grey")}
+            onMouseLeave={evt => (evt.target.style.color = "white")}
           >
-            {props.title}
+            <CloseIcon></CloseIcon>
           </Typography>
+          <Divider style={{ marginBottom: "12px" }} />
           <div
             style={{
-              paddingLeft: "6px",
-              flexGrow: 1,
-              overflow: "auto",
-              minHeight: 0
+              maxHeight: "calc(100% - 35px)",
+              overflowY: "auto",
+              paddingTop: 5
             }}
           >
             {props.children}
           </div>
         </CardContent>
         <Divider />
-        <CardActions style={{ alignSelf: "flex-end" }}>
-          <Button onClick={cancel} variant="outlined" color={props.cancelColor}>
-            {props.cancelText}
-          </Button>
-          <Button color={props.submitColor} onClick={submit}>
-            {props.submitText}
-          </Button>
+        <CardActions>
+          {props.hasSubmitButton && (
+            <Button color={props.submitColor} onClick={submit}>
+              {props.submitText}
+            </Button>
+          )}
+          {props.hasCancelButton && (
+            <Button onClick={cancel} color={props.cancelColor}>
+              {props.cancelText}
+            </Button>
+          )}
         </CardActions>
       </Card>
     </Modal>
@@ -106,7 +118,9 @@ AbstractModal.propTypes = {
   cancelText: PropTypes.string,
   cancelColor: PropTypes.string,
   width: PropTypes.string,
-  height: PropTypes.string
+  height: PropTypes.string,
+  hasSubmitButton: PropTypes.bool,
+  hasCancelButton: PropTypes.bool
 };
 
 AbstractModal.defaultProps = {
@@ -117,9 +131,11 @@ AbstractModal.defaultProps = {
   submitText: "Confirm",
   submitColor: "primary",
   cancelText: "Cancel",
-  cancelColor: "inherit",
+  cancelColor: "secondary",
   width: "25%",
-  height: "25%"
+  height: "25%",
+  hasSubmitButton: true,
+  hasCancelButton: true
 };
 
 export default AbstractModal;
