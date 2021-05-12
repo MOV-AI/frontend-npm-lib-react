@@ -25,7 +25,7 @@ const styles = theme => ({
   },
   tableRowHover: {
     "&:hover": {
-      backgroundColor: theme.palette.grey[200]
+      backgroundColor: "rgba(0, 5, 58, 0.3)"
     }
   },
   tableCell: {
@@ -33,7 +33,8 @@ const styles = theme => ({
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    display: "inline-block"
+    display: "inline-block",
+    color: "white"
   },
   flexColumn: {
     flex: 1,

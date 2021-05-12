@@ -16,6 +16,8 @@ import LogsTable from "./LogsTable/LogsTable";
 import _isEqual from "lodash/isEqual";
 import PropTypes from "prop-types";
 
+const UI_TAG = { key: 0, label: "ui" };
+
 class Logs extends Component {
   state = {
     selectedRobots: [],
@@ -26,7 +28,7 @@ class Logs extends Component {
     selectedFromDate: null,
     selectedToDate: null,
     columns: ["Time", "Robot", "Message"],
-    tags: this.props.advancedMode ? [] : [{ key: 0, label: "ui" }],
+    tags: this.props.advancedMode ? [] : [UI_TAG],
     height: 0, //LogsTable height
     levelsList: this.props.advancedMode
       ? [
@@ -232,12 +234,13 @@ class Logs extends Component {
             advancedMode={this.state.advancedMode}
             handleAdvancedMode={evt => {
               // Toggle advanced mode: change the levels
+              const advancedMode = !this.state.advancedMode;
               this.setState({
-                advancedMode: !this.state.advancedMode,
+                advancedMode: advancedMode,
                 levelsList: this.state.advancedMode
                   ? this.simpleLevelsList
                   : this.advancedLevelsList,
-                tags: this.state.advancedMode ? [] : this.state.tags
+                tags: advancedMode ? [] : [UI_TAG]
               });
             }}
           ></LogsFilterBar>
