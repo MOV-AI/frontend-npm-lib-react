@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import "./Logs.css";
 import { MasterDB } from "mov-fe-lib-core";
+import RobotLogModal from "../Modal/RobotLogModal";
 import {
   getRequestLevels,
   getRequestTags,
@@ -42,6 +43,7 @@ class Logs extends Component {
     advancedMode: this.props.advancedMode
   };
   logsTimeout = undefined;
+  logModal = createRef();
 
   simpleLevelsList = [
     { value: "INFO", label: "Robot Status" },
@@ -71,14 +73,14 @@ class Logs extends Component {
   }
 
   updateSelectedRobots = () => {
-    if(
-      this.props.robotsData.length 
-      && this.props.robotsData.filter(robot => robot.ip).length
+    if (
+      this.props.robotsData.length &&
+      this.props.robotsData.filter(robot => robot.ip).length
     )
       this.setSelectedRobots(
         this.props.robotsData.map(elem => ({ ...elem, isSelected: true }))
       );
-  }
+  };
 
   componentWillUnmount() {
     if (this.logsTimeout) {
@@ -149,6 +151,10 @@ class Logs extends Component {
         re([]);
       }
     }).catch(() => console.log("Failed getRobotLogData"));
+  };
+
+  onRowClick = log => {
+    this.logModal.current.open(log.rowData);
   };
 
   render() {
@@ -231,9 +237,7 @@ class Logs extends Component {
                 levelsList: this.state.advancedMode
                   ? this.simpleLevelsList
                   : this.advancedLevelsList,
-                tags: this.state.advancedMode
-                  ? []
-                  : this.state.tags
+                tags: this.state.advancedMode ? [] : this.state.tags
               });
             }}
           ></LogsFilterBar>
@@ -258,9 +262,14 @@ class Logs extends Component {
               )}
               height={this.state.height}
               levelsList={this.state.levelsList}
+              onRowClick={this.onRowClick}
             ></LogsTable>
           </div>
         </div>
+        <RobotLogModal
+          ref={this.logModal}
+          props={["module", "service"]}
+        ></RobotLogModal>
       </div>
     );
   }

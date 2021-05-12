@@ -1,6 +1,7 @@
 import Button from "./src/Components/Button";
 import AbstractModal from "./src/Components/Modal/AbstractModal";
 import ConfirmAlertModal from "./src/Components/Modal/ConfirmAlertModal";
+import RobotLogModal from "./src/Components/Modal/RobotLogModal";
 import Drawer from "./src/Components/Drawer";
 import Collapse from "./src/Components/Collapse";
 import VerticalBar from "./src/Components/VerticalBar";
@@ -25,6 +26,7 @@ export {
   Button,
   AbstractModal,
   ConfirmAlertModal,
+  RobotLogModal,
   Drawer,
   Collapse,
   VerticalBar,
@@ -43,5 +45,5 @@ export {
   Logs,
   FilterIcon,
   LoginForm,
-  ProfileMenu,
+  ProfileMenu
 };
