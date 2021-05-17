@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import "./Logs.css";
 import { MasterDB } from "mov-fe-lib-core";
+import RobotLogModal from "../Modal/RobotLogModal";
 import {
   getRequestLevels,
   getRequestTags,
@@ -15,6 +16,8 @@ import LogsTable from "./LogsTable/LogsTable";
 import _isEqual from "lodash/isEqual";
 import PropTypes from "prop-types";
 
+const UI_TAG = { key: 0, label: "ui" };
+
 class Logs extends Component {
   state = {
     selectedRobots: [],
@@ -25,7 +28,7 @@ class Logs extends Component {
     selectedFromDate: null,
     selectedToDate: null,
     columns: ["Time", "Robot", "Message"],
-    tags: this.props.advancedMode ? [] : [{ key: 0, label: "ui" }],
+    tags: this.props.advancedMode ? [] : [UI_TAG],
     height: 0, //LogsTable height
     levelsList: this.props.advancedMode
       ? [
@@ -42,6 +45,7 @@ class Logs extends Component {
     advancedMode: this.props.advancedMode
   };
   logsTimeout = undefined;
+  logModal = createRef();
 
   simpleLevelsList = [
     { value: "INFO", label: "Robot Status" },
@@ -71,14 +75,14 @@ class Logs extends Component {
   }
 
   updateSelectedRobots = () => {
-    if(
-      this.props.robotsData.length 
-      && this.props.robotsData.filter(robot => robot.ip).length
+    if (
+      this.props.robotsData.length &&
+      this.props.robotsData.filter(robot => robot.ip).length
     )
       this.setSelectedRobots(
         this.props.robotsData.map(elem => ({ ...elem, isSelected: true }))
       );
-  }
+  };
 
   componentWillUnmount() {
     if (this.logsTimeout) {
@@ -149,6 +153,10 @@ class Logs extends Component {
         re([]);
       }
     }).catch(() => console.log("Failed getRobotLogData"));
+  };
+
+  onRowClick = log => {
+    this.logModal.current.open(log.rowData);
   };
 
   render() {
@@ -226,14 +234,13 @@ class Logs extends Component {
             advancedMode={this.state.advancedMode}
             handleAdvancedMode={evt => {
               // Toggle advanced mode: change the levels
+              const advancedMode = !this.state.advancedMode;
               this.setState({
-                advancedMode: !this.state.advancedMode,
+                advancedMode: advancedMode,
                 levelsList: this.state.advancedMode
                   ? this.simpleLevelsList
                   : this.advancedLevelsList,
-                tags: this.state.advancedMode
-                  ? []
-                  : this.state.tags
+                tags: advancedMode ? [] : [UI_TAG]
               });
             }}
           ></LogsFilterBar>
@@ -258,9 +265,14 @@ class Logs extends Component {
               )}
               height={this.state.height}
               levelsList={this.state.levelsList}
+              onRowClick={this.onRowClick}
             ></LogsTable>
           </div>
         </div>
+        <RobotLogModal
+          ref={this.logModal}
+          props={["module", "service"]}
+        ></RobotLogModal>
       </div>
     );
   }

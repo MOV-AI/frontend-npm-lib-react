@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Menu from "@material-ui/core/Menu";
-import { Typography } from "@material-ui/core";
+import { Typography, Tooltip } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import IconButton from "@material-ui/core/IconButton";
 import PropTypes from "prop-types";
@@ -82,16 +82,19 @@ class FilterIcon extends Component {
   };
 
   render() {
-    const { classes, t } = this.props;
+    const { classes, t, disabled, tooltip, title } = this.props;
     return (
       <React.Fragment>
-        <IconButton
-          size="small"
-          onClick={this.handleClick}
-          className={this.props.isActive ? classes.iconActive : classes.icon}
-        >
-          {this.props.icon}
-        </IconButton>
+        <Tooltip title={tooltip || title}>
+          <IconButton
+            size="small"
+            onClick={this.handleClick}
+            disabled={disabled}
+            className={this.props.isActive ? classes.iconActive : classes.icon}
+          >
+            {this.props.icon}
+          </IconButton>
+        </Tooltip>
         <StyledMenu
           id="customized-menu"
           anchorEl={this.state.anchorEl}
@@ -157,11 +160,15 @@ class FilterIcon extends Component {
 
 FilterIcon.propTypes = {
   isActive: PropTypes.bool,
+  disabled: PropTypes.bool,
+  tooltip: PropTypes.string,
   title: PropTypes.string
 };
 
 FilterIcon.defaultProps = {
   isActive: false,
+  disabled: false,
+  tooltip: "",
   title: "Filters"
 };
 

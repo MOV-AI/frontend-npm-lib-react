@@ -25,11 +25,16 @@ const styles = theme => ({
   },
   tableRowHover: {
     "&:hover": {
-      backgroundColor: theme.palette.grey[200]
+      backgroundColor: "rgba(0, 5, 58, 0.3)"
     }
   },
   tableCell: {
-    flexGrow: 1
+    flexGrow: 1,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "inline-block",
+    color: "white"
   },
   flexColumn: {
     flex: 1,
@@ -107,6 +112,7 @@ class MuiVirtualizedTable extends React.PureComponent {
       columns,
       rowHeight,
       headerHeight,
+      onRowClick,
       ...tableProps
     } = this.props;
     return (
@@ -115,6 +121,7 @@ class MuiVirtualizedTable extends React.PureComponent {
           <Table
             height={height}
             width={width}
+            onRowClick={onRowClick}
             rowHeight={rowHeight}
             gridStyle={{
               direction: "inherit"
@@ -173,6 +180,7 @@ export default function LogsTable(props) {
       rowGetter={({ index }) => props.logsData[index]}
       data={props.logsData}
       columns={props.columns.map(elem => props.columnList[elem])}
+      onRowClick={props.onRowClick}
     />
   );
 }
@@ -181,7 +189,8 @@ LogsTable.propTypes = {
   columns: PropTypes.array,
   columnList: PropTypes.object,
   logsData: PropTypes.array,
-  height: PropTypes.number
+  height: PropTypes.number,
+  onRowClick: PropTypes.func
 };
 
 LogsTable.defaultProps = {

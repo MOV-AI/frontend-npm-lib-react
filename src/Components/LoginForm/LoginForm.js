@@ -54,12 +54,14 @@ class LoginForm extends Component {
     }
   };
 
-  checkCapsLock = (event) => {
-    if(event.key === 'CapsLock' && this.state.capsLockOn)
+  checkCapsLock = event => {
+    if (event.key === "CapsLock" && this.state.capsLockOn)
       this.setState({ capsLockOn: false });
-    else
-      this.setState({ capsLockOn: event.getModifierState('CapsLock') });
-  }
+    else {
+      const capsLock = event.getModifierState("CapsLock");
+      this.setState({ capsLockOn: capsLock });
+    }
+  };
 
   render() {
     const { classes, logo } = this.props;
@@ -92,11 +94,13 @@ class LoginForm extends Component {
                 className={classes.formControl}
                 error={this.state.error}
               >
-                <InputLabel htmlFor="component-error">Username</InputLabel>
+                <InputLabel htmlFor="component-username-error">
+                  Username
+                </InputLabel>
                 <Input
-                  id="component-error"
+                  id="component-username-error"
                   value={this.state.username}
-                  aria-describedby="component-error-text"
+                  aria-describedby="component-username-error-text"
                   onChange={event =>
                     this.setState({ username: event.target.value })
                   }
@@ -110,12 +114,14 @@ class LoginForm extends Component {
                 className={classes.formControl}
                 error={this.state.error}
               >
-                <InputLabel htmlFor="component-error">Password</InputLabel>
+                <InputLabel htmlFor="component-password-error">
+                  Password
+                </InputLabel>
                 <Input
-                  id="component-error"
+                  id="component-password-error"
                   type="password"
                   value={this.state.password}
-                  aria-describedby="component-error-text"
+                  aria-describedby="component-password-error-text"
                   onChange={event =>
                     this.setState({ password: event.target.value })
                   }

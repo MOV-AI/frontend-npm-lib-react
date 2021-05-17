@@ -193,6 +193,7 @@ const LogsFilterBar = props => {
           <Select
             labelId="demo-mutiple-checkbox-label"
             id="demo-mutiple-checkbox"
+            style={{ minWidth: "290px" }}
             multiple
             value={props.levels}
             onChange={props.handleLevels}
@@ -219,11 +220,12 @@ const LogsFilterBar = props => {
     );
   };
 
-  const getTags = () => {
+  const getTags = isAdvancedMode => {
     return (
       <FiltersIcon
         icon={<LabelIcon></LabelIcon>}
         title="Tags"
+        disabled={!isAdvancedMode}
         isActive={props.tags.length > 0}
       >
         <div className={classes.tagsContainer}>
@@ -235,14 +237,19 @@ const LogsFilterBar = props => {
               // User pressed Enter
               if (event.keyCode === 13) {
                 props.handleAddTag(tagText);
+                setTagText("");
               }
             }}
             label="Add Tag"
-            // placeholder="Tag"
             InputProps={{
               endAdornment: (
                 <InputAdornment>
-                  <IconButton onClick={() => props.handleAddTag(tagText)}>
+                  <IconButton
+                    onClick={() => {
+                      props.handleAddTag(tagText);
+                      setTagText("");
+                    }}
+                  >
                     <AddIcon />
                   </IconButton>
                 </InputAdornment>
@@ -406,7 +413,7 @@ const LogsFilterBar = props => {
       {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
       {getLevels()}
       {/* Tags */}
-      {props.advancedMode && getTags()}
+      {getTags(props.advancedMode)}
       {getTimeFilters()}
       <div style={{ flexGrow: 1 }}></div>
       {getSettings()}
