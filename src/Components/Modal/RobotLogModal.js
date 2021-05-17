@@ -5,12 +5,19 @@ import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { ListItem, ListItemAvatar, ListItemText } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import WarningIcon from "@material-ui/icons/Warning";
 import ViewModuleIcon from "@material-ui/icons/ViewModule";
 import ChatIcon from "@material-ui/icons/Chat";
 import { MasterDB } from "mov-fe-lib-core";
 import AbstractModal from "./AbstractModal";
+
+const styles = theme => ({
+  breakWord: {
+    wordBreak: "break-all"
+  }
+});
 
 class RobotLogModal extends Component {
   state = {
@@ -61,7 +68,7 @@ class RobotLogModal extends Component {
 
   renderAlertInfo = () => {
     const { data } = this.state;
-    const { props } = this.props;
+    const { props, classes } = this.props;
     return (
       <Typography component="div">
         <List style={{ width: "100%" }}>
@@ -91,7 +98,10 @@ class RobotLogModal extends Component {
                     <WarningIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={data.service} />
+                <ListItemText
+                  primary={data.service}
+                  className={classes.breakWord}
+                />
               </ListItem>
               <Divider variant="inset" component="li" />
             </div>
@@ -104,7 +114,10 @@ class RobotLogModal extends Component {
                     <ViewModuleIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={data.module} />
+                <ListItemText
+                  primary={data.module}
+                  className={classes.breakWord}
+                />
               </ListItem>
               <Divider variant="inset" component="li" />
             </div>
@@ -115,7 +128,10 @@ class RobotLogModal extends Component {
                 <ChatIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={data.message} />
+            <ListItemText
+              primary={data.message}
+              className={classes.breakWord}
+            />
           </ListItem>
         </List>
         {data.action && (
@@ -123,7 +139,10 @@ class RobotLogModal extends Component {
             <Divider />
             <List style={{ width: "100%" }}>
               <ListItem>
-                <ListItemText primary={data.action} />
+                <ListItemText
+                  primary={data.action}
+                  className={classes.breakWord}
+                />
               </ListItem>
             </List>
           </div>
@@ -163,4 +182,4 @@ RobotLogModal.defaultProps = {
   props: []
 };
 
-export default RobotLogModal;
+export default withStyles(styles, { withTheme: true })(RobotLogModal);
