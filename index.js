@@ -23,7 +23,7 @@ import ProfileMenu from "./src/Components/ProfileMenu";
 import FilterIcon from "./src/Components/Logs/LogsFilterBar/FiltersIcon/FiltersIcon";
 import SelectScopeModal from "./src/Components/Modal/SelectScopeModal";
 // import HOCs
-import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation.jsx";
+import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
 
 export {
   withOfflineValidation,
