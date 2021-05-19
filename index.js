@@ -22,8 +22,11 @@ import LoginForm from "./src/Components/LoginForm/LoginForm";
 import ProfileMenu from "./src/Components/ProfileMenu";
 import FilterIcon from "./src/Components/Logs/LogsFilterBar/FiltersIcon/FiltersIcon";
 import SelectScopeModal from "./src/Components/Modal/SelectScopeModal";
+// import HOCs
+import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
 
 export {
+  withOfflineValidation,
   Button,
   AbstractModal,
   ConfirmAlertModal,
