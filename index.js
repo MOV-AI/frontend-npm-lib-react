@@ -24,9 +24,11 @@ import FilterIcon from "./src/Components/Logs/LogsFilterBar/FiltersIcon/FiltersI
 import SelectScopeModal from "./src/Components/Modal/SelectScopeModal";
 // import HOCs
 import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
+import withAuthentication from "./src/Components/HOCs/withAuthentication";
 
 export {
   withOfflineValidation,
+  withAuthentication,
   Button,
   AbstractModal,
   ConfirmAlertModal,
