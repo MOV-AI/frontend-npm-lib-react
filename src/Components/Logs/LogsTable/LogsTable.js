@@ -1,59 +1,58 @@
 import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import { AutoSizer, Column, Table } from "react-virtualized";
 import { colorCoding } from "../utils/Utils";
 
-const styles = theme => ({
-  flexContainer: {
-    display: "flex",
-    alignItems: "center",
-    boxSizing: "border-box"
-  },
-  table: {
-    // temporary right-to-left patch, waiting for
-    // // https://github.com/bvaughn/react-virtualized/issues/454
-    "& .ReactVirtualized__Table__headerRow": {
-      flip: false,
-      paddingRight: theme.direction === "rtl" ? "0 !important" : undefined
-    }
-  },
-  tableRow: {
-    cursor: "pointer"
-  },
-  tableRowHover: {
-    "&:hover": {
-      backgroundColor: "rgba(0, 5, 58, 0.3)"
-    }
-  },
-  tableCell: {
-    flexGrow: 1,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    display: "inline-block",
-    color: "white"
-  },
-  flexColumn: {
-    flex: 1,
-    alignItems: "center"
-  },
-  noClick: {
-    cursor: "initial"
-  },
-  ...colorCoding
+const useStyles = makeStyles(theme => {
+  return {
+    flexContainer: {
+      display: "flex",
+      alignItems: "center",
+      boxSizing: "border-box"
+    },
+    table: {
+      // temporary right-to-left patch, waiting for
+      // // https://github.com/bvaughn/react-virtualized/issues/454
+      "& .ReactVirtualized__Table__headerRow": {
+        flip: false,
+        paddingRight: theme.direction === "rtl" ? "0 !important" : undefined
+      }
+    },
+    tableRow: {
+      cursor: "pointer"
+    },
+    tableRowHover: {
+      "&:hover": {
+        backgroundColor: "rgba(0, 5, 58, 0.3)"
+      }
+    },
+    tableCell: {
+      flexGrow: 1,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      display: "inline-block"
+    },
+    flexColumn: {
+      flex: 1,
+      alignItems: "center"
+    },
+    noClick: {
+      cursor: "initial"
+    },
+    ...colorCoding
+  };
 });
 
-class MuiVirtualizedTable extends React.PureComponent {
-  static defaultProps = {
-    headerHeight: 48,
-    rowHeight: 48
-  };
+const MuiVirtualizedTable = props => {
+  const { columns, rowHeight, headerHeight, onRowClick, ...tableProps } = props;
+  const classes = useStyles();
 
-  getRowClassName = ({ index }) => {
-    const { classes, onRowClick, data } = this.props;
+  const getRowClassName = ({ index }) => {
+    const { data } = props;
     const rowData = data[index];
     return clsx(
       classes.tableRow,
@@ -65,14 +64,11 @@ class MuiVirtualizedTable extends React.PureComponent {
     );
   };
 
-  cellRenderer = render => ({ cellData, columnIndex }) => {
-    const { columns, classes, rowHeight, onRowClick } = this.props;
+  const cellRenderer = render => ({ cellData, columnIndex }) => {
     return (
       <TableCell
         component="div"
-        className={clsx(classes.tableCell, classes.flexContainer, {
-          [classes.noClick]: onRowClick == null
-        })}
+        className={`${classes.tableCell} ${classes.flexContainer}`}
         variant="body"
         style={{ height: rowHeight }}
         align={
@@ -86,9 +82,7 @@ class MuiVirtualizedTable extends React.PureComponent {
     );
   };
 
-  headerRenderer = ({ label, columnIndex }) => {
-    const { headerHeight, columns, classes } = this.props;
-
+  const headerRenderer = ({ label, columnIndex }) => {
     return (
       <TableCell
         component="div"
@@ -106,76 +100,53 @@ class MuiVirtualizedTable extends React.PureComponent {
     );
   };
 
-  render() {
-    const {
-      classes,
-      columns,
-      rowHeight,
-      headerHeight,
-      onRowClick,
-      ...tableProps
-    } = this.props;
-    return (
-      <AutoSizer>
-        {({ height, width }) => (
-          <Table
-            height={height}
-            width={width}
-            onRowClick={onRowClick}
-            rowHeight={rowHeight}
-            gridStyle={{
-              direction: "inherit"
-            }}
-            headerHeight={headerHeight}
-            className={classes.table}
-            {...tableProps}
-            rowClassName={this.getRowClassName}
-          >
-            {columns.map(({ dataKey, render, ...other }, index) => {
-              return (
-                <Column
-                  key={dataKey}
-                  headerRenderer={headerProps => {
-                    return this.headerRenderer({
-                      ...headerProps,
-                      columnIndex: index
-                    });
-                  }}
-                  flexGrow={dataKey === "message" ? 1 : undefined}
-                  className={classes.flexContainer}
-                  cellRenderer={this.cellRenderer(render)}
-                  dataKey={dataKey}
-                  {...other}
-                />
-              );
-            })}
-          </Table>
-        )}
-      </AutoSizer>
-    );
-  }
-}
-
-MuiVirtualizedTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataKey: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      numeric: PropTypes.bool,
-      width: PropTypes.number.isRequired
-    })
-  ).isRequired,
-  headerHeight: PropTypes.number,
-  onRowClick: PropTypes.func,
-  rowHeight: PropTypes.number
+  return (
+    <AutoSizer>
+      {({ height, width }) => (
+        <Table
+          height={height}
+          width={width}
+          onRowClick={onRowClick}
+          rowHeight={rowHeight}
+          gridStyle={{
+            direction: "inherit"
+          }}
+          headerHeight={headerHeight}
+          className={classes.table}
+          {...tableProps}
+          rowClassName={getRowClassName}
+        >
+          {columns.map(({ dataKey, render, ...other }, index) => {
+            return (
+              <Column
+                key={dataKey}
+                headerRenderer={headerProps => {
+                  return headerRenderer({
+                    ...headerProps,
+                    columnIndex: index
+                  });
+                }}
+                flexGrow={dataKey === "message" ? 1 : undefined}
+                className={classes.flexContainer}
+                cellRenderer={cellRenderer(render)}
+                dataKey={dataKey}
+                {...other}
+              />
+            );
+          })}
+        </Table>
+      )}
+    </AutoSizer>
+  );
 };
 
-const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
+// const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function LogsTable(props) {
   return (
-    <VirtualizedTable
+    <MuiVirtualizedTable
+      rowHeight={48}
+      headerHeight={48}
       rowCount={props.logsData.length}
       rowGetter={({ index }) => props.logsData[index]}
       data={props.logsData}

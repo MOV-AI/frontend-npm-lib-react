@@ -43,3 +43,13 @@ Use these steps to clone from SourceTree, our client for using the repository co
 4. Open the directory you just created to see your repository’s files.
 
 Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+
+# Troubleshooting
+
+## Invalid hook
+
+When running the lib-react locally from IDE or another app, you might have an issue with invalid hooks with the following message: "Error: Invalid hook call. Hooks can only be called inside of the body of a function component."
+
+To fix it, stop the development server of IDE (or the other app), stop the buildDev of lib-react and run the following command in lib-react repository root:
+
+`sudo npm link ../mov-fe-app-ide/node_modules/react`

@@ -2,6 +2,7 @@ import React, { Component, createRef } from "react";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import "./Logs.css";
 import { MasterDB } from "mov-fe-lib-core";
+import { withStyles } from "@material-ui/core/styles";
 import RobotLogModal from "../Modal/RobotLogModal";
 import {
   getRequestLevels,
@@ -17,6 +18,14 @@ import _isEqual from "lodash/isEqual";
 import PropTypes from "prop-types";
 
 const UI_TAG = { key: 0, label: "ui" };
+
+const styles = theme => ({
+  tableContainer: {
+    flexGrow: 1,
+    minHeight: 0,
+    overflow: "hidden"
+  }
+});
 
 class Logs extends Component {
   state = {
@@ -248,12 +257,7 @@ class Logs extends Component {
             ref={divElement => {
               this.divElement = divElement;
             }}
-            style={{
-              flexGrow: 1,
-              overflowY: "auto",
-              minHeight: 0,
-              height: "1px"
-            }}
+            className={this.props.classes.tableContainer}
           >
             <LogsTable
               columns={this.state.columns}
@@ -346,4 +350,4 @@ Logs.defaultProps = {
   advancedMode: false
 };
 
-export default Logs;
+export default withStyles(styles, { withTheme: true })(Logs);

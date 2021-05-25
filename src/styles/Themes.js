@@ -2,6 +2,25 @@ import { createMuiTheme } from "@material-ui/core/styles";
 import "fontsource-roboto";
 import "fontsource-open-sans";
 
+const CONSTANTS = {
+  dark: {
+    borderBottom: "1px solid #212121",
+    textColor: "white",
+    background: {
+      primary: "#424242",
+      secondary: "#212121"
+    }
+  },
+  light: {
+    borderBottom: "1px solid #ccc",
+    textColor: "rgba(0, 0, 0, 0.87)",
+    background: {
+      primary: "#e2e2e2",
+      secondary: "#b2b2b2"
+    }
+  }
+};
+
 const themeFactory = particular => ({
   ...particular,
   typography: {
@@ -40,6 +59,7 @@ const Themes = {
   dark: createMuiTheme(
     themeFactory({
       label: "dark",
+      textColor: CONSTANTS.dark.textColor,
       backgroundColor:
         "linear-gradient(114.01deg, #212121 0%, #050505 100.43%)",
       bottomNavigation: { background: "#212121" },
@@ -58,9 +78,36 @@ const Themes = {
         },
         green: {
           main: "#03DAC5"
+        },
+        background: {
+          primary: CONSTANTS.dark.background.primary,
+          secondary: CONSTANTS.dark.background.secondary
+        },
+        accent: {
+          background: "#f5f5f9",
+          color: "rgba(0, 0, 0, 0.87)",
+          border: "#dadde9"
         }
       },
+      icon: { color: "#c6c6c6", hoverColor: "white" },
+      table: { stripColor: "#505050" },
       overrides: {
+        MuiTableCell: {
+          body: {
+            color: CONSTANTS.dark.textColor
+          }
+        },
+        MuiAppBar: {
+          colorDefault: {
+            color: CONSTANTS.dark.textColor,
+            borderColor: "black",
+            backgroundColor: CONSTANTS.dark.background.secondary
+          },
+          colorInherit: {
+            color: CONSTANTS.dark.textColor,
+            backgroundColor: "#353535"
+          }
+        },
         MuiButton: {
           outlined: {
             margin: "8px"
@@ -140,9 +187,12 @@ const Themes = {
         }
       },
       label: "light",
+      textColor: CONSTANTS.light.textColor,
       backgroundColor:
         "linear-gradient(122.19deg, #FFFFFF 2.58%, #FFFFFF 76.23%)", // it was white before
       bottomNavigation: { background: "#c3c3c3" },
+      icon: { color: "#757575", hoverColor: "black" },
+      table: { stripColor: "whitesmoke" },
       globalStats: {
         borderColor: "#E6E6E6",
         subTextColor: "#717171",
@@ -157,9 +207,34 @@ const Themes = {
         },
         green: {
           main: "#03DAC5"
+        },
+        background: {
+          primary: CONSTANTS.light.background.primary,
+          secondary: CONSTANTS.light.background.secondary
+        },
+        accent: {
+          background: "whitesmoke",
+          color: CONSTANTS.light.textColor,
+          border: "darkgray"
         }
       },
       overrides: {
+        MuiTableCell: {
+          body: {
+            color: CONSTANTS.light.textColor
+          }
+        },
+        MuiAppBar: {
+          colorDefault: {
+            color: CONSTANTS.light.textColor,
+            borderColor: CONSTANTS.light.borderBottom,
+            backgroundColor: CONSTANTS.light.background.secondary
+          },
+          colorInherit: {
+            color: CONSTANTS.light.textColor,
+            backgroundColor: "#d2d2d2"
+          }
+        },
         MuiButton: {
           outlined: {
             margin: "8px"
@@ -222,6 +297,25 @@ const Themes = {
           underline: {
             "&::before": {
               borderRadius: "4px"
+            }
+          }
+        },
+        MuiPaper: {
+          root: {
+            color: "#272727",
+            backgroundColor: CONSTANTS.light.background.primary
+          }
+        },
+        MuiTableRow: {
+          head: {
+            "& th": {
+              backgroundColor: CONSTANTS.light.background.primary,
+              borderBottom: CONSTANTS.light.borderBottom
+            }
+          },
+          root: {
+            "& td": {
+              borderBottom: CONSTANTS.light.borderBottom
             }
           }
         }

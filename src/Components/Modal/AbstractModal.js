@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import CloseIcon from "@material-ui/icons/Close";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
   Typography,
@@ -11,25 +12,32 @@ import {
   Modal
 } from "@material-ui/core";
 
-const style = {
-  margin: "auto",
-  position: "absolute",
-  overflow: "auto",
-  display: "flex",
-  flexDirection: "column",
-  maxHeight: "98%",
-  maxWidth: "50%"
-};
-
-const closeButtonStyle = {
-  cursor: "pointer",
-  position: "absolute",
-  color: "white",
-  top: 15,
-  right: 15
-};
+const useStyles = makeStyles(theme => {
+  return {
+    card: {
+      margin: "auto",
+      position: "absolute",
+      overflow: "auto",
+      display: "flex",
+      flexDirection: "column",
+      maxHeight: "98%"
+    },
+    closeButton: {
+      cursor: "pointer",
+      position: "absolute",
+      color: theme.textColor,
+      top: 15,
+      right: 15,
+      "&:hover": {
+        color: "gray"
+      }
+    }
+  };
+});
 
 const AbstractModal = props => {
+  const classes = useStyles();
+
   const onKeyPress = e => {
     if (e.key === "Enter") {
       submit();
@@ -56,8 +64,9 @@ const AbstractModal = props => {
       }}
     >
       <Card
+        className={classes.card}
         style={{
-          ...style,
+          ...props.style,
           minWidth: props.width,
           minHeight: props.height
         }}
@@ -72,10 +81,8 @@ const AbstractModal = props => {
           <Typography variant="h5">{props.title}</Typography>
           <Typography
             component="div"
-            style={closeButtonStyle}
+            className={classes.closeButton}
             onClick={() => props.onCancel()}
-            onMouseEnter={evt => (evt.target.style.color = "grey")}
-            onMouseLeave={evt => (evt.target.style.color = "white")}
           >
             <CloseIcon></CloseIcon>
           </Typography>
@@ -119,6 +126,7 @@ AbstractModal.propTypes = {
   cancelColor: PropTypes.string,
   width: PropTypes.string,
   height: PropTypes.string,
+  style: PropTypes.object,
   hasSubmitButton: PropTypes.bool,
   hasCancelButton: PropTypes.bool
 };
@@ -134,6 +142,7 @@ AbstractModal.defaultProps = {
   cancelColor: "secondary",
   width: "25%",
   height: "25%",
+  style: {},
   hasSubmitButton: true,
   hasCancelButton: true
 };

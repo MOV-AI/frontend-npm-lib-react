@@ -3,7 +3,13 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControlLabel, Switch, TextField } from "@material-ui/core";
+import {
+  AppBar,
+  FormControlLabel,
+  Switch,
+  TextField,
+  Toolbar
+} from "@material-ui/core";
 import ResetSearch from "@material-ui/icons/Close";
 import FiltersIcon from "./FiltersIcon/FiltersIcon";
 import LabelIcon from "@material-ui/icons/Label";
@@ -28,15 +34,6 @@ import _isEqual from "lodash/isEqual";
 import _get from "lodash/get";
 
 const useStyles = makeStyles(theme => ({
-  filterBarContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    padding: 6,
-    backgroundColor: "#353535",
-    alignItems: "center"
-    // justifyContent: "space-between"
-  },
   input: {
     flex: 1,
     paddingLeft: "10px",
@@ -406,18 +403,21 @@ const LogsFilterBar = props => {
   };
 
   return (
-    <div className={classes.filterBarContainer}>
-      {getRobotSelector()}
-      {/* Search Input */}
-      {getSearchInput()}
-      {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
-      {getLevels()}
-      {/* Tags */}
-      {getTags(props.advancedMode)}
-      {getTimeFilters()}
-      <div style={{ flexGrow: 1 }}></div>
-      {getSettings()}
-    </div>
+    <AppBar position="static" color="inherit">
+      <Toolbar variant="dense">
+        {getRobotSelector()}
+        {/* Search Input */}
+        {getSearchInput()}
+        {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
+        {getLevels()}
+        {/* Tags */}
+        {getTags(props.advancedMode)}
+        {/* Date time filter */}
+        {getTimeFilters()}
+        <div style={{ flexGrow: 1 }}></div>
+        {getSettings()}
+      </Toolbar>
+    </AppBar>
   );
 };
 

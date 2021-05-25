@@ -11,24 +11,19 @@ import _isEmpty from "lodash/isEmpty";
 
 export const colorCoding = {
   INFO: {
-    backgroundColor: "rgba(33, 150, 243, 0.1)",
-    color: "rgba(33, 150, 243, 1)"
+    backgroundColor: "rgba(33, 150, 243, 0.1)"
   },
   WARNING: {
-    backgroundColor: "rgba(255, 152, 0, 0.1)",
-    color: "rgba(255, 152, 0, 1)"
+    backgroundColor: "rgba(255, 152, 0, 0.1)"
   },
   DEBUG: {
-    backgroundColor: "rgba(76, 175, 80, 0.1)",
-    color: "rgba(76, 175, 80, 1)"
+    backgroundColor: "rgba(76, 175, 80, 0.1)"
   },
   ERROR: {
-    backgroundColor: "rgba(244, 67, 54, 0.1)",
-    color: "rgba(244, 67, 54, 1)"
+    backgroundColor: "rgba(244, 67, 54, 0.1)"
   },
   CRITICAL: {
-    backgroundColor: "rgba(255, 19, 1, 0.1)",
-    color: "rgba(255, 19, 1, 1)"
+    backgroundColor: "rgba(255, 19, 1, 0.1)"
   }
 };
 
