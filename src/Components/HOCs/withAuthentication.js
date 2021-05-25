@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Modal } from "@material-ui/core";
 import { Authentication } from "mov-fe-lib-core";
-import { LoginForm } from "../LoginForm/LoginForm";
+import LoginForm from "../LoginForm/LoginForm";
 import jwtDecode from "jwt-decode";
 
 export default function withAuthentication(Component) {
