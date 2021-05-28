@@ -53,10 +53,6 @@ const useStyles = makeStyles(theme => ({
   toggleContainer: {
     margin: theme.spacing(2)
   },
-  datePicker: {
-    width: "200px",
-    margin: theme.spacing(0, 3, 0, 3)
-  },
   tagsContainer: {
     display: "flex",
     flexDirection: "column",
@@ -286,7 +282,6 @@ const LogsFilterBar = props => {
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDateTimePicker
             key="time-picker"
-            className={classes.datePicker}
             size="small"
             variant="inline"
             ampm={false}
@@ -300,7 +295,6 @@ const LogsFilterBar = props => {
           />
           <KeyboardDateTimePicker
             key="time-picker2"
-            className={classes.datePicker}
             size="small"
             variant="inline"
             ampm={false}
