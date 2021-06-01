@@ -91,6 +91,9 @@ const Themes = {
       },
       icon: { color: "#c6c6c6", hoverColor: "white" },
       table: { stripColor: "#505050" },
+      verticalBar: {
+        iconColor: "#9e9e9e"
+      },
       overrides: {
         MuiTableCell: {
           body: {
@@ -217,6 +220,9 @@ const Themes = {
           color: CONSTANTS.light.textColor,
           border: "darkgray"
         }
+      },
+      verticalBar: {
+        iconColor: "#616161"
       },
       overrides: {
         MuiTableCell: {
