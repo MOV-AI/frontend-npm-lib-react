@@ -1,14 +1,12 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+import Drawer from "@material-ui/core/Drawer";
 
 const useStyles = makeStyles(theme => ({
-  container: {
-    height: "100%",
-    backgroundColor: props => props.backgroundColor,
-    width: props => props.width,
-    display: "flex",
-    flexDirection: "column"
+  drawerClose: {
+    overflowX: "hidden",
+    width: 65
   },
   logoArea: {
     padding: "17px",
@@ -20,7 +18,6 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     display: "flex",
     flexDirection: "column",
-    //justifyContent: "center",
     alignItems: "center"
   },
   accountArea: {
@@ -34,7 +31,14 @@ const useStyles = makeStyles(theme => ({
 const VerticalBar = props => {
   const classes = useStyles(props);
   return (
-    <div className={classes.container}>
+    <Drawer
+      open={false}
+      variant="permanent"
+      className={classes.drawerClose}
+      classes={{
+        paper: classes.drawerClose
+      }}
+    >
       <div className={classes.logoArea}>{props.upperElement}</div>
       <div className={classes.navigationArea}>
         {props.navigationList.map((element, index) => {
@@ -46,24 +50,20 @@ const VerticalBar = props => {
         })}
       </div>
       <div className={classes.accountArea}>{props.lowerElement}</div>
-    </div>
+    </Drawer>
   );
 };
 
 VerticalBar.propTypes = {
-  upperElement: PropTypes.node.isRequired,
+  upperElement: PropTypes.node,
   navigationList: PropTypes.array,
   lowerElement: PropTypes.node.isRequired,
-  width: PropTypes.string,
-  backgroundColor: PropTypes.string,
   unsetAccountAreaPadding: PropTypes.bool
 };
 VerticalBar.defaultProps = {
   upperElement: <div></div>,
   navigationList: [<div></div>],
   lowerElement: <div></div>,
-  width: "68px",
-  backgroundColor: "#424242",
   unsetAccountAreaPadding: false
 };
 
