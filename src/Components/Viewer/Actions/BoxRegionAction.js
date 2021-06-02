@@ -97,8 +97,8 @@ class BoxRegionAction extends MouseKeysAction {
       .doAction(() => {
         this.createBoxRegion(points, mesh.name, scene, parentView, true);
       })
-      .undoAction(() => {
-        parentView.deleteNodeFromTreeUsingName(mesh.name);
+      .undoAction(({ is2UpdateInServer = true }) => {
+        parentView.deleteNodeFromTreeUsingName(mesh.name, is2UpdateInServer);
       })
       .build();
   }

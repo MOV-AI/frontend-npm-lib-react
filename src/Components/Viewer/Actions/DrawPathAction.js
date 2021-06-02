@@ -6,15 +6,16 @@ import React from "react";
 import { Color3 } from "@babylonjs/core";
 import { UndoManager } from "mov-fe-lib-core";
 import { selectOneAction } from "../Utils/Utils";
-import GraphItem from "../NodeItem/GraphItem";
+import Constants from "../Utils/Constants";
 
 class DrawPathAction extends MouseKeysAction {
   constructor() {
     super();
     this.key = "drawPath";
     this.name = "Draw Path [2]";
-    this.mouseCurve = [];
     this.icon = props => <i className="fas fa-bezier-curve" {...props}></i>;
+    this.mouseCurve = [];
+    this.spherePlaceHolder = { dispose: () => {}, isDisposed: () => true };
   }
 
   action = parentView => {
@@ -22,8 +23,24 @@ class DrawPathAction extends MouseKeysAction {
     parentView.setSelectedAction(this);
   };
 
+  onChange = parentView => {
+    if (this.mouseCurve.length > 1) {
+      parentView.getSceneMemory().forEach(({ scene }) => {
+        parentView
+          .getUndoManager()
+          .doIt(
+            this.getUndoAbleEnterAction(this.mouseCurve, scene, parentView)
+          );
+      });
+    }
+  };
+
   onPointerDown = (evt, parentView) => {
     if (!(evt.buttons === 1)) return;
+    if (!this.spherePlaceHolder.isDisposed()) {
+      this.createPointInCurve(parentView);
+      return;
+    }
     parentView.getSceneMemory().forEach(memory => {
       const { scene, ground, camera, canvas } = memory;
       const maybeMousePos = Util3d.getGroundPosition(scene, ground);
@@ -58,20 +75,33 @@ class DrawPathAction extends MouseKeysAction {
         }
         this.mouseCurve = kps;
       })
-      .undoAction(() => {
-        parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME);
+      .undoAction(({ is2UpdateInServer = true }) => {
+        parentView.deleteNodeFromTreeUsingName(
+          TEMP_PATH_NAME,
+          is2UpdateInServer
+        );
         const reducedKps = kps.slice(0, kps.length - 1);
         const finalKps =
           reducedKps.length === 1 ? [reducedKps[0], reducedKps[0]] : reducedKps;
-        reducedKps.length > 0 &&
-          this.createCurve(finalKps, TEMP_PATH_NAME, scene, parentView, false);
-        this.mouseCurve = reducedKps;
+        if (is2UpdateInServer) {
+          reducedKps.length > 0 &&
+            this.createCurve(
+              finalKps,
+              TEMP_PATH_NAME,
+              scene,
+              parentView,
+              false
+            );
+          this.mouseCurve = reducedKps;
+        } else {
+          this.mouseCurve = [];
+        }
       })
       .build();
   }
 
   onPointerMove = (evt, parentView) => {
-    // empty
+    this.addKeyPointPlaceHolder(parentView);
   };
 
   onPointerUp = (evt, parentView) => {
@@ -100,9 +130,6 @@ class DrawPathAction extends MouseKeysAction {
           {
             predicate: e => e.code === "Escape",
             action: () => {
-              if (this.mouseCurve.length === 0) {
-                super.onKeyUp(evt, parentView);
-              }
               contextActions[0].action(parentView);
             }
           }
@@ -194,19 +221,26 @@ class DrawPathAction extends MouseKeysAction {
         this.mouseCurve = [];
         parentView.setPropertiesWithName(name);
         parentView.closeContextDial();
-        const keyPointMeshes = pathItem.keyPoints;
-        DrawPathAction.addEdgesInKeyPoints(keyPointMeshes, scene, parentView);
+        if (pathItem && pathItem.keyPoints) {
+          const keyPointMeshes = pathItem.keyPoints;
+          Path.addEdgesInKeyPoints(keyPointMeshes, scene, parentView);
+        }
       })
-      .undoAction(() => {
-        this.deleteEdgeInKeyPoints(name, parentView);
-        parentView.deleteNodeFromTreeUsingName(name);
-        this.createCurve(kps, TEMP_PATH_NAME, scene, parentView, false);
-        this.mouseCurve = kps;
+      .undoAction(({ is2UpdateInServer = true }) => {
+        this.deleteEdgeInKeyPoints(name, parentView, is2UpdateInServer);
+        parentView.deleteNodeFromTreeUsingName(name, is2UpdateInServer);
+        if (is2UpdateInServer) {
+          this.createCurve(kps, TEMP_PATH_NAME, scene, parentView, false);
+          this.mouseCurve = kps;
+        } else {
+          this.mouseCurve = [];
+          parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false);
+        }
       })
       .build();
   }
 
-  deleteEdgeInKeyPoints(pathName, parentView) {
+  deleteEdgeInKeyPoints(pathName, parentView, is2UpdateInServer = true) {
     parentView.getGraph().forEach(({ item: graph }) => {
       parentView.getNodeFromTree(pathName).forEach(({ item: pathItem }) => {
         const keyPointMeshes = pathItem.keyPoints;
@@ -215,21 +249,112 @@ class DrawPathAction extends MouseKeysAction {
           keyPointMeshes[keyPointMeshes.length - 1]
         ];
         graph.delEdge(...edgeMeshes);
-        parentView.updateNodeInServer(graph.name);
+        if (is2UpdateInServer) parentView.updateNodeInServer(graph.name);
       });
     });
   }
 
-  static addEdgesInKeyPoints(keyPointMeshes, scene, parentView) {
-    GraphItem.createGraphItemIfNone(scene, parentView);
-    parentView.getGraph().forEach(({ item: graph }) => {
-      const edgeMeshes = [
-        keyPointMeshes[0],
-        keyPointMeshes[keyPointMeshes.length - 1]
-      ];
-      graph.addEdge(...edgeMeshes);
-      parentView.updateNodeInServer(graph.name);
+  addKeyPointPlaceHolder(parentView) {
+    this.spherePlaceHolder.dispose();
+    parentView.getSceneMemory().forEach(({ scene, ground }) => {
+      Util3d.pickMesh(scene, ground).forEach(mesh => {
+        if (mesh.name === TEMP_PATH_NAME) return;
+        parentView.getNodeFromTree(mesh.name).forEach(({ item: nodeItem }) => {
+          if (nodeItem.getType() === Path.TYPE) {
+            Util3d.getGroundPosition(scene, ground).forEach(groundPos => {
+              const rootMesh = parentView.getRootNode().item.mesh;
+              this.spherePlaceHolder = Util3d.createSphere(
+                scene,
+                Color3.Gray(),
+                Constants.RADIUS,
+                "sphereInsertPlaceHolder",
+                false
+              );
+              this.spherePlaceHolder.parent = rootMesh;
+              this.spherePlaceHolder.position = Util3d.toGlobalCoord(
+                parentView
+              )(groundPos);
+              this.spherePlaceHolder.visibility = 0.5;
+            });
+          }
+        });
+      });
     });
+  }
+
+  createPointInCurve(parentView) {
+    parentView.getSceneMemory().forEach(({ scene, ground }) => {
+      // dispose mesh before pick mesh
+      this.spherePlaceHolder.dispose();
+      // it can be shown that the picked mesh is the curve we want to edit
+      Util3d.pickMesh(scene, ground).forEach(({ name }) => {
+        parentView.getNodeFromTree(name).forEach(({ item: pathItem }) => {
+          Util3d.getGroundPosition(scene, ground).forEach(groundPos => {
+            const oldPoints = [...pathItem.localPath].map(p =>
+              Vec3.of(p).toBabylon()
+            );
+            const oldPosition = pathItem.mesh.position;
+            parentView.getUndoManager().doIt(
+              UndoManager.actionBuilder()
+                .doAction(() => {
+                  this.insertPointInCurve(
+                    scene,
+                    parentView,
+                    pathItem,
+                    groundPos
+                  );
+                  parentView.updateNodeInServer(pathItem.name);
+                })
+                .undoAction(({ is2UpdateInServer = true }) => {
+                  Path.createNewMeshFromOldUsingNewPoints(
+                    oldPoints,
+                    scene,
+                    pathItem,
+                    parentView,
+                    Path.onAddNewPointKeyPointUpdate
+                  );
+                  pathItem.mesh.position = oldPosition;
+                  if (is2UpdateInServer)
+                    parentView.updateNodeInServer(pathItem.name);
+                })
+                .build()
+            );
+          });
+        });
+      });
+    });
+  }
+
+  insertPointInCurve(scene, parentView, pathItem, groundPosInWorld) {
+    const localGround = Util3d.getLocalCoordFromWorld(
+      { parent: pathItem.mesh },
+      Vec3.ofBabylon(groundPosInWorld)
+    );
+    const localPath = pathItem.localPath.map(p => Vec3.of(p));
+    const sortedDistances = localPath
+      .map((p, i) => ({
+        distance: localGround.sub(p).length(),
+        index: i
+      }))
+      .sort((a, b) => a.distance - b.distance);
+    // all paths have 2 points at least
+    const minIndex = Math.min(
+      sortedDistances[0].index,
+      sortedDistances[1].index
+    );
+    const localPathB = localPath.map(p => p.toBabylon());
+    const newPoints = [
+      ...localPathB.slice(0, minIndex + 1),
+      localGround.toBabylon(),
+      ...localPathB.slice(minIndex + 1)
+    ];
+    Path.createNewMeshFromOldUsingNewPoints(
+      newPoints,
+      scene,
+      pathItem,
+      parentView,
+      Path.onAddNewPointKeyPointUpdate
+    );
   }
 }
 

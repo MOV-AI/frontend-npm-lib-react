@@ -5,6 +5,7 @@ import _capitalize from "lodash/capitalize";
 import { Quaternion, Color3, Vector3 } from "@babylonjs/core";
 import AnnotationManager from "../Utils/AnnotationManager";
 import GlobalRef from "./GlobalRef";
+import Constants from "../Utils/Constants";
 
 class NodeItem {
   constructor(mesh, keyValueMap = {}) {
@@ -16,6 +17,7 @@ class NodeItem {
   }
 
   dispose() {
+    this.delVertex();
     this.mesh.dispose();
   }
 
@@ -35,8 +37,15 @@ class NodeItem {
           return [q.w, q.x, q.y, q.z];
         }),
       color: Maybe.fromNull(this.mesh?.material)
-        .flatMap(x => Maybe.fromNull(x.diffuseColor).map(z => [z.r, z.g, z.b]))
-        .orSome([0, 0, 0]),
+        .flatMap(x =>
+          Maybe.fromNull(x.diffuseColor).map(z => [
+            z.r,
+            z.g,
+            z.b,
+            this.mesh.visibility
+          ])
+        )
+        .orSome([0, 0, 0, 1]),
       keyValueMap: this.keyValueMap,
       isVisible: this.mesh.isEnabled()
     };
@@ -48,6 +57,14 @@ class NodeItem {
   toForm() {
     const info = this.toDict();
     const color = new Color3(info.color[0], info.color[1], info.color[2]);
+    const q = new Quaternion(
+      info.quaternion[1],
+      info.quaternion[2],
+      info.quaternion[3],
+      info.quaternion[0]
+    );
+    const euler = q.toEulerAngles();
+
     const schema = {
       jsonSchema: {
         type: "object",
@@ -81,14 +98,10 @@ class NodeItem {
               }
             }
           },
-          quaternion: {
+          rotation: {
             type: "object",
-            title: "Orientation",
+            title: "Rotation",
             properties: {
-              w: {
-                type: "number",
-                title: "w"
-              },
               x: {
                 type: "number",
                 title: "x"
@@ -104,8 +117,22 @@ class NodeItem {
             }
           },
           color: {
-            type: "string",
-            title: "Color"
+            type: "object",
+            title: "Color",
+            properties: {
+              r: {
+                type: "number"
+              },
+              g: {
+                type: "number"
+              },
+              b: {
+                type: "number"
+              },
+              a: {
+                type: "number"
+              }
+            }
           }
         }
       },
@@ -122,7 +149,7 @@ class NodeItem {
         position: {
           "ui:widget": "collapse"
         },
-        quaternion: {
+        rotation: {
           "ui:widget": "collapse"
         }
       },
@@ -135,13 +162,17 @@ class NodeItem {
           y: info.position[1],
           z: info.position[2]
         },
-        quaternion: {
-          w: info.quaternion[0],
-          x: info.quaternion[1],
-          y: info.quaternion[2],
-          z: info.quaternion[3]
+        rotation: {
+          x: euler.x * Constants.RAD2DEG,
+          y: euler.y * Constants.RAD2DEG,
+          z: euler.z * Constants.RAD2DEG
         },
-        color: color.toHexString()
+        color: {
+          r: color.r,
+          g: color.g,
+          b: color.b,
+          a: this.mesh.visibility
+        }
       }
     };
 
@@ -163,15 +194,17 @@ class NodeItem {
       const pos = [position.x, position.y, position.z].map(Number.parseFloat);
       this.mesh.position = Vector3.FromArray(pos);
     });
-    Maybe.fromNull(form?.quaternion).forEach(quaternion => {
-      const quat = [quaternion.x, quaternion.y, quaternion.z, quaternion.w].map(
-        Number.parseFloat
-      );
-      this.mesh.rotationQuaternion = Quaternion.FromArray(quat).normalize();
+    Maybe.fromNull(form?.rotation).forEach(euler => {
+      const angles = [euler.x, euler.y, euler.z]
+        .map(Number.parseFloat)
+        .map(deg => deg * Constants.DEG2RAD);
+      this.mesh.rotationQuaternion = Quaternion.FromEulerAngles(...angles);
     });
     if (this.mesh.material) {
-      this.mesh.material.diffuseColor = Color3.FromHexString(form.color);
-      this.mesh.material.emissiveColor = Color3.FromHexString(form.color);
+      const color = new Color3(form.color.r, form.color.g, form.color.b);
+      this.mesh.material.diffuseColor = color;
+      this.mesh.material.emissiveColor = color;
+      this.mesh.visibility = form.color.a;
     }
     this.keyValueMap = { ...form.annotations };
   }
@@ -194,13 +227,16 @@ class NodeItem {
     ];
   };
 
-  getCopyFunction(isForceUpdate = true) {
+  getCopyFunction(
+    isForceUpdate = true,
+    nameGenerator = old => old + "_copy" + Clipboard.getUID()
+  ) {
     // mousePosFromRoot : Vector3
     return (mousePosFromRoot, someMainView) =>
       someMainView.getSceneMemory().map(({ scene }) => {
         const { item: rootItem } = someMainView.getRootNode();
         const copyDict = this.toDict();
-        copyDict.name += "_copy" + Clipboard.getUID();
+        copyDict.name = nameGenerator(copyDict.name);
         const newPosArray = Vec3.ofBabylon(mousePosFromRoot).toArray();
         // preserves z-coordinate
         newPosArray[2] = copyDict.position[2];
@@ -296,13 +332,25 @@ class NodeItem {
             scopeList: "Annotation",
             name: _capitalize(annotation),
             filter: e => {
-              return annotations[annotation].names.includes(e.name);
+              return (
+                annotations[annotation] &&
+                annotations[annotation].names.includes(e.name)
+              );
             }
           }
         };
         // }
       }
     );
+  }
+
+  static randomId() {
+    return "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+      // eslint-disable-next-line no-mixed-operators
+      var r = (Math.random() * 16) | 0,
+        v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
   }
 }
 

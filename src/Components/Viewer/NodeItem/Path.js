@@ -9,9 +9,11 @@ import {
   Color3,
   MeshBuilder,
   Quaternion,
-  Vector3
+  Vector3,
+  Space
 } from "@babylonjs/core";
 import { UndoManager } from "mov-fe-lib-core";
+import GraphItem from "./GraphItem";
 
 const RADIUS = Constants.RADIUS;
 
@@ -74,12 +76,11 @@ class Path extends NodeItem {
           }
         }
       };
-
       schema.uiSchema["selectedKeyPoint"] = {
         "ui:widget": "collapse"
       };
       schema.uiSchema["position"] = { "ui:widget": "hidden" };
-      schema.uiSchema["quaternion"] = { "ui:widget": "hidden" };
+      schema.uiSchema["rotation"] = { "ui:widget": "hidden" };
       schema.uiSchema["color"] = { "ui:widget": "hidden" };
       schema.uiSchema["annotations"] = { "ui:widget": "hidden" };
       const selectedMesh = this.keyPoints[this.selectedKeyPointIndex];
@@ -108,7 +109,7 @@ class Path extends NodeItem {
           title: "Weight"
         },
         position: props.position,
-        quaternion: props.quaternion,
+        rotation: props.rotation,
         color: props.color,
         annotations: props.annotations
       }
@@ -167,11 +168,14 @@ class Path extends NodeItem {
     return Path.ofDict(scene, dict, mainView);
   }
 
-  getCopyFunction(isForceUpdate = true) {
+  getCopyFunction(isForceUpdate, nameGenerator) {
     // mousePosFromRoot : Vector3
     return (mousePosFromRoot, someMainView) => {
       return super
-        .getCopyFunction(isForceUpdate)(mousePosFromRoot, someMainView)
+        .getCopyFunction(isForceUpdate, nameGenerator)(
+          mousePosFromRoot,
+          someMainView
+        )
         .map(copiedPath => {
           const kp = copiedPath?.keyPoints;
           if (kp !== undefined && isPathOnGraph(this)) {
@@ -183,6 +187,15 @@ class Path extends NodeItem {
   }
 
   getType = () => Path.TYPE;
+
+  /**
+   * Import path features
+   * @param {*} pathItem
+   */
+  importFeatures(pathItem = new Path({}, {}, {}, {}, {})) {
+    this.keyValueMap = pathItem.keyValueMap;
+    this.weight = pathItem.weight;
+  }
 
   static TYPE = "Path";
 
@@ -297,8 +310,15 @@ class Path extends NodeItem {
     item.localPath = newPoints.map(x => Vec3.ofBabylon(x).toArray());
     item.splinePath = Util3d.splineObj2redis(spline);
     item.mesh = newMesh;
-    const oldKeyPoints = item.keyPoints;
+    const oldKeyPoints = [...item.keyPoints];
     item.keyPoints = keyPointUpdateFunction(scene, mainView, oldMesh, item);
+    // update children
+    const childrenCopy = [...oldMesh._children];
+    childrenCopy
+      .filter(c => mainView.getNodeFromTree(c.name).isJust())
+      .forEach(c => {
+        c.parent = item.mesh;
+      });
     // update observer that triggers keypoints observers
     item.mesh.observers.clear();
     item.mesh.observers.add(getMeshObserver(item.keyPoints));
@@ -309,7 +329,6 @@ class Path extends NodeItem {
       item,
       oldKeyPoints.length !== item.keyPoints.length
     );
-
     oldMesh.dispose();
     return item;
   }
@@ -359,7 +378,7 @@ class Path extends NodeItem {
         );
         mainView.updateNodeInServer(name);
       })
-      .undoAction(() => {
+      .undoAction(({ is2UpdateInServer = true }) => {
         const copyPoints = [...newPoints];
         item.mesh.position = copyPosition;
         Path.createNewMeshFromOldUsingNewPoints(
@@ -369,14 +388,15 @@ class Path extends NodeItem {
           mainView,
           Path.onAddNewPointKeyPointUpdate
         );
-        mainView.updateNodeInServer(name);
+        if (is2UpdateInServer) mainView.updateNodeInServer(name);
       })
       .build();
   }
 
   static onAddNewPointKeyPointUpdate(scene, mainView, oldMesh, item) {
     // used when new keypoint is added
-    return createPlaceHolderKeyPoints(scene, item, mainView);
+    const keypoints = createPlaceHolderKeyPoints(scene, item, mainView);
+    return keypoints;
   }
 
   /**
@@ -438,6 +458,7 @@ class Path extends NodeItem {
               .scale(0.5)
           ]);
         } else {
+          // TODO: consider doing using slice
           const specialIndex = index + Math.max(0, orientation);
           for (let i = 0; i < specialIndex; i++) {
             newPoints.push(oldPoints[i]);
@@ -458,7 +479,7 @@ class Path extends NodeItem {
 
         mainView.updateNodeInServer(name);
       })
-      .undoAction(() => {
+      .undoAction(({ is2UpdateInServer = true }) => {
         const copyPoints = [...points];
         item.mesh.position = copyPosition;
         Path.createNewMeshFromOldUsingNewPoints(
@@ -468,8 +489,7 @@ class Path extends NodeItem {
           mainView,
           Path.onAddNewPointKeyPointUpdate
         );
-
-        mainView.updateNodeInServer(name);
+        if (is2UpdateInServer) mainView.updateNodeInServer(name);
       })
       .build();
   }
@@ -479,20 +499,224 @@ class Path extends NodeItem {
    * @param {*} mainView: MainView
    * @param {*} oldKpMeshes: Mesh
    * @param {*} pathItem: PathItem
-   * @param {*} isTopologyChange: boolean
+   * @param {*} isTopologyChange: boolean, vertex added or deleted from curve
    */
   static updateGraph(mainView, oldKpMeshes, pathItem, isTopologyChange) {
     if (!isTopologyChange) return;
     mainView.getGraph().forEach(({ item: graph }) => {
-      //naive algorithm, delete all vertices
-      oldKpMeshes.forEach(kp => {
-        graph.delVertexFromMesh(kp, false);
-      });
-      // add final edge
       const keyPoints = pathItem.keyPoints;
       const edgeMeshes = [keyPoints[0], keyPoints[keyPoints.length - 1]];
+      const firstLastKpNeighborEdges = [];
+      const firstLastOldKp = [
+        oldKpMeshes[0],
+        oldKpMeshes[oldKpMeshes.length - 1]
+      ];
+      graph.getEdge(...firstLastOldKp).forEach(oldEdge => {
+        // get keypoint neighbors edges, besides the edge of the path itself
+        firstLastOldKp.forEach(kp => {
+          const edges = [];
+          graph
+            .getNeighbors(kp)
+            .filter(v => !graph.doMeshesBelong2SamePath(kp, v.mesh))
+            .forEach(neigh => {
+              edges.push({
+                edge: graph.getEdge(kp, neigh.mesh),
+                vertex: neigh
+              });
+            });
+          firstLastKpNeighborEdges.push(edges);
+        });
+        // remove old path vertices
+        firstLastOldKp.forEach(vp => graph.delVertexFromMesh(vp));
+        // add new path edge
+        graph.addEdge(...edgeMeshes);
+        graph.getEdge(...edgeMeshes).forEach(edge => {
+          edge.importFeatures(oldEdge);
+        });
+        // add old neighbors to path endpoints
+        firstLastKpNeighborEdges.forEach((neighborEdges, i) => {
+          neighborEdges.forEach(edgeVertexObj => {
+            graph.addEdge(edgeMeshes[i], edgeVertexObj.vertex.mesh);
+            graph
+              .getEdge(edgeMeshes[i], edgeVertexObj.vertex.mesh)
+              .forEach(edge =>
+                edgeVertexObj.edge.forEach(oldNeighEdge => {
+                  edge.importFeatures(oldNeighEdge);
+                })
+              );
+          });
+        });
+        mainView.updateNodeInServer(graph.name);
+      });
+    });
+  }
+
+  static isKeyPointMesh(mesh, mainView) {
+    return (
+      Number.isInteger(mesh.index) &&
+      mainView
+        .getNodeFromTree(mesh.parent.name)
+        .filter(({ item }) => item.getType() === Path.TYPE)
+        .orSome(false)
+    );
+  }
+
+  /**
+   *
+   * @param {*} left: keypoint mesh
+   * @param {*} right: keypoint mesh
+   * @param {*} mainView
+   */
+  static areKeyPointsCompatible(left, right, mainView) {
+    return mainView
+      .getNodeFromTree(left.parent.name)
+      .flatMap(({ item: leftPath }) =>
+        mainView
+          .getNodeFromTree(right.parent.name)
+          .map(({ item: rightPath }) => {
+            let i = left.index;
+            let j = right.index;
+            const n = leftPath.localPath.length;
+            const m = rightPath.localPath.length;
+            // keypoint must be a boundary
+            if (!((i === 0 || i === n - 1) && (j === 0 || j === m - 1)))
+              return false;
+            i = i === 0 ? 1 : -1;
+            j = j === 0 ? 1 : -1;
+            // must preserve orientation
+            if (i * j > 0) return false;
+            return true;
+          })
+      )
+      .orSome(false);
+  }
+  /**
+   * Merge simple paths, function
+   * Not commutative action
+   * @param {*} leftPath
+   * @param {*} rightPath
+   * @param {*} mergeName
+   * @param {*} mainView
+   */
+  static mergePaths(leftPathName, rightPathName, mergeName, mainView) {
+    mainView.getNodeFromTree(leftPathName).forEach(({ item: leftPath }) => {
+      mainView.getNodeFromTree(rightPathName).forEach(({ item: rightPath }) => {
+        const parent = leftPath.mesh.parent;
+        const leftChildren = leftPath.mesh._children.filter(
+          kp => kp.index === undefined
+        );
+        const rightChildren = rightPath.mesh._children.filter(
+          kp => kp.index === undefined
+        );
+        const leftDict = leftPath.toDict();
+        const rightPointsInLeftCoord = rightPath.keyPoints
+          .splice(1)
+          .map(kp =>
+            Util3d.getLocalCoordFromWorld(
+              { parent: leftPath.mesh },
+              Vec3.ofBabylon(kp.absolutePosition)
+            )
+          );
+        leftDict.name = mergeName;
+        // concat new path
+        leftDict.localPath = leftDict.localPath.concat(
+          rightPointsInLeftCoord.map(kp => kp.toArray())
+        );
+        const average = Util3d.pointAverageVec3(
+          leftDict.localPath.map(x => Vec3.of(x))
+        );
+
+        // center curve
+        leftDict.localPath = leftDict.localPath.map(x =>
+          Vec3.of(x).sub(average).toArray()
+        );
+        mainView.getSceneMemory().forEach(({ scene }) => {
+          const newPath = Path.ofDict(scene, leftDict, mainView);
+          newPath.mesh.parent = parent;
+          newPath.mesh.translate(average.toBabylon(), 1, Space.LOCAL);
+          //import default features
+          newPath.importFeatures();
+          mainView.addNodeItem2Tree(newPath, parent.name);
+          Path.addEdgesInKeyPoints(newPath.keyPoints, scene, mainView);
+          leftChildren.forEach(child => {
+            mainView.getNodeFromTree(child.name).forEach(({ item }) => {
+              mainView.updateNodeItemInTree(item, newPath.name);
+              const newChildPos = Util3d.getLocalCoordFromWorld(
+                { parent: newPath.mesh },
+                Vec3.ofBabylon(child.absolutePosition)
+              );
+              child.position = newChildPos.toBabylon();
+              child.parent = newPath.mesh;
+            });
+          });
+          rightChildren.forEach(child => {
+            mainView.getNodeFromTree(child.name).forEach(({ item }) => {
+              mainView.updateNodeItemInTree(item, newPath.name);
+              const newChildPos = Util3d.getLocalCoordFromWorld(
+                { parent: newPath.mesh },
+                Vec3.ofBabylon(child.absolutePosition)
+              );
+              child.position = newChildPos.toBabylon();
+              child.parent = newPath.mesh;
+            });
+          });
+          mainView.deleteNodeFromTreeUsingName(leftPath.name);
+          mainView.deleteNodeFromTreeUsingName(rightPath.name);
+        });
+      });
+    });
+  }
+
+  static unMergePaths(oldPaths, mergeName, mainView, is2UpdateInServer = true) {
+    oldPaths.forEach(path => {
+      mainView.getSceneMemory().forEach(({ scene }) => {
+        const pathItem = Path.ofDict(scene, path.dict, mainView);
+        pathItem.mesh.parent = path.parent;
+        mainView.addNodeItem2Tree(
+          pathItem,
+          path.parent.name,
+          is2UpdateInServer
+        );
+        Path.addEdgesInKeyPoints(
+          pathItem.keyPoints,
+          scene,
+          mainView,
+          is2UpdateInServer
+        );
+        path.children.forEach(child => {
+          mainView.getNodeFromTree(child.name).forEach(({ item }) => {
+            mainView.updateNodeItemInTree(
+              item,
+              pathItem.name,
+              is2UpdateInServer
+            );
+            const newChildPos = Util3d.getLocalCoordFromWorld(
+              { parent: pathItem.mesh },
+              Vec3.ofBabylon(child.absolutePosition)
+            );
+            child.position = newChildPos.toBabylon();
+            child.parent = pathItem.mesh;
+          });
+        });
+      });
+    });
+    mainView.deleteNodeFromTreeUsingName(mergeName, is2UpdateInServer);
+  }
+
+  static addEdgesInKeyPoints(
+    keyPointMeshes,
+    scene,
+    mainView,
+    is2UpdateInServer = true
+  ) {
+    GraphItem.createGraphItemIfNone(scene, mainView);
+    mainView.getGraph().forEach(({ item: graph }) => {
+      const edgeMeshes = [
+        keyPointMeshes[0],
+        keyPointMeshes[keyPointMeshes.length - 1]
+      ];
       graph.addEdge(...edgeMeshes);
-      mainView.updateNodeInServer(graph.name);
+      if (is2UpdateInServer) mainView.updateNodeInServer(graph.name);
     });
   }
 }
@@ -506,21 +730,19 @@ const getMeshOnClick = (mainView, nodeItem) => () => {
     .forEach(node => (node.item.selectedKeyPointIndex = -1));
 };
 
-const getMeshObserver = keypoints => ({
-  updatedPointMesh,
-  is2updateServer,
-  displacement
-}) => {
-  keypoints.forEach(k => {
-    if (!!k.graphVertex) {
-      k.graphVertex.vertexObs({
-        updatedPointMesh: k,
-        is2updateServer,
-        displacement
-      });
-    }
-  });
-};
+const getMeshObserver =
+  keypoints =>
+  ({ updatedPointMesh, is2updateServer, displacement }) => {
+    keypoints.forEach(k => {
+      if (!!k.graphVertex) {
+        k.graphVertex.vertexObs({
+          updatedPointMesh: k,
+          is2updateServer,
+          displacement
+        });
+      }
+    });
+  };
 
 function defaultKeyPointUpdate(scene, mainView, oldMesh, item) {
   // used when key point is updated
@@ -619,12 +841,12 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
   return actions;
 };
 
-const createPlaceHolderKeyPoints = (scene, item, mainView) => {
+const createPlaceHolderKeyPoints = (scene, pseudoItem, mainView) => {
   const color = new Color3(0.25, 0.25, 0.25);
   const keyPoints = [];
-  const curve = item.localPath.map(z => Vec3.of(z).toBabylon());
-  const spline = item.splinePath.map(z => new Vector3(z[0], z[1], 0));
-  const curveMesh = item.mesh;
+  const curve = pseudoItem.localPath.map(z => Vec3.of(z).toBabylon());
+  const spline = pseudoItem.splinePath.map(z => new Vector3(z[0], z[1], 0));
+  const curveMesh = pseudoItem.mesh;
   curve.forEach((p, i) => {
     const sphere = getSphereMesh(scene, color, curveMesh, i);
     const cone = () => {
@@ -654,9 +876,237 @@ const createPlaceHolderKeyPoints = (scene, item, mainView) => {
         mainView.setProperties(node.item.toForm());
       });
     };
+    kp.getMouseContextActions = getKpMouseContextActions(
+      scene,
+      kp,
+      pseudoItem.name
+    );
   });
   return keyPoints;
 };
+
+function getKpMouseContextActions(scene, kp, pathName) {
+  return mainView => {
+    const actions = [];
+    mainView.getNodeFromTree(pathName).forEach(({ item: pathItem }) => {
+      const n = pathItem.localPath.length;
+      if (n <= 2) {
+        return;
+      }
+      if (kp.index > 0 && kp.index < n - 1) {
+        actions.push({
+          title: "Split curve",
+          onClick: () => {
+            mainView.getUndoManager().doIt(
+              UndoManager.actionBuilder()
+                .doAction(() => {
+                  splitCurve(mainView, scene, kp, pathItem.name);
+                })
+                .undoAction(({ is2UpdateInServer = true }) => {
+                  unSplitCurve(mainView, scene, pathItem, is2UpdateInServer);
+                })
+                .build()
+            );
+          }
+        });
+      }
+    });
+    actions.push({
+      title: "Delete point",
+      onClick: () => {
+        Path.deleteKeyPoint(scene, kp, mainView);
+      }
+    });
+    return actions;
+  };
+}
+
+function splitCurve(mainView, scene, kp, pathName) {
+  // TODO: very similar to unSplitCurve
+  mainView.getGraph().forEach(({ item: graph }) => {
+    mainView.getNodeFromTree(pathName).forEach(({ item }) => {
+      const edgesByCurveBoundary = [[], []];
+      const oldPath = item.localPath;
+      const oldCenter = Vec3.ofBabylon(item.mesh.position);
+      const pathParent = item?.mesh.parent;
+      // creating split path positions
+      const splitAtIndex = kp.index;
+      const splitPath = [[], []];
+      oldPath.forEach((point, i) => {
+        if (i <= splitAtIndex) {
+          splitPath[0].push(point);
+        } else {
+          if (i === splitAtIndex + 1) splitPath[1].push(oldPath[splitAtIndex]);
+          splitPath[1].push(point);
+        }
+      });
+      // retrieve edges from path boundary
+      const keyPoints = item.keyPoints;
+      const boundary = [keyPoints[0], keyPoints[keyPoints.length - 1]];
+      boundary.forEach((keyPoint, i) => {
+        graph
+          .getNeighbors(keyPoint)
+          .filter(v => !graph.doMeshesBelong2SamePath(keyPoint, v.mesh))
+          .forEach(neigh => {
+            edgesByCurveBoundary[i].push({
+              edge: graph.getEdge(keyPoint, neigh.mesh),
+              vertex: neigh
+            });
+          });
+      });
+      // delete boundary vertex from graph
+      boundary.forEach(keyPoint => {
+        graph.delVertexFromMesh(keyPoint);
+      });
+      // remove old path
+      mainView.deleteNodeFromTreeUsingName(pathName);
+      // create new paths
+      splitPath.forEach((localPath, i) => {
+        // set props of new paths from old path
+        const middlePoint = Util3d.pointAverage(
+          localPath.map(p => Vec3.of(p).toBabylon())
+        );
+        const centeredCurve = localPath.map(v =>
+          Vec3.of(v).sub(Vec3.ofBabylon(middlePoint)).toBabylon()
+        );
+        // set colorArray
+        const colorArray = [];
+        item.mesh.material.diffuseColor.toArray(colorArray);
+        // set quaternion
+        const quaternion =
+          item.mesh.rotationQuaternion.clone() || Quaternion.Identity();
+        const quaternionArray = [
+          quaternion.w,
+          quaternion.x,
+          quaternion.y,
+          quaternion.z
+        ];
+        const newPath = Path.ofDict(
+          scene,
+          {
+            name: i === 0 ? pathName : `${pathName}_split${numberOfSplits++}`,
+            position: oldCenter.toArray(),
+            quaternion: quaternionArray,
+            color: colorArray,
+            localPath: centeredCurve.map(z => Vec3.ofBabylon(z).toArray())
+          },
+          mainView
+        );
+        newPath.mesh.translate(middlePoint, 1, Space.LOCAL);
+        newPath.mesh.parent = pathParent;
+        newPath.importFeatures(item);
+        mainView.addNodeItem2Tree(newPath, pathParent.name);
+        // add edge of new path
+        const newKeyPoints = newPath.keyPoints;
+        const newEdge = [
+          newKeyPoints[0],
+          newKeyPoints[newKeyPoints.length - 1]
+        ];
+        graph.addEdge(...newEdge);
+        graph.getEdge(...newEdge).forEach(edge => {
+          edge.importFeatures(newPath);
+        });
+        // add old edges to the new paths
+        edgesByCurveBoundary[i].forEach(edgeVertexObj => {
+          graph.addEdge(newEdge[i], edgeVertexObj.vertex.mesh);
+          graph.getEdge(newEdge[i], edgeVertexObj.vertex.mesh).forEach(edge => {
+            edgeVertexObj.edge.forEach(oldNeighEdge => {
+              edge.importFeatures(oldNeighEdge);
+            });
+          });
+        });
+      });
+      mainView.updateNodeInServer(graph.name);
+    });
+  });
+}
+
+function unSplitCurve(mainView, scene, oldPathItem, is2UpdateInServer = true) {
+  mainView.getGraph().forEach(({ item: graph }) => {
+    const oldPathName = oldPathItem.name;
+    const oldPathNameSplit = `${oldPathName}_split${--numberOfSplits}`;
+    mainView.getNodeFromTree(oldPathName).forEach(({ item: leftSplit }) => {
+      mainView
+        .getNodeFromTree(oldPathNameSplit)
+        .forEach(({ item: rightSplit }) => {
+          const pathParent = leftSplit.mesh.parent;
+          const edgesByCurveBoundary = [[], []];
+          // retrieve edges from split paths
+          const boundary = [
+            leftSplit.keyPoints[0],
+            rightSplit.keyPoints[rightSplit.keyPoints.length - 1]
+          ];
+          boundary.forEach((keyPoint, i) => {
+            graph
+              .getNeighbors(keyPoint)
+              .filter(v => !graph.doMeshesBelong2SamePath(keyPoint, v.mesh))
+              .forEach(neigh => {
+                edgesByCurveBoundary[i].push({
+                  edge: graph.getEdge(keyPoint, neigh.mesh),
+                  vertex: neigh
+                });
+              });
+          });
+          // delete graph vertices from split path
+          // delete boundary vertex from graph
+          boundary.forEach(keyPoint => {
+            graph.delVertexFromMesh(keyPoint);
+          });
+          // remove split paths
+          mainView.deleteNodeFromTreeUsingName(oldPathName, is2UpdateInServer);
+          mainView.deleteNodeFromTreeUsingName(
+            oldPathNameSplit,
+            is2UpdateInServer
+          );
+          // create oldPathItem
+          // set colorArray
+          const colorArray = [];
+          oldPathItem.mesh.material.diffuseColor.toArray(colorArray);
+          const newPath = Path.ofDict(
+            scene,
+            {
+              name: oldPathName,
+              position: Vec3.ofBabylon(oldPathItem.mesh.position).toArray(),
+              color: colorArray,
+              localPath: oldPathItem.localPath
+            },
+            mainView
+          );
+          newPath.mesh.parent = pathParent;
+          newPath.importFeatures(oldPathItem);
+          mainView.addNodeItem2Tree(
+            newPath,
+            pathParent.name,
+            is2UpdateInServer
+          );
+          // add oldPathItem path edge
+          const newKeyPoints = newPath.keyPoints;
+          const newEdge = [
+            newKeyPoints[0],
+            newKeyPoints[newKeyPoints.length - 1]
+          ];
+          graph.addEdge(...newEdge);
+          graph.getEdge(...newEdge).forEach(edge => {
+            edge.importFeatures(newPath);
+          });
+          // add boundary edges of the split
+          edgesByCurveBoundary.forEach((edges, i) => {
+            edges.forEach(edgeVertexObj => {
+              graph.addEdge(newEdge[i], edgeVertexObj.vertex.mesh);
+              graph
+                .getEdge(newEdge[i], edgeVertexObj.vertex.mesh)
+                .forEach(edge => {
+                  edgeVertexObj.edge.forEach(oldNeighEdge => {
+                    edge.importFeatures(oldNeighEdge);
+                  });
+                });
+            });
+          });
+          if (is2UpdateInServer) mainView.updateNodeInServer(graph.name);
+        });
+    });
+  });
+}
 
 function getConeMesh(scene, color, curveMesh, i, spline, p) {
   return () => {
@@ -666,8 +1116,12 @@ function getConeMesh(scene, color, curveMesh, i, spline, p) {
         value: Number.MAX_VALUE,
         index: -1
       }).index;
-    const u = spline[index + 1]
-      .subtract(spline[index])
+    const nextSplinePoint = spline[index + 1]
+      ? spline[index + 1]
+      : spline[index];
+    const currentSplinePoint = spline[index];
+    const u = nextSplinePoint
+      .subtract(currentSplinePoint)
       .normalize()
       .scale(RADIUS);
     const c = Util3d.createOrientedCone(
@@ -698,3 +1152,5 @@ function isPathOnGraph(pathItem) {
     pathItem.keyPoints[pathItem.keyPoints.length - 1]?.graphVertex
   ].every(v => !!v);
 }
+
+let numberOfSplits = 0;

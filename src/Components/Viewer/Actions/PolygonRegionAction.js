@@ -22,6 +22,18 @@ class PolygonRegionAction extends MouseKeysAction {
     parentView.setSelectedAction(this);
   };
 
+  onChange = parentView => {
+    if (this.mouseCurve.length > 2) {
+      parentView.getSceneMemory().forEach(({ scene }) => {
+        parentView
+          .getUndoManager()
+          .doIt(
+            this.getUndoAbleEnterAction(this.mouseCurve, scene, parentView)
+          );
+      });
+    }
+  };
+
   onPointerDown = (evt, parentView) => {
     if (!(evt.buttons === 1)) return;
     parentView.getSceneMemory().forEach(memory => {
@@ -68,19 +80,23 @@ class PolygonRegionAction extends MouseKeysAction {
         );
         this.mouseCurve = kps;
       })
-      .undoAction(() => {
-        parentView.deleteNodeFromTreeUsingName(TEMP_POLYGON_REGION_NAME);
+      .undoAction(({ is2UpdateInServer = true }) => {
+        parentView.deleteNodeFromTreeUsingName(
+          TEMP_POLYGON_REGION_NAME,
+          is2UpdateInServer
+        );
         const reducedKps = kps.slice(0, kps.length - 1);
         const finalKps =
           reducedKps.length === 1 ? [reducedKps[0], reducedKps[0]] : reducedKps;
-        reducedKps.length > 0 &&
-          this.createPolygonRegion(
-            finalKps,
-            TEMP_POLYGON_REGION_NAME,
-            scene,
-            parentView,
-            false
-          );
+        if (is2UpdateInServer)
+          reducedKps.length > 0 &&
+            this.createPolygonRegion(
+              finalKps,
+              TEMP_POLYGON_REGION_NAME,
+              scene,
+              parentView,
+              false
+            );
         this.mouseCurve = reducedKps;
       })
       .build();
@@ -126,16 +142,18 @@ class PolygonRegionAction extends MouseKeysAction {
         parentView.setPropertiesWithName(name);
         parentView.closeContextDial();
       })
-      .undoAction(() => {
-        parentView.deleteNodeFromTreeUsingName(name);
-        this.createPolygonRegion(
-          kps,
-          TEMP_POLYGON_REGION_NAME,
-          scene,
-          parentView,
-          false
-        );
-        this.mouseCurve = kps;
+      .undoAction(({ is2UpdateInServer = true }) => {
+        parentView.deleteNodeFromTreeUsingName(name, is2UpdateInServer);
+        if (is2UpdateInServer) {
+          this.createPolygonRegion(
+            kps,
+            TEMP_POLYGON_REGION_NAME,
+            scene,
+            parentView,
+            false
+          );
+          this.mouseCurve = kps;
+        }
       })
       .build();
   }
@@ -171,9 +189,6 @@ class PolygonRegionAction extends MouseKeysAction {
           {
             predicate: e => e.code === "Escape",
             action: () => {
-              if (this.mouseCurve.length === 0) {
-                super.onKeyUp(evt, parentView);
-              }
               contextActions[0].action(parentView);
             }
           }

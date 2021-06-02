@@ -1,16 +1,21 @@
 import GlobalRef from "../NodeItem/GlobalRef";
 import { Maybe } from "monet";
-import { ASSETS_TYPES } from "../Utils/AssetsTypesFactory";
+import { ASSETS_TYPES, AssetsTypesFactory } from "../Utils/AssetsTypesFactory";
 import NODE_ITEM_FACTORY_MAP from "./NodeItemFactoryMap";
+import Robot from "../NodeItem/Robot";
 
 class MainViewRetriever {
+  static updateErrorList = () => {};
+
   static importScene(
     mainView,
     serverScene = [],
     parent = null,
-    is2addInServer = false
+    is2addInServer = false,
+    updateErrorList = () => {}
   ) {
     console.log("Importing scene...", mainView, serverScene);
+    MainViewRetriever.updateErrorList = updateErrorList;
     const errors = [];
     if (serverScene.length > 0) {
       importSceneRecursive(
@@ -60,9 +65,16 @@ function importAsset(mainView, nodeDict, parent, errors) {
   const assetName = Maybe.fromNull(nodeDict.assetName).orSome(nodeDict.name);
   const assetActionMap = mainView.getAssetsActionMap();
   // legacy
-  const retrievedAction = Maybe.fromNull(assetActionMap[assetName]).orLazy(
+  let retrievedAction = Maybe.fromNull(assetActionMap[assetName]).orLazy(
     () => assetActionMap[assetName.split(".")[0]]
   );
+  if (!retrievedAction && assetType === ASSETS_TYPES.Robot) {
+    const defaultRobot = Robot.createBaseObject({
+      robotName: assetName,
+      nodeDict
+    });
+    retrievedAction = AssetsTypesFactory.Robot(defaultRobot);
+  }
   if (!retrievedAction) {
     errors.push({
       cause: `Asset of type ${assetType} with name ${assetName}, was not found`,
@@ -77,7 +89,16 @@ function importAsset(mainView, nodeDict, parent, errors) {
   retrievedAction.memory["isImport"] = true;
   retrievedAction.memory["isVisible"] =
     nodeDict.isVisible === undefined ? true : nodeDict.isVisible;
-  retrievedAction.action(mainView);
+  // Execute action
+  retrievedAction.action(mainView, err => {
+    if (err?.exception?.name === "RequestFileError") {
+      errors.push({
+        cause: `Asset of type ${err.assetType} with name ${err.assetName}, was not found`,
+        solution: `please upload ${err.assetType} ${err.assetName}`
+      });
+      MainViewRetriever.updateErrorList(errors);
+    }
+  });
 }
 
 function importSceneRecursive(

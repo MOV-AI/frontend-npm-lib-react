@@ -21,21 +21,29 @@ class RobotAction extends Action {
     this.icon = props => <i className="fas fa-robot" {...props}></i>;
   }
 
-  action = parentView => {
+  action = (parentView, errorCallback = () => {}) => {
     super.action(parentView);
-    // if robot already exists, do nothing
+    // If robot doesn't exists: Add robot
     parentView
       .getNodeFromTree(this.robot.name)
-      .orElseRun(() => this.addRobot(parentView));
+      .orElseRun(() => this.addRobot(parentView, errorCallback));
+    // If robot already exist in node tree : Update robot if mesh is different
+    parentView.getNodeFromTree(this.robot.name).forEach(({ item }) => {
+      if (!item.mesh.id.includes(this.robot.meshName)) {
+        parentView.deleteNodeFromTreeUsingName(this.name, true, true);
+        this.addRobot(parentView, errorCallback);
+      }
+    });
     parentView.setSelectedAction(ACTIONS().dragObjects);
   };
 
-  addRobot(parentView) {
+  addRobot(parentView, errorCallback = () => {}) {
     parentView.getSceneMemory().forEach(memory => {
       const { scene } = memory;
       const actionMemoryClone = { ...this.memory };
       const isImport = actionMemoryClone["isImport"];
-      if (isImport) this.loadRobot(scene, parentView, actionMemoryClone);
+      if (isImport)
+        this.loadRobot(scene, parentView, actionMemoryClone, errorCallback);
       else {
         parentView
           .getUndoManager()
@@ -50,18 +58,19 @@ class RobotAction extends Action {
       .doAction(() => {
         this.loadRobot(scene, parentView, actionMemoryClone);
       })
-      .undoAction(() => {
-        parentView.deleteNodeFromTreeUsingName(this.name);
+      .undoAction(({ is2UpdateInServer = true }) => {
+        parentView.deleteNodeFromTreeUsingName(this.name, is2UpdateInServer);
       })
       .build();
   }
 
-  loadRobot(scene, parentView, actionMemoryClone) {
+  loadRobot(scene, parentView, actionMemoryClone, errorCallback = () => {}) {
     MeshLoader.of(scene)
-      .load(Robot.ROBOT_MESH_NAME, mesh => Robot.transformMesh(mesh, scene))
+      .load(this.robot.meshName)
       .then(mesh =>
         this.createRobotFromMesh(mesh, scene, parentView, actionMemoryClone)
-      );
+      )
+      .catch(err => errorCallback(err));
   }
 
   createRobotFromMesh(mesh, scene, parentView, memory) {
@@ -70,7 +79,7 @@ class RobotAction extends Action {
     const isVisible = Maybe.fromNull(memory.isVisible).orSome(true);
     mesh.setEnabled(isVisible);
 
-    const robot = this.getRobot(scene, mesh, parentMesh);
+    const robot = this.getRobot(scene, mesh, parentMesh, parentView);
     robot.animate(this.robotAnimatorFactory(robot, parentView));
     parentView.addNodeItem2Tree(robot, parentMesh.name, !isImport, isVisible);
 
@@ -78,7 +87,7 @@ class RobotAction extends Action {
     parentView.addNodeItem2Tree(cloudPoint, robot.name, false, isVisible);
   }
 
-  getRobot = (scene, mesh, parentMesh) => {
+  getRobot = (scene, mesh, parentMesh, parentView) => {
     const meshTree = Robot.createRobotMeshTree(
       this.robot.robotTree,
       mesh,
@@ -93,6 +102,7 @@ class RobotAction extends Action {
       )
       .meshTree(meshTree)
       .parentMesh(parentMesh)
+      .parentView(parentView)
       .scene(scene)
       .keyValueMap(dict.map(x => x.keyValueMap).orSome({}))
       .build();

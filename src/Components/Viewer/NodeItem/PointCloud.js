@@ -1,8 +1,9 @@
 import NodeItem from "./NodeItem";
 import { Mesh, StandardMaterial, Color3, VertexData } from "@babylonjs/core";
 import { Maybe } from "monet";
-import { Utils, MasterDB } from "mov-fe-lib-core";
-const ofNull = Utils.ofNull;
+import { MasterDB, Utils } from "mov-fe-lib-core";
+
+const { ofNull } = Utils;
 
 class PointCloud extends NodeItem {
   /**

@@ -151,7 +151,7 @@ class BoxRegion extends NodeItem {
     material.backFaceCulling = false;
     mesh.material = material;
 
-    mesh.visibility = VISIBILITY;
+    mesh.visibility = dict.color[3] || VISIBILITY;
 
     Maybe.fromNull(dict.quaternion).forEach(quaternion => {
       const babylonQuaternion = new Quaternion(
@@ -224,6 +224,7 @@ function createBoxRegionMesh(boxRegion, name, scene) {
     boxRegionMesh.faces
   );
   mesh.position = middlePoint;
+  mesh.rotationQuaternion = Quaternion.Identity();
   return mesh;
 }
 
@@ -245,12 +246,14 @@ function createNewMeshFromOldUsingNewBox(newBox, scene, mesh, item) {
   newMesh.position = averageInParentCoord.add(mesh.position);
 
   newMesh.material = mesh.material;
-  newMesh.visibility = VISIBILITY;
+  newMesh.visibility = mesh.visibility;
   newMesh.getMouseContextActions = mesh.getMouseContextActions;
   newMesh.nodeItem = mesh.nodeItem;
   newMesh.observers = mesh.observers;
-  if (!!mesh.graphVertex) newMesh.graphVertex = mesh.graphVertex;
-
+  if (!!mesh.graphVertex) {
+    newMesh.graphVertex = mesh.graphVertex;
+    newMesh.graphVertex.vertex.mesh = newMesh;
+  }
   item.mesh = newMesh;
   item.corners = newBox.corners;
 
@@ -259,7 +262,9 @@ function createNewMeshFromOldUsingNewBox(newBox, scene, mesh, item) {
     c.parent = newMesh;
   });
   item.keyPoints.forEach((k, j) => {
+    const saveZ = k.position.z;
     k.position = Vec3.of(newBox.corners[j]).toBabylon();
+    k.position.z = saveZ;
   });
   // dispose old mesh
   mesh.dispose();
@@ -278,9 +283,11 @@ const getKeyPointObserverFunction = (mainView, scene) => {
           position: Vec3.ofBabylon(mesh.position).toArray(),
           corners: item.corners
         };
-        newBox.corners[index] = Vec3.ofBabylon(
-          updatedPointMesh.position
-        ).toArray();
+        newBox.corners[index] = [
+          updatedPointMesh.position.x,
+          updatedPointMesh.position.y,
+          newBox.corners[index][2]
+        ];
         createNewMeshFromOldUsingNewBox(newBox, scene, mesh, item);
         mainView.addGizmo2Name();
         if (is2updateServer) {
@@ -315,6 +322,10 @@ const createPlaceHolderKeyPoints = (
   mainView
 ) => {
   const keyPoints = [];
+  const maxHeight = corners.reduce(
+    (max, x) => Math.max(max, x.z),
+    Number.MIN_VALUE
+  );
   corners.forEach((corner, i) => {
     const p = corner;
 
@@ -328,6 +339,7 @@ const createPlaceHolderKeyPoints = (
 
     keyPoint.parent = boxRegionMesh;
     keyPoint.position = p;
+    keyPoint.position.z = maxHeight;
     keyPoint.index = i;
     keyPoint.observers = new Observable();
     keyPoint.observers.add(getKeyPointObserverFunction(mainView, scene));

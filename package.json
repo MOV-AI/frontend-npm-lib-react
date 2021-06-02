@@ -6,8 +6,7 @@
   "proxy": {
     "/token-auth": "http://localhost/token-auth",
     "/ws/subscriber": "http://localhost/ws/subscriber",
-    "/api/v1": "http://localhost/api/v1",
-    "Tugbot.STL": "http://localhost/Tugbot.STL"
+    "/api/v1": "http://localhost/api/v1"
   },
   "scripts": {
     "test": "jest",
@@ -90,6 +89,7 @@
     "react-resize-detector": "^4.2.1",
     "react-virtualized": "^9.22.2",
     "react-virtualized-tree": "^3.4.1",
+    "roslib": "^1.1.0",
     "styled-components": "^5.3.0"
   }
 }

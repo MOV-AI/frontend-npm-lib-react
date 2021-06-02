@@ -8,7 +8,6 @@ import GlobalRef from "../NodeItem/GlobalRef";
 import { Vector3 } from "@babylonjs/core";
 import DefaultScene from "../Utils/DefaultScene";
 import { ACTIONS } from "../MainView/MainViewActions";
-import MapLoader from "../AssetsManager/MapLoader";
 import { UndoManager } from "mov-fe-lib-core";
 import AssetsManager from "../AssetsManager/AssetsManager";
 
@@ -78,8 +77,8 @@ class AddMapAction extends Action {
     maybeNode.orElseRun(() => {
       const isImport = this.memory["isImport"];
       // you shouldn't be able to undo when importing a scene. isImport prevents removing the map when you undo.
-      // firstTimeLoad condition to prevent adding a map when fast map switch
-      if (isImport && this.firstTimeLoad) {
+      // firstTimeLoad condition to prevent adding a map when fast map switch, TODO: doesn't work
+      if (isImport) {
         this.addMap(parentView);
         this.firstTimeLoad = false;
       } else {
@@ -95,9 +94,9 @@ class AddMapAction extends Action {
         .doAction(() => {
           this.addMap(parentView);
         })
-        .undoAction(() => {
+        .undoAction(({ is2UpdateInServer = true }) => {
           const name = parentView.getObjectTree()[1].title;
-          parentView.deleteNodeFromTreeUsingName(name);
+          parentView.deleteNodeFromTreeUsingName(name, is2UpdateInServer);
         })
         .build();
     } else {
@@ -107,8 +106,8 @@ class AddMapAction extends Action {
         .doAction(() => {
           this.switchMaps(oldMapName, newMapName, parentView);
         })
-        .undoAction(() => {
-          parentView.deleteNodeFromTreeUsingName(newMapName);
+        .undoAction(({ is2UpdateInServer = true }) => {
+          parentView.deleteNodeFromTreeUsingName(newMapName, is2UpdateInServer);
           Maybe.fromNull(
             AssetsManager.getInstance().getAssetsActionMap()[oldMapName]
           ).forEach(a => a.action(parentView));
@@ -123,26 +122,7 @@ class AddMapAction extends Action {
 
   deleteAsset = () => {};
 
-  download = async () => {
-    const { textureSrc } = await this.mapLoader.load();
-    const { yamlSrc } = this.mapLoader;
-    const downloadLinks = (
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div style={{ marginRight: "5px" }}>Image:</div>
-          <a href={textureSrc} download>
-            {textureSrc}
-          </a>
-        </div>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div style={{ marginRight: "5px" }}>Yaml:</div>
-          <a href={MapLoader.getMapUrl(yamlSrc)} download>
-            {yamlSrc}
-          </a>
-        </div>
-      </div>
-    );
-  };
+  download = async () => {};
 
   static TYPE = "AddMapAction";
 }

@@ -15,7 +15,7 @@ export default class DefaultMouseEvents {
     });
   };
 
-  static onPointerUp = mainView => evt => {
+  static onPointerUp = mainView => () => {
     mainView.sceneMemory.forEach(({ camera, canvas }) => {
       camera.attachControl(canvas, true);
     });

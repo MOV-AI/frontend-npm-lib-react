@@ -6,6 +6,7 @@ import CameraBuilder from "./CameraBuilder";
 import PositionalLightBuilder from "./PositionalLightBuilder";
 import ReferentialBuilder from "./ReferentialBuilder";
 import GroundBuilder from "./GroundBuilder";
+import TooltipBuilder from "./TooltipBuilder";
 import DirectionalLightBuilder from "./DirectionalLightBuilder";
 import earcut from "earcut";
 import {
@@ -18,10 +19,15 @@ import {
   Matrix,
   MeshBuilder,
   VertexBuffer,
-  Curve3
+  Curve3,
+  ActionManager,
+  ExecuteCodeAction,
+  ShaderMaterial,
+  Camera
 } from "@babylonjs/core";
 import GlobalRef from "../NodeItem/GlobalRef";
 import Box from "../NodeItem/Box";
+import MaterialCache from "../Utils/MaterialCache";
 
 class Util3d {
   /**
@@ -47,6 +53,24 @@ class Util3d {
           Util3d.getGlobalCoordinates(mesh.parent, localPosition)
         )
       )
+      .add(meshParentPos);
+  }
+
+  /**
+   *
+   * @param {*} mesh
+   * @param {*} localPosition : Vec3
+   * @returns
+   */
+  static getParentCoord(mesh, localPosition, withTranslation = true) {
+    const meshParent = mesh.parent;
+    const meshParentPos = withTranslation
+      ? Vec3.ofBabylon(meshParent.position)
+      : Vec3.ZERO;
+    const meshParentRotMat = Util3d.getRotationMatrix(meshParent);
+    const meshParentScaling = Vec3.ofBabylon(meshParent.scaling);
+    return meshParentRotMat
+      .prodVec(meshParentScaling.mul(localPosition))
       .add(meshParentPos);
   }
 
@@ -268,10 +292,13 @@ class Util3d {
       surface.faces
     );
     mesh.convertToFlatShadedMesh();
-    const material = new StandardMaterial(`OrientedConeMaterial${name}`, scene);
-    material.diffuseColor = color;
-    material.emissiveColor = color;
-    mesh.material = material;
+
+    const materialName = `OrientedConeMaterial${name}`;
+    mesh.material = MATERIAL_CACHE.get(materialName, scene).orLazy(() => {
+      const material = Util3d.getMaterialFromColor(color, scene, materialName);
+      MATERIAL_CACHE.put(materialName, scene, material);
+      return material;
+    });
     mesh.isPickable = isPickable;
     return mesh;
   };
@@ -329,11 +356,12 @@ class Util3d {
       },
       scene
     );
-    mesh.material = Util3d.getMaterialFromColor(
-      color,
-      scene,
-      `Material${name}`
-    );
+    const materialName = `Material${name}`;
+    mesh.material = MATERIAL_CACHE.get(materialName, scene).orLazy(() => {
+      const material = Util3d.getMaterialFromColor(color, scene, materialName);
+      MATERIAL_CACHE.put(materialName, scene, material);
+      return material;
+    });
     mesh.isPickable = isPickable;
     return mesh;
   };
@@ -517,10 +545,215 @@ class Util3d {
       return [x.x, x.y, orientations[i]];
     });
   };
+
+  static getShaderMaterial = ({
+    name = `CustomShader${randomDigits()}`,
+    vertex = VERTEX,
+    frag = FRAG,
+    onBindObservable = SHADER_BIND,
+    preProcessShader = SHADER_PRE
+  }) => scene => {
+    /**
+     * Check this for shader re-usage, if a problem appears
+     * https://playground.babylonjs.com/#KJ3BVA#4
+     * */
+    const shaderMaterial = new ShaderMaterial(
+      name,
+      scene,
+      { vertexSource: vertex, fragmentSource: frag },
+      {
+        attributes: ["position", "normal", "uv"],
+        uniforms: [
+          "world",
+          "worldView",
+          "worldViewProjection",
+          "view",
+          "projection"
+        ]
+      }
+    );
+    preProcessShader(scene, shaderMaterial);
+    shaderMaterial.onBindObservable.add(() => {
+      onBindObservable(scene, shaderMaterial);
+    });
+    return shaderMaterial;
+  };
+
+  static setOrthoView(camera, scene) {
+    camera.mode = Camera.ORTHOGRAPHIC_CAMERA;
+    const aspect = scene.getEngine().getAspectRatio(camera);
+    const distance = camera.position.length();
+    camera.orthoLeft = -distance / 2;
+    camera.orthoRight = distance / 2;
+    camera.orthoBottom = camera.orthoLeft * aspect;
+    camera.orthoTop = camera.orthoRight * aspect;
+  }
+
+  static setPerspectiveView(camera, scene) {
+    camera.mode = Camera.PERSPECTIVE_CAMERA;
+  }
+
+  /**
+   *
+   * @param {*} scene: Babylonjs Scene
+   * @param {*} name: String
+   * @param {*} begin: Vector3
+   * @param {*} end: Vector3
+   */
+  static getArrow(scene, name, begin, end, radius = 1) {
+    const arrowTube = Util3d.createTubeFromPoints(
+      scene,
+      [begin, end],
+      Color3.Gray(),
+      radius,
+      name + "tube"
+    );
+    const arrowCone = Util3d.createOrientedCone(
+      scene,
+      end
+        .subtract(begin)
+        .normalize()
+        .scale(radius * 7),
+      Color3.Gray(),
+      name + "cone"
+    );
+    arrowCone.position = end;
+    const arrowMesh = new Mesh(name, scene);
+    arrowTube.parent = arrowMesh;
+    arrowCone.parent = arrowMesh;
+    return arrowMesh;
+  }
+
+  /*
+   * Show tooltip on mesh on mouse over
+   *
+   * @param {Mesh} mesh: Mesh to add the tooltip
+   * @param {Scene} scene: Scene
+   * @param {String} tooltipText: Text to be added to the tooltip
+   *
+   * @returns {TextBlock} TextBlock instance to allow dynamic changes
+   *  on the tooltip content by: textBlock.text = "new text"
+   */
+  static addTooltipToMesh(mesh, scene, tooltipText = "") {
+    return new TooltipBuilder(mesh, scene).text(tooltipText).build();
+  }
+
+  static addClickActionToMesh(mesh, scene, callback) {
+    // Set mesh action manager
+    const actionManager = new ActionManager(scene);
+    mesh.actionManager = actionManager;
+    // Register actions: OnPickDownTrigger (click action)
+    actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPickDownTrigger, function (_) {
+        callback();
+      })
+    );
+    // Register actions: OnPointerOverTrigger (hover effect)
+    actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPointerOverTrigger, function (_) {
+        mesh.material.unfreeze();
+        mesh.material.emissiveColor = Color3.Gray();
+      })
+    );
+    // Register actions: OnPointerOutTrigger (clear hover effect)
+    actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPointerOutTrigger, function (_) {
+        mesh.material.emissiveColor = Color3.White();
+        setTimeout(() => mesh.material.freeze(), 10);
+      })
+    );
+  }
 }
 
 const randomDigits = () => {
   return Math.floor(Math.random() * 1e3);
 };
+
+const VERTEX = `precision highp float;
+
+// Attributes
+attribute vec3 position;
+attribute vec3 normal;
+attribute vec2 uv;
+
+// Uniforms
+uniform mat4 worldViewProjection;
+
+// Varying
+varying vec3 vPosition;
+varying vec3 vNormal;
+varying vec2 vUV;
+
+void main(void) {
+    vec4 outPosition = worldViewProjection * vec4(position, 1.0);
+    gl_Position = outPosition;
+
+    vUV = uv;
+    vPosition = position;
+    vNormal = normal;
+}`;
+const FRAG = `
+precision highp float;
+
+// Varying
+varying vec3 vPosition;
+varying vec3 vNormal;
+varying vec2 vUV;
+
+// Uniforms
+uniform mat4 world;
+
+// Refs
+uniform vec3 cameraPosition;
+uniform vec3 lightPosition;
+uniform float time;
+
+void main(void) {
+    vec3 vLightPosition = lightPosition;
+
+    // World values
+    vec3 vPositionW = vec3(world * vec4(vPosition, 1.0));
+    vec3 vNormalW = normalize(vec3(world * vec4(vNormal, 0.0)));
+    vec3 viewDirectionW = normalize(cameraPosition - vPositionW);
+
+    // Light
+    vec3 lightVectorW = normalize(vLightPosition - vPositionW);
+    vec3 color = vec3(0.5,0.,1.);
+
+    // diffuse
+    float ndl = max(0., dot(vNormalW, lightVectorW));
+
+    // Specular
+    vec3 angleW = normalize(viewDirectionW + lightVectorW);
+    float specComp = max(0., dot(vNormalW, angleW));
+    specComp = pow(specComp, max(1., 64.)) * 2.;
+
+    gl_FragColor = vec4(color * ndl + vec3(specComp), 1.);
+}
+`;
+
+const SHADER_BIND = (() => {
+  let time = 0;
+  let T = new Date().getTime();
+  return (scene, shaderMaterial) => {
+    const dt = (new Date().getTime() - T) / 1000;
+    shaderMaterial.setFloat("time", time);
+    shaderMaterial.setVector3("cameraPosition", scene.activeCamera.position);
+    if (scene.lights.length > 0) {
+      shaderMaterial.setVector3("lightPosition", scene.lights[0].position);
+    }
+    time = time + dt;
+    T = new Date().getTime();
+  };
+})();
+
+const SHADER_PRE = (scene, shaderMaterial) => {
+  shaderMaterial.backFaceCulling = false;
+  shaderMaterial.setFloat("time", 0);
+  shaderMaterial.setVector3("cameraPosition", scene.activeCamera.position);
+  shaderMaterial.setVector3("lightPosition", new Vector3(0, 20, 10));
+};
+
+const MATERIAL_CACHE = MaterialCache.getInstance();
 
 export default Util3d;

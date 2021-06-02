@@ -72,8 +72,8 @@ class AddMeshAction extends Action {
       .doAction(() => {
         this.loadMesh(parentView, scene, actionMemory, isImport, finalName);
       })
-      .undoAction(() => {
-        parentView.deleteNodeFromTreeUsingName(finalName);
+      .undoAction(({ is2UpdateInServer = true }) => {
+        parentView.deleteNodeFromTreeUsingName(finalName, is2UpdateInServer);
       })
       .build();
   }
@@ -145,18 +145,7 @@ class AddMeshAction extends Action {
 
   deleteAsset = () => {};
 
-  download = async () => {
-    const downloadLinks = (
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div style={{ marginRight: "5px" }}>Mesh:</div>
-          <a href={MeshLoader.getMeshUrl(this.key)} download>
-            {this.key}
-          </a>
-        </div>
-      </div>
-    );
-  };
+  download = async () => {};
 }
 
 const ofNull = Maybe.fromNull;

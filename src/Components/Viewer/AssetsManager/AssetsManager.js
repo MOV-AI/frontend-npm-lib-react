@@ -2,6 +2,7 @@ import { Maybe } from "monet";
 import { ASSETS_TYPES, AssetsTypesFactory } from "../Utils/AssetsTypesFactory";
 import { MasterDB } from "mov-fe-lib-core";
 import MapLoader from "./MapLoader";
+import Robot from "../NodeItem/Robot";
 
 /**
  *  Graphic Assets Manager, retrieves and manages the assets that are in DB.
@@ -93,10 +94,29 @@ class AssetsManager {
           Name: "*",
           RobotName: "*"
         },
-        this.getRobotNameUpdate(),
-        this.getRobotNameSub(
-          ({ value }) => value,
-          () => this.finishSub("RobotName", resolve)
+        this.getRobotUpdate(),
+        (data) => this.getRobotNameSub(
+          data.value,
+          () => {
+            this.addRobots();
+            this.finishSub("RobotName", resolve);
+          }
+        )
+      ),
+    resolve => 
+      MasterDB.subscribe(
+        {
+          Scope: "Robot",
+          Name: "*",
+          Parameter: "mesh"
+        },
+        this.getRobotUpdate(),
+        (data) => this.getRobotMeshSub(
+          data.value,
+          () => {
+            this.addRobots();
+            this.finishSub("RobotMesh", resolve);
+          }
         )
       ),
     resolve =>
@@ -153,57 +173,87 @@ class AssetsManager {
   //========================================================================================
 
   deleteRobot = id => {
+    if(!this.robots.hasOwnProperty(id)) return;
     this.delAsset(this.robots[id].name);
     if (id in this.robots) delete this.robots[id];
   };
 
-  addRobot(id, name = null) {
+  setRobot(id, name = null, meshName = null) {
     if (!(id in this.robots)) {
       this.robots[id] = {
         id: id,
-        name: null
+        name: null,
+        meshName: null,
       };
     }
     ofNull(name).forEach(name => (this.robots[id].name = name));
-    if (Object.values(this.robots[id]).every(x => x !== null)) {
-      const localRobot = this.robots[id];
-      this.addAsset(localRobot.name, {
-        name: localRobot.name,
-        id: id,
-        type: ASSETS_TYPES.Robot,
-        robotTree: {
-          name: localRobot.name,
-          position: { x: 0, y: 0, z: 0 },
-          orientation: {
-            w: 1,
-            x: 0,
-            y: 0,
-            z: 0
-          },
-          child: []
-        }
-      });
-    }
+    ofNull(meshName).forEach(meshName => (this.robots[id].meshName = meshName));
   }
 
-  getRobotNameSub(getter, after = () => {}) {
-    return data => {
-      ofNull(getter(data))
-        .flatMap(maybeGet("Robot"))
-        .forEach(r =>
-          Object.keys(r).forEach(id => this.addRobot(id, r[id].RobotName))
+  addRobots(robots = this.robots) {
+    Object.keys(robots).forEach((id) => {
+      if (Object.values(this.robots[id]).every(x => x !== null)) {
+        const localRobot = this.robots[id];
+        this.addAsset(
+          localRobot.name, 
+          Robot.createBaseObject({robotName: localRobot.name, robotMeshName: localRobot.meshName, id })
         );
-      after();
-    };
+      }
+    })
   }
 
-  getRobotNameUpdate() {
+  getRobotNameSub(data, after = () => {}) {
+    ofNull(data)
+      .flatMap(maybeGet("Robot"))
+      .forEach(r =>
+        Object.keys(r).forEach(id => this.setRobot(id, r[id].RobotName))
+      );
+    after();
+  }
+
+  getRobotMeshSub(data, after = () => {}) {
+    ofNull(data)
+      .flatMap(maybeGet("Robot"))
+      .forEach(r =>
+        Object.keys(r).forEach(id => this.setRobot(id, r[id].RobotName, r[id].Parameter.mesh.Value))
+      );
+    Object.keys(this.robots).forEach((id) => {
+      this.robots[id].meshName = this.robots[id].meshName 
+        ? this.robots[id].meshName 
+        : Robot.ROBOT_MESH_NAME;
+    });
+    after();
+  }
+
+  getRobotUpdate() {
     const actionMap = {
-      del: data =>
-        ofNull(data.key)
-          .flatMap(maybeGet("Robot"))
-          .forEach(r => Object.keys(r).forEach(this.deleteRobot)),
-      set: this.getRobotNameSub(({ key }) => key)
+      del: data => {
+        const pattern = data.patterns[0];
+        // del event from RobotName pattern
+        if(pattern.hasOwnProperty('RobotName')) {
+          ofNull(data.key)
+            .flatMap(maybeGet("Robot"))
+            .forEach(r => Object.keys(r).forEach(this.deleteRobot));
+        }
+        // del event from RobotMesh pattern
+        else if(pattern.hasOwnProperty('Parameter')) {
+          ofNull(data.key)
+            .flatMap(maybeGet("Robot"))
+            .forEach(r => Object.keys(r).forEach(robotId => {
+              this.robots[robotId].meshName = Robot.ROBOT_MESH_NAME;
+            }));
+        }
+      },
+      set: data => {
+        const pattern = data.patterns[0];
+        const robots = { ...data.key.Robot }
+        // set event from RobotName pattern
+        if(pattern.hasOwnProperty('RobotName'))
+          this.getRobotNameSub(data.key, () => this.addRobots(robots))
+        // set event from RobotMesh pattern
+        else if(pattern.hasOwnProperty('Parameter'))
+          this.getRobotMeshSub(data.key, () => this.addRobots(robots))
+      }
     };
     return data => {
       console.log("Robot NAME UPDATE", data);

@@ -127,8 +127,8 @@ class AddKeyPointAction extends MouseKeysAction {
         keyPoint.position = mesh.position;
         parentView.updateNodeInServer(mesh.name);
       })
-      .undoAction(() => {
-        parentView.deleteNodeFromTreeUsingName(mesh.name);
+      .undoAction(({ is2UpdateInServer = true }) => {
+        parentView.deleteNodeFromTreeUsingName(mesh.name, is2UpdateInServer);
       })
       .build();
   }

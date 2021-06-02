@@ -16,7 +16,8 @@ import Util3d from "./Util3d/Util3d";
 import Vec3 from "./Math/Vec3";
 import ReactResizeDetector from "react-resize-detector";
 import ConfirmAlertModal from "../Modal/ConfirmAlertModal";
-import { UndoManager } from "mov-fe-lib-core";
+import RobotLogModal from "../Modal/RobotLogModal";
+import { UndoManager, RobotManager } from "mov-fe-lib-core";
 
 //========================================================================================
 /*                                                                                      *
@@ -38,6 +39,8 @@ class SceneViewer extends Component {
     this.targetPos = undefined;
     this.cameraSpeed = Vector3.Zero();
     this.time = new Date().getTime() * 1e-3;
+    this.robotManager = new RobotManager();
+    this.robotAlertModal = React.createRef();
   }
 
   //========================================================================================
@@ -45,6 +48,8 @@ class SceneViewer extends Component {
    *                                   Getters & Setters                                  *
    *                                                                                      */
   //========================================================================================
+
+  getRobotManager = () => this.robotManager;
 
   getSceneMemory = () => this.sceneMemory;
 
@@ -75,10 +80,10 @@ class SceneViewer extends Component {
   //========================================================================================
 
   getNodeFromTree = (name, objectTree = [...this.objectTree]) => {
-    return TreeServerUtils.ofScene(this.sceneName).getNodeFromTree(
-      name,
-      objectTree
-    );
+    return TreeServerUtils.ofScene(
+      this.sceneName,
+      this.undoManager
+    ).getNodeFromTree(name, objectTree);
   };
 
   deleteNodeFromTreeUsingName = () => {
@@ -86,11 +91,10 @@ class SceneViewer extends Component {
   };
 
   updateNodeInServer = (name, oldName = null) => {
-    TreeServerUtils.ofScene(this.sceneName).updateNodeInServer(
-      name,
-      [...this.objectTree],
-      oldName
-    );
+    TreeServerUtils.ofScene(
+      this.sceneName,
+      this.undoManager
+    ).updateNodeInServer(name, [...this.objectTree], oldName);
   };
 
   addNodeItem2Tree = (
@@ -100,7 +104,8 @@ class SceneViewer extends Component {
     isVisible = true
   ) => {
     const newObjectTree = TreeServerUtils.ofScene(
-      this.sceneName
+      this.sceneName,
+      this.undoManager
     ).addNodeItem2Tree(
       [...this.objectTree],
       nodeItem,
@@ -114,22 +119,22 @@ class SceneViewer extends Component {
   setCameraToTarget = () => {
     this.sceneMemory.forEach(({ camera }) => {
       const focusObject = this.isPanned ? "" : this.props.focusObject.Value;
-      this.getNodeFromTree(focusObject).forEach(
-        x => {
-          console.log("Set Camera, Found Object", x.item.mesh);
-          const dt = new Date().getTime() * 1e-3 - this.time;
-          this.time = new Date().getTime() * 1e-3;
-          const pos = x.item.mesh._absolutePosition.clone();
-          this.cameraSpeed = !this.targetPos ? Vector3.Zero() : pos.subtract(this.targetPos);
-          this.targetPos = pos;  
-          camera.setTarget(pos);
-          camera.position = camera.position.add(this.cameraSpeed.scale(dt))
-          camera.beta = this.isRotated ? camera.beta : 0;
-          // move target object for debug
-          // const p = x.item.mesh.position;
-          // x.item.mesh.position = p.add(new Vector3(p.x, p.y, 0).scale(1e-2)); 
-        }
-      );
+      this.getNodeFromTree(focusObject).forEach(x => {
+        console.log("Set Camera, Found Object", x.item.mesh);
+        const dt = new Date().getTime() * 1e-3 - this.time;
+        this.time = new Date().getTime() * 1e-3;
+        const pos = x.item.mesh._absolutePosition.clone();
+        this.cameraSpeed = !this.targetPos
+          ? Vector3.Zero()
+          : pos.subtract(this.targetPos);
+        this.targetPos = pos;
+        camera.setTarget(pos);
+        camera.position = camera.position.add(this.cameraSpeed.scale(dt));
+        camera.beta = this.isRotated ? camera.beta : 0;
+        // move target object for debug
+        // const p = x.item.mesh.position;
+        // x.item.mesh.position = p.add(new Vector3(p.x, p.y, 0).scale(1e-2));
+      });
     });
   };
 
@@ -160,11 +165,12 @@ class SceneViewer extends Component {
   };
 
   onPointerMove = evt => {
-    if(evt.buttons === 4) this.isPanned = true;
+    if (evt.buttons === 4) this.isPanned = true;
     DefaultMouseEvents.onPointerMove(this)(evt);
   };
 
   getMouseCoordsFromRoot() {
+    // TODO: code repetition in mainView
     return this.sceneMemory.flatMap(({ scene, ground }) => {
       const maybeCurrent = Util3d.getGroundPosition(scene, ground);
       return maybeCurrent.flatMap(current =>
@@ -216,7 +222,7 @@ class SceneViewer extends Component {
     this.getSceneMemory().forEach(({ engine, scene }) =>
       engine.runRenderLoop(() => {
         this.time = new Date().getTime() * 1e-3;
-        scene.render()
+        scene.render();
         this.setCameraToTarget();
       })
     );
@@ -244,6 +250,14 @@ class SceneViewer extends Component {
     return scene;
   };
 
+  showRobotAlertModal = alert => {
+    this.robotAlertModal.current.open(alert);
+  };
+
+  showAlert = (message, type) => {
+    alert(`type:${type} ` + message);
+  };
+
   //========================================================================================
   /*                                                                                      *
    *                                   Render functions                                   *
@@ -262,11 +276,11 @@ class SceneViewer extends Component {
       },
       {
         propVar: x => x.focusObject.Value,
-        action:() => {
+        action: () => {
           this.isPanned = false;
           this.isRotated = false;
-          this.setCameraToTarget()
-        } 
+          this.setCameraToTarget();
+        }
       }
     ];
     predicateAction.forEach(({ propVar, action }) => {
@@ -304,6 +318,7 @@ class SceneViewer extends Component {
         >
           {getErrorSolutionList(errorList)}
         </ConfirmAlertModal>
+        <RobotLogModal ref={this.robotAlertModal} title="Alert" />
         <ReactResizeDetector
           handleWidth
           handleHeight

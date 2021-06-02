@@ -10,12 +10,11 @@ class MeasureAction extends MouseKeysAction {
     super();
     this.key = "drawWall";
     this.name = "Measure [7]";
-    this.ruler = []; // can only have to elements, start point and end point
-    this.tempMesh = null;
-    this.mesh = null;
+    this.icon = props => <i className="fas fa-ruler" {...props}></i>;
+    this.ruler = []; // can only have two elements, start point and end point
+    this.rulerMesh = null;
     this.advancedTexture = null;
     this.text = null;
-    this.icon = props => <i className="fas fa-ruler" {...props}></i>;
   }
 
   action = parentView => {
@@ -23,81 +22,74 @@ class MeasureAction extends MouseKeysAction {
     parentView.setSelectedAction(this);
   };
 
+  onChange = parentView => {
+    this.resetMeasure(parentView);
+  };
+
   onPointerDown = (evt, parentView) => {
     if (evt.button !== 0) {
       return;
     }
-    parentView.getSceneMemory().forEach(memory => {
-      const scene = memory.scene;
-      const ground = memory.ground;
-
+    parentView.getSceneMemory().forEach(({ scene, ground, camera, canvas }) => {
       Util3d.getGroundPosition(scene, ground).forEach(current => {
         const currentMousePos = Util3d.toGlobalCoord(parentView)(current);
         this.ruler.push(currentMousePos);
         if (this.ruler.length > 2) {
-          this.mesh && this.mesh.dispose();
-          this.tempMesh && this.tempMesh.dispose();
-          this.text && this.text.dispose();
-          this.ruler = [];
-        }
-        if (this.ruler.length === 2) {
-          this.mesh = MeshBuilder.CreateLines(
-            "ruler",
-            {
-              points: this.ruler,
-              updatable: true
-            },
-            scene
-          );
-
+          this.resetMeasure(parentView);
+        } else if (this.ruler.length === 2) {
+          // remove temp mesh
+          this.rulerMesh && this.rulerMesh.dispose();
+          this.rulerMesh = this.createRulerMesh(this.ruler, scene, parentView);
           this.addTextGUI(
             scene,
             this.calculateDistance(this.ruler[0], currentMousePos),
             evt
           );
-
-          const rootMesh = parentView.getRootNode().item.mesh;
-          this.mesh.parent = rootMesh;
+          camera.attachControl(canvas, true);
+        } else {
+          camera.detachControl(canvas);
         }
       });
     });
   };
 
   onPointerMove = (evt, parentView) => {
-    parentView.getSceneMemory().forEach(memory => {
-      const scene = memory.scene;
-      const ground = memory.ground;
-
+    parentView.getSceneMemory().forEach(({ scene, ground }) => {
       Util3d.getGroundPosition(scene, ground).forEach(current => {
         const currentMousePos = Util3d.toGlobalCoord(parentView)(current);
-        // Don't add more than two point to the ruler
+        // If the user pressed the mouse wheel or is rotating the view, it will delete the ruler
+        if (
+          this.ruler.length >= 2 &&
+          (evt.buttons === 4 || evt.pressure === 0.5)
+        ) {
+          this.resetMeasure(parentView);
+        }
+        // Fixed one point so display the ruler real time
         if (this.ruler.length === 1) {
           // Remove previous element from Mesh to not overlap
-          this.tempMesh && this.tempMesh.dispose();
-
-          this.tempMesh = MeshBuilder.CreateLines(
-            "ruler",
-            {
-              points: [this.ruler[0], currentMousePos],
-              updatable: true
-            },
-            scene
+          this.rulerMesh && this.rulerMesh.dispose();
+          this.rulerMesh = this.createRulerMesh(
+            [this.ruler[0], currentMousePos],
+            scene,
+            parentView
           );
-
           this.addTextGUI(
             scene,
             this.calculateDistance(this.ruler[0], currentMousePos),
             evt
           );
-
-          const rootMesh = parentView.getRootNode().item.mesh;
-          this.tempMesh.parent = rootMesh;
         }
       });
     });
   };
 
   onPointerUp = (evt, parentView) => {};
+
+  onWheel = (evt, parentView) => {
+    if (Math.abs(evt.deltaY) > 0) {
+      this.resetMeasure(parentView);
+    }
+  };
 
   // Calculate 2D distance from starting of ruler to the end of ruler
   calculateDistance = (start, end) => {
@@ -107,14 +99,15 @@ class MeasureAction extends MouseKeysAction {
   };
 
   addTextGUI = function (scene, value, evt) {
-    this.advancedTexture && this.advancedTexture.removeControl(this.text);
-    // GUI
-    this.advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
-      "UI",
-      true,
-      scene
-    );
-
+    // TODO: maybe should use mouse coordinates  advanced texture from mainView
+    if (!this.advancedTexture) {
+      this.advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
+        "UI Ruler",
+        true,
+        scene
+      );
+    }
+    this.text && this.advancedTexture.removeControl(this.text);
     this.text = new TextBlock();
     this.text.text = `${value}m`;
     this.text.fontSize = 17;
@@ -123,6 +116,30 @@ class MeasureAction extends MouseKeysAction {
     this.text.color = "white";
     this.advancedTexture.addControl(this.text);
   };
+
+  resetMeasure(parentView) {
+    this.rulerMesh && this.rulerMesh.dispose();
+    this.text && this.text.dispose();
+    this.ruler = [];
+    parentView &&
+      parentView.getSceneMemory().forEach(({ camera, canvas }) => {
+        camera.attachControl(canvas, true);
+      });
+  }
+
+  createRulerMesh(points, scene, parentView) {
+    const rulerMesh = MeshBuilder.CreateLines(
+      "ruler",
+      {
+        points: points,
+        updatable: true
+      },
+      scene
+    );
+    const rootMesh = parentView.getRootNode().item.mesh;
+    rulerMesh.parent = rootMesh;
+    return rulerMesh;
+  }
 }
 
 export default MeasureAction;

@@ -1,7 +1,7 @@
 import NodeItem from "./NodeItem";
 import Util3d from "../Util3d/Util3d";
 import { Maybe } from "monet";
-import { MeshBuilder, StandardMaterial } from "@babylonjs/core";
+import { MeshBuilder, Quaternion, StandardMaterial } from "@babylonjs/core";
 
 class KeyPoint extends NodeItem {
   ofDict(scene, dict = null, mainView = null) {
@@ -25,6 +25,7 @@ class KeyPoint extends NodeItem {
     const material = new StandardMaterial(`KeyPointMaterial${name}`, scene);
     mesh.material = material;
     mesh.convertToFlatShadedMesh();
+    mesh.rotationQuaternion = Quaternion.Identity();
 
     const axis = Util3d.referentialBuilder(scene)
       .isPickable(false)

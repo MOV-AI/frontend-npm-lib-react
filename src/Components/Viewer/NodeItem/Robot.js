@@ -1,59 +1,126 @@
 import Vec3 from "../Math/Vec3";
 import Util3d from "../Util3d/Util3d";
-import { Database } from "mov-fe-lib-core";
 import AssetNodeItem from "./AssetNodeItem";
-import { Axis, Space, Vector3, Quaternion, Color3 } from "@babylonjs/core";
+import errorIcon from "../../../../resources/alert-error.png";
+import {
+  Axis,
+  Space,
+  Vector3,
+  Quaternion,
+  Color3,
+  MeshBuilder,
+  Mesh,
+  StandardMaterial,
+  Texture
+} from "@babylonjs/core";
 import _get from "lodash/get";
 
 class Robot extends AssetNodeItem {
   static ROBOT_MESH_NAME = "Tugbot.stl";
 
-  constructor(meshTree, assetName, keyValueMap = {}) {
+  constructor(meshTree, assetName, keyValueMap = {}, scene, parentView) {
     super(meshTree.mesh, assetName, keyValueMap);
+    this.robot = parentView.getRobotManager().getRobot(meshTree.id);
+    this.loggerSubscription = null;
+    this.parentView = parentView;
     this.requestAnimationFrameId = null;
     this.meshTree = meshTree;
+    this.scene = scene;
+    this.alert = null;
     this.timeSinceLastUpdate = 0;
     this.isOnline = true;
+    this.isSubscribedToLogs = true;
     this.speed = Vector3.Zero();
     this.qSpeed = Quaternion.Zero();
     this.newPos = Vector3.Zero();
     this.newOri = Quaternion.Identity();
-    this.db = new Database();
+    // Build alert mesh
+    this.alertMesh = this.buildAlertMesh(meshTree, scene);
+    // Get robot ip to start logger
+    const robotIP = this.robot.getIP(this.onGetIP(this));
+    if (robotIP) this.startLogger();
+    // Add click action to alertMesh
+    Util3d.addClickActionToMesh(
+      this.alertMesh,
+      scene,
+      this.onMeshAlertClick(this)
+    );
+  }
+
+  buildAlertMesh(meshTree, scene) {
+    if (this.alertMesh) return this.alertMesh;
+    const alertMesh = MeshBuilder.CreateDisc(`AlertDisc${meshTree.name}`, {
+      radius: 0.2,
+      sideOrientation: Mesh.DOUBLESIDE
+    });
+    const material = new StandardMaterial(`AlertMat${meshTree.name}`, scene);
+    material.emissiveColor = new Color3.White();
+    material.ambientTexture = new Texture(errorIcon, scene);
+    material.freeze();
+    alertMesh.material = material;
+    alertMesh.isStatic = true;
+    alertMesh.position.y = -1.5;
+    alertMesh.parent = meshTree.mesh;
+    alertMesh.setEnabled(false);
+    alertMesh.billboardMode = Mesh.BILLBOARDMODE_ALL;
+    return alertMesh;
+  }
+
+  /**
+   * On alert mesh click handler
+   *
+   * @param {*} robot: Robot class instance (this)
+   * @returns {Function} Function to be triggered whenever there's a click on the alert mesh
+   */
+  onMeshAlertClick(robot) {
+    return () => {
+      robot.parentView.showRobotAlertModal(robot.alert);
+    };
   }
 
   toDict() {
     let dict = super.toDict();
+    dict.isSubscribedToLogs = this.isSubscribedToLogs;
     return dict;
   }
 
   toForm() {
     const schema = super.toForm();
-    schema.jsonSchema.properties = {
-      oldName: schema.jsonSchema.properties.oldName,
-      name: schema.jsonSchema.properties.name,
-      type: schema.jsonSchema.properties.type,
-      assetName: {
-        type: "string",
-        title: "Asset Name"
-      },
-      position: schema.jsonSchema.properties.position,
-      quaternion: schema.jsonSchema.properties.quaternion,
-      color: schema.jsonSchema.properties.color,
-      annotations: schema.jsonSchema.properties.annotations
+    const props = { ...schema.jsonSchema.properties };
+    const newJsonSchema = {
+      type: "object",
+      properties: {
+        oldName: props.oldName,
+        name: props.name,
+        type: props.type,
+        // isSubscribedToLogs: {
+        //   type: "boolean",
+        //   title: "Subscribe to alerts"
+        // },
+        position: props.position,
+        rotation: props.rotation,
+        color: props.color,
+        annotations: props.annotations
+      }
     };
-    schema.uiSchema["assetName"] = {
-      "ui:disabled": true
-    };
-    schema.data["assetName"] = this.assetName;
+    schema.jsonSchema = newJsonSchema;
+    schema.data["isSubscribedToLogs"] = this.isSubscribedToLogs;
     return schema;
+  }
+
+  ofForm(form) {
+    super.ofForm(form);
+    this.isSubscribedToLogs = Boolean(form.isSubscribedToLogs);
+    // Start/Stop logger based on isSubscribedToLogs property
+    if (form.isSubscribedToLogs && this.robot.ip) this.startLogger();
+    else this.stopLogger(true);
   }
 
   dispose() {
     super.dispose();
-    this.db.unsubscribe({
-      Scope: "Robot",
-      Name: this.meshTree.id,
-      Parameter: "tf"
+    this.robot.unsubscribe({
+      property: "Parameter",
+      propValue: "tf"
     });
     window.cancelAnimationFrame(this.requestAnimationFrameId);
   }
@@ -81,13 +148,75 @@ class Robot extends AssetNodeItem {
     this.speed = Vector3.Zero();
     this.qSpeed = Quaternion.Zero();
     this.isOnline = false;
+    this.stopLogger();
   }
 
   toOnline() {
     if (this.mesh.isDisposed()) return;
     this.mesh._children[0]._children[0].visibility = 1;
     this.isOnline = true;
+    this.startLogger();
   }
+
+  /**
+   * Start robot logger
+   */
+  startLogger() {
+    if (!this.loggerSubscription) {
+      this.loggerSubscription = this.robot.subscribeToLogs(
+        this.updateAlertState(this)
+      );
+    }
+  }
+
+  /**
+   * Stop robot logger
+   *
+   * @param {Boolean} is2RemoveAlertMesh: If true: remove alert mesh
+   */
+  stopLogger(is2RemoveAlertMesh) {
+    if (this.loggerSubscription) {
+      this.robot.unsubscribeToLogs(this.loggerSubscription);
+      this.loggerSubscription = null;
+    }
+    // Remove robot alert mesh
+    if (is2RemoveAlertMesh) this.alertMesh.setEnabled(false);
+  }
+
+  /**
+   * Update robot alert state
+   *
+   * @param {*} robot: Robot class instance (this)
+   * @returns {Function} Function to be triggered whenever there's a new log for this robot
+   */
+  updateAlertState(robot) {
+    return logs => {
+      robot.timeSinceLastUpdate = 0;
+      if (logs[0].level === "ERROR" || logs[0].level === "CRITICAL") {
+        robot.alert = logs[0];
+        robot.alertMesh.setEnabled(true);
+      }
+      // If last log is not error/critical then clean alert (set it to null)
+      else {
+        robot.alertMesh.setEnabled(false);
+      }
+    };
+  }
+
+  /**
+   * Start logger after receiving robot IP
+   *
+   * @param {*} robot: Robot class instance (this)
+   * @returns {Function} Function to be triggered when receive robot ip
+   */
+  onGetIP(robot) {
+    return ip => {
+      // If robot IP were not found doesn't start logger
+      if (!ip) return;
+      robot.startLogger();
+    };
+  }
+
   //========================================================================================
   /*                                                                                      *
    *                                   Static Functions                                   *
@@ -97,6 +226,38 @@ class Robot extends AssetNodeItem {
   static TYPE = "Robot";
 
   static TIME_2_BE_OFFLINE_IN_SEC = 10;
+
+  static createBaseObject = ({
+    robotName,
+    robotMeshName = Robot.ROBOT_MESH_NAME,
+    id = Robot.randomId(),
+    nodeDict = {
+      position: [0, 0, 0],
+      quaternion: [1, 0, 0, 0]
+    }
+  }) => {
+    return {
+      id: id,
+      name: robotName,
+      type: Robot.TYPE,
+      meshName: robotMeshName,
+      robotTree: {
+        name: robotName,
+        child: [],
+        position: {
+          x: nodeDict.position[0],
+          y: nodeDict.position[1],
+          z: nodeDict.position[2]
+        },
+        orientation: {
+          w: nodeDict.quaternion[0],
+          x: nodeDict.quaternion[1],
+          y: nodeDict.quaternion[2],
+          z: nodeDict.quaternion[3]
+        }
+      }
+    };
+  };
 
   static getDefaultAnimator = parentView => (robot, dt) => {
     const mesh = robot.mesh;
@@ -132,25 +293,22 @@ class Robot extends AssetNodeItem {
   }
 
   static getSocketAnimator = (robot, parentView) => {
-    robot.db.subscribe(
-      { Scope: "Robot", Name: robot.meshTree.id, Parameter: "tf" },
-      data => {
-        const tf = _get(
-          data,
-          `key.Robot.${robot.meshTree.id}.Parameter.tf.Value`,
-          undefined
-        );
-        if (tf) Robot.updateRobotMeshTree(tf, robot);
-      },
-      data => {
-        const tf = _get(
-          data,
-          `key.Robot.${robot.meshTree.id}.Parameter.tf.Value`,
-          undefined
-        );
-        if (tf) Robot.updateRobotMeshTree(tf, robot);
-      }
-    );
+    const updateTF = data => {
+      const tf = _get(
+        data,
+        `Robot.${robot.meshTree.id}.Parameter.tf.Value`,
+        undefined
+      );
+      if (tf) Robot.updateRobotMeshTree(tf, robot);
+    };
+    // Subscribe to tf parameter
+    robot.robot.subscribe({
+      property: "Parameter",
+      propValue: "tf",
+      onLoad: data => updateTF(data?.value),
+      onUpdate: data => updateTF(data?.key)
+    });
+    // Animate
     return (robot2Animate, dt) => {
       const epsilon = 1e-2;
       const n = 1 / epsilon;
@@ -172,53 +330,10 @@ class Robot extends AssetNodeItem {
 
   static setOnOffLine(robot) {
     if (robot.timeSinceLastUpdate > Robot.TIME_2_BE_OFFLINE_IN_SEC) {
-      robot.toOffline();
+      if (robot.isOnline) robot.toOffline();
     } else {
       if (!robot.isOnline) robot.toOnline();
     }
-  }
-
-  /**
-   * Side effect function
-   */
-  static transformMesh(mesh, scene) {
-    const thetaX = Math.PI / 2;
-    const translate = 0.25;
-    const boundScale = 1.9;
-
-    const boundingSphere = mesh.getBoundingInfo().boundingSphere;
-    mesh.position.set(
-      -boundingSphere.center.x,
-      -boundingSphere.center.y,
-      -boundingSphere.center.z
-    );
-
-    const tfSphereMesh = Util3d.createSphere(
-      scene,
-      new Color3(0.0, 0.0, 0.0),
-      0.5 * boundingSphere.radius,
-      `tfsphere${mesh.name}`,
-      false
-    );
-    tfSphereMesh.visibility = 0.25;
-    tfSphereMesh.scaling = Vec3.ONES.scale(
-      1 / boundingSphere.radius
-    ).toBabylon();
-
-    tfSphereMesh.addRotation(thetaX, 0, 0);
-    tfSphereMesh.position.set(0, 0, translate);
-    const spherePlaceHolder = Util3d.createSphere(
-      scene,
-      new Color3(0.0, 0.0, 0.0),
-      boundScale,
-      mesh.name,
-      true
-    );
-    spherePlaceHolder.visibility = 0.1;
-
-    mesh.parent = tfSphereMesh;
-    tfSphereMesh.parent = spherePlaceHolder;
-    return spherePlaceHolder;
   }
 
   static createRobotMeshTreeRecursive(node, mesh, parent, scene) {
@@ -283,6 +398,7 @@ class RobotBuilder {
     this._name = null;
     this._meshTree = null;
     this._parentMesh = null;
+    this._parentView = null;
     this._scene = null;
     this._isPickable = true;
     this._id = null;
@@ -302,6 +418,11 @@ class RobotBuilder {
 
   parentMesh(parentMesh) {
     this._parentMesh = parentMesh;
+    return this;
+  }
+
+  parentView(parentView) {
+    this._parentView = parentView;
     return this;
   }
 
@@ -355,7 +476,13 @@ class RobotBuilder {
       .build();
     baseAxis.parent = this._meshTree.mesh;
 
-    return new Robot(this._meshTree, this._assetName, this._keyValueMap);
+    return new Robot(
+      this._meshTree,
+      this._assetName,
+      this._keyValueMap,
+      this._scene,
+      this._parentView
+    );
   }
 }
 

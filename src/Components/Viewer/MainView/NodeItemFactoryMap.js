@@ -6,6 +6,7 @@ import Wall from "../NodeItem/Wall";
 import BoxRegion from "../NodeItem/BoxRegion";
 import PolygonRegion from "../NodeItem/PolygonRegion";
 import GraphItem from "../NodeItem/GraphItem";
+import NavigationPreviewItem from "../NodeItem/NavigationPreviewItem";
 
 const NODE_ITEM_FACTORY_MAP = {
   GlobalRef: GlobalRef,
@@ -15,7 +16,8 @@ const NODE_ITEM_FACTORY_MAP = {
   Wall: Wall,
   BoxRegion: BoxRegion,
   PolygonRegion: PolygonRegion,
-  GraphItem: GraphItem
+  GraphItem: GraphItem,
+  NavigationPreviewItem: NavigationPreviewItem
 };
 
 export default NODE_ITEM_FACTORY_MAP;

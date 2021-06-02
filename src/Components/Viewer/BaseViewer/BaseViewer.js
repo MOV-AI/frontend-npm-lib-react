@@ -6,14 +6,21 @@
 
 import { Engine, Scene } from "@babylonjs/core";
 import React, { useEffect, useRef, useState } from "react";
+import { useTheme, makeStyles } from "@material-ui/core/styles";
 import ReactResizeDetector from "react-resize-detector";
 import PropTypes from "prop-types";
+import { SCENE_BACKGROUND } from "../Utils/Constants";
+
+const useStyles = makeStyles(theme => {
+  return {
+    root: {}
+  };
+});
 const FLEX_STYLE = {
   display: "flex",
   flexDirection: "column",
   flexGrow: 1
 };
-// import EngineSingleton from "../Util3d/EngineSingleton";
 
 const BaseViewer = props => {
   const {
@@ -27,6 +34,8 @@ const BaseViewer = props => {
     sceneFactory,
     ...rest
   } = props;
+  const theme = useTheme();
+  const classes = useStyles();
   const reactCanvas = useRef(null);
   const [loaded, setLoaded] = useState(false);
   const [scene, setScene] = useState(null);
@@ -86,6 +95,12 @@ const BaseViewer = props => {
   }, [reactCanvas, loaded, scene]);
   /* eslint-enable react-hooks/exhaustive-deps */
   // loaded && reactCanvas.current.focus();
+
+  // On toggle theme update scene background color
+  useEffect(() => {
+    if (!scene) return;
+    scene.clearColor = SCENE_BACKGROUND[theme?.label || "default"];
+  }, [classes, theme.label, scene]);
 
   return (
     <div style={{ ...FLEX_STYLE, maxHeight: "100%" }}>

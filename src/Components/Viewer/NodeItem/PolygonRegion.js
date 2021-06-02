@@ -15,7 +15,8 @@ import {
 import { UndoManager } from "mov-fe-lib-core";
 
 const RADIUS = Constants.RADIUS;
-const positiveMod = Utils.mod;
+
+const { mod: positiveMod } = Utils;
 
 class PolygonRegion extends NodeItem {
   /**
@@ -23,22 +24,60 @@ class PolygonRegion extends NodeItem {
    * @param {*} localPolygon: is an array of 3-arrays of numbers of the local coordinates in relation to mesh.position and quaternion
    * @param {*} keyPoints: are the keyPoints meshes array
    */
-  constructor(mesh, localPolygon, height, keyPoints, keyValueMap = {}) {
+  constructor(
+    mesh,
+    localPolygon,
+    height,
+    keyPoints,
+    keyValueMap = {},
+    navigationAllowed = true
+  ) {
     super(mesh, keyValueMap);
     this.localPolygon = localPolygon;
     this.height = height;
     this.keyPoints = keyPoints;
+    this.navigationAllowed = navigationAllowed;
   }
 
   toDict() {
     const dict = super.toDict();
     dict.localPolygon = this.localPolygon;
     dict.height = this.height;
+    dict.navigationAllowed = this.navigationAllowed;
     return dict;
   }
 
   ofDict(scene, dict = null, mainView = null) {
     return PolygonRegion.ofDict(scene, dict, mainView);
+  }
+
+  toForm() {
+    const schema = super.toForm();
+    const props = { ...schema.jsonSchema.properties };
+    const newJsonSchema = {
+      type: "object",
+      properties: {
+        oldName: props.oldName,
+        name: props.name,
+        type: props.type,
+        navigationAllowed: {
+          type: "boolean",
+          title: "Navigation allowed"
+        },
+        position: props.position,
+        rotation: props.rotation,
+        color: props.color,
+        annotations: props.annotations
+      }
+    };
+    schema.jsonSchema = newJsonSchema;
+    schema.data["navigationAllowed"] = this.navigationAllowed;
+    return schema;
+  }
+
+  ofForm(form) {
+    super.ofForm(form);
+    this.navigationAllowed = Boolean(form.navigationAllowed);
   }
 
   getType = () => PolygonRegion.TYPE;
@@ -59,13 +98,14 @@ class PolygonRegion extends NodeItem {
       dict.name
     );
     mesh.position = middlePoint;
+    mesh.rotationQuaternion = Quaternion.Identity();
 
     const material = new StandardMaterial(`PolygonMaterial${dict.name}`, scene);
     const color = new Color3(dict.color[0], dict.color[1], dict.color[2]);
     material.diffuseColor = color;
     material.emissiveColor = color;
     mesh.material = material;
-    mesh.visibility = 0.5;
+    mesh.visibility = dict.color[3] || VISIBILITY;
     Maybe.fromNull(dict.quaternion).forEach(quaternion => {
       const babylonQuaternion = new Quaternion(
         quaternion[1],
@@ -88,7 +128,8 @@ class PolygonRegion extends NodeItem {
       polygon.map(point => [point.x, point.y, point.z]),
       dict.height,
       keypoints,
-      dict.keyValueMap
+      dict.keyValueMap,
+      dict.navigationAllowed
     );
   }
 
@@ -137,12 +178,21 @@ class PolygonRegion extends NodeItem {
     newMesh.getMouseContextActions = oldMesh.getMouseContextActions;
     newMesh.nodeItem = oldMesh.nodeItem;
     newMesh.observers = oldMesh.observers;
-    if (!!oldMesh.graphVertex) newMesh.graphVertex = oldMesh.graphVertex;
+    if (!!oldMesh.graphVertex) {
+      newMesh.graphVertex = oldMesh.graphVertex;
+      newMesh.graphVertex.vertex.mesh = newMesh;
+    }
 
     item.localPolygon = newPoints.map(x => Vec3.ofBabylon(x).toArray());
     item.mesh = newMesh;
     item.keyPoints = keyPointUpdateFunction(scene, mainView, oldMesh, item);
-
+    // update children
+    const childrenCopy = [...oldMesh._children];
+    childrenCopy
+      .filter(c => mainView.getNodeFromTree(c.name).isJust())
+      .forEach(c => {
+        c.parent = item.mesh;
+      });
     oldMesh.dispose();
     return newPoints;
   }
@@ -192,7 +242,7 @@ class PolygonRegion extends NodeItem {
         );
         mainView.updateNodeInServer(name);
       })
-      .undoAction(() => {
+      .undoAction(({ is2UpdateInServer = true }) => {
         const copyPoints = [...newPoints];
         item.mesh.position = copyPosition;
         PolygonRegion.createNewMeshFromOldUsingNewPoints(
@@ -202,7 +252,7 @@ class PolygonRegion extends NodeItem {
           mainView,
           PolygonRegion.onAddNewPointKeyPointUpdate
         );
-        mainView.updateNodeInServer(name);
+        if (is2UpdateInServer) mainView.updateNodeInServer(name);
       })
       .build();
   }
@@ -285,7 +335,7 @@ class PolygonRegion extends NodeItem {
         );
         mainView.updateNodeInServer(name);
       })
-      .undoAction(() => {
+      .undoAction(({ is2UpdateInServer = true }) => {
         const copyPoints = [...points];
         item.mesh.position = copyPosition;
         PolygonRegion.createNewMeshFromOldUsingNewPoints(
@@ -295,7 +345,7 @@ class PolygonRegion extends NodeItem {
           mainView,
           PolygonRegion.onAddNewPointKeyPointUpdate
         );
-        mainView.updateNodeInServer(name);
+        if (is2UpdateInServer) mainView.updateNodeInServer(name);
       })
       .build();
   }
@@ -489,4 +539,5 @@ const createPlaceHolderKeyPoints = (scene, polygon, polygonMesh, mainView) => {
   return keyPoints;
 };
 
+const VISIBILITY = 0.5;
 export default PolygonRegion;

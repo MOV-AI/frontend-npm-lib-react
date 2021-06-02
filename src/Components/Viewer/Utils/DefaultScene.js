@@ -1,6 +1,5 @@
 import {
   Scene,
-  Color3,
   RotationGizmo,
   UtilityLayerRenderer,
   Vector3,
@@ -12,6 +11,7 @@ import { TextBlock, AdvancedDynamicTexture } from "@babylonjs/gui/2D";
 import Util3d from "../Util3d/Util3d";
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
+import Constants from "./Constants";
 
 class DefaultScene {
   static createGizmo = scene => {
@@ -65,14 +65,15 @@ class DefaultScene {
 
   static createScene = engine => {
     const scene = new Scene(engine);
-    scene.clearColor = Color3.Black;
     scene.collisionsEnabled = true;
     scene._uid = scene.getUniqueId();
-    // scene.debugLayer.show({
-    //   embedMode: true,
-    //   globalRoot: document.body,
-    //   overlay: true
-    // });
+    if (Constants.DEBUG) {
+      scene.debugLayer.show({
+        embedMode: true,
+        globalRoot: document.body,
+        overlay: true
+      });
+    }
     return scene;
   };
 

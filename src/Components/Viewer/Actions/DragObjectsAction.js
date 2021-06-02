@@ -15,6 +15,7 @@ import TreeObject from "../TreeObject/TreeObject";
 import GlobalRef from "../NodeItem/GlobalRef";
 import GraphItem from "../NodeItem/GraphItem";
 import Map from "../NodeItem/Map";
+import Path from "../NodeItem/Path";
 
 class DragObjectsAction extends MouseKeysAction {
   constructor() {
@@ -35,7 +36,7 @@ class DragObjectsAction extends MouseKeysAction {
   };
 
   onPointerDown = (evt, parentView) => {
-    if (!(evt.buttons === 1 || evt.buttons === 2)) return;
+    if (!(evt.buttons === 1 || evt.buttons === 2) || evt.ctrlKey) return;
     parentView.getSceneMemory().forEach(({ scene, ground }) => {
       this.maybeSelectedMesh = Util3d.pickMesh(scene, ground);
       this.maybeSelectedMesh.forEach(currentMesh =>
@@ -48,7 +49,7 @@ class DragObjectsAction extends MouseKeysAction {
   };
 
   onPointerMove = (evt, parentView) => {
-    if (!(evt.buttons === 1)) return;
+    if (!(evt.buttons === 1) || evt.ctrlKey) return;
     parentView.getSceneMemory().forEach(({ scene, ground }) => {
       // check that a mesh was selected
       this.maybeSelectedMesh.forEach(selectedMesh => {
@@ -104,6 +105,7 @@ class DragObjectsAction extends MouseKeysAction {
   //========================================================================================
 
   dragDownMesh(currentMesh, parentView, evt) {
+    if (currentMesh.isStatic) return;
     parentView.getSceneMemory().forEach(({ camera, canvas, scene, ground }) => {
       camera.detachControl(canvas);
       this.addSelectedMesh(evt, currentMesh, parentView);
@@ -118,10 +120,12 @@ class DragObjectsAction extends MouseKeysAction {
         if (currentMesh.isSelectionPlaceHolder) {
           parentView.addGizmo2Mesh(
             currentMesh,
-            () =>
-              this.notifyObservers(currentMesh, true, Vec3.ZERO, parentView),
-            () =>
-              this.notifyObservers(currentMesh, false, Vec3.ZERO, parentView)
+            () => {
+              this.notifyObservers(currentMesh, false, Vec3.ZERO, parentView);
+            },
+            () => {
+              this.notifyObservers(currentMesh, true, Vec3.ZERO, parentView);
+            }
           );
         } else {
           this.selectMeshUpdateUI(parentView);
@@ -197,12 +201,21 @@ class DragObjectsAction extends MouseKeysAction {
     Util3d.getGroundPosition(scene, ground).forEach(groundPos => {
       const groundPosInWorld = Vec3.ofBabylon(groundPos);
       const bigDisplacement = groundPosInWorld.sub(this.clickPointInWorld);
+      const isBigDisplacement = bigDisplacement.length() > 1e-3;
       meshes.forEach(mesh => {
-        this.notifyObservers(mesh, true, Vec3.ZERO, parentView);
-        parentView.updateNodeInServer(mesh.name);
+        // TODO: find better way without edge if
+        const isBigDisplaceOrIsEdgeMesh =
+          isBigDisplacement || !!mesh.edgeIndexes;
+        this.notifyObservers(
+          mesh,
+          isBigDisplaceOrIsEdgeMesh,
+          Vec3.ZERO,
+          parentView
+        );
+        if (isBigDisplacement) parentView.updateNodeInServer(mesh.name);
       });
       this.setProperties(parentView, selectedMesh.name);
-      if (bigDisplacement.length() > 0) {
+      if (isBigDisplacement) {
         parentView
           .getUndoManager()
           .addIt(this.getUndoAbleAction(meshes, bigDisplacement, parentView));
@@ -211,6 +224,7 @@ class DragObjectsAction extends MouseKeysAction {
         meshSelector.clear();
         meshSelector.addArray(selectPlaceHolder.arrayOfMeshes);
       }
+      this.mergePathsIfAny(selectedMesh, parentView, scene, ground);
     });
   }
 
@@ -283,10 +297,11 @@ class DragObjectsAction extends MouseKeysAction {
         const maybeNode = parentView.getNodeFromTree(mesh.name);
         maybeNode.forEach(node => parentView.onDeleteNode(node, isOne, isOne));
         maybeNode.orElseRun(() => {
-          //TODO REFACTOR THIS;
           if (!isOne) return;
+          //TODO REFACTOR THIS;
           const contextActions = parentView.getContextActions();
           !!contextActions[0] && contextActions[0].action(parentView);
+          mesh.onDel && mesh.onDel();
         });
       });
       parentView.highlightNodesInTree();
@@ -294,67 +309,120 @@ class DragObjectsAction extends MouseKeysAction {
       parentView.addGizmo2Mesh();
       meshSelector.clear();
       SelectionPlaceHolder.ofMainView(parentView).clear();
-      parentView.forceUpdate();
+      parentView.renderMenus();
     };
   }
 
   getCopyAction(parentView) {
     const meshSelector = MeshSelector.ofMainView(parentView);
     const meshes = meshSelector.meshes();
-    const selectPlaceHolder = SelectionPlaceHolder.ofMainView(parentView).mesh;
+    const selectPlaceHolderMesh = SelectionPlaceHolder.ofMainView(parentView)
+      .mesh;
     return () => {
       if (meshes.length <= 1) {
-        meshes
-          .filter(mesh => !!mesh.nodeItem)
-          .map(mesh => mesh.nodeItem)
-          .forEach(item => {
-            Clipboard.copy((mousePosFromRoot, someMainView) => {
-              item
-                .getCopyFunction()(mousePosFromRoot, someMainView)
-                .forEach(({ mesh: copiedMesh }) => {
-                  someMainView.addGizmo2Name(copiedMesh.name);
-                  someMainView.highlightMeshesInScene([copiedMesh]);
-                  someMainView.highlightNodesInTree([copiedMesh.name]);
-                  MeshSelector.ofMainView(someMainView).clear().add(copiedMesh);
-                });
-            });
-          });
+        this.copyOne(meshes);
       } else {
-        const nodeCopyActionPairs = meshes
-          .filter(mesh => !!mesh.nodeItem)
-          .map(mesh => mesh.nodeItem)
-          .reduce((nodeActionPairs, nodeItem) => {
-            nodeActionPairs.push([nodeItem, nodeItem.getCopyFunction(false)]);
-            return nodeActionPairs;
-          }, []);
-        Clipboard.copy((mousePosFromRoot, someMainView) => {
-          const maybeCopiedItems = nodeCopyActionPairs.map(
-            ([nodeItem, copyAction]) => {
-              const displacement = Util3d.toGlobalCoord(parentView)(
-                nodeItem.mesh.absolutePosition
-              ).subtract(selectPlaceHolder.position);
-              return copyAction(
-                displacement.add(mousePosFromRoot),
-                someMainView
-              );
-            }
-          );
-          const copiedItems = maybeCopiedItems
-            .filter(maybe => maybe.isSome())
-            .map(maybe => maybe.some());
-          const copiedMeshes = copiedItems.map(({ mesh }) => mesh);
-          const copiedNames = copiedItems.map(({ name }) => name);
-          someMainView.addGizmo2Name();
-          someMainView.highlightMeshesInScene(copiedMeshes);
-          someMainView.highlightNodesInTree(copiedNames);
-          MeshSelector.ofMainView(someMainView).clear().addArray(copiedMeshes);
-          SelectionPlaceHolder.ofMainView(someMainView)
-            .clear()
-            .push(copiedMeshes);
-          someMainView.forceUpdate();
-        });
+        this.copyMany(meshes, selectPlaceHolderMesh);
       }
     };
+  }
+
+  copyOne(meshes) {
+    Clipboard.copy((mousePosFromRoot, someMainView) => {
+      const uuid = Clipboard.getUID();
+      const itemCopyFunctions = meshes
+        .filter(mesh => !!mesh.nodeItem)
+        .map(mesh => mesh.nodeItem)
+        .map(item => item.getCopyFunction(true, name => name + "_copy" + uuid));
+      if (itemCopyFunctions.length === 0) return;
+      const doAction = () => {
+        const maybeCopiedItem = itemCopyFunctions[0](
+          mousePosFromRoot,
+          someMainView
+        );
+        maybeCopiedItem.forEach(item => {
+          const copiedMesh = item.mesh;
+          someMainView.addGizmo2Name(copiedMesh.name);
+          someMainView.highlightMeshesInScene([copiedMesh]);
+          someMainView.highlightNodesInTree([copiedMesh.name]);
+          MeshSelector.ofMainView(someMainView).clear().add(copiedMesh);
+          someMainView.setProperties(item.toForm());
+          someMainView.renderMenus();
+        });
+        return maybeCopiedItem;
+      };
+      const maybeCopiedItem = doAction();
+      someMainView.getUndoManager().addIt(
+        UndoManager.actionBuilder()
+          .doAction(doAction)
+          .undoAction(() => {
+            maybeCopiedItem.forEach(({ mesh: copiedMesh }) => {
+              someMainView.deleteNodeFromTreeUsingName(copiedMesh.name);
+              someMainView.highlightMeshesInScene();
+              someMainView.highlightNodesInTree();
+              someMainView.renderMenus();
+            });
+          })
+          .build()
+      );
+    });
+  }
+
+  copyMany(meshes, selectPlaceHolderMesh) {
+    Clipboard.copy((mousePosFromRoot, someMainView) => {
+      const nodeItems = meshes
+        .filter(mesh => !!mesh.nodeItem)
+        .map(mesh => mesh.nodeItem);
+      const uuids = nodeItems.map(() => Clipboard.getUID());
+      const itemCopyFunctions = nodeItems.map((item, i) =>
+        item.getCopyFunction(false, name => name + "_copy" + uuids[i])
+      );
+      const doAction = () => {
+        const maybeCopiedItems = itemCopyFunctions.map(
+          (itemCopyFunction, i) => {
+            const displacement = Util3d.toGlobalCoord(someMainView)(
+              nodeItems[i].mesh.absolutePosition
+            ).subtract(selectPlaceHolderMesh.position);
+            return itemCopyFunction(
+              displacement.add(mousePosFromRoot),
+              someMainView
+            );
+          }
+        );
+        const copiedItems = maybeCopiedItems
+          .filter(maybe => maybe.isSome())
+          .map(maybe => maybe.some());
+        const copiedMeshes = copiedItems.map(({ mesh }) => mesh);
+        const copiedNames = copiedItems.map(({ name }) => name);
+        someMainView.addGizmo2Name();
+        someMainView.highlightMeshesInScene(copiedMeshes);
+        someMainView.highlightNodesInTree(copiedNames);
+        MeshSelector.ofMainView(someMainView).clear().addArray(copiedMeshes);
+        SelectionPlaceHolder.ofMainView(someMainView)
+          .clear()
+          .push(copiedMeshes);
+        someMainView.renderMenus();
+        someMainView.forceUpdate();
+        return copiedItems;
+      };
+      const copiedItems = doAction();
+      someMainView.getUndoManager().addIt(
+        UndoManager.actionBuilder()
+          .doAction(doAction)
+          .undoAction(() => {
+            copiedItems.forEach(({ mesh }) => {
+              someMainView.deleteNodeFromTreeUsingName(mesh.name, true, false);
+            });
+            someMainView.highlightMeshesInScene();
+            someMainView.highlightNodesInTree();
+            MeshSelector.ofMainView(someMainView).clear();
+            SelectionPlaceHolder.ofMainView(someMainView).clear();
+            someMainView.renderMenus();
+            someMainView.forceUpdate();
+          })
+          .build()
+      );
+    });
   }
 
   getPasteAction(parentView) {
@@ -391,17 +459,37 @@ class DragObjectsAction extends MouseKeysAction {
       });
     });
     if (parentView.getNodeFromTree(mesh.name).isSome()) {
-      mesh._children
-        .filter(
-          m =>
-            (!!m.observers || !!m.graphVertex) &&
-            parentView.getNodeFromTree(m.name).isSome()
-        )
-        .forEach(m =>
-          this.notifyObservers(m, is2updateServer, displacement, parentView)
-        );
+      this.notifyChildrenObserversRecursively(
+        mesh?._children || [],
+        is2updateServer,
+        displacement,
+        parentView
+      );
     }
   }
+
+  notifyChildrenObserversRecursively = (
+    nodeTree,
+    is2updateServer,
+    displacement,
+    parentView
+  ) => {
+    nodeTree.forEach(m => {
+      if (
+        (!!m.observers || !!m.graphVertex) &&
+        parentView.getNodeFromTree(m.name).isSome()
+      ) {
+        this.notifyObservers(m, is2updateServer, displacement, parentView);
+      }
+      if (m._children && m._children.length)
+        this.notifyChildrenObserversRecursively(
+          m._children,
+          is2updateServer,
+          displacement,
+          parentView
+        );
+    });
+  };
 
   setProperties = (parentView, name) => parentView.setPropertiesWithName(name);
 
@@ -412,33 +500,60 @@ class DragObjectsAction extends MouseKeysAction {
    * @param {*} parentView: MainView
    */
   getUndoAbleAction(selectedMeshes, displacement, parentView) {
+    const meshesStruct = [...selectedMeshes].map(m => ({
+      mesh: m,
+      parent: m.parent,
+      keypointIndex: m.index || -1
+    }));
+    const sendMesh = (mesh, finalDisplacement, is2UpdateInServer = true) => {
+      const localDisplacement = Util3d.getLocalCoordFromWorld(
+        mesh,
+        finalDisplacement,
+        false
+      );
+      const newPos = Vec3.ofBabylon(mesh.position).add(localDisplacement);
+      mesh.position = newPos.toBabylon();
+      this.notifyObservers(
+        mesh,
+        is2UpdateInServer,
+        finalDisplacement,
+        parentView
+      );
+    };
+    const moveMesh = (dir = 1, is2UpdateInServer = true) => ({
+      mesh,
+      parent,
+      keypointIndex
+    }) => {
+      const finalDisplacement = displacement.scale(dir);
+      let maybeNodeItem = Maybe.None();
+      if (keypointIndex >= 0) {
+        maybeNodeItem = parentView.getNodeFromTree(parent.name);
+        maybeNodeItem.forEach(({ item }) => {
+          const nodeMesh = item.keyPoints[keypointIndex];
+          sendMesh(nodeMesh, finalDisplacement, is2UpdateInServer);
+          if (is2UpdateInServer) parentView.updateNodeInServer(item.name);
+        });
+        maybeNodeItem.orElseRun(() => {});
+      } else {
+        maybeNodeItem = parentView.getNodeFromTree(mesh.name);
+        maybeNodeItem.forEach(({ item }) => {
+          const nodeMesh = item.mesh;
+          sendMesh(nodeMesh, finalDisplacement, is2UpdateInServer);
+          if (is2UpdateInServer) parentView.updateNodeInServer(nodeMesh.name);
+        });
+      }
+      maybeNodeItem.orElseRun(() => {
+        sendMesh(mesh, finalDisplacement, is2UpdateInServer);
+        if (is2UpdateInServer) parentView.updateNodeInServer(mesh.name);
+      });
+    };
     return UndoManager.actionBuilder()
       .doAction(() => {
-        selectedMeshes.forEach(mesh => {
-          const localDisplacement = Util3d.getLocalCoordFromWorld(
-            mesh,
-            displacement,
-            false
-          );
-          const newPos = Vec3.ofBabylon(mesh.position).add(localDisplacement);
-          mesh.position = newPos.toBabylon();
-          this.notifyObservers(mesh, true, displacement, parentView);
-          parentView.updateNodeInServer(mesh.name);
-        });
+        meshesStruct.forEach(moveMesh());
       })
-      .undoAction(() => {
-        selectedMeshes.forEach(mesh => {
-          const invertDisplacement = displacement.scale(-1);
-          const localDisplacement = Util3d.getLocalCoordFromWorld(
-            mesh,
-            invertDisplacement,
-            false
-          );
-          const newPos = Vec3.ofBabylon(mesh.position).add(localDisplacement);
-          mesh.position = newPos.toBabylon();
-          this.notifyObservers(mesh, true, invertDisplacement, parentView);
-          parentView.updateNodeInServer(mesh.name);
-        });
+      .undoAction(({ is2UpdateInServer = true }) => {
+        meshesStruct.forEach(moveMesh(-1, is2UpdateInServer));
       })
       .build();
   }
@@ -579,6 +694,81 @@ class DragObjectsAction extends MouseKeysAction {
       }
       return Math.abs(theta - 2 * Math.PI) < epsilon;
     };
+  }
+
+  /**
+   *
+   * Merge paths if boundary keypoints are dragged together and have same orientation
+   *
+   * @param {*} selectedMesh
+   * @param {*} parentView
+   * @param {*} scene
+   * @param {*} ground
+   * @returns
+   */
+  mergePathsIfAny(selectedMesh, parentView, scene, ground) {
+    if (!Path.isKeyPointMesh(selectedMesh, parentView)) return;
+    const pickInfo = scene.pick(
+      scene.pointerX,
+      scene.pointerY,
+      mesh => mesh !== ground && mesh.isEnabled()
+    );
+    if (pickInfo.hit) {
+      const ray = pickInfo.ray;
+      var hits = scene.multiPickWithRay(ray);
+      if (hits) {
+        const keyPointHits = hits
+          .map(({ pickedMesh }) => pickedMesh)
+          .filter(hitMesh => Path.isKeyPointMesh(hitMesh, parentView));
+        // Are hits a keypoint of path
+        if (keyPointHits.length >= 2) {
+          const [first, second] = keyPointHits;
+          const left = first.index > second.index ? first : second;
+          const right = first.index <= second.index ? first : second;
+          // do they belong to the same path
+          if (left.parent.name !== right.parent.name) {
+            if (Path.areKeyPointsCompatible(left, right, parentView)) {
+              parentView
+                .getNodeFromTree(left.parent.name)
+                .forEach(({ item: firstPath }) => {
+                  parentView
+                    .getNodeFromTree(right.parent.name)
+                    .forEach(({ item: secondPath }) => {
+                      const oldPaths = [firstPath, secondPath].map(path => {
+                        return {
+                          parent: path.mesh.parent,
+                          dict: path.toDict(),
+                          children: [...path.mesh._children]
+                        };
+                      });
+                      const mergeName = firstPath.name + "_" + secondPath.name;
+                      parentView.getUndoManager().doIt(
+                        UndoManager.actionBuilder()
+                          .doAction(() => {
+                            Path.mergePaths(
+                              firstPath.name,
+                              secondPath.name,
+                              mergeName,
+                              parentView
+                            );
+                          })
+                          .undoAction(({ is2UpdateInServer = true }) => {
+                            Path.unMergePaths(
+                              oldPaths,
+                              mergeName,
+                              parentView,
+                              is2UpdateInServer
+                            );
+                          })
+                          .build()
+                      );
+                    });
+                });
+            }
+          }
+        }
+      }
+    }
   }
 }
 

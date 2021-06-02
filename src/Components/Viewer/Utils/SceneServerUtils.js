@@ -16,9 +16,7 @@ class SceneServerUtils {
   };
 }
 
-const DEFAULT_FAILURE = failureLocation => data => {
-  throw new Error(`Exception caught in ${failureLocation}: ${data.error}`);
-};
+const DEFAULT_FAILURE = failureLocation => data => {};
 
 const DEFAULT_SUCCESS = data => {};
 

@@ -31,6 +31,12 @@ class DrawGraphAction extends MouseKeysAction {
   action = parentView => {
     super.action(parentView);
     parentView.setSelectedAction(this);
+    // Make LogicGraph visible when action is selected
+    parentView.getGraph().forEach(node => {
+      if (!node.isVisible) {
+        node.item.mesh.setEnabled(true);
+      }
+    });
   };
 
   onPointerDown = (evt, parentView) => {
@@ -79,6 +85,10 @@ class DrawGraphAction extends MouseKeysAction {
     ];
     selectOneAction(predicateActionList)(evt);
   };
+
+  onChange() {
+    this.resetPreview();
+  }
 
   //========================================================================================
   /*                                                                                      *
@@ -166,7 +176,9 @@ class DrawGraphAction extends MouseKeysAction {
     } else {
       //firstMousePos exists
       if (
-        this.belongs2SamePath(parentView)(clickedMesh, this.firstClickedMesh)
+        this.belongs2SamePath(parentView)(clickedMesh, this.firstClickedMesh) ||
+        GraphItem.isInvalidEdge(this.firstClickedMesh, clickedMesh) ||
+        this.firstClickedMesh.name === clickedMesh.name
       ) {
         this.resetPreview();
       } else {
@@ -190,8 +202,8 @@ class DrawGraphAction extends MouseKeysAction {
         this.createEdge(edgeMeshes, scene, parentView);
         this.resetPreview();
       })
-      .undoAction(() => {
-        this.deleteEdge(edgeMeshes, parentView);
+      .undoAction(({ is2UpdateInServer = true }) => {
+        this.deleteEdge(edgeMeshes, parentView, is2UpdateInServer);
       })
       .build();
   };
@@ -210,6 +222,7 @@ class DrawGraphAction extends MouseKeysAction {
       GraphItem.getEdgeMesh(
         scene,
         edgeEmbedding,
+        "previewEdge",
         Color3.Blue(),
         Constants.RADIUS / 4
       )
@@ -236,11 +249,11 @@ class DrawGraphAction extends MouseKeysAction {
     });
   };
 
-  deleteEdge = (edgeMeshes, parentView) => {
+  deleteEdge = (edgeMeshes, parentView, is2UpdateInServer) => {
     parentView.getGraph().forEach(graphNode => {
       const { item: graphItem } = graphNode;
       graphItem.delEdge(...edgeMeshes);
-      parentView.updateNodeInServer(graphItem.name);
+      if (is2UpdateInServer) parentView.updateNodeInServer(graphItem.name);
     });
   };
 }

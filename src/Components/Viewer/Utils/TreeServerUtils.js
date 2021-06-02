@@ -3,17 +3,25 @@ import TreeNode from "../TreeObject/TreeNode";
 import GlobalRef from "../NodeItem/GlobalRef";
 import { MasterDB } from "mov-fe-lib-core";
 import Constants from "./Constants";
+import GraphItem from "../NodeItem/GraphItem";
+import NavigationPreviewItem from "../NodeItem/NavigationPreviewItem";
+import _debounce from "lodash/debounce";
 
 const CLOUD_FUNCTION_NAME = Constants.CLOUD_FUNCTION_NAME;
 
 class TreeServerUtils {
-  constructor(sceneName) {
+  constructor(sceneName, undoManager, alert = window.alert) {
     this.sceneName = sceneName;
+    this.undoManager = undoManager;
+    this.alert = (msg, type) => alert(msg, type);
+    this.staticNodeTypes = [GraphItem.TYPE, NavigationPreviewItem.TYPE];
   }
 
-  static ofScene(sceneName) {
-    return new TreeServerUtils(sceneName);
+  static ofScene(sceneName, undoManager, alert) {
+    return new TreeServerUtils(sceneName, undoManager, alert);
   }
+
+  static undoAction = _debounce(utils => utils.lostConnection(), 500);
 
   //========================================================================================
   /*                                                                                      *
@@ -61,11 +69,13 @@ class TreeServerUtils {
   ) => {
     // delete if already exist
     this.deleteNodeFromTreeUsingName(nodeItem.name, objectTree, is2addInServer);
+    const isStatic = this.staticNodeTypes.includes(nodeItem.getType());
 
     const node2Add = TreeNode.builder()
       .title(nodeItem.name)
       .item(nodeItem)
       .isVisible(isVisible)
+      .isStatic(isStatic)
       .build();
 
     if (parentName) {
@@ -79,6 +89,16 @@ class TreeServerUtils {
       if (is2addInServer) this.addNodeItem2Server(node2Add, null);
     }
     return objectTree;
+  };
+
+  lostConnection = () => {
+    this.undoManager.undo({ is2UpdateInServer: false });
+    setImmediate(() => {
+      this.alert(
+        "Sorry, work not saved. Please check internet connection",
+        "error"
+      );
+    });
   };
 
   //========================================================================================
@@ -100,7 +120,10 @@ class TreeServerUtils {
         data => {
           console.log("Update node with success?", data.success, data.error);
         }
-      );
+      ).catch(err => {
+        console.warn("Update node error", name, err);
+        TreeServerUtils.undoAction(this);
+      });
     });
   };
 
@@ -112,7 +135,10 @@ class TreeServerUtils {
       data => {
         console.log("Add node with success?", data.success);
       }
-    );
+    ).catch(err => {
+      console.warn("Add node error", treeNode.title, err);
+      TreeServerUtils.undoAction(this);
+    });
   };
 
   deleteNodeInServer = name => {
@@ -123,7 +149,10 @@ class TreeServerUtils {
       data => {
         console.log("Deleted node with success?", data.success);
       }
-    );
+    ).catch(err => {
+      console.warn("Deleted node error", name, err);
+      TreeServerUtils.undoAction(this);
+    });
   };
 }
 

@@ -48,7 +48,7 @@ class Graph {
   addEdge(i, j) {
     this.addVertex(i);
     this.addVertex(j);
-    const edgeProps = {};
+    const edgeProps = this.getEdge(i, j).orSome({});
     this.#edges[Graph.edgeKey(i, j)] = edgeProps;
     this.#edges[Graph.edgeKey(j, i)] = edgeProps;
     this.#adjMap[i][j] = true;

@@ -56,6 +56,7 @@ class GraphItem extends NodeItem {
         };
       });
     });
+    // export directed graph
     Object.keys(edges).forEach(k => {
       const ids = Graph.key2Edge(k);
       graph.getEdge(...ids).forEach(({ data: edgeData }) => {
@@ -80,6 +81,11 @@ class GraphItem extends NodeItem {
             // remove edge if belongs to same path and i > j
             delete edges[k];
           }
+        } else {
+          if (this.checkInvalidEdges(...edgeMesh, edges[k])) {
+            // remove edge if is invalid edge
+            delete edges[k];
+          }
         }
       });
     });
@@ -91,13 +97,13 @@ class GraphItem extends NodeItem {
   toForm() {
     const form = super.toForm();
     delete form.jsonSchema.properties.position;
-    delete form.jsonSchema.properties.quaternion;
+    delete form.jsonSchema.properties.rotation;
     delete form.jsonSchema.properties.color;
     delete form.uiSchema.position;
-    delete form.uiSchema.quaternion;
+    delete form.uiSchema.rotation;
     delete form.uiSchema.color;
     delete form.data.position;
-    delete form.data.quaternion;
+    delete form.data.rotation;
     delete form.data.color;
     return this.graphFormMapper.toForm(form);
   }
@@ -176,6 +182,13 @@ class GraphItem extends NodeItem {
     return this;
   }
 
+  getEdge(iMesh, jMesh) {
+    const { graph } = this;
+    const [i, j] = [iMesh, jMesh].map(this.getVertexIdFromMesh);
+    // if it has an edge
+    return graph.getEdge(i, j).map(({ data }) => data);
+  }
+
   delEdge(iMesh, jMesh) {
     const { graph } = this;
     const [i, j] = [iMesh, jMesh].map(this.getVertexIdFromMesh);
@@ -190,6 +203,8 @@ class GraphItem extends NodeItem {
       });
       graph.delEdge(i, j);
     });
+    // Reset right menu to display scene details
+    this.mainView.setProperties();
   }
 
   /**
@@ -222,7 +237,49 @@ class GraphItem extends NodeItem {
       if (is2updateServer) this.mainView.updateNodeInServer(this.name);
     });
   }
+  /**
+   *
+   * @param {*} iMesh
+   * @returns {*} Maybe<Vertex>
+   */
+  getVertex(iMesh) {
+    const { graph } = this;
+    const i = this.getVertexIdFromMesh(iMesh);
+    return graph.getVertex(i).map(({ data }) => data);
+  }
 
+  /**
+   *
+   * @param {*} iMesh
+   * @returns {*} Array<Vertex>
+   */
+  getNeighbors(iMesh) {
+    const { graph } = this;
+    const i = this.getVertexIdFromMesh(iMesh);
+    return graph
+      .getNeighbors(i)
+      .map(id => graph.getVertex(id).orNull())
+      .map(({ data }) => data)
+      .filter(x => !!x);
+  }
+
+  doMeshesBelong2SamePath(iMesh, jMesh) {
+    const iParentNodeItem = iMesh?.parent?.nodeItem;
+    const jParentNodeItem = jMesh?.parent?.nodeItem;
+    return (
+      !!iParentNodeItem &&
+      !!jParentNodeItem &&
+      iParentNodeItem.name === jParentNodeItem.name &&
+      iParentNodeItem.getType() === Path.TYPE &&
+      jParentNodeItem.getType() === Path.TYPE
+    );
+  }
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                    Private Methods                                   *
+   *                                                                                      */
+  //========================================================================================
   /**
    *
    * @param {*} id: vertex to be updated id
@@ -259,7 +316,7 @@ class GraphItem extends NodeItem {
    */
   delVertexRecursively(nodeTree = []) {
     nodeTree.forEach(node => {
-      if(node.item.getType() !== GraphItem.TYPE) {
+      if (node.item.getType() !== GraphItem.TYPE) {
         node.item.delVertex();
         this.delVertexRecursively(node.children);
       }
@@ -317,6 +374,7 @@ class GraphItem extends NodeItem {
    */
   getVertexMeshObs(vertexData) {
     return ({ updatedPointMesh, is2updateServer, _ }) => {
+      if (updatedPointMesh.isDisposed()) return;
       const newPos = Util3d.getGlobalCoordinates(
         updatedPointMesh,
         updatedPointMesh.position
@@ -341,11 +399,18 @@ class GraphItem extends NodeItem {
     graph.getVertex(i).forEach(({ data: iVertexD }) =>
       graph.getVertex(j).forEach(({ data: jVertexD }) => {
         graph.getEdge(i, j).forEach(edge => {
-          edge.data = new EdgeData(iVertexD, jVertexD);
+          if (!edge.data) {
+            edge.data = new EdgeData(iVertexD, jVertexD);
+          } else {
+            edge.data.edge = [iVertexD, jVertexD];
+          }
         });
         // if vertices belong to same path don't build mesh
-        if (!this.doVerticesBelong2SamePath(i, j)) {
-          const edgeMesh = this.getEdgeMesh(iVertexD, jVertexD);
+        if (!this.doMeshesBelong2SamePath(iMesh, jMesh)) {
+          const isPath2Path = [iMesh, jMesh]
+            .map(this.isMeshBelong2Path)
+            .every(x => x);
+          const edgeMesh = this.getEdgeMesh(iVertexD, jVertexD, isPath2Path);
           this.meshByEdgeId[Graph.edgeKey(i, j)] = edgeMesh;
           this.meshByEdgeId[Graph.edgeKey(j, i)] = edgeMesh;
         }
@@ -353,15 +418,20 @@ class GraphItem extends NodeItem {
     );
   }
 
-  getEdgeMesh(iVertexD, jVertexD) {
-    const edgeGlobalCoord = [iVertexD, jVertexD].map(({ mesh }) => {
-      return Util3d.getGlobalCoord(mesh, mesh.position);
-    });
+  getEdgeMesh(iVertexD, jVertexD, hasDirection = false) {
+    const edgeInGlobal = [iVertexD, jVertexD].map(({ mesh }) =>
+      Util3d.getGlobalCoord(mesh, mesh.position)
+    );
     const edgeMesh = GraphItem.getEdgeMesh(
       this.scene,
-      edgeGlobalCoord,
+      edgeInGlobal,
+      `edgeMesh${iVertexD.id}_${jVertexD.id}`,
       Color3.Yellow()
     );
+    edgeMesh.visibility = 0.99;
+    edgeMesh.material = GraphItem.getEdgeMaterial(this.scene, {
+      speed: hasDirection ? 8 : 0
+    });
     edgeMesh.parent = this.mesh;
     edgeMesh.edgeIndexes = [iVertexD, jVertexD].map(({ id }) => id);
     edgeMesh.getMouseContextActions = this.getEdgeMouseCtxActions(edgeMesh);
@@ -397,17 +467,19 @@ class GraphItem extends NodeItem {
   /**
    * @returns ({updatedPointMesh: Mesh, is2updateServer: Boolean, displacement: Vector3}) => {}
    */
-  getEdgeObs = () => ({ updatedPointMesh, is2updateServer, displacement }) => {
-    const v = Vec3.ofBabylon(displacement);
-    const vLocal = Util3d.getLocalCoordFromWorld(this.mesh, v, false);
-    updatedPointMesh.position = updatedPointMesh.position.add(
-      vLocal.scale(-1).toBabylon()
-    );
-    if (is2updateServer) {
-      this.graphFormMapper = this.getToFormEdge(updatedPointMesh);
-      this.mainView.setProperties(this.toForm());
-    }
-  };
+  getEdgeObs =
+    () =>
+    ({ updatedPointMesh, is2updateServer, displacement }) => {
+      const v = Vec3.ofBabylon(displacement);
+      const vLocal = Util3d.getLocalCoordFromWorld(this.mesh, v, false);
+      updatedPointMesh.position = updatedPointMesh.position.add(
+        vLocal.scale(-1).toBabylon()
+      );
+      if (is2updateServer) {
+        this.graphFormMapper = this.getToFormEdge(updatedPointMesh);
+        this.mainView.setProperties(this.toForm());
+      }
+    };
 
   /**
    *
@@ -456,36 +528,16 @@ class GraphItem extends NodeItem {
         this.mainView.closeContextDial();
         this.mainView.updateNodeInServer(this.name);
       })
-      .undoAction(() => {
+      .undoAction(({ is2UpdateInServer = true }) => {
         this.addEdge(...edgeMeshes, [i, j]);
         graph.getEdge(i, j).forEach(({ data: edgeData }) => {
           edgeData.keyValueMap = edgeProps.keyValueMap;
           edgeData.weight = edgeProps.weight;
           edgeData.edge = edgeProps.edge;
         });
-        this.mainView.updateNodeInServer(this.name);
+        if (is2UpdateInServer) this.mainView.updateNodeInServer(this.name);
       })
       .build();
-  }
-
-  /**
-   *
-   * @param {*} i: Integer
-   * @param {*} j: Integer
-   * @returns: Boolean
-   */
-  doVerticesBelong2SamePath(i, j) {
-    return this.graph
-      .getEdge(i, j)
-      .map(({ data: edgeData }) => {
-        const [iMesh, jMesh] = edgeData.edge.map(vData => vData.mesh);
-        if (iMesh === undefined || jMesh === undefined) return false;
-        return (
-          iMesh?.parent?.name === jMesh?.parent?.name &&
-          [iMesh, jMesh].map(this.isMeshBelong2Path).every(x => x)
-        );
-      })
-      .orSome(false);
   }
 
   isMeshBelong2Path = ({ parent }) => {
@@ -495,16 +547,20 @@ class GraphItem extends NodeItem {
       .orSome(false);
   };
 
-  doMeshesBelong2SamePath(iMesh, jMesh) {
-    const iParentNodeItem = iMesh?.parent?.nodeItem;
-    const jParentNodeItem = jMesh?.parent?.nodeItem;
-    return (
-      !!iParentNodeItem &&
-      !!jParentNodeItem &&
-      iParentNodeItem.name === jParentNodeItem.name &&
-      iParentNodeItem.getType() === Path.TYPE &&
-      jParentNodeItem.getType() === Path.TYPE
-    );
+  checkInvalidEdges(iMesh, jMesh, edgeData) {
+    const edgeMeshesArePath = [iMesh, jMesh]
+      .map(this.isMeshBelong2Path)
+      .every(x => x);
+    if (!edgeMeshesArePath) return false;
+    const srcMesh = [iMesh, jMesh].filter(
+      mesh => mesh.parent.name === edgeData.belongsSrc.name
+    )[0];
+    const trgMesh = [iMesh, jMesh].filter(
+      mesh => mesh.parent.name === edgeData.belongsTrg.name
+    )[0];
+    return srcMesh && trgMesh
+      ? GraphItem.isInvalidEdge(srcMesh, trgMesh)
+      : false;
   }
 
   exportBelongToData = mesh => {
@@ -543,14 +599,19 @@ class GraphItem extends NodeItem {
     const { edges } = dict;
     let vertexCounter = Number.MIN_VALUE;
     // create mesh of graph using addEdge
+    // map directed graph -> undirected graph
     Object.values(edges).forEach(({ ids, belongsSrc, belongsTrg }) => {
       const [i, j] = ids.map(x => Number(x));
       vertexCounter = Math.max(vertexCounter, Math.max(i, j));
-      if (i < j) {
-        const edgeMeshes = getMeshesFromEdgeData(mainView, {
-          belongsSrc,
-          belongsTrg
-        });
+      const edgeMeshes = getMeshesFromEdgeData(mainView, {
+        belongsSrc,
+        belongsTrg
+      });
+      const foundMeshes = edgeMeshes.reduce(
+        (e, x) => e && x !== null && x !== undefined,
+        true
+      );
+      if (foundMeshes) {
         graphItem.addEdge(...edgeMeshes, [i, j]);
         // add additional data
         graphItem.graph.getEdge(i, j).forEach(({ data: edgeData }) => {
@@ -584,10 +645,21 @@ class GraphItem extends NodeItem {
   static getEdgeMesh(
     scene,
     edge,
+    name,
     color = Color3.Gray(),
     radius = Constants.RADIUS / 4
   ) {
-    return Util3d.createTubeFromPoints(scene, edge, color, radius);
+    return Util3d.createTubeFromPoints(scene, edge, color, radius, name);
+  }
+
+  static getEdgeMaterial(
+    scene,
+    { color = Color3.Yellow(), frequency = 8, speed = 0 }
+  ) {
+    return Util3d.getShaderMaterial({
+      vertex: VERTEX,
+      frag: FRAG(frequency, speed, [color.r, color.g, color.b])
+    })(scene);
   }
 
   static createGraphItemIfNone = (scene, parentView) =>
@@ -596,6 +668,31 @@ class GraphItem extends NodeItem {
       graphItem.mesh.parent = parentView.getRootNode().item.mesh;
       parentView.addNodeItem2Tree(graphItem);
     });
+
+  /**
+   * Check if edge being draw is invalid
+   * @param {Mesh} firstMesh: origin/source edge mesh
+   * @param {Mesh} secondMesh: destination/target edge mesh
+   */
+  static isInvalidEdge = (firstMesh, secondMesh) => {
+    const firstMeshParent = firstMesh.parent?.nodeItem;
+    const secondMeshParent = secondMesh.parent?.nodeItem;
+    const validationError = [];
+    // Invalid Edge 1 : from start of a path to the end of another path
+    // Invalid Edge 2 : from the end of a path to the end of another path
+    if (
+      firstMeshParent.getType() === Path.TYPE &&
+      secondMeshParent.getType() === Path.TYPE
+    ) {
+      const origin = firstMesh.index / (firstMeshParent.keyPoints.length - 1);
+      const target = secondMesh.index / (secondMeshParent.keyPoints.length - 1);
+      // Invalid Edge 1 validation
+      if (origin === 0 && target === 1) validationError.push(1);
+      // Invalid Edge 2 validation
+      if (origin === 1 && target === 1) validationError.push(2);
+    }
+    return validationError.length > 0;
+  };
 }
 
 const graphItemInstances = {};
@@ -666,5 +763,48 @@ class EdgeData {
     this.weight = weight;
   }
 }
+
+const VERTEX = `
+precision highp float;
+// Attributes
+attribute vec3 position;
+attribute vec3 normal;
+attribute vec2 uv;
+
+// Uniforms
+uniform mat4 worldViewProjection;
+
+// Varying
+varying vec3 vPosition;
+varying vec3 vNormal;
+varying vec2 vUV;
+
+void main(void) {
+    vec4 outPosition = worldViewProjection * vec4(position, 1.0);
+    gl_Position = outPosition;
+
+    vUV = uv;
+    vPosition = position;
+    vNormal = normal;
+}`;
+
+const FRAG = (freq = 8, speed = 2, color) => `
+#define PI 3.1415926538
+precision highp float;
+
+// Varying
+varying vec3 vPosition;
+varying vec3 vNormal;
+varying vec2 vUV;
+
+// Refs
+uniform float time;
+
+void main(void) {
+    vec3 color = vec3(${color[0]}, ${color[1]}, ${color[2]});
+    float frequency = ${Number(freq).toFixed(1)};
+    float speed = ${Number(speed).toFixed(1)};
+    gl_FragColor = vec4(color, max(0.,sin(2. * PI * vUV.y * frequency - speed * time)));
+}`;
 
 export default GraphItem;

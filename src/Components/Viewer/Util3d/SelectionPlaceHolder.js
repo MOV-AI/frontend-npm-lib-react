@@ -1,13 +1,7 @@
 import _uniqBy from "lodash/uniqBy";
 import Util3d from "../Util3d/Util3d";
 import KeyPoint from "../NodeItem/KeyPoint";
-import {
-  Quaternion,
-  Observable,
-  Vector3,
-  ShaderMaterial,
-  Effect
-} from "@babylonjs/core";
+import { Quaternion, Observable, Vector3 } from "@babylonjs/core";
 import { Maybe } from "monet";
 import Vec3 from "../Math/Vec3";
 import Vec2 from "../Math/Vec2";
@@ -73,7 +67,7 @@ class SelectionPlaceHolder {
         keyValueMap: {},
         isVisible: true
       }).mesh;
-      this.mesh.material = getShaderMaterial(this.scene)();
+      this.mesh.material = this.getSelPlaceHolderShader();
     }
     const that = this;
     this.mesh.getMouseContextActions = () => [
@@ -97,6 +91,14 @@ class SelectionPlaceHolder {
     return this.mesh;
   }
 
+  getSelPlaceHolderShader() {
+    return Util3d.getShaderMaterial({
+      name: "placeHolderShader",
+      vertex: VERTEX,
+      frag: FRAG
+    })(this.scene);
+  }
+
   getPlaceHolderObs() {
     const that = this;
     return ({
@@ -115,9 +117,6 @@ class SelectionPlaceHolder {
         handleMotion(theta, mesh, displacement, placeHolder, dTheta, that);
         if (is2updateServer) {
           that.mainView.updateNodeInServer(mesh.name);
-          that.mesh.rotationQuaternion = Quaternion.Identity();
-          that.angleByMeshName[mesh.name] = getAngleFromMesh(mesh);
-          that.theta = 0;
         }
         // notify babylonjs observers
         Maybe.fromNull(mesh.observers).forEach(obs =>
@@ -147,37 +146,6 @@ class SelectionPlaceHolder {
   }
 }
 
-const getShaderMaterial = scene => (vertex = VERTEX, frag = FRAG) => {
-  Effect.ShadersStore["customVertexShader"] = vertex;
-  Effect.ShadersStore["customFragmentShader"] = frag;
-  const shaderMaterial = new ShaderMaterial(
-    "shader",
-    scene,
-    { vertex: "custom", fragment: "custom" },
-    {
-      attributes: ["position", "normal", "uv"],
-      uniforms: [
-        "world",
-        "worldView",
-        "worldViewProjection",
-        "view",
-        "projection",
-        "time"
-      ]
-    }
-  );
-  shaderMaterial.backFaceCulling = false;
-  let time = 0;
-  let T = new Date().getTime();
-  shaderMaterial.onBindObservable.add(() => {
-    const dt = (new Date().getTime() - T) / 1000;
-    shaderMaterial.setFloat("time", time);
-    time = time + dt;
-    T = new Date().getTime();
-  });
-  return shaderMaterial;
-};
-
 const VERTEX = `precision highp float;
 
 // Attributes
@@ -197,7 +165,8 @@ void main(void) {
     vNormal = normal;
 }`;
 
-const FRAG = `precision highp float;
+const FRAG = `
+precision highp float;
 
 // Varying
 varying vec3 vPosition;
@@ -211,10 +180,12 @@ void main(void) {
     // World values
     vec3 p = vec3(world * vec4(vPosition, 1.0));
     vec3 n = normalize(vec3(world * vec4(vNormal, 0.0)));
-    float spatialFreq = 10.;
+    vec3 nColor = n * 0.5 + 0.5;
+    float spatialFreq = 20.;
     float timeFreq = 10.;
     float power = sin(spatialFreq * p.y - timeFreq * time);
-    vec3 color = power *  vec3( 1, 0, 0 ) + (1. - power) * vec3(1,0.5,0.5);
+    power *= power;
+    vec3 color = power *  nColor + (1. - power) * vec3(1,1,1);
     gl_FragColor = vec4(color, 1.);
 }`;
 
@@ -228,7 +199,7 @@ const NAME = "placeholder";
 const HEIGHT = 1.5;
 
 function handleMotion(theta, mesh, displacement, placeHolder, dTheta, that) {
-  if (Math.abs(theta) < 1e-3) {
+  if (Math.abs(dTheta) < 1e-3) {
     handleTranslation(mesh, displacement);
   } else {
     handleRotation(placeHolder, mesh, dTheta, that, theta);
