@@ -76,7 +76,6 @@ const SelectScopeModal = props => {
   );
   const [workSpaceList, setWorkSpaceList] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(true);
-  let firstTime = true; // this is to avoid repeating getAllData() which is a costly operation
 
   const scopeFilteredData = initialData.filter(elem =>
     props.scopeList.includes(elem.scope)
@@ -84,27 +83,32 @@ const SelectScopeModal = props => {
 
   /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
-    // Only fetch information the first time the modal is opened
-    if (firstTime) {
-      //get list of workspace
-      Workspace.getAll()
-        .then(response => setWorkSpaceList(response))
-        .catch(error => console.log(error));
+    //get list of workspace
+    Workspace.getAll()
+      .then(response => setWorkSpaceList(response))
+      .catch(error => console.log(error));
 
-      // get all information in the scopes (not filtered by message)
-      getAllData(selectedWorkspace);
-      firstTime = false;
-    }
-
+    // get all information in the scopes (not filtered by message)
+    getAllData(selectedWorkspace);
     //Unmount
     return () => {};
-  }, [props.scopeList]);
+  }, []);
+
+  // Filter Results based on props.filter
+  React.useEffect(() => {
+    if (isLoading || selectedWorkspace !== "global" || !props.filter) return;
+    const filteredData = _cloneDeep(data);
+    data.forEach((scope, index) => {
+      filteredData[index].children = scope.children.filter(props.filter);
+    });
+    // Set filtered data
+    setData(filteredData);
+  }, [props.filter, isLoading]);
   /* eslint-enable react-hooks/exhaustive-deps */
 
   const changeWorkspace = evt => {
     // Update the selector
     setSelectedWorkspace(evt.target.value);
-
     // When you switch workspaces reset Data
     getAllData(evt.target.value);
     setIsLoading(true);
@@ -118,7 +122,7 @@ const SelectScopeModal = props => {
       Workspace.getDocs({ workspace: workspace, scope: element.scope })
         .then(response => {
           let sortedScopeItems = response.scopes
-            .sort((a, b) => a.ref.toLowerCase() > b.ref.toLowerCase())
+            .sort((a, b) => a.ref.localeCompare(b.ref))
             .map((elem, i) => {
               return {
                 id: i,
@@ -127,12 +131,6 @@ const SelectScopeModal = props => {
                 children: [{ name: "" }]
               };
             });
-
-          if (workspace === "global") {
-            sortedScopeItems = sortedScopeItems.filter((elem, index) => {
-              return props.filter(elem, index);
-            });
-          }
 
           dataToSet[index].children = sortedScopeItems;
           setData(dataToSet);
@@ -327,8 +325,7 @@ SelectScopeModal.defaultProps = {
   onCancel: () => {},
   open: false,
   scopeList: ["Callback"],
-  selected: "",
-  filter: () => true
+  selected: ""
 };
 
 export default SelectScopeModal;
