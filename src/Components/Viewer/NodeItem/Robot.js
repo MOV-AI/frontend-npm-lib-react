@@ -14,6 +14,7 @@ import {
   Texture
 } from "@babylonjs/core";
 import _get from "lodash/get";
+import Statistics from "../Utils/Statistics";
 
 class Robot extends AssetNodeItem {
   static ROBOT_MESH_NAME = "Tugbot.stl";
@@ -21,15 +22,18 @@ class Robot extends AssetNodeItem {
   constructor(meshTree, assetName, keyValueMap = {}, scene, parentView) {
     super(meshTree.mesh, assetName, keyValueMap);
     this.robot = parentView.getRobotManager().getRobot(meshTree.id);
-    this.loggerSubscription = null;
-    this.parentView = parentView;
-    this.requestAnimationFrameId = null;
-    this.meshTree = meshTree;
     this.scene = scene;
-    this.alert = null;
-    this.timeSinceLastUpdate = 0;
     this.isOnline = true;
+    this.numberOfIte = 0;
+    this.is2UsePos = true;
+    this.meshTree = meshTree;
+    this.parentView = parentView;
+    this.timeSinceLastUpdate = 0;
     this.isSubscribedToLogs = true;
+    this.speedStats = new Statistics();
+    this.alert = null;
+    this.loggerSubscription = null;
+    this.requestAnimationFrameId = null;
     this.speed = Vector3.Zero();
     this.qSpeed = Quaternion.Zero();
     this.newPos = Vector3.Zero();
@@ -144,7 +148,7 @@ class Robot extends AssetNodeItem {
 
   toOffline() {
     if (this.mesh.isDisposed()) return;
-    this.mesh._children[0]._children[0].visibility = 0.1;
+    this.mesh.visibility = 0.1;
     this.speed = Vector3.Zero();
     this.qSpeed = Quaternion.Zero();
     this.isOnline = false;
@@ -153,7 +157,7 @@ class Robot extends AssetNodeItem {
 
   toOnline() {
     if (this.mesh.isDisposed()) return;
-    this.mesh._children[0]._children[0].visibility = 1;
+    this.mesh.visibility = 1;
     this.isOnline = true;
     this.startLogger();
   }
@@ -284,9 +288,26 @@ class Robot extends AssetNodeItem {
       newRobotTf.orientation.w
     ).normalize();
 
-    const dtReciprocal = 1 / robot.timeSinceLastUpdate;
-    robot.speed = newPosition.subtract(lastPosition).scale(dtReciprocal);
-    robot.qSpeed = newOrientation.subtract(lastOrientation).scale(dtReciprocal);
+    robot.numberOfIte++;
+    const isZero = robot.timeSinceLastUpdate === 0;
+    const dtInv = isZero ? 1.0 : 1.0 / robot.timeSinceLastUpdate;
+
+    const speed = newPosition.subtract(lastPosition).scale(dtInv);
+    const qSpeed = newOrientation.subtract(lastOrientation).scale(dtInv);
+    const vel = speed.length();
+
+    if (robot.numberOfIte < SAMPLES) {
+      robot.speedStats.update(vel);
+    }
+    if (robot.speedStats.isOutlier(vel)) {
+      robot.is2UsePos = true;
+    } else {
+      robot.speedStats.update(vel);
+      robot.speed = speed;
+      robot.qSpeed = qSpeed;
+      robot.is2UsePos = false;
+    }
+
     robot.newPos = newPosition;
     robot.newOri = newOrientation;
     robot.timeSinceLastUpdate = 0;
@@ -308,22 +329,23 @@ class Robot extends AssetNodeItem {
       onLoad: data => updateTF(data?.value),
       onUpdate: data => updateTF(data?.key)
     });
+
     // Animate
     return (robot2Animate, dt) => {
-      const epsilon = 1e-2;
-      const n = 1 / epsilon;
-      const biasedCoin = robot2Animate.timeSinceLastUpdate % n; // Math.random() < epsilon
       robot2Animate.timeSinceLastUpdate += dt;
       if (Vec3.ofBabylon(robot2Animate.speed).someNaNOrInfinite()) return;
       if (Vec3.ofBabylon(robot2Animate.qSpeed).someNaNOrInfinite()) return;
-      robot2Animate.mesh.position = biasedCoin
-        ? robot2Animate.newPos
-        : robot2Animate.mesh.position.add(robot2Animate.speed.scale(dt));
-      robot2Animate.mesh.rotationQuaternion = biasedCoin
-        ? robot2Animate.newOri
-        : robot2Animate.mesh.rotationQuaternion
-            .add(robot.qSpeed.scale(dt))
-            .normalize();
+      if (robot2Animate.is2UsePos) {
+        robot2Animate.mesh.position = robot2Animate.newPos;
+        robot2Animate.mesh.rotationQuaternion = robot2Animate.newOri;
+      } else {
+        robot2Animate.mesh.position = robot2Animate.mesh.position.add(
+          robot2Animate.speed.scale(dt)
+        );
+        robot2Animate.mesh.rotationQuaternion = robot2Animate.mesh.rotationQuaternion
+          .add(robot.qSpeed.scale(dt))
+          .normalize();
+      }
       Robot.setOnOffLine(robot2Animate);
     };
   };
@@ -332,6 +354,9 @@ class Robot extends AssetNodeItem {
     if (robot.timeSinceLastUpdate > Robot.TIME_2_BE_OFFLINE_IN_SEC) {
       if (robot.isOnline) robot.toOffline();
     } else {
+      if (robot.timeSinceLastUpdate > Robot.TIME_2_BE_OFFLINE_IN_SEC / 4) {
+        robot.is2UsePos = true;
+      }
       if (!robot.isOnline) robot.toOnline();
     }
   }
@@ -485,5 +510,19 @@ class RobotBuilder {
     );
   }
 }
+
+//========================================================================================
+/*                                                                                      *
+ *                                       CONSTANTS                                      *
+ *                                                                                      */
+//========================================================================================
+
+const SAMPLES = 15;
+
+//========================================================================================
+/*                                                                                      *
+ *                                        EXPORT                                        *
+ *                                                                                      */
+//========================================================================================
 
 export default Robot;
