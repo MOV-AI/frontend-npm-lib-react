@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
+import _debounce from "lodash/debounce";
 import {
   Card,
   Typography,
@@ -38,6 +39,10 @@ const useStyles = makeStyles(theme => {
 const AbstractModal = props => {
   const classes = useStyles();
 
+  const debounceSubmit = _debounce(() => {
+    props.onSubmit();
+  }, 50);
+
   const onKeyPress = e => {
     if (e.key === "Enter") {
       submit();
@@ -45,7 +50,7 @@ const AbstractModal = props => {
   };
 
   const submit = () => {
-    props.onSubmit();
+    debounceSubmit();
   };
 
   const cancel = () => {
