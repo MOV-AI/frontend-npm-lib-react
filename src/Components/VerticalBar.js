@@ -7,7 +7,8 @@ const useStyles = makeStyles(theme => ({
     width: 65,
     height: "100%",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    backgroundColor: props => props.backgroundColor
   },
   logoArea: {
     padding: "17px",
@@ -52,12 +53,14 @@ VerticalBar.propTypes = {
   upperElement: PropTypes.node,
   navigationList: PropTypes.array,
   lowerElement: PropTypes.node.isRequired,
+  backgroundColor: PropTypes.string,
   unsetAccountAreaPadding: PropTypes.bool
 };
 VerticalBar.defaultProps = {
   upperElement: <div></div>,
   navigationList: [<div></div>],
   lowerElement: <div></div>,
+  backgroundColor: "#424242",
   unsetAccountAreaPadding: false
 };
 
