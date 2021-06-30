@@ -1,12 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
-import Drawer from "@material-ui/core/Drawer";
 
 const useStyles = makeStyles(theme => ({
-  drawerClose: {
-    overflowX: "hidden",
-    width: 65
+  container: {
+    width: 65,
+    height: "100%",
+    display: "flex",
+    flexDirection: "column"
   },
   logoArea: {
     padding: "17px",
@@ -31,14 +32,7 @@ const useStyles = makeStyles(theme => ({
 const VerticalBar = props => {
   const classes = useStyles(props);
   return (
-    <Drawer
-      open={false}
-      variant="permanent"
-      className={classes.drawerClose}
-      classes={{
-        paper: classes.drawerClose
-      }}
-    >
+    <div className={classes.container}>
       <div className={classes.logoArea}>{props.upperElement}</div>
       <div className={classes.navigationArea}>
         {props.navigationList.map((element, index) => {
@@ -50,7 +44,7 @@ const VerticalBar = props => {
         })}
       </div>
       <div className={classes.accountArea}>{props.lowerElement}</div>
-    </Drawer>
+    </div>
   );
 };
 
