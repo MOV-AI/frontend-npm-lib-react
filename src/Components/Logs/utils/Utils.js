@@ -154,8 +154,9 @@ export function getRequestMessage(message) {
   if (!message || message === "") {
     return "";
   }
-
-  return `&message=${message}`;
+  // Parse message to URL and return
+  const parsedMessageToUrl = message.replace(/ /g, "+");
+  return `&message=${parsedMessageToUrl}`;
 }
 
 // Convert Date format to a human readable format

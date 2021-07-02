@@ -92,7 +92,7 @@ const SelectScopeModal = props => {
     getAllData(selectedWorkspace);
     //Unmount
     return () => {};
-  }, []);
+  }, [props.scopeList]);
 
   // Filter Results based on props.filter
   React.useEffect(() => {
