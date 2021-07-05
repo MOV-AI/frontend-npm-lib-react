@@ -15,6 +15,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
       AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
       AWS_DEFAULT_REGION: us-east-2
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -22,10 +23,11 @@ jobs:
         with:
           node-version: '12.x'
           registry-url: 'https://npm.pkg.github.com/mov-ai'
+
       - run: npm ci --loglevel verbose
+      
       - run: npm run test
       - if: ${{ always() }}
         run: cat /github/home/.npm/_logs/*.log
       - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
