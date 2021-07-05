@@ -24,7 +24,7 @@ jobs:
           node-version: '12.x'
           registry-url: 'https://npm.pkg.github.com/mov-ai'
 
-      - run: ls ${{ $HOME}}/
+      - run: cat ${{ NPM_CONFIG_USERCONFIG}}
       - run: npm ci --loglevel verbose
       
       - run: npm run test
