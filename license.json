@@ -1,0 +1,1541 @@
+{
+  "@babel/code-frame@7.10.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "publisher": "Sebastian McKenzie",
+    "email": "sebmck@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/code-frame",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/code-frame/LICENSE"
+  },
+  "@babel/generator@7.10.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "publisher": "Sebastian McKenzie",
+    "email": "sebmck@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/generator",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/generator/LICENSE"
+  },
+  "@babel/helper-annotate-as-pure@7.10.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-annotate-as-pure",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-annotate-as-pure/LICENSE"
+  },
+  "@babel/helper-function-name@7.10.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-function-name",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-function-name/LICENSE"
+  },
+  "@babel/helper-get-function-arity@7.10.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-get-function-arity",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-get-function-arity/LICENSE"
+  },
+  "@babel/helper-module-imports@7.10.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "publisher": "Logan Smyth",
+    "email": "loganfsmyth@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-module-imports",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-module-imports/LICENSE"
+  },
+  "@babel/helper-split-export-declaration@7.10.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-split-export-declaration",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-split-export-declaration/LICENSE"
+  },
+  "@babel/helper-validator-identifier@7.10.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-validator-identifier",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/helper-validator-identifier/LICENSE"
+  },
+  "@babel/highlight@7.10.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "publisher": "suchipi",
+    "email": "me@suchipi.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/highlight",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/highlight/LICENSE"
+  },
+  "@babel/parser@7.10.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "publisher": "Sebastian McKenzie",
+    "email": "sebmck@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/parser",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/parser/LICENSE"
+  },
+  "@babel/runtime@7.10.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "publisher": "Sebastian McKenzie",
+    "email": "sebmck@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/runtime",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/runtime/LICENSE"
+  },
+  "@babel/template@7.10.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "publisher": "Sebastian McKenzie",
+    "email": "sebmck@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/template",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/template/LICENSE"
+  },
+  "@babel/traverse@7.10.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "publisher": "Sebastian McKenzie",
+    "email": "sebmck@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/traverse",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/traverse/LICENSE"
+  },
+  "@babel/types@7.10.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "publisher": "Sebastian McKenzie",
+    "email": "sebmck@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/types",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/types/LICENSE"
+  },
+  "@babylonjs/core@4.1.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/BabylonJS/Babylon.js",
+    "publisher": "David CATUHE",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babylonjs/core",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babylonjs/core/readme.md"
+  },
+  "@babylonjs/gui@4.1.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/BabylonJS/Babylon.js",
+    "publisher": "David CATUHE",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babylonjs/gui",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babylonjs/gui/readme.md"
+  },
+  "@babylonjs/loaders@4.1.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/BabylonJS/Babylon.js",
+    "publisher": "David CATUHE",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babylonjs/loaders",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babylonjs/loaders/readme.md"
+  },
+  "@date-io/core@1.3.13": {
+    "licenses": "MIT",
+    "repository": "https://github.com/dmtrKovalenko/date-io",
+    "publisher": "Dmitriy Kovalenko",
+    "email": "dmtr.kovalenko@outlook.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@date-io/core",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@date-io/core/LICENSE"
+  },
+  "@date-io/date-fns@1.3.13": {
+    "licenses": "MIT",
+    "repository": "https://github.com/dmtrKovalenko/date-io",
+    "publisher": "Dmitriy Kovalenko",
+    "email": "dmtr.kovalenko@outlook.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@date-io/date-fns",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@date-io/date-fns/LICENSE"
+  },
+  "@emotion/hash@0.8.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/emotion-js/emotion/tree/master/packages/hash",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@emotion/hash",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@emotion/hash/LICENSE"
+  },
+  "@emotion/is-prop-valid@0.8.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/emotion-js/emotion/tree/master/packages/is-prop-valid",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@emotion/is-prop-valid",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@emotion/is-prop-valid/LICENSE"
+  },
+  "@emotion/memoize@0.7.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/emotion-js/emotion/tree/master/packages/memoize",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@emotion/memoize",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@emotion/memoize/LICENSE"
+  },
+  "@emotion/stylis@0.8.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/emotion-js/emotion/tree/master/packages/stylis",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@emotion/stylis",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@emotion/stylis/LICENSE"
+  },
+  "@emotion/unitless@0.7.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/emotion-js/emotion/tree/master/packages/unitless",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@emotion/unitless",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@emotion/unitless/LICENSE"
+  },
+  "@material-ui/core@4.11.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mui-org/material-ui",
+    "publisher": "Material-UI Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/core",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/core/LICENSE"
+  },
+  "@material-ui/icons@4.9.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mui-org/material-ui",
+    "publisher": "Material-UI Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/icons",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/icons/LICENSE"
+  },
+  "@material-ui/lab@4.0.0-alpha.56": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mui-org/material-ui",
+    "publisher": "Material-UI Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/lab",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/lab/LICENSE"
+  },
+  "@material-ui/pickers@3.2.10": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mui-org/material-ui-pickers",
+    "publisher": "Dmitriy Kovalenko",
+    "email": "dmtr.kovalenko@outlook.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/pickers",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/pickers/README.md"
+  },
+  "@material-ui/styles@4.10.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mui-org/material-ui",
+    "publisher": "Material-UI Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/styles",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/styles/LICENSE"
+  },
+  "@material-ui/system@4.9.14": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mui-org/material-ui",
+    "publisher": "Material-UI Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/system",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/system/LICENSE"
+  },
+  "@material-ui/types@5.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mui-org/material-ui",
+    "publisher": "Material-UI Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/types",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/types/README.md"
+  },
+  "@material-ui/utils@4.10.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mui-org/material-ui",
+    "publisher": "Material-UI Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/utils",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@material-ui/utils/LICENSE"
+  },
+  "@types/prop-types@15.7.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@types/prop-types",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@types/prop-types/LICENSE"
+  },
+  "@types/react-transition-group@4.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@types/react-transition-group",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@types/react-transition-group/LICENSE"
+  },
+  "@types/react@16.9.43": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@types/react",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@types/react/LICENSE"
+  },
+  "@types/styled-jsx@2.2.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@types/styled-jsx",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@types/styled-jsx/LICENSE"
+  },
+  "abab@1.0.4": {
+    "licenses": "ISC",
+    "repository": "https://github.com/jsdom/abab",
+    "publisher": "Jeff Carpenter",
+    "email": "gcarpenterv@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/abab",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/abab/LICENSE.md"
+  },
+  "acorn-globals@1.0.9": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ForbesLindesay/acorn-globals",
+    "publisher": "ForbesLindesay",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/acorn-globals",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/acorn-globals/LICENSE"
+  },
+  "acorn@2.7.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ternjs/acorn",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/acorn",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/acorn/LICENSE"
+  },
+  "ajv@6.12.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ajv-validator/ajv",
+    "publisher": "Evgeny Poberezkin",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/ajv",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/ajv/LICENSE"
+  },
+  "ansi-styles@3.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/ansi-styles",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/ansi-styles",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/ansi-styles/license"
+  },
+  "array-equal@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/component/array-equal",
+    "publisher": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/array-equal",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/array-equal/LICENSE"
+  },
+  "asn1@0.2.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/joyent/node-asn1",
+    "publisher": "Joyent",
+    "url": "joyent.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/asn1",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/asn1/LICENSE"
+  },
+  "assert-plus@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mcavage/node-assert-plus",
+    "publisher": "Mark Cavage",
+    "email": "mcavage@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/assert-plus",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/assert-plus/README.md"
+  },
+  "asynckit@0.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/alexindigo/asynckit",
+    "publisher": "Alex Indigo",
+    "email": "iam@alexindigo.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/asynckit",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/asynckit/LICENSE"
+  },
+  "aws-sign2@0.7.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/mikeal/aws-sign",
+    "publisher": "Mikeal Rogers",
+    "email": "mikeal.rogers@gmail.com",
+    "url": "http://www.futurealoof.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/aws-sign2",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/aws-sign2/LICENSE"
+  },
+  "aws4@1.10.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mhart/aws4",
+    "publisher": "Michael Hart",
+    "email": "michael.hart.au@gmail.com",
+    "url": "https://github.com/mhart",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/aws4",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/aws4/LICENSE"
+  },
+  "babel-plugin-styled-components@1.10.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/styled-components/babel-plugin-styled-components",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/babel-plugin-styled-components",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/babel-plugin-styled-components/LICENSE.md"
+  },
+  "babel-plugin-syntax-jsx@6.18.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-jsx",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/babel-plugin-syntax-jsx",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/babel-plugin-syntax-jsx/README.md"
+  },
+  "babylonjs-gltf2interface@4.1.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/BabylonJS/Babylon.js",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/babylonjs-gltf2interface"
+  },
+  "base64-arraybuffer@0.1.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/niklasvh/base64-arraybuffer",
+    "publisher": "Niklas von Hertzen",
+    "email": "niklasvh@gmail.com",
+    "url": "http://hertzen.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/base64-arraybuffer",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/base64-arraybuffer/LICENSE-MIT"
+  },
+  "bcrypt-pbkdf@1.0.2": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/joyent/node-bcrypt-pbkdf",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/bcrypt-pbkdf",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/bcrypt-pbkdf/LICENSE"
+  },
+  "camelize@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/substack/camelize",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/camelize",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/camelize/LICENSE"
+  },
+  "canvg@1.5.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/canvg/canvg",
+    "publisher": "Gabe Lerner",
+    "email": "gabelerner@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/canvg",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/canvg/LICENSE"
+  },
+  "caseless@0.12.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/mikeal/caseless",
+    "publisher": "Mikeal Rogers",
+    "email": "mikeal.rogers@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/caseless",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/caseless/LICENSE"
+  },
+  "chalk@2.4.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/chalk",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/chalk",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/chalk/license"
+  },
+  "classnames@2.2.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/JedWatson/classnames",
+    "publisher": "Jed Watson",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/classnames",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/classnames/LICENSE"
+  },
+  "clsx@1.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/lukeed/clsx",
+    "publisher": "Luke Edwards",
+    "email": "luke.edwards05@gmail.com",
+    "url": "https://lukeed.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/clsx",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/clsx/license"
+  },
+  "color-convert@1.9.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Qix-/color-convert",
+    "publisher": "Heather Arthur",
+    "email": "fayearthur@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/color-convert",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/color-convert/LICENSE"
+  },
+  "color-name@1.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/dfcreative/color-name",
+    "publisher": "DY",
+    "email": "dfcreative@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/color-name",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/color-name/LICENSE"
+  },
+  "combined-stream@1.0.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/felixge/node-combined-stream",
+    "publisher": "Felix Geisendörfer",
+    "email": "felix@debuggable.com",
+    "url": "http://debuggable.com/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/combined-stream",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/combined-stream/License"
+  },
+  "core-util-is@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/isaacs/core-util-is",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/core-util-is",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/core-util-is/LICENSE"
+  },
+  "css-box-model@1.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/alexreardon/css-box-model",
+    "publisher": "Alex Reardon",
+    "email": "alexreardon@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/css-box-model",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/css-box-model/LICENSE"
+  },
+  "css-color-keywords@1.0.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/sonicdoe/css-color-keywords",
+    "publisher": "Jakob Krigovsky",
+    "email": "jakob@krigovsky.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/css-color-keywords",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/css-color-keywords/LICENSE"
+  },
+  "css-line-break@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/niklasvh/css-line-break",
+    "publisher": "Niklas von Hertzen",
+    "email": "niklasvh@gmail.com",
+    "url": "https://hertzen.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/css-line-break",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/css-line-break/LICENSE"
+  },
+  "css-to-react-native@3.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/styled-components/css-to-react-native",
+    "publisher": "Jacob Parker",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/css-to-react-native",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/css-to-react-native/LICENSE.md"
+  },
+  "css-vendor@2.0.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cssinjs/css-vendor",
+    "publisher": "Oleg Slobodskoi",
+    "email": "oleg008@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/css-vendor",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/css-vendor/LICENSE"
+  },
+  "cssom@0.3.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/NV/CSSOM",
+    "publisher": "Nikita Vasilyev",
+    "email": "me@elv1s.ru",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/cssom",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/cssom/LICENSE.txt"
+  },
+  "cssstyle@0.2.37": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chad3814/CSSStyleDeclaration",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/cssstyle",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/cssstyle/README.md"
+  },
+  "csstype@2.6.11": {
+    "licenses": "MIT",
+    "repository": "https://github.com/frenic/csstype",
+    "publisher": "Fredrik Nicol",
+    "email": "fredrik.nicol@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/csstype",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/csstype/LICENSE"
+  },
+  "dashdash@1.14.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/trentm/node-dashdash",
+    "publisher": "Trent Mick",
+    "email": "trentm@gmail.com",
+    "url": "http://trentm.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/dashdash",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/dashdash/LICENSE.txt"
+  },
+  "date-fns@2.15.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/date-fns/date-fns",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/date-fns",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/date-fns/LICENSE.md"
+  },
+  "debounce@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/component/debounce",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/debounce",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/debounce/Readme.md"
+  },
+  "debug@4.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/visionmedia/debug",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/debug",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/debug/LICENSE"
+  },
+  "deep-is@0.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/thlorenz/deep-is",
+    "publisher": "Thorsten Lorenz",
+    "email": "thlorenz@gmx.de",
+    "url": "http://thlorenz.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/deep-is",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/deep-is/LICENSE"
+  },
+  "delayed-stream@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/felixge/node-delayed-stream",
+    "publisher": "Felix Geisendörfer",
+    "email": "felix@debuggable.com",
+    "url": "http://debuggable.com/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/delayed-stream",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/delayed-stream/License"
+  },
+  "dom-helpers@5.1.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/react-bootstrap/dom-helpers",
+    "publisher": "Jason Quense",
+    "email": "monastic.panic@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/dom-helpers",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/dom-helpers/LICENSE"
+  },
+  "earcut@2.2.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/mapbox/earcut",
+    "publisher": "Vladimir Agafonkin",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/earcut",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/earcut/LICENSE"
+  },
+  "ecc-jsbn@0.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/quartzjer/ecc-jsbn",
+    "publisher": "Jeremie Miller",
+    "email": "jeremie@jabber.org",
+    "url": "http://jeremie.com/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/ecc-jsbn",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/ecc-jsbn/LICENSE"
+  },
+  "escape-string-regexp@1.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/escape-string-regexp",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/escape-string-regexp",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/escape-string-regexp/license"
+  },
+  "escodegen@1.14.3": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/estools/escodegen",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/escodegen",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/escodegen/LICENSE.BSD"
+  },
+  "esprima@4.0.1": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/jquery/esprima",
+    "publisher": "Ariya Hidayat",
+    "email": "ariya.hidayat@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/esprima",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/esprima/LICENSE.BSD"
+  },
+  "estraverse@4.3.0": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/estools/estraverse",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/estraverse",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/estraverse/LICENSE.BSD"
+  },
+  "esutils@2.0.3": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/estools/esutils",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/esutils",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/esutils/LICENSE.BSD"
+  },
+  "extend@3.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/justmoon/node-extend",
+    "publisher": "Stefan Thomas",
+    "email": "justmoon@members.fsf.org",
+    "url": "http://www.justmoon.net",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/extend",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/extend/LICENSE"
+  },
+  "extsprintf@1.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/davepacheco/node-extsprintf",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/extsprintf",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/extsprintf/LICENSE"
+  },
+  "fast-deep-equal@2.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/fast-deep-equal",
+    "publisher": "Evgeny Poberezkin",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/fast-deep-equal",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/fast-deep-equal/LICENSE"
+  },
+  "fast-deep-equal@3.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/fast-deep-equal",
+    "publisher": "Evgeny Poberezkin",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/ajv/node_modules/fast-deep-equal",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/ajv/node_modules/fast-deep-equal/LICENSE"
+  },
+  "fast-json-stable-stringify@2.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/fast-json-stable-stringify",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/fast-json-stable-stringify",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/fast-json-stable-stringify/LICENSE"
+  },
+  "fast-levenshtein@2.0.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/hiddentao/fast-levenshtein",
+    "publisher": "Ramesh Nair",
+    "email": "ram@hiddentao.com",
+    "url": "http://www.hiddentao.com/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/fast-levenshtein",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/fast-levenshtein/LICENSE.md"
+  },
+  "file-saver@1.3.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/eligrey/FileSaver.js",
+    "publisher": "Eli Grey",
+    "email": "me@eligrey.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/file-saver",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/file-saver/LICENSE.md"
+  },
+  "filefy@0.1.10": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mbrn/filefy",
+    "publisher": "Mehmet Baran",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/filefy",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/filefy/LICENSE"
+  },
+  "forever-agent@0.6.1": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/mikeal/forever-agent",
+    "publisher": "Mikeal Rogers",
+    "email": "mikeal.rogers@gmail.com",
+    "url": "http://www.futurealoof.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/forever-agent",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/forever-agent/LICENSE"
+  },
+  "form-data@2.3.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/form-data/form-data",
+    "publisher": "Felix Geisendörfer",
+    "email": "felix@debuggable.com",
+    "url": "http://debuggable.com/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/form-data",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/form-data/License"
+  },
+  "getpass@0.1.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/arekinath/node-getpass",
+    "publisher": "Alex Wilson",
+    "email": "alex.wilson@joyent.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/getpass",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/getpass/LICENSE"
+  },
+  "globals@11.12.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/globals",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/globals",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/globals/license"
+  },
+  "har-schema@2.0.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/ahmadnassri/har-schema",
+    "publisher": "Ahmad Nassri",
+    "email": "ahmad@ahmadnassri.com",
+    "url": "https://www.ahmadnassri.com/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/har-schema",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/har-schema/LICENSE"
+  },
+  "har-validator@5.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ahmadnassri/node-har-validator",
+    "publisher": "Ahmad Nassri",
+    "email": "ahmad@ahmadnassri.com",
+    "url": "https://www.ahmadnassri.com/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/har-validator",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/har-validator/LICENSE"
+  },
+  "has-flag@3.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/has-flag",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/has-flag",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/has-flag/license"
+  },
+  "hoist-non-react-statics@3.3.2": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/mridgway/hoist-non-react-statics",
+    "publisher": "Michael Ridgway",
+    "email": "mcridgway@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/hoist-non-react-statics",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/hoist-non-react-statics/LICENSE.md"
+  },
+  "html2canvas@1.0.0-alpha.12": {
+    "licenses": "MIT",
+    "repository": "https://github.com/niklasvh/html2canvas",
+    "publisher": "Niklas von Hertzen",
+    "email": "niklasvh@gmail.com",
+    "url": "https://hertzen.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/html2canvas",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/html2canvas/LICENSE"
+  },
+  "http-signature@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/joyent/node-http-signature",
+    "publisher": "Joyent, Inc",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/http-signature",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/http-signature/LICENSE"
+  },
+  "hyphenate-style-name@1.0.4": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/rexxars/hyphenate-style-name",
+    "publisher": "Espen Hovlandsdal",
+    "email": "espen@hovlandsdal.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/hyphenate-style-name",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/hyphenate-style-name/LICENSE"
+  },
+  "iconv-lite@0.4.24": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ashtuchkin/iconv-lite",
+    "publisher": "Alexander Shtuchkin",
+    "email": "ashtuchkin@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/iconv-lite",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/iconv-lite/LICENSE"
+  },
+  "is-in-browser@1.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/tuxsudo/is-in-browser",
+    "publisher": "Jared Anderson",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/is-in-browser",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/is-in-browser/readme.md"
+  },
+  "is-typedarray@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/hughsk/is-typedarray",
+    "publisher": "Hugh Kennedy",
+    "email": "hughskennedy@gmail.com",
+    "url": "http://hughsk.io/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/is-typedarray",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/is-typedarray/LICENSE.md"
+  },
+  "isstream@0.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/rvagg/isstream",
+    "publisher": "Rod Vagg",
+    "email": "rod@vagg.org",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/isstream",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/isstream/LICENSE.md"
+  },
+  "js-tokens@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/lydell/js-tokens",
+    "publisher": "Simon Lydell",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/js-tokens",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/js-tokens/LICENSE"
+  },
+  "jsbn@0.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/andyperlitch/jsbn",
+    "publisher": "Tom Wu",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jsbn",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jsbn/LICENSE"
+  },
+  "jsdom@8.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/tmpvar/jsdom",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jsdom",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jsdom/LICENSE.txt"
+  },
+  "jsesc@2.5.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mathiasbynens/jsesc",
+    "publisher": "Mathias Bynens",
+    "url": "https://mathiasbynens.be/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jsesc",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jsesc/LICENSE-MIT.txt"
+  },
+  "json-schema-traverse@0.4.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/json-schema-traverse",
+    "publisher": "Evgeny Poberezkin",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/json-schema-traverse",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/json-schema-traverse/LICENSE"
+  },
+  "json-schema@0.2.3": {
+    "licenses": [
+      "AFLv2.1",
+      "BSD"
+    ],
+    "repository": "https://github.com/kriszyp/json-schema",
+    "publisher": "Kris Zyp",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/json-schema",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/json-schema/README.md"
+  },
+  "json-stringify-safe@5.0.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/json-stringify-safe",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/json-stringify-safe",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/json-stringify-safe/LICENSE"
+  },
+  "jspdf-autotable@3.5.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/simonbengtsson/jsPDF-AutoTable",
+    "publisher": "Simon Bengtsson",
+    "email": "dev@simonbengtsson.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jspdf-autotable",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jspdf-autotable/LICENSE.txt"
+  },
+  "jspdf@1.5.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/MrRio/jsPDF",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jspdf",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jspdf/README.md"
+  },
+  "jsprim@1.4.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/joyent/node-jsprim",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jsprim",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jsprim/LICENSE"
+  },
+  "jss-plugin-camel-case@10.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cssinjs/jss",
+    "publisher": "JSS Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-camel-case",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-camel-case/LICENSE"
+  },
+  "jss-plugin-default-unit@10.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cssinjs/jss",
+    "publisher": "JSS Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-default-unit",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-default-unit/LICENSE"
+  },
+  "jss-plugin-global@10.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cssinjs/jss",
+    "publisher": "JSS Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-global",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-global/LICENSE"
+  },
+  "jss-plugin-nested@10.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cssinjs/jss",
+    "publisher": "JSS Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-nested",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-nested/LICENSE"
+  },
+  "jss-plugin-props-sort@10.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cssinjs/jss",
+    "publisher": "JSS Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-props-sort",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-props-sort/LICENSE"
+  },
+  "jss-plugin-rule-value-function@10.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cssinjs/jss",
+    "publisher": "JSS Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-rule-value-function",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-rule-value-function/LICENSE"
+  },
+  "jss-plugin-vendor-prefixer@10.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cssinjs/jss",
+    "publisher": "JSS Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-vendor-prefixer",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss-plugin-vendor-prefixer/LICENSE"
+  },
+  "jss@10.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cssinjs/jss",
+    "publisher": "JSS Team",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jss/LICENSE"
+  },
+  "jwt-decode@2.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/auth0/jwt-decode",
+    "publisher": "Jose F. Romaniello",
+    "email": "jfromaniello@gmail.com",
+    "url": "http://joseoncode.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jwt-decode",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/jwt-decode/LICENSE"
+  },
+  "levn@0.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/gkz/levn",
+    "publisher": "George Zahariev",
+    "email": "z@georgezahariev.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/levn",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/levn/LICENSE"
+  },
+  "lodash-es@4.17.15": {
+    "licenses": "MIT",
+    "repository": "https://github.com/lodash/lodash",
+    "publisher": "John-David Dalton",
+    "email": "john.david.dalton@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/lodash-es",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/lodash-es/LICENSE"
+  },
+  "lodash.isequal@4.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/lodash/lodash",
+    "publisher": "John-David Dalton",
+    "email": "john.david.dalton@gmail.com",
+    "url": "http://allyoucanleet.com/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/lodash.isequal",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/lodash.isequal/LICENSE"
+  },
+  "lodash@4.17.19": {
+    "licenses": "MIT",
+    "repository": "https://github.com/lodash/lodash",
+    "publisher": "John-David Dalton",
+    "email": "john.david.dalton@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/lodash",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/lodash/LICENSE"
+  },
+  "loose-envify@1.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/zertosh/loose-envify",
+    "publisher": "Andres Suarez",
+    "email": "zertosh@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/loose-envify",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/loose-envify/LICENSE"
+  },
+  "material-table@1.66.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mbrn/material-table",
+    "publisher": "Mehmet Baran",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/material-table",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/material-table/LICENSE"
+  },
+  "memoize-one@5.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/alexreardon/memoize-one",
+    "publisher": "Alex Reardon",
+    "email": "alexreardon@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/memoize-one",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/memoize-one/LICENSE"
+  },
+  "mime-db@1.44.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/mime-db",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/mime-db",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/mime-db/LICENSE"
+  },
+  "mime-types@2.1.27": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/mime-types",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/mime-types",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/mime-types/LICENSE"
+  },
+  "monet@0.9.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/monet/monet.js",
+    "publisher": "Chris Myers",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/monet",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/monet/LICENSE"
+  },
+  "mov-fe-lib-core@1.0.0": {
+    "licenses": "ISC",
+    "repository": "git://bitbucket.org/robosavvy/mov-fe-lib-core",
+    "publisher": "MOV.AI",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/mov-fe-lib-core",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/mov-fe-lib-core/README.md"
+  },
+  "mov-fe-lib-react@1.0.0": {
+    "licenses": "ISC",
+    "repository": "git+https://pedromovai@bitbucket.org/robosavvy/mov.ai-react",
+    "publisher": "MOV.AI",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/license.json"
+  },
+  "ms@2.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/zeit/ms",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/ms",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/ms/license.md"
+  },
+  "nwmatcher@1.4.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/dperini/nwmatcher",
+    "publisher": "Diego Perini",
+    "email": "diego.perini@gmail.com",
+    "url": "http://www.iport.it/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/nwmatcher",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/nwmatcher/LICENSE"
+  },
+  "oauth-sign@0.9.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/mikeal/oauth-sign",
+    "publisher": "Mikeal Rogers",
+    "email": "mikeal.rogers@gmail.com",
+    "url": "http://www.futurealoof.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/oauth-sign",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/oauth-sign/LICENSE"
+  },
+  "object-assign@4.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/object-assign",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/object-assign",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/object-assign/license"
+  },
+  "omggif@1.0.7": {
+    "licenses": "MIT*",
+    "repository": "https://github.com/deanm/omggif",
+    "publisher": "Dean McNamee",
+    "email": "dean@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/omggif",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/omggif/README"
+  },
+  "optionator@0.8.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/gkz/optionator",
+    "publisher": "George Zahariev",
+    "email": "z@georgezahariev.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/optionator",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/optionator/LICENSE"
+  },
+  "parse5@1.5.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inikulin/parse5",
+    "publisher": "Ivan Nikulin",
+    "email": "ifaaan@gmail.com",
+    "url": "https://github.com/inikulin",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/parse5",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/parse5/LICENSE"
+  },
+  "performance-now@2.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/braveg1rl/performance-now",
+    "publisher": "Braveg1rl",
+    "email": "braveg1rl@outlook.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/performance-now",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/performance-now/license.txt"
+  },
+  "popper.js@1.16.1-lts": {
+    "licenses": "MIT",
+    "repository": "https://github.com/FezVrasta/popper.js",
+    "publisher": "Federico Zivolo",
+    "email": "federico.zivolo@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/popper.js",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/popper.js/README.md"
+  },
+  "postcss-value-parser@4.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/TrySound/postcss-value-parser",
+    "publisher": "Bogdan Chadkin",
+    "email": "trysound@yandex.ru",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/postcss-value-parser",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/postcss-value-parser/LICENSE"
+  },
+  "prelude-ls@1.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/gkz/prelude-ls",
+    "publisher": "George Zahariev",
+    "email": "z@georgezahariev.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/prelude-ls",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/prelude-ls/LICENSE"
+  },
+  "promise-polyfill@8.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/taylorhakes/promise-polyfill",
+    "publisher": "Taylor Hakes",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/promise-polyfill",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/promise-polyfill/LICENSE"
+  },
+  "prop-types@15.7.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/prop-types",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/prop-types",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/prop-types/LICENSE"
+  },
+  "psl@1.8.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/lupomontero/psl",
+    "publisher": "Lupo Montero",
+    "email": "lupomontero@gmail.com",
+    "url": "https://lupomontero.com/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/psl",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/psl/LICENSE"
+  },
+  "punycode@2.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/bestiejs/punycode.js",
+    "publisher": "Mathias Bynens",
+    "url": "https://mathiasbynens.be/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/punycode",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/punycode/LICENSE-MIT.txt"
+  },
+  "qs@6.5.2": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/ljharb/qs",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/qs",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/qs/LICENSE"
+  },
+  "quickselect@2.0.0": {
+    "licenses": "ISC",
+    "publisher": "Vladimir Agafonkin",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/quickselect",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/quickselect/LICENSE"
+  },
+  "raf-schd@4.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/alexreardon/raf-schd",
+    "publisher": "Alex Reardon",
+    "email": "alexreardon@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/raf-schd",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/raf-schd/README.md"
+  },
+  "rbush@3.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mourner/rbush",
+    "publisher": "Vladimir Agafonkin",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/rbush",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/rbush/LICENSE"
+  },
+  "react-beautiful-dnd@13.0.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/atlassian/react-beautiful-dnd",
+    "publisher": "Alex Reardon",
+    "email": "areardon@atlassian.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-beautiful-dnd",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-beautiful-dnd/LICENSE"
+  },
+  "react-dom@16.13.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-dom",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-dom/LICENSE"
+  },
+  "react-double-scrollbar@0.0.15": {
+    "licenses": "MIT",
+    "repository": "https://github.com/umchee/react-double-scrollbar",
+    "publisher": "Scott McDaniel",
+    "email": "hknapps@gmail.com",
+    "url": "https://scottmcdaniel.me",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-double-scrollbar",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-double-scrollbar/LICENSE"
+  },
+  "react-is@16.13.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-is",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-is/LICENSE"
+  },
+  "react-redux@7.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/reduxjs/react-redux",
+    "publisher": "Dan Abramov",
+    "email": "dan.abramov@me.com",
+    "url": "https://github.com/gaearon",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-redux",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-redux/LICENSE.md"
+  },
+  "react-resize-detector@4.2.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/maslianok/react-resize-detector",
+    "publisher": "Vitalii Maslianok",
+    "email": "maslianok@gmail.com",
+    "url": "https://github.com/maslianok",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-resize-detector",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-resize-detector/LICENSE"
+  },
+  "react-transition-group@4.4.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/reactjs/react-transition-group",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-transition-group",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react-transition-group/LICENSE"
+  },
+  "react@16.13.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/react/LICENSE"
+  },
+  "redux@4.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/reduxjs/redux",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/redux",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/redux/LICENSE.md"
+  },
+  "regenerator-runtime@0.13.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime",
+    "publisher": "Ben Newman",
+    "email": "bn@cs.stanford.edu",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/regenerator-runtime",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/regenerator-runtime/LICENSE"
+  },
+  "request@2.88.2": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/request/request",
+    "publisher": "Mikeal Rogers",
+    "email": "mikeal.rogers@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/request",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/request/LICENSE"
+  },
+  "resize-observer-polyfill@1.5.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/que-etc/resize-observer-polyfill",
+    "publisher": "Denis Rul",
+    "email": "que.etc@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/resize-observer-polyfill",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/resize-observer-polyfill/LICENSE"
+  },
+  "rgbcolor@1.0.1": {
+    "licenses": "MIT*",
+    "repository": "https://github.com/yetzt/node-rgbcolor",
+    "publisher": "Sebastian Vollnhals",
+    "email": "sebastian@vollnhals.info",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/rgbcolor",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/rgbcolor/LICENSE.md"
+  },
+  "rifm@0.7.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/istarkov/rifm",
+    "publisher": "istarkov",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/rifm",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/rifm/README.md"
+  },
+  "safe-buffer@5.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/feross/safe-buffer",
+    "publisher": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "https://feross.org",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/safe-buffer",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/safe-buffer/LICENSE"
+  },
+  "safer-buffer@2.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ChALkeR/safer-buffer",
+    "publisher": "Nikita Skovoroda",
+    "email": "chalkerx@gmail.com",
+    "url": "https://github.com/ChALkeR",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/safer-buffer",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/safer-buffer/LICENSE"
+  },
+  "sax@1.2.4": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/sax-js",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/sax",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/sax/LICENSE"
+  },
+  "scheduler@0.19.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/scheduler",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/scheduler/LICENSE"
+  },
+  "shallowequal@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/dashed/shallowequal",
+    "publisher": "Alberto Leal",
+    "email": "mailforalberto@gmail.com",
+    "url": "github.com/dashed",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/shallowequal",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/shallowequal/LICENSE"
+  },
+  "source-map@0.5.7": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/mozilla/source-map",
+    "publisher": "Nick Fitzgerald",
+    "email": "nfitzgerald@mozilla.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/generator/node_modules/source-map",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/@babel/generator/node_modules/source-map/LICENSE"
+  },
+  "source-map@0.6.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/mozilla/source-map",
+    "publisher": "Nick Fitzgerald",
+    "email": "nfitzgerald@mozilla.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/source-map",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/source-map/LICENSE"
+  },
+  "sshpk@1.16.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/joyent/node-sshpk",
+    "publisher": "Joyent, Inc",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/sshpk",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/sshpk/LICENSE"
+  },
+  "stackblur-canvas@1.4.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/flozz/StackBlur",
+    "publisher": "Mario Klingemann",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/canvg/node_modules/stackblur-canvas",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/canvg/node_modules/stackblur-canvas/LICENSE"
+  },
+  "stackblur-canvas@2.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/flozz/StackBlur",
+    "publisher": "Mario Klingemann",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/stackblur-canvas",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/stackblur-canvas/LICENSE-MIT.txt"
+  },
+  "styled-components@5.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/styled-components/styled-components",
+    "publisher": "Glen Maddern",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/styled-components"
+  },
+  "supports-color@5.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/supports-color",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/supports-color",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/supports-color/license"
+  },
+  "symbol-observable@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/blesh/symbol-observable",
+    "publisher": "Ben Lesh",
+    "email": "ben@benlesh.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/symbol-observable",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/symbol-observable/license"
+  },
+  "symbol-tree@3.2.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jsdom/js-symbol-tree",
+    "publisher": "Joris van der Wel",
+    "email": "joris@jorisvanderwel.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/symbol-tree",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/symbol-tree/LICENSE"
+  },
+  "tiny-invariant@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/alexreardon/tiny-invariant",
+    "publisher": "Alex Reardon",
+    "email": "alexreardon@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tiny-invariant",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tiny-invariant/LICENSE"
+  },
+  "tiny-warning@1.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/alexreardon/tiny-warning",
+    "publisher": "Alex Reardon",
+    "email": "alexreardon@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tiny-warning",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tiny-warning/LICENSE"
+  },
+  "to-fast-properties@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/to-fast-properties",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/to-fast-properties",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/to-fast-properties/license"
+  },
+  "tough-cookie@2.5.0": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/salesforce/tough-cookie",
+    "publisher": "Jeremy Stashewsky",
+    "email": "jstash@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tough-cookie",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tough-cookie/LICENSE"
+  },
+  "tr46@0.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Sebmaster/tr46.js",
+    "publisher": "Sebastian Mayr",
+    "email": "npm@smayr.name",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tr46"
+  },
+  "tslib@1.13.0": {
+    "licenses": "0BSD",
+    "repository": "https://github.com/Microsoft/tslib",
+    "publisher": "Microsoft Corp.",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tslib",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tslib/LICENSE.txt"
+  },
+  "tunnel-agent@0.6.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/mikeal/tunnel-agent",
+    "publisher": "Mikeal Rogers",
+    "email": "mikeal.rogers@gmail.com",
+    "url": "http://www.futurealoof.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tunnel-agent",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tunnel-agent/LICENSE"
+  },
+  "tweetnacl@0.14.5": {
+    "licenses": "Unlicense",
+    "repository": "https://github.com/dchest/tweetnacl-js",
+    "publisher": "TweetNaCl-js contributors",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tweetnacl",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/tweetnacl/LICENSE"
+  },
+  "type-check@0.3.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/gkz/type-check",
+    "publisher": "George Zahariev",
+    "email": "z@georgezahariev.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/type-check",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/type-check/LICENSE"
+  },
+  "uri-js@4.2.2": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/garycourt/uri-js",
+    "publisher": "Gary Court",
+    "email": "gary.court@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/uri-js",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/uri-js/README.md"
+  },
+  "use-memo-one@1.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/alexreardon/use-memo-one",
+    "publisher": "Alex Reardon",
+    "email": "alexreardon@gmail.com",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/use-memo-one",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/use-memo-one/LICENSE"
+  },
+  "uuid@3.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/uuidjs/uuid",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/uuid",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/uuid/LICENSE.md"
+  },
+  "verror@1.10.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/davepacheco/node-verror",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/verror",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/verror/LICENSE"
+  },
+  "webidl-conversions@3.0.1": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/jsdom/webidl-conversions",
+    "publisher": "Domenic Denicola",
+    "email": "d@domenic.me",
+    "url": "https://domenic.me/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/webidl-conversions",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/webidl-conversions/LICENSE.md"
+  },
+  "whatwg-url@2.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jsdom/whatwg-url",
+    "publisher": "Sebastian Mayr",
+    "email": "github@smayr.name",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/whatwg-url",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/whatwg-url/LICENSE.txt"
+  },
+  "word-wrap@1.2.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonschlinkert/word-wrap",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/word-wrap",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/word-wrap/LICENSE"
+  },
+  "xml-name-validator@2.0.1": {
+    "licenses": "WTFPL",
+    "repository": "https://github.com/jsdom/xml-name-validator",
+    "publisher": "Domenic Denicola",
+    "email": "d@domenic.me",
+    "url": "https://domenic.me/",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/xml-name-validator",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/xml-name-validator/LICENSE.txt"
+  },
+  "xmldom@0.1.31": {
+    "licenses": "MIT*",
+    "repository": "https://github.com/xmldom/xmldom",
+    "publisher": "jindw",
+    "email": "jindw@xidea.org",
+    "url": "http://www.xidea.org",
+    "path": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/xmldom",
+    "licenseFile": "/home/cristovao/movai/src/feapps/mov-fe-lib-react/node_modules/xmldom/LICENSE"
+  }
+}
+
