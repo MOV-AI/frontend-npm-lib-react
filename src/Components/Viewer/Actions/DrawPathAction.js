@@ -4,7 +4,7 @@ import Path from "../NodeItem/Path";
 import MouseKeysAction from "./MouseKeysAction";
 import React from "react";
 import { Color3 } from "@babylonjs/core";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 import { selectOneAction } from "../Utils/Utils";
 import Constants from "../Utils/Constants";
 

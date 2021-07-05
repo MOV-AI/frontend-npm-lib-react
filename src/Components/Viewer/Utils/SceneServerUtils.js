@@ -1,4 +1,4 @@
-import { MasterDB } from "mov-fe-lib-core";
+import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import Constants from "./Constants";
 
 class SceneServerUtils {

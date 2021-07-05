@@ -4,7 +4,7 @@ import Util3d from "../Util3d/Util3d";
 import React from "react";
 import PolygonRegion from "../NodeItem/PolygonRegion";
 import { Color3 } from "@babylonjs/core";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 import { selectOneAction } from "../Utils/Utils";
 
 // Similar 2 Draw Action Path

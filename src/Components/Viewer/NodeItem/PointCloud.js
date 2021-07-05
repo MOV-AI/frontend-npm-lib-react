@@ -1,7 +1,7 @@
 import NodeItem from "./NodeItem";
 import { Mesh, StandardMaterial, Color3, VertexData } from "@babylonjs/core";
 import { Maybe } from "monet";
-import { MasterDB, Utils } from "mov-fe-lib-core";
+import { MasterDB, Utils } from "@mov-ai/mov-fe-lib-core";
 
 const { ofNull } = Utils;
 

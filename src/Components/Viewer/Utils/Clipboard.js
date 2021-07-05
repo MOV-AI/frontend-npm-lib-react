@@ -1,4 +1,4 @@
-import { Clipboard as Clip } from "mov-fe-lib-core";
+import { Clipboard as Clip } from "@mov-ai/mov-fe-lib-core";
 
 const SCENE_CONTEXT = "scene";
 let COPY_PASTE_UID = 0;

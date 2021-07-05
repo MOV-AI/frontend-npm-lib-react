@@ -12,20 +12,22 @@ jobs:
         username: ${{secrets.PORTUS_APP_USER}} 
         password: ${{secrets.PORTUS_APP_TOKEN}} 
     env:
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-      AWS_DEFAULT_REGION: us-east-2
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+
+      - name: Checkout    
+        uses: actions/checkout@v1
+      - name: Setup Github as proxy Registry 
+        uses: actions/setup-node@v2
         with:
           node-version: '12.x'
           registry-url: 'https://npm.pkg.github.com/mov-ai'
-      - run: npm ci --loglevel verbose
-      
-#for now
-#      - run: npm run test
-      - run: npm publish
-
+      - name: Install dependencies
+        run: npm ci --loglevel verbose
+      - name: Build
+        run: npm run build
+      #temp disable till tests are fixed
+      #- name: Run tests
+      #  run: npm run test
+      - name: Publish
+        run: npm publish
