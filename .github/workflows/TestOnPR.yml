@@ -24,7 +24,7 @@ jobs:
           node-version: '12.x'
           registry-url: 'https://npm.pkg.github.com/mov-ai'
 
-      - run: npm i -g npm
+      - run: npm cache clean -f
       - run: npm -v
       - run: npm ci --loglevel verbose
       
