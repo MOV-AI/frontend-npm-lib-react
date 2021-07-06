@@ -26,7 +26,6 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/mov-ai'
       - name: Install dependencies
         run: npm ci --loglevel verbose
-      - run: cat $NPM_CONFIG_USERCONFIG
       - name: Build
         run: npm run build
       # temporary comment till tests are fixed
@@ -36,6 +35,6 @@ jobs:
       - name: Check NPM log on failure
         if: ${{ failure() }}
         run: cat /github/home/.npm/_logs/*.log
-      #- name: Publish
-      #  run: npm publish
+      - name: Publish
+        run: npm publish
 
