@@ -19,19 +19,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Setup Github as proxy Registry 
+        uses: actions/setup-node@v2
         with:
           node-version: '12.x'
           registry-url: 'https://npm.pkg.github.com/mov-ai'
-
-      - run: npm cache clean --force
-      - run: npm -v
-      - run: npm ci --loglevel verbose
+      - name: Install dependencies
+        run: npm ci --loglevel verbose
+      - name: Build
+        run: npm run build
       # temporary comment till tests are fixed
-      #- run: npm run test
+      #- name: Run tests
+      #  run: npm run test
 
-      - name: Check NPM log
+      - name: Check NPM log on failure
         if: ${{ failure() }}
         run: cat /github/home/.npm/_logs/*.log
-      - run: npm publish
+      - name: Publish
+        run: npm publish
 
