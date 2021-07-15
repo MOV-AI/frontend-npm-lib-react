@@ -68,3 +68,10 @@
     opacity: 0.2;
   }
 }
+
+.MuiPickersToolbarButton-toolbarBtn {
+  padding: 0 !important;
+  min-width: 16px !important;
+  margin: 0 !important;
+  text-transform: none !important;
+}
