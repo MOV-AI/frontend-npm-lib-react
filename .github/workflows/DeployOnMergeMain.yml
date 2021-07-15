@@ -1,0 +1,71 @@
+name: "Deploy - On branch main Push"
+on:
+  pull_request:
+    types: [ closed ]
+    branches:
+      - main
+
+    paths-ignore:
+      - 'package.json'
+      - 'package-lock.json'
+
+jobs:
+  Deploy-NPM-Component:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-20.04
+    container:
+      image: registry.cloud.mov.ai/devops/npm-buildserver:latest
+      credentials:
+        username: ${{secrets.PORTUS_APP_USER}} 
+        password: ${{secrets.PORTUS_APP_TOKEN}}
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    steps:
+    - name: Checkout    
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.NPM_TOKEN }}
+
+    - name: Raise App version
+      run: |
+        git config --global user.name 'Automatic Raise'
+        git config --global user.email 'test@test'
+        npm version patch -m "Automatic Bump of build version"
+        git add package.*
+        git push
+
+    - name: Setup Github as proxy Registry 
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16.x'
+        registry-url: 'https://npm.pkg.github.com/mov-ai'
+
+    - name: Install dependencies
+      run: npm ci --loglevel verbose
+
+    - name: Build
+      run: npm run build
+
+    - name: Check NPM log on failure
+      if: ${{ failure() }}
+      run: cat /github/home/.npm/_logs/*.log
+    # Skip tests for now
+    #- name: Run tests
+    #  run: npm run test
+
+    - name: Publish
+      run: npm publish
+        
+  # [On Pull request merge] Since the pipeline will run, have a nice communication that is not doing anything.
+  Skipped:
+    if: github.event.pull_request.merged == false
+    runs-on: ubuntu-20.04
+    container:
+      image: registry.cloud.mov.ai/devops/tf-buildserver:latest
+      credentials:
+        username: ${{secrets.PORTUS_APP_USER}} 
+        password: ${{secrets.PORTUS_APP_TOKEN}} 
+    steps:
+    - run: |
+        echo PR #${{ github.event.number }} has been skipped since the pull request was not approved.
