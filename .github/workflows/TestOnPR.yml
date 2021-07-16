@@ -31,7 +31,8 @@ jobs:
         node-version: '16.x'
         registry-url: 'https://npm.pkg.github.com/mov-ai'
 
-    
+
+    - run: cat $NPM_CONFIG_USERCONFIG    
     - name: Install dependencies
       run: npm ci --loglevel verbose
 
