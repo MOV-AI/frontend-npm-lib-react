@@ -1,4 +1,4 @@
-import { createTheme } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 import "fontsource-roboto";
 import "fontsource-open-sans";
 
@@ -56,7 +56,7 @@ const themeFactory = particular => ({
 });
 
 const Themes = {
-  dark: createTheme(
+  dark: createMuiTheme(
     themeFactory({
       label: "dark",
       textColor: CONSTANTS.dark.textColor,
@@ -179,7 +179,7 @@ const Themes = {
       }
     })
   ),
-  light: createTheme(
+  light: createMuiTheme(
     themeFactory({
       font: {
         Roboto: {
