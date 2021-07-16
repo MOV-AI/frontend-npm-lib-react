@@ -1,48 +1,40 @@
-name: "CI - On main/dev branches"
+name: "CI - On branch dev Push"
 on:
   pull_request:
     branches:
       - dev
-      - main
-    paths-ignore:
-      - 'package.json'
-      - 'package-lock.json'
-
 jobs:
-  Test-NPM-Component:
+  Test-NPM:
     runs-on: ubuntu-20.04
     container:
       image: registry.cloud.mov.ai/devops/npm-buildserver:latest
       credentials:
         username: ${{secrets.PORTUS_APP_USER}} 
-        password: ${{secrets.PORTUS_APP_TOKEN}}
+        password: ${{secrets.PORTUS_APP_TOKEN}} 
     env:
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      AWS_DEFAULT_REGION: us-east-2
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
     steps:
-    - name: Checkout    
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.NPM_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Github as proxy Registry 
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+          registry-url: 'https://npm.pkg.github.com/mov-ai'
+      - name: Install dependencies
+        run: npm ci --loglevel verbose
+      - run: cat $NPM_CONFIG_USERCONFIG
+      - name: Build
+        run: npm run build
+      # temporary comment till tests are fixed
+      #- name: Run tests
+      #  run: npm run test
 
-    - name: Setup Github as proxy Registry 
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16.x'
-        registry-url: 'https://npm.pkg.github.com/mov-ai'
-
-
-    - run: cat $NPM_CONFIG_USERCONFIG    
-    - name: Install dependencies
-      run: npm ci --loglevel verbose
-
-    - name: Build
-      run: npm run build
-
-    - name: Check NPM log on failure
-      if: ${{ failure() }}
-      run: cat /github/home/.npm/_logs/*.log
-
-    # temporary comment till tests are fixed
-    #- name: Run tests
-    #  run: npm run test
+      - name: Check NPM log on failure
+        if: ${{ failure() }}
+        run: cat /github/home/.npm/_logs/*.log
+      #- name: Publish
+      #  run: npm publish
