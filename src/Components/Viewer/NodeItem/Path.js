@@ -12,7 +12,7 @@ import {
   Vector3,
   Space
 } from "@babylonjs/core";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 import GraphItem from "./GraphItem";
 
 const RADIUS = Constants.RADIUS;

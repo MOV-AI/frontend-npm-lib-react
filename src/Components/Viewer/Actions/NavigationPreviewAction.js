@@ -6,7 +6,7 @@ import Constants from "../Utils/Constants";
 import Vec3 from "../Math/Vec3";
 // import JsonToReact from "../../_shared/JsonToReact/JsonToReact";
 import NavigationPreviewItem from "../NodeItem/NavigationPreviewItem";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 
 class NavigationPreviewAction extends MouseKeysAction {
   /**

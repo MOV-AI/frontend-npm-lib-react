@@ -11,7 +11,7 @@ import {
   Select,
   Typography
 } from "@material-ui/core";
-import { Workspace } from "mov-fe-lib-core";
+import { Workspace } from "@mov-ai/mov-fe-lib-core";
 import BasicVirtualizedTree from "../Tree/BasicVirtualizedTree";
 import AbstractModal from "./AbstractModal";
 import Backdrop from "@material-ui/core/Backdrop";

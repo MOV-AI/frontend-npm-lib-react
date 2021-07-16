@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { MasterDB } from "mov-fe-lib-core";
+import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import Alert from "@material-ui/lab/Alert";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/styles";

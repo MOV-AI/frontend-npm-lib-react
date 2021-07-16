@@ -10,7 +10,7 @@ import ScheduleIcon from "@material-ui/icons/Schedule";
 import WarningIcon from "@material-ui/icons/Warning";
 import ViewModuleIcon from "@material-ui/icons/ViewModule";
 import ChatIcon from "@material-ui/icons/Chat";
-import { MasterDB } from "mov-fe-lib-core";
+import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import AbstractModal from "./AbstractModal";
 
 const styles = theme => ({

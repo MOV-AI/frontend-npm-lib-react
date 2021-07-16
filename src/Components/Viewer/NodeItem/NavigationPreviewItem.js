@@ -15,7 +15,7 @@ import Vec3 from "../Math/Vec3";
 import Constants from "../Utils/Constants";
 import { Animator } from "../Utils/Animator";
 import { Service, ServiceRequest, Ros } from "roslib";
-import { MasterDB } from "mov-fe-lib-core";
+import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 
 const MESSAGES = {
   failGenerateCurve: "Fail to generate navigation preview."

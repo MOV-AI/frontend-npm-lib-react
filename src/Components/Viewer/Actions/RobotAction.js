@@ -5,7 +5,7 @@ import React from "react";
 import PointCloud from "../NodeItem/PointCloud";
 import { ACTIONS } from "../MainView/MainViewActions";
 import MeshLoader from "../Utils/MeshLoader";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 
 class RobotAction extends Action {
   constructor(

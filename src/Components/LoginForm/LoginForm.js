@@ -9,7 +9,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import { withStyles } from "@material-ui/core/styles";
-import { Authentication } from "mov-fe-lib-core";
+import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import PropTypes from "prop-types";
 
 const styles = theme => ({
