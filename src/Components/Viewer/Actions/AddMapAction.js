@@ -8,7 +8,7 @@ import GlobalRef from "../NodeItem/GlobalRef";
 import { Vector3 } from "@babylonjs/core";
 import DefaultScene from "../Utils/DefaultScene";
 import { ACTIONS } from "../MainView/MainViewActions";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 import AssetsManager from "../AssetsManager/AssetsManager";
 
 class AddMapAction extends Action {

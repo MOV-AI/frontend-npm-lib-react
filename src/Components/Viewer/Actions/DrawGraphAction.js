@@ -4,7 +4,7 @@ import Util3d from "../Util3d/Util3d";
 import { Color3 } from "@babylonjs/core";
 import GraphItem from "../NodeItem/GraphItem";
 import Constants from "../Utils/Constants";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 import { selectOneAction } from "../Utils/Utils";
 import Path from "../NodeItem/Path";
 import { Maybe } from "monet";
