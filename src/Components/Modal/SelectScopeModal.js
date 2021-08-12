@@ -234,8 +234,6 @@ const SelectScopeModal = props => {
       open={props.open}
       title={getModalTitle(props.scopeList[0])}
       width="50%"
-      // ioports
-      // height="70%"
     >
       <Grid container>
         <Grid
@@ -251,11 +249,9 @@ const SelectScopeModal = props => {
             <InputLabel>Workspace</InputLabel>
             <Select
               value={selectedWorkspace}
-              // shared
-              // defaultValue=""
               onChange={changeWorkspace}
+              disabled={!props.allowArchive}
             >
-              {/* shared  */}
               {Object.keys(workSpaceList).map((key, index) => (
                 <MenuItem key={index} value={key}>
                   {workSpaceList[key].label}
@@ -289,7 +285,6 @@ const SelectScopeModal = props => {
           ) : (
             <BasicVirtualizedTree
               onClickNode={node => requestScopeVersions(node)}
-              // shared
               onDoubleClickNode={data => confirmNodeSelection(data)}
               data={data}
               handleChange={nodes => setData(nodes)}
@@ -309,6 +304,7 @@ const SelectScopeModal = props => {
 };
 
 SelectScopeModal.propTypes = {
+  allowArchive: PropTypes.bool,
   onSubmit: PropTypes.func,
   onCancel: PropTypes.func,
   open: PropTypes.bool,
@@ -319,6 +315,7 @@ SelectScopeModal.propTypes = {
 };
 
 SelectScopeModal.defaultProps = {
+  allowArchive: true,
   title: "Insert Text here",
   message: "Are you sure?",
   onSubmit: () => {},
