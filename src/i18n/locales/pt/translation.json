@@ -203,5 +203,12 @@
   "There are missing variables to build a camera, e.g": "Há variáveis ausentes para construir uma camera, e.g",
   "There are missing variables to build a light, e.g": "Há variáveis ausentes para construir uma luz, e.g",
   "Load": "Carregar",
-  "Nothing selected": "Nada selecionado"
+  "Nothing selected": "Nada selecionado",
+  "an": "um",
+  "a": "um",
+  "Select": "Selecione",
+  "Document": "Documento",
+  "Are you sure?": "Tens a certeza?",
+  "Insert Text here": "Inserir texto aqui",
+  "Confirm": "Confirmar"
 }
