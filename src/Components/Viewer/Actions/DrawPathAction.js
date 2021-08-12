@@ -61,11 +61,16 @@ class DrawPathAction extends MouseKeysAction {
     });
   };
 
-  getUndoAbleClickAction(keyPoints, scene, parentView, { camera, canvas }) {
-    const kps = [...keyPoints];
+  getUndoAbleClickAction = (
+    keyPoints,
+    scene,
+    parentView,
+    { camera, canvas }
+  ) => {
+    const kps = keyPoints.map(x => Vec3.ofBabylon(x));
     return UndoManager.actionBuilder()
       .doAction(() => {
-        const finalKps = kps.length === 1 ? [kps[0], kps[0]] : kps;
+        const finalKps = kps.length === 1 ? [kps[0], kps[0]] : [...kps];
         parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false, false);
         this.createCurve(finalKps, TEMP_PATH_NAME, scene, parentView, false);
         if (kps.length <= 2) {
@@ -73,7 +78,7 @@ class DrawPathAction extends MouseKeysAction {
             this.getDrawPathContextAction(camera, canvas, scene)
           );
         }
-        this.mouseCurve = kps;
+        this.mouseCurve = [...kps];
       })
       .undoAction(({ is2UpdateInServer = true }) => {
         parentView.deleteNodeFromTreeUsingName(
@@ -98,7 +103,7 @@ class DrawPathAction extends MouseKeysAction {
         }
       })
       .build();
-  }
+  };
 
   onPointerMove = (evt, parentView) => {
     this.addKeyPointPlaceHolder(parentView);
@@ -109,7 +114,6 @@ class DrawPathAction extends MouseKeysAction {
   };
 
   onKeyUp = (evt, parentView) => {
-    const defaultAction = () => super.onKeyUp(evt, parentView);
     parentView.getSceneMemory().forEach(memory => {
       const { scene, camera, canvas } = memory;
       const contextActions = this.getDrawPathContextAction(
@@ -117,25 +121,23 @@ class DrawPathAction extends MouseKeysAction {
         canvas,
         scene
       );
-      selectOneAction(
-        [
-          {
-            predicate: e => e.code === "Enter" || e.code === "NumpadEnter",
-            action: () => contextActions[1].action(parentView)
-          },
-          {
-            predicate: e => e.code === "Delete" || e.code === "Backspace",
-            action: () => contextActions[0].action(parentView)
-          },
-          {
-            predicate: e => e.code === "Escape",
-            action: () => {
-              contextActions[0].action(parentView);
-            }
+      const actions = [
+        {
+          predicate: e => e.code === "Enter" || e.code === "NumpadEnter",
+          action: () => contextActions[1].action(parentView)
+        },
+        {
+          predicate: e => e.code === "Delete" || e.code === "Backspace",
+          action: () => contextActions[0].action(parentView)
+        },
+        {
+          predicate: e => e.code === "Escape",
+          action: () => {
+            contextActions[0].action(parentView);
           }
-        ],
-        defaultAction
-      )(evt);
+        }
+      ];
+      selectOneAction(actions)(evt);
     });
   };
 

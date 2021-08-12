@@ -10,10 +10,35 @@ import { useTheme, makeStyles } from "@material-ui/core/styles";
 import ReactResizeDetector from "react-resize-detector";
 import PropTypes from "prop-types";
 import { SCENE_BACKGROUND } from "../Utils/Constants";
+import LoadingScreen from "../Utils/LoadingScreen";
+import loader from "../../../../resources/movai_red.svg";
+import { LinearProgress } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => {
   return {
-    root: {}
+    root: {
+      ...FLEX_STYLE,
+      maxHeight: "100%",
+      position: "relative"
+    },
+    loaderContainer: {
+      // backgroundColor: theme.palette.background.secondary,
+      backgroundColor: "black",
+      display: "none",
+      height: "100%",
+      position: "absolute",
+      textAlign: "center",
+      top: 0,
+      left: 0,
+      width: "100%",
+      zIndex: 1051 // Must be greater than 1050 to be on top of floating buttons
+    },
+    loaderImage: {
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)"
+    }
   };
 });
 const FLEX_STYLE = {
@@ -82,7 +107,10 @@ const BaseViewer = props => {
         engineOptions,
         adaptToDeviceRatio
       );
-      // const engine = new EngineSingleton(reactCanvas.current).engine;
+      // Set custom loading screen and display loading
+      const loadingScreen = new LoadingScreen();
+      engine.loadingScreen = loadingScreen;
+      // Setup and render scene
       const newScene = setUpScene(engine);
       renderScene(engine, newScene);
     }
@@ -103,7 +131,13 @@ const BaseViewer = props => {
   }, [classes, theme.label, scene]);
 
   return (
-    <div style={{ ...FLEX_STYLE, maxHeight: "100%" }}>
+    <div className={classes.root}>
+      <div id="loading-scene" className={classes.loaderContainer}>
+        <div className={classes.loaderImage}>
+          <img src={loader} alt="loading" width={200}></img>
+          <LinearProgress color="secondary" style={{ marginTop: 50 }} />
+        </div>
+      </div>
       <canvas
         ref={reactCanvas}
         width={size.width}

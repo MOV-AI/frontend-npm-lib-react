@@ -333,13 +333,14 @@ class Path extends NodeItem {
     return item;
   }
 
-  static deleteKeyPoint(scene, keyPointMesh, mainView) {
+  static deleteKeyPointWithUndo(scene, keyPointMesh, mainView) {
     const index = keyPointMesh.index;
     const name = keyPointMesh.parent.name;
     mainView.getNodeFromTree(name).forEach(({ item }) => {
       const { mesh } = item;
       const copyPosition = { ...mesh.position };
       let newPoints = item.localPath.map(x => Vec3.of(x).toBabylon());
+      if (newPoints.length === 2) return;
       mainView
         .getUndoManager()
         .doIt(
@@ -812,7 +813,7 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
       actions.push({
         icon: props => <i className="fas fa-trash" {...props}></i>,
         action: parentView => {
-          Path.deleteKeyPoint(scene, keyPointMesh, parentView);
+          Path.deleteKeyPointWithUndo(scene, keyPointMesh, parentView);
           parentView.closeContextDial();
         },
         name: "Delete node [DEL]"
@@ -862,9 +863,7 @@ const createPlaceHolderKeyPoints = (scene, pseudoItem, mainView) => {
     keyPoint.position = p;
     keyPoint.index = i;
     keyPoint.observers = new Observable();
-
     keyPoints.push(keyPoint);
-
     keyPoint.observers.add(getKeyPointObserverFunction(scene, mainView));
   });
 
@@ -881,6 +880,7 @@ const createPlaceHolderKeyPoints = (scene, pseudoItem, mainView) => {
       kp,
       pseudoItem.name
     );
+    kp.onDel = () => Path.deleteKeyPointWithUndo(scene, kp, mainView);
   });
   return keyPoints;
 };
@@ -914,7 +914,7 @@ function getKpMouseContextActions(scene, kp, pathName) {
     actions.push({
       title: "Delete point",
       onClick: () => {
-        Path.deleteKeyPoint(scene, kp, mainView);
+        Path.deleteKeyPointWithUndo(scene, kp, mainView);
       }
     });
     return actions;
