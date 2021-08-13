@@ -1,4 +1,4 @@
-// import { UndoManager } from "mov-fe-lib-core";
+// import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 // import MainView from "../../MainView/MainView";
 // import GraphItem from "../GraphItem";
 // import { Vector3, Scene, Color3 } from "@babylonjs/core";

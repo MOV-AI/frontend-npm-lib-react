@@ -15,11 +15,11 @@ import DefaultMouseEvents from "./Utils/DefaultMouseEvents";
 import Util3d from "./Util3d/Util3d";
 import Vec3 from "./Math/Vec3";
 import ReactResizeDetector from "react-resize-detector";
-import { UndoManager, RobotManager } from "mov-fe-lib-core";
 import ConfirmAlertModal from "../Modal/ConfirmAlertModal";
 import RobotLogModal from "../Modal/RobotLogModal";
 import MeshCache from "./Utils/MeshCache";
 import Robot from "./NodeItem/Robot";
+import { UndoManager, RobotManager } from "@mov-ai/mov-fe-lib-core";
 
 //========================================================================================
 /*                                                                                      *
