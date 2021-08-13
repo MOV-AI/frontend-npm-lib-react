@@ -754,6 +754,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/movai_red.svg":
+/*!*********************************!*\
+  !*** ./resources/movai_red.svg ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.0' width='400.000000' height='400.000000' preserveAspectRatio='xMidYMid meet'%3E%3Crect id='backgroundrect' width='100%25' height='100%25' x='0' y='0' fill='none' stroke='none'/%3E %3Cg class='currentLayer' style=''%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cg transform='translate(0,400) scale(0.10000000149011612,-0.10000000149011612) ' fill='%23d31b1b' stroke='none' id='svg_1' class='' fill-opacity='1'%3E %3Cpath d='M1770 3990 c-682 -83 -1271 -501 -1570 -1115 -103 -211 -167 -437 -191 -673 -14 -129 -6 -404 14 -522 85 -495 339 -929 729 -1242 232 -187 539 -332 836 -393 957 -199 1909 314 2272 1224 204 512 180 1116 -64 1606 -115 232 -229 387 -412 565 -296 286 -639 460 -1059 536 -106 19 -443 27 -555 14z m-998 -1105 c3 -3 -23 -48 -57 -99 -113 -172 -182 -338 -226 -546 -32 -149 -33 -448 -1 -593 31 -145 70 -258 134 -387 65 -132 64 -140 -28 -140 -66 0 -100 13 -143 53 -74 70 -71 38 -71 748 0 555 2 642 16 690 43 144 129 236 248 265 54 13 119 18 128 9z m2621 -21 c99 -34 192 -157 216 -288 14 -78 15 -1256 1 -1307 -13 -48 -82 -125 -124 -139 -55 -18 -166 -12 -166 9 0 4 25 57 55 118 195 391 215 839 55 1247 -41 105 -117 247 -176 327 -18 25 -30 49 -26 54 10 11 109 -2 165 -21z m-251 -61 c128 -170 217 -370 265 -594 13 -63 18 -129 18 -264 0 -199 -13 -285 -66 -448 -33 -101 -114 -277 -128 -277 -26 0 -31 80 -32 549 0 267 -4 495 -8 505 -6 16 -20 4 -87 -77 -43 -53 -81 -96 -84 -96 -3 -1 -16 41 -29 92 -27 106 -74 215 -132 304 -32 48 -38 66 -31 80 34 61 243 273 271 273 4 0 23 -21 43 -47z m-2206 15 c52 -39 95 -82 171 -170 l74 -88 -42 -61 c-23 -34 -54 -89 -69 -123 -35 -76 -80 -219 -80 -252 0 -13 -4 -24 -8 -24 -4 0 -43 43 -87 95 -43 52 -83 95 -87 95 -4 0 -8 -224 -9 -497 0 -492 -5 -565 -34 -565 -16 0 -94 166 -130 279 -52 159 -69 294 -62 493 8 230 47 384 147 585 56 112 154 255 174 255 7 0 26 -10 42 -22z m458 -511 l133 -157 -20 -58 c-13 -39 -19 -85 -19 -147 -1 -150 44 -260 151 -365 107 -105 214 -150 361 -150 241 0 443 162 500 399 16 69 8 222 -15 278 l-17 43 132 157 c73 87 136 159 140 161 24 9 119 -186 148 -303 11 -44 22 -104 25 -134 l4 -54 -329 -388 c-343 -405 -362 -424 -466 -455 -101 -31 -258 -12 -341 41 -48 29 -83 69 -607 691 -52 62 -94 121 -94 131 0 52 33 202 60 271 33 86 99 204 112 200 5 -2 68 -74 142 -161z m376 -444 c85 -102 167 -194 182 -204 62 -45 81 -30 292 224 76 92 142 165 146 162 13 -8 20 -110 10 -167 -27 -170 -153 -299 -324 -334 -130 -27 -257 9 -356 102 -61 57 -116 162 -125 239 -8 57 1 165 13 164 4 0 77 -84 162 -186z' id='svg_2' fill='%23d31b1b' fill-opacity='1'/%3E %3C/g%3E%3C/g%3E%3C/svg%3E"
+
+/***/ }),
+
 /***/ "./src/Components/Breadcrumb.js":
 /*!**************************************!*\
   !*** ./src/Components/Breadcrumb.js ***!
@@ -4347,9 +4358,7 @@ var SelectScopeModal = function SelectScopeModal(props) {
     onCancel: props.onCancel,
     open: props.open,
     title: getModalTitle(props.scopeList[0]),
-    width: "50%" // ioports
-    // height="70%"
-
+    width: "50%"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_6__["Grid"], {
     container: true
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_6__["Grid"], {
@@ -4365,10 +4374,9 @@ var SelectScopeModal = function SelectScopeModal(props) {
       width: "50%"
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_6__["InputLabel"], null, _i18n_i18n_js__WEBPACK_IMPORTED_MODULE_12__["default"].t("Workspace")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_6__["Select"], {
-    value: selectedWorkspace // shared
-    // defaultValue=""
-    ,
-    onChange: changeWorkspace
+    value: selectedWorkspace,
+    onChange: changeWorkspace,
+    disabled: !props.allowArchive
   }, Object.keys(workSpaceList).map(function (key, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_6__["MenuItem"], {
       key: index,
@@ -4396,8 +4404,7 @@ var SelectScopeModal = function SelectScopeModal(props) {
   })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Tree_BasicVirtualizedTree__WEBPACK_IMPORTED_MODULE_8__["default"], {
     onClickNode: function onClickNode(node) {
       return requestScopeVersions(node);
-    } // shared
-    ,
+    },
     onDoubleClickNode: function onDoubleClickNode(data) {
       return confirmNodeSelection(data);
     },
@@ -4421,6 +4428,7 @@ var SelectScopeModal = function SelectScopeModal(props) {
 };
 
 SelectScopeModal.propTypes = {
+  allowArchive: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool,
   onSubmit: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.func,
   onCancel: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.func,
   open: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool,
@@ -4432,6 +4440,7 @@ SelectScopeModal.propTypes = {
 SelectScopeModal.defaultProps = {
   title: _i18n_i18n_js__WEBPACK_IMPORTED_MODULE_12__["default"].t("Insert Text here"),
   message: _i18n_i18n_js__WEBPACK_IMPORTED_MODULE_12__["default"].t("Are you sure?"),
+  allowArchive: true,
   onSubmit: function onSubmit() {},
   onCancel: function onCancel() {},
   open: false,
@@ -6861,44 +6870,46 @@ var TEMP_KEY_POINT_NAME = "temp_key_point";
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "@babel/runtime/helpers/esm/extends");
-/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/asyncToGenerator */ "@babel/runtime/helpers/esm/asyncToGenerator");
-/* harmony import */ var _babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/esm/classCallCheck */ "@babel/runtime/helpers/esm/classCallCheck");
-/* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/esm/createClass */ "@babel/runtime/helpers/esm/createClass");
-/* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/esm/assertThisInitialized */ "@babel/runtime/helpers/esm/assertThisInitialized");
-/* harmony import */ var _babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_esm_get__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/esm/get */ "@babel/runtime/helpers/esm/get");
-/* harmony import */ var _babel_runtime_helpers_esm_get__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_get__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inherits */ "@babel/runtime/helpers/esm/inherits");
-/* harmony import */ var _babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/esm/possibleConstructorReturn */ "@babel/runtime/helpers/esm/possibleConstructorReturn");
-/* harmony import */ var _babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/esm/getPrototypeOf */ "@babel/runtime/helpers/esm/getPrototypeOf");
-/* harmony import */ var _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @babel/runtime/helpers/esm/defineProperty */ "@babel/runtime/helpers/esm/defineProperty");
-/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @babel/runtime/regenerator */ "@babel/runtime/regenerator");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../Util3d/Util3d */ "./src/Components/Viewer/Util3d/Util3d.js");
-/* harmony import */ var _Math_Vec3__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../Math/Vec3 */ "./src/Components/Viewer/Math/Vec3.js");
-/* harmony import */ var _Action__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Action */ "./src/Components/Viewer/Actions/Action.js");
-/* harmony import */ var _NodeItem_Map__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../NodeItem/Map */ "./src/Components/Viewer/NodeItem/Map.js");
-/* harmony import */ var monet__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! monet */ "monet");
-/* harmony import */ var monet__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(monet__WEBPACK_IMPORTED_MODULE_15__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_16__);
-/* harmony import */ var _NodeItem_GlobalRef__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../NodeItem/GlobalRef */ "./src/Components/Viewer/NodeItem/GlobalRef.js");
-/* harmony import */ var _babylonjs_core__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @babylonjs/core */ "@babylonjs/core");
-/* harmony import */ var _babylonjs_core__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(_babylonjs_core__WEBPACK_IMPORTED_MODULE_18__);
-/* harmony import */ var _Utils_DefaultScene__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../Utils/DefaultScene */ "./src/Components/Viewer/Utils/DefaultScene.js");
-/* harmony import */ var _MainView_MainViewActions__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../MainView/MainViewActions */ "./src/Components/Viewer/MainView/MainViewActions.js");
-/* harmony import */ var mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! mov-fe-lib-core */ "mov-fe-lib-core");
-/* harmony import */ var mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_21___default = /*#__PURE__*/__webpack_require__.n(mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_21__);
-/* harmony import */ var _AssetsManager_AssetsManager__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../AssetsManager/AssetsManager */ "./src/Components/Viewer/AssetsManager/AssetsManager.js");
+/* harmony import */ var _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/slicedToArray */ "@babel/runtime/helpers/esm/slicedToArray");
+/* harmony import */ var _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "@babel/runtime/helpers/esm/extends");
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/esm/asyncToGenerator */ "@babel/runtime/helpers/esm/asyncToGenerator");
+/* harmony import */ var _babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/esm/classCallCheck */ "@babel/runtime/helpers/esm/classCallCheck");
+/* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/esm/createClass */ "@babel/runtime/helpers/esm/createClass");
+/* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/esm/assertThisInitialized */ "@babel/runtime/helpers/esm/assertThisInitialized");
+/* harmony import */ var _babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_esm_get__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/esm/get */ "@babel/runtime/helpers/esm/get");
+/* harmony import */ var _babel_runtime_helpers_esm_get__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_get__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inherits */ "@babel/runtime/helpers/esm/inherits");
+/* harmony import */ var _babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/esm/possibleConstructorReturn */ "@babel/runtime/helpers/esm/possibleConstructorReturn");
+/* harmony import */ var _babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @babel/runtime/helpers/esm/getPrototypeOf */ "@babel/runtime/helpers/esm/getPrototypeOf");
+/* harmony import */ var _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @babel/runtime/helpers/esm/defineProperty */ "@babel/runtime/helpers/esm/defineProperty");
+/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @babel/runtime/regenerator */ "@babel/runtime/regenerator");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../Util3d/Util3d */ "./src/Components/Viewer/Util3d/Util3d.js");
+/* harmony import */ var _Math_Vec3__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../Math/Vec3 */ "./src/Components/Viewer/Math/Vec3.js");
+/* harmony import */ var _Action__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Action */ "./src/Components/Viewer/Actions/Action.js");
+/* harmony import */ var _NodeItem_Map__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../NodeItem/Map */ "./src/Components/Viewer/NodeItem/Map.js");
+/* harmony import */ var monet__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! monet */ "monet");
+/* harmony import */ var monet__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(monet__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var _NodeItem_GlobalRef__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../NodeItem/GlobalRef */ "./src/Components/Viewer/NodeItem/GlobalRef.js");
+/* harmony import */ var _babylonjs_core__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @babylonjs/core */ "@babylonjs/core");
+/* harmony import */ var _babylonjs_core__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(_babylonjs_core__WEBPACK_IMPORTED_MODULE_19__);
+/* harmony import */ var _Utils_DefaultScene__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../Utils/DefaultScene */ "./src/Components/Viewer/Utils/DefaultScene.js");
+/* harmony import */ var _MainView_MainViewActions__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../MainView/MainViewActions */ "./src/Components/Viewer/MainView/MainViewActions.js");
+/* harmony import */ var mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! mov-fe-lib-core */ "mov-fe-lib-core");
+/* harmony import */ var mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_22___default = /*#__PURE__*/__webpack_require__.n(mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_22__);
+/* harmony import */ var _AssetsManager_AssetsManager__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../AssetsManager/AssetsManager */ "./src/Components/Viewer/AssetsManager/AssetsManager.js");
 
 
 
@@ -6911,7 +6922,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7___default()(this, result); }; }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9___default()(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_8___default()(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
@@ -6929,25 +6941,25 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 
 var AddMapAction = /*#__PURE__*/function (_Action) {
-  _babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_6___default()(AddMapAction, _Action);
+  _babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_7___default()(AddMapAction, _Action);
 
   var _super = _createSuper(AddMapAction);
 
   function AddMapAction(name, mapLoader) {
     var _this;
 
-    _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default()(this, AddMapAction);
+    _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default()(this, AddMapAction);
 
     _this = _super.call(this);
 
-    _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this), "getType", function () {
+    _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), "getType", function () {
       return AddMapAction.TYPE;
     });
 
-    _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this), "deleteAsset", function () {});
+    _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), "deleteAsset", function () {});
 
-    _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this), "download", /*#__PURE__*/_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_10___default.a.mark(function _callee() {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_10___default.a.wrap(function _callee$(_context) {
+    _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), "download", /*#__PURE__*/_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -6963,7 +6975,7 @@ var AddMapAction = /*#__PURE__*/function (_Action) {
     _this.mapLoader = mapLoader;
 
     _this.icon = function (props) {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement("i", _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, props, {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_17___default.a.createElement("i", _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1___default()({}, props, {
         className: "fas fa-map"
       }));
     };
@@ -6972,16 +6984,16 @@ var AddMapAction = /*#__PURE__*/function (_Action) {
     return _this;
   }
 
-  _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_3___default()(AddMapAction, [{
+  _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_4___default()(AddMapAction, [{
     key: "addMap",
     value: function addMap(parentView) {
       var _this2 = this;
 
       parentView.getSceneMemory().forEach( /*#__PURE__*/function () {
-        var _ref2 = _babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_10___default.a.mark(function _callee2(memory) {
-          var scene, camera, _yield$_this2$mapLoad, textureSrc, resolution, origin, imageSize, width, height, mesh, originPos, rootNode, parent, map, isVisible, is2sendServer;
+        var _ref2 = _babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.mark(function _callee2(memory) {
+          var scene, camera, _yield$_this2$mapLoad, textureSrc, resolution, origin, imageSize, width, height, mesh, _origin, xOrigin, yOrigin, yawOrigin, originPos, rootNode, parent, map, isVisible, is2sendServer;
 
-          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_10___default.a.wrap(function _callee2$(_context2) {
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.wrap(function _callee2$(_context2) {
             while (1) {
               switch (_context2.prev = _context2.next) {
                 case 0:
@@ -6997,24 +7009,27 @@ var AddMapAction = /*#__PURE__*/function (_Action) {
                   imageSize = _yield$_this2$mapLoad.imageSize;
                   width = resolution * imageSize[0];
                   height = resolution * imageSize[1];
-                  mesh = _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_11__["default"].groundBuilder(scene).name(monet__WEBPACK_IMPORTED_MODULE_15__["Maybe"].fromNull(_this2.memory["name"]).orSome(_this2.name)).width(width).height(height).textureSrc(textureSrc).build();
-                  originPos = _Math_Vec3__WEBPACK_IMPORTED_MODULE_12__["default"].of([-width / 2, -height / 2, 0]).sub(_Math_Vec3__WEBPACK_IMPORTED_MODULE_12__["default"].of(origin));
+                  mesh = _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_12__["default"].groundBuilder(scene).name(monet__WEBPACK_IMPORTED_MODULE_16__["Maybe"].fromNull(_this2.memory["name"]).orSome(_this2.name)).width(width).height(height).textureSrc(textureSrc).build();
+                  _origin = _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(origin, 3), xOrigin = _origin[0], yOrigin = _origin[1], yawOrigin = _origin[2];
+                  originPos = _Math_Vec3__WEBPACK_IMPORTED_MODULE_13__["default"].of([-width / 2, -height / 2, 0]).sub(_Math_Vec3__WEBPACK_IMPORTED_MODULE_13__["default"].of([xOrigin, yOrigin, 0]));
                   rootNode = parentView.getRootNode();
                   parent = rootNode.item.mesh.parent;
-                  parent.position = _NodeItem_GlobalRef__WEBPACK_IMPORTED_MODULE_17__["default"].inverseCoordinates(originPos.toBabylon());
-                  camera.setTarget(new _babylonjs_core__WEBPACK_IMPORTED_MODULE_18__["Vector3"](parent.position.x, parent.position.y, parent.position.z));
-                  map = new _NodeItem_Map__WEBPACK_IMPORTED_MODULE_14__["default"](mesh, [width, height], _this2.textureSrc, monet__WEBPACK_IMPORTED_MODULE_15__["Maybe"].fromNull(_this2.memory["assetName"]).orSome(_this2.name));
-                  isVisible = monet__WEBPACK_IMPORTED_MODULE_15__["Maybe"].fromNull(_this2.memory["isVisible"]).orSome(true);
-                  is2sendServer = monet__WEBPACK_IMPORTED_MODULE_15__["Maybe"].fromNull(_this2.memory["isImport"]).map(function (x) {
+                  parent.position = _NodeItem_GlobalRef__WEBPACK_IMPORTED_MODULE_18__["default"].inverseCoordinates(originPos.toBabylon());
+                  parent.rotationQuaternion = new _babylonjs_core__WEBPACK_IMPORTED_MODULE_19__["Quaternion"](_NodeItem_GlobalRef__WEBPACK_IMPORTED_MODULE_18__["ROS_ORIGIN"].quaternion[1], _NodeItem_GlobalRef__WEBPACK_IMPORTED_MODULE_18__["ROS_ORIGIN"].quaternion[2], _NodeItem_GlobalRef__WEBPACK_IMPORTED_MODULE_18__["ROS_ORIGIN"].quaternion[3], _NodeItem_GlobalRef__WEBPACK_IMPORTED_MODULE_18__["ROS_ORIGIN"].quaternion[0]);
+                  parent.rotate(_babylonjs_core__WEBPACK_IMPORTED_MODULE_19__["Axis"].Z, -yawOrigin, _babylonjs_core__WEBPACK_IMPORTED_MODULE_19__["Space"].LOCAL);
+                  camera.setTarget(new _babylonjs_core__WEBPACK_IMPORTED_MODULE_19__["Vector3"](parent.position.x, parent.position.y, parent.position.z));
+                  map = new _NodeItem_Map__WEBPACK_IMPORTED_MODULE_15__["default"](mesh, [width, height], _this2.textureSrc, monet__WEBPACK_IMPORTED_MODULE_16__["Maybe"].fromNull(_this2.memory["assetName"]).orSome(_this2.name));
+                  isVisible = monet__WEBPACK_IMPORTED_MODULE_16__["Maybe"].fromNull(_this2.memory["isVisible"]).orSome(true);
+                  is2sendServer = monet__WEBPACK_IMPORTED_MODULE_16__["Maybe"].fromNull(_this2.memory["isImport"]).map(function (x) {
                     return !x;
                   }).orSome(true);
                   mesh.setEnabled(isVisible);
                   parentView.addNodeItem2Tree(map, null, is2sendServer, isVisible);
                   memory.ground.dispose();
-                  memory.ground = _Utils_DefaultScene__WEBPACK_IMPORTED_MODULE_19__["default"].createMeshGround(scene, width, height);
+                  memory.ground = _Utils_DefaultScene__WEBPACK_IMPORTED_MODULE_20__["default"].createMeshGround(scene, width, height);
                   _this2.memory["isImport"] = false;
 
-                case 24:
+                case 27:
                 case "end":
                   return _context2.stop();
               }
@@ -7032,7 +7047,7 @@ var AddMapAction = /*#__PURE__*/function (_Action) {
     value: function action(parentView) {
       var _this3 = this;
 
-      _babel_runtime_helpers_esm_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(AddMapAction.prototype), "action", this).call(this, parentView);
+      _babel_runtime_helpers_esm_get__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9___default()(AddMapAction.prototype), "action", this).call(this, parentView);
 
       var maybeNode = parentView.getNodeFromTree(this.name);
       maybeNode.orElseRun(function () {
@@ -7047,7 +7062,7 @@ var AddMapAction = /*#__PURE__*/function (_Action) {
           parentView.getUndoManager().doIt(_this3.getUndoAction(parentView));
         }
       });
-      parentView.setSelectedAction(Object(_MainView_MainViewActions__WEBPACK_IMPORTED_MODULE_20__["ACTIONS"])().orbit);
+      parentView.setSelectedAction(Object(_MainView_MainViewActions__WEBPACK_IMPORTED_MODULE_21__["ACTIONS"])().orbit);
     }
   }, {
     key: "getUndoAction",
@@ -7055,7 +7070,7 @@ var AddMapAction = /*#__PURE__*/function (_Action) {
       var _this4 = this;
 
       if (parentView.getObjectTree().length < 2) {
-        return mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_21__["UndoManager"].actionBuilder().doAction(function () {
+        return mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_22__["UndoManager"].actionBuilder().doAction(function () {
           _this4.addMap(parentView);
         }).undoAction(function (_ref3) {
           var _ref3$is2UpdateInServ = _ref3.is2UpdateInServer,
@@ -7066,13 +7081,13 @@ var AddMapAction = /*#__PURE__*/function (_Action) {
       } else {
         var oldMapName = parentView.getObjectTree()[1].title;
         var newMapName = this.name;
-        return mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_21__["UndoManager"].actionBuilder().doAction(function () {
+        return mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_22__["UndoManager"].actionBuilder().doAction(function () {
           _this4.switchMaps(oldMapName, newMapName, parentView);
         }).undoAction(function (_ref4) {
           var _ref4$is2UpdateInServ = _ref4.is2UpdateInServer,
               is2UpdateInServer = _ref4$is2UpdateInServ === void 0 ? true : _ref4$is2UpdateInServ;
           parentView.deleteNodeFromTreeUsingName(newMapName, is2UpdateInServer);
-          monet__WEBPACK_IMPORTED_MODULE_15__["Maybe"].fromNull(_AssetsManager_AssetsManager__WEBPACK_IMPORTED_MODULE_22__["default"].getInstance().getAssetsActionMap()[oldMapName]).forEach(function (a) {
+          monet__WEBPACK_IMPORTED_MODULE_16__["Maybe"].fromNull(_AssetsManager_AssetsManager__WEBPACK_IMPORTED_MODULE_23__["default"].getInstance().getAssetsActionMap()[oldMapName]).forEach(function (a) {
             return a.action(parentView);
           });
         }).build();
@@ -7084,9 +7099,9 @@ var AddMapAction = /*#__PURE__*/function (_Action) {
   }]);
 
   return AddMapAction;
-}(_Action__WEBPACK_IMPORTED_MODULE_13__["default"]);
+}(_Action__WEBPACK_IMPORTED_MODULE_14__["default"]);
 
-_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(AddMapAction, "TYPE", "AddMapAction");
+_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(AddMapAction, "TYPE", "AddMapAction");
 
 /* harmony default export */ __webpack_exports__["default"] = (AddMapAction);
 
@@ -7628,7 +7643,7 @@ var DragObjectsAction = /*#__PURE__*/function (_MouseKeysAction) {
   var _super = _createSuper(DragObjectsAction);
 
   function DragObjectsAction() {
-    var _thisSuper, _thisSuper2, _this;
+    var _thisSuper, _this;
 
     _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default()(this, DragObjectsAction);
 
@@ -7702,15 +7717,11 @@ var DragObjectsAction = /*#__PURE__*/function (_MouseKeysAction) {
     });
 
     _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), "onKeyUp", function (evt, parentView) {
-      var defaultAction = function defaultAction() {
-        return _babel_runtime_helpers_esm_get__WEBPACK_IMPORTED_MODULE_8___default()((_thisSuper2 = _babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9___default()(DragObjectsAction.prototype)), "onKeyUp", _thisSuper2).call(_thisSuper2, evt, parentView);
-      };
-
       var predicateActionList = [{
         predicate: function predicate(e) {
           return ["Backspace", "Delete"].includes(e.code);
         },
-        action: _this.getDeleteButtonAction(parentView)
+        action: _this.getDeleteAction(parentView)
       }, {
         predicate: function predicate(e) {
           return e.ctrlKey && e.code === "KeyC";
@@ -7722,7 +7733,7 @@ var DragObjectsAction = /*#__PURE__*/function (_MouseKeysAction) {
         },
         action: _this.getPasteAction(parentView)
       }];
-      Object(_Utils_Utils__WEBPACK_IMPORTED_MODULE_19__["selectOneAction"])(predicateActionList, defaultAction)(evt);
+      Object(_Utils_Utils__WEBPACK_IMPORTED_MODULE_19__["selectOneAction"])(predicateActionList)(evt);
     });
 
     _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), "handleMeshRightClick", function (evt, parentView, mesh) {
@@ -7975,8 +7986,8 @@ var DragObjectsAction = /*#__PURE__*/function (_MouseKeysAction) {
       }
     }
   }, {
-    key: "getDeleteButtonAction",
-    value: function getDeleteButtonAction(parentView) {
+    key: "getDeleteAction",
+    value: function getDeleteAction(parentView) {
       return function () {
         var meshSelector = _MainView_MeshSelector__WEBPACK_IMPORTED_MODULE_21__["default"].ofMainView(parentView);
         var meshes = meshSelector.meshes();
@@ -7987,10 +7998,7 @@ var DragObjectsAction = /*#__PURE__*/function (_MouseKeysAction) {
             return parentView.onDeleteNode(node, isOne, isOne);
           });
           maybeNode.orElseRun(function () {
-            if (!isOne) return; //TODO REFACTOR THIS;
-
-            var contextActions = parentView.getContextActions();
-            !!contextActions[0] && contextActions[0].action(parentView);
+            if (!isOne) return;
             mesh.onDel && mesh.onDel();
           });
         });
@@ -8768,7 +8776,7 @@ var DrawGraphAction = /*#__PURE__*/function (_MouseKeysAction) {
         _this.firstClickedMesh = clickedMesh;
       } else {
         //firstMousePos exists
-        if (_this.belongs2SamePath(parentView)(clickedMesh, _this.firstClickedMesh) || _NodeItem_GraphItem__WEBPACK_IMPORTED_MODULE_14__["default"].isInvalidEdge(_this.firstClickedMesh, clickedMesh) || _this.firstClickedMesh.name === clickedMesh.name) {
+        if (_this.belongs2SamePath(parentView)(clickedMesh, _this.firstClickedMesh) || _NodeItem_GraphItem__WEBPACK_IMPORTED_MODULE_14__["default"].isInvalidEdge(_this.firstClickedMesh, clickedMesh)) {
           _this.resetPreview();
         } else {
           parentView.getUndoManager().doIt(_this.getUndoAbleLineEdge([_this.firstClickedMesh, clickedMesh], scene, parentView, clickedMesh));
@@ -8875,10 +8883,10 @@ var toGlobalCoord = _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_12__["default"].toGl
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/toConsumableArray */ "@babel/runtime/helpers/esm/toConsumableArray");
-/* harmony import */ var _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "@babel/runtime/helpers/esm/extends");
-/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "@babel/runtime/helpers/esm/extends");
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/toConsumableArray */ "@babel/runtime/helpers/esm/toConsumableArray");
+/* harmony import */ var _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/esm/classCallCheck */ "@babel/runtime/helpers/esm/classCallCheck");
 /* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/esm/createClass */ "@babel/runtime/helpers/esm/createClass");
@@ -8938,7 +8946,7 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
   var _super = _createSuper(DrawPathAction);
 
   function DrawPathAction() {
-    var _thisSuper, _thisSuper2, _this;
+    var _thisSuper, _this;
 
     _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default()(this, DrawPathAction);
 
@@ -8984,6 +8992,39 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
       });
     });
 
+    _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this), "getUndoAbleClickAction", function (keyPoints, scene, parentView, _ref2) {
+      var camera = _ref2.camera,
+          canvas = _ref2.canvas;
+      var kps = keyPoints.map(function (x) {
+        return _Math_Vec3__WEBPACK_IMPORTED_MODULE_11__["default"].ofBabylon(x);
+      });
+      return mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_16__["UndoManager"].actionBuilder().doAction(function () {
+        var finalKps = kps.length === 1 ? [kps[0], kps[0]] : _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(kps);
+        parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false, false);
+
+        _this.createCurve(finalKps, TEMP_PATH_NAME, scene, parentView, false);
+
+        if (kps.length <= 2) {
+          parentView.setContextActions(_this.getDrawPathContextAction(camera, canvas, scene));
+        }
+
+        _this.mouseCurve = _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(kps);
+      }).undoAction(function (_ref3) {
+        var _ref3$is2UpdateInServ = _ref3.is2UpdateInServer,
+            is2UpdateInServer = _ref3$is2UpdateInServ === void 0 ? true : _ref3$is2UpdateInServ;
+        parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, is2UpdateInServer);
+        var reducedKps = kps.slice(0, kps.length - 1);
+        var finalKps = reducedKps.length === 1 ? [reducedKps[0], reducedKps[0]] : reducedKps;
+
+        if (is2UpdateInServer) {
+          reducedKps.length > 0 && _this.createCurve(finalKps, TEMP_PATH_NAME, scene, parentView, false);
+          _this.mouseCurve = reducedKps;
+        } else {
+          _this.mouseCurve = [];
+        }
+      }).build();
+    });
+
     _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this), "onPointerMove", function (evt, parentView) {
       _this.addKeyPointPlaceHolder(parentView);
     });
@@ -8992,10 +9033,6 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
     });
 
     _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this), "onKeyUp", function (evt, parentView) {
-      var defaultAction = function defaultAction() {
-        return _babel_runtime_helpers_esm_get__WEBPACK_IMPORTED_MODULE_7___default()((_thisSuper2 = _babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this), _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(DrawPathAction.prototype)), "onKeyUp", _thisSuper2).call(_thisSuper2, evt, parentView);
-      };
-
       parentView.getSceneMemory().forEach(function (memory) {
         var scene = memory.scene,
             camera = memory.camera,
@@ -9003,7 +9040,7 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
 
         var contextActions = _this.getDrawPathContextAction(camera, canvas, scene);
 
-        Object(_Utils_Utils__WEBPACK_IMPORTED_MODULE_17__["selectOneAction"])([{
+        var actions = [{
           predicate: function predicate(e) {
             return e.code === "Enter" || e.code === "NumpadEnter";
           },
@@ -9024,7 +9061,8 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
           action: function action() {
             contextActions[0].action(parentView);
           }
-        }], defaultAction)(evt);
+        }];
+        Object(_Utils_Utils__WEBPACK_IMPORTED_MODULE_17__["selectOneAction"])(actions)(evt);
       });
     });
 
@@ -9054,7 +9092,7 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
       var ans = [];
       ans.push({
         icon: function icon(props) {
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement("i", _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1___default()({
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement("i", _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0___default()({
             className: "fas fa-trash"
           }, props));
         },
@@ -9070,7 +9108,7 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
       if (_this.mouseCurve.length > 1) {
         ans.push({
           icon: function icon(props) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement("i", _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1___default()({
+            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement("i", _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0___default()({
               className: "fas fa-check"
             }, props));
           },
@@ -9089,7 +9127,7 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
     _this.name = "Draw Path [2]";
 
     _this.icon = function (props) {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement("i", _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1___default()({
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement("i", _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0___default()({
         className: "fas fa-bezier-curve"
       }, props));
     };
@@ -9105,55 +9143,19 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
   }
 
   _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_3___default()(DrawPathAction, [{
-    key: "getUndoAbleClickAction",
-    value: function getUndoAbleClickAction(keyPoints, scene, parentView, _ref2) {
-      var _this2 = this;
-
-      var camera = _ref2.camera,
-          canvas = _ref2.canvas;
-
-      var kps = _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(keyPoints);
-
-      return mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_16__["UndoManager"].actionBuilder().doAction(function () {
-        var finalKps = kps.length === 1 ? [kps[0], kps[0]] : kps;
-        parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false, false);
-
-        _this2.createCurve(finalKps, TEMP_PATH_NAME, scene, parentView, false);
-
-        if (kps.length <= 2) {
-          parentView.setContextActions(_this2.getDrawPathContextAction(camera, canvas, scene));
-        }
-
-        _this2.mouseCurve = kps;
-      }).undoAction(function (_ref3) {
-        var _ref3$is2UpdateInServ = _ref3.is2UpdateInServer,
-            is2UpdateInServer = _ref3$is2UpdateInServ === void 0 ? true : _ref3$is2UpdateInServ;
-        parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, is2UpdateInServer);
-        var reducedKps = kps.slice(0, kps.length - 1);
-        var finalKps = reducedKps.length === 1 ? [reducedKps[0], reducedKps[0]] : reducedKps;
-
-        if (is2UpdateInServer) {
-          reducedKps.length > 0 && _this2.createCurve(finalKps, TEMP_PATH_NAME, scene, parentView, false);
-          _this2.mouseCurve = reducedKps;
-        } else {
-          _this2.mouseCurve = [];
-        }
-      }).build();
-    }
-  }, {
     key: "getUndoAbleEnterAction",
     value: function getUndoAbleEnterAction(keyPoints, scene, parentView) {
-      var _this3 = this;
+      var _this2 = this;
 
-      var kps = _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(keyPoints);
+      var kps = _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(keyPoints);
 
       var name = "Path".concat(Math.floor(Math.random() * 1e3));
       return mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_16__["UndoManager"].actionBuilder().doAction(function () {
         parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false);
 
-        var pathItem = _this3.createCurve(kps, name, scene, parentView, true);
+        var pathItem = _this2.createCurve(kps, name, scene, parentView, true);
 
-        _this3.mouseCurve = [];
+        _this2.mouseCurve = [];
         parentView.setPropertiesWithName(name);
         parentView.closeContextDial();
 
@@ -9165,16 +9167,16 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
         var _ref4$is2UpdateInServ = _ref4.is2UpdateInServer,
             is2UpdateInServer = _ref4$is2UpdateInServ === void 0 ? true : _ref4$is2UpdateInServ;
 
-        _this3.deleteEdgeInKeyPoints(name, parentView, is2UpdateInServer);
+        _this2.deleteEdgeInKeyPoints(name, parentView, is2UpdateInServer);
 
         parentView.deleteNodeFromTreeUsingName(name, is2UpdateInServer);
 
         if (is2UpdateInServer) {
-          _this3.createCurve(kps, TEMP_PATH_NAME, scene, parentView, false);
+          _this2.createCurve(kps, TEMP_PATH_NAME, scene, parentView, false);
 
-          _this3.mouseCurve = kps;
+          _this2.mouseCurve = kps;
         } else {
-          _this3.mouseCurve = [];
+          _this2.mouseCurve = [];
           parentView.deleteNodeFromTreeUsingName(TEMP_PATH_NAME, false);
         }
       }).build();
@@ -9197,7 +9199,7 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
   }, {
     key: "addKeyPointPlaceHolder",
     value: function addKeyPointPlaceHolder(parentView) {
-      var _this4 = this;
+      var _this3 = this;
 
       this.spherePlaceHolder.dispose();
       parentView.getSceneMemory().forEach(function (_ref7) {
@@ -9211,10 +9213,10 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
             if (nodeItem.getType() === _NodeItem_Path__WEBPACK_IMPORTED_MODULE_12__["default"].TYPE) {
               _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_10__["default"].getGroundPosition(scene, ground).forEach(function (groundPos) {
                 var rootMesh = parentView.getRootNode().item.mesh;
-                _this4.spherePlaceHolder = _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_10__["default"].createSphere(scene, _babylonjs_core__WEBPACK_IMPORTED_MODULE_15__["Color3"].Gray(), _Utils_Constants__WEBPACK_IMPORTED_MODULE_18__["default"].RADIUS, "sphereInsertPlaceHolder", false);
-                _this4.spherePlaceHolder.parent = rootMesh;
-                _this4.spherePlaceHolder.position = _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_10__["default"].toGlobalCoord(parentView)(groundPos);
-                _this4.spherePlaceHolder.visibility = 0.5;
+                _this3.spherePlaceHolder = _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_10__["default"].createSphere(scene, _babylonjs_core__WEBPACK_IMPORTED_MODULE_15__["Color3"].Gray(), _Utils_Constants__WEBPACK_IMPORTED_MODULE_18__["default"].RADIUS, "sphereInsertPlaceHolder", false);
+                _this3.spherePlaceHolder.parent = rootMesh;
+                _this3.spherePlaceHolder.position = _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_10__["default"].toGlobalCoord(parentView)(groundPos);
+                _this3.spherePlaceHolder.visibility = 0.5;
               });
             }
           });
@@ -9224,14 +9226,14 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
   }, {
     key: "createPointInCurve",
     value: function createPointInCurve(parentView) {
-      var _this5 = this;
+      var _this4 = this;
 
       parentView.getSceneMemory().forEach(function (_ref9) {
         var scene = _ref9.scene,
             ground = _ref9.ground;
 
         // dispose mesh before pick mesh
-        _this5.spherePlaceHolder.dispose(); // it can be shown that the picked mesh is the curve we want to edit
+        _this4.spherePlaceHolder.dispose(); // it can be shown that the picked mesh is the curve we want to edit
 
 
         _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_10__["default"].pickMesh(scene, ground).forEach(function (_ref10) {
@@ -9239,13 +9241,13 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
           parentView.getNodeFromTree(name).forEach(function (_ref11) {
             var pathItem = _ref11.item;
             _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_10__["default"].getGroundPosition(scene, ground).forEach(function (groundPos) {
-              var oldPoints = _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(pathItem.localPath).map(function (p) {
+              var oldPoints = _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(pathItem.localPath).map(function (p) {
                 return _Math_Vec3__WEBPACK_IMPORTED_MODULE_11__["default"].of(p).toBabylon();
               });
 
               var oldPosition = pathItem.mesh.position;
               parentView.getUndoManager().doIt(mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_16__["UndoManager"].actionBuilder().doAction(function () {
-                _this5.insertPointInCurve(scene, parentView, pathItem, groundPos);
+                _this4.insertPointInCurve(scene, parentView, pathItem, groundPos);
 
                 parentView.updateNodeInServer(pathItem.name);
               }).undoAction(function (_ref12) {
@@ -9282,7 +9284,7 @@ var DrawPathAction = /*#__PURE__*/function (_MouseKeysAction) {
       var localPathB = localPath.map(function (p) {
         return p.toBabylon();
       });
-      var newPoints = [].concat(_babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(localPathB.slice(0, minIndex + 1)), [localGround.toBabylon()], _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(localPathB.slice(minIndex + 1)));
+      var newPoints = [].concat(_babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(localPathB.slice(0, minIndex + 1)), [localGround.toBabylon()], _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(localPathB.slice(minIndex + 1)));
       _NodeItem_Path__WEBPACK_IMPORTED_MODULE_12__["default"].createNewMeshFromOldUsingNewPoints(newPoints, scene, pathItem, parentView, _NodeItem_Path__WEBPACK_IMPORTED_MODULE_12__["default"].onAddNewPointKeyPointUpdate);
     }
   }]);
@@ -11137,12 +11139,12 @@ _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "@babel/runtime/helpers/esm/extends");
 /* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/defineProperty */ "@babel/runtime/helpers/esm/defineProperty");
-/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/esm/slicedToArray */ "@babel/runtime/helpers/esm/slicedToArray");
-/* harmony import */ var _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutProperties */ "@babel/runtime/helpers/esm/objectWithoutProperties");
-/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/slicedToArray */ "@babel/runtime/helpers/esm/slicedToArray");
+/* harmony import */ var _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutProperties */ "@babel/runtime/helpers/esm/objectWithoutProperties");
+/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/esm/defineProperty */ "@babel/runtime/helpers/esm/defineProperty");
+/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _babylonjs_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babylonjs/core */ "@babylonjs/core");
 /* harmony import */ var _babylonjs_core__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babylonjs_core__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "react");
@@ -11154,6 +11156,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! prop-types */ "prop-types");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Utils/Constants */ "./src/Components/Viewer/Utils/Constants.js");
+/* harmony import */ var _Utils_LoadingScreen__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../Utils/LoadingScreen */ "./src/Components/Viewer/Utils/LoadingScreen.js");
+/* harmony import */ var _resources_movai_red_svg__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../../resources/movai_red.svg */ "./resources/movai_red.svg");
+/* harmony import */ var _resources_movai_red_svg__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_resources_movai_red_svg__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core__WEBPACK_IMPORTED_MODULE_12__);
 
 
 
@@ -11162,7 +11169,7 @@ var _excluded = ["antialias", "engineOptions", "adaptToDeviceRatio", "sceneOptio
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 //========================================================================================
 
@@ -11176,9 +11183,34 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 
 
+
+
+
 var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_6__["makeStyles"])(function (theme) {
   return {
-    root: {}
+    root: _objectSpread(_objectSpread({}, FLEX_STYLE), {}, {
+      maxHeight: "100%",
+      position: "relative"
+    }),
+    loaderContainer: {
+      // backgroundColor: theme.palette.background.secondary,
+      backgroundColor: "black",
+      display: "none",
+      height: "100%",
+      position: "absolute",
+      textAlign: "center",
+      top: 0,
+      left: 0,
+      width: "100%",
+      zIndex: 1051 // Must be greater than 1050 to be on top of floating buttons
+
+    },
+    loaderImage: {
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)"
+    }
   };
 });
 var FLEX_STYLE = {
@@ -11196,19 +11228,19 @@ var BaseViewer = function BaseViewer(props) {
       onSceneReady = props.onSceneReady,
       is2render = props.is2render,
       sceneFactory = props.sceneFactory,
-      rest = _babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_3___default()(props, _excluded);
+      rest = _babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_2___default()(props, _excluded);
 
   var theme = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_6__["useTheme"])();
   var classes = useStyles();
   var reactCanvas = Object(react__WEBPACK_IMPORTED_MODULE_5__["useRef"])(null);
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_5__["useState"])(false),
-      _useState2 = _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState, 2),
+      _useState2 = _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState, 2),
       loaded = _useState2[0],
       setLoaded = _useState2[1];
 
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_5__["useState"])(null),
-      _useState4 = _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState3, 2),
+      _useState4 = _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState3, 2),
       scene = _useState4[0],
       setScene = _useState4[1];
 
@@ -11216,7 +11248,7 @@ var BaseViewer = function BaseViewer(props) {
     width: 100,
     height: 100
   }),
-      _useState6 = _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState5, 2),
+      _useState6 = _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState5, 2),
       size = _useState6[0],
       setSize = _useState6[1];
 
@@ -11259,7 +11291,10 @@ var BaseViewer = function BaseViewer(props) {
   Object(react__WEBPACK_IMPORTED_MODULE_5__["useEffect"])(function () {
     if (!loaded) {
       setLoaded(true);
-      var engine = new _babylonjs_core__WEBPACK_IMPORTED_MODULE_4__["Engine"](reactCanvas.current, antialias, engineOptions, adaptToDeviceRatio); // const engine = new EngineSingleton(reactCanvas.current).engine;
+      var engine = new _babylonjs_core__WEBPACK_IMPORTED_MODULE_4__["Engine"](reactCanvas.current, antialias, engineOptions, adaptToDeviceRatio); // Set custom loading screen and display loading
+
+      var loadingScreen = new _Utils_LoadingScreen__WEBPACK_IMPORTED_MODULE_10__["default"]();
+      engine.loadingScreen = loadingScreen; // Setup and render scene
 
       var newScene = setUpScene(engine);
       renderScene(engine, newScene);
@@ -11280,10 +11315,22 @@ var BaseViewer = function BaseViewer(props) {
     scene.clearColor = _Utils_Constants__WEBPACK_IMPORTED_MODULE_9__["SCENE_BACKGROUND"][(theme === null || theme === void 0 ? void 0 : theme.label) || "default"];
   }, [classes, theme.label, scene]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement("div", {
-    style: _objectSpread(_objectSpread({}, FLEX_STYLE), {}, {
-      maxHeight: "100%"
-    })
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement("canvas", _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0___default()({
+    className: classes.root
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement("div", {
+    id: "loading-scene",
+    className: classes.loaderContainer
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement("div", {
+    className: classes.loaderImage
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement("img", {
+    src: _resources_movai_red_svg__WEBPACK_IMPORTED_MODULE_11___default.a,
+    alt: "loading",
+    width: 200
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_12__["LinearProgress"], {
+    color: "secondary",
+    style: {
+      marginTop: 50
+    }
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement("canvas", _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0___default()({
     ref: reactCanvas,
     width: size.width,
     height: size.height
@@ -13009,11 +13056,12 @@ var VISIBILITY = 0.25;
 /*!*****************************************************!*\
   !*** ./src/Components/Viewer/NodeItem/GlobalRef.js ***!
   \*****************************************************/
-/*! exports provided: default */
+/*! exports provided: ROS_ORIGIN, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ROS_ORIGIN", function() { return ROS_ORIGIN; });
 /* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/classCallCheck */ "@babel/runtime/helpers/esm/classCallCheck");
 /* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/createClass */ "@babel/runtime/helpers/esm/createClass");
@@ -13243,6 +13291,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! mov-fe-lib-core */ "mov-fe-lib-core");
 /* harmony import */ var mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_21___default = /*#__PURE__*/__webpack_require__.n(mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_21__);
 /* harmony import */ var _Path__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./Path */ "./src/Components/Viewer/NodeItem/Path.js");
+/* harmony import */ var _KeyPoint__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./KeyPoint */ "./src/Components/Viewer/NodeItem/KeyPoint.js");
 
 
 
@@ -13262,6 +13311,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9___default()(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_8___default()(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
 
 
 
@@ -13315,10 +13365,24 @@ var GraphItem = /*#__PURE__*/function (_NodeItem) {
       return function () {
         return [{
           title: "Delete",
-          onClick: function onClick() {
-            return _this.mainView.getUndoManager().doIt(_this.getUndoDeleteEdge(edgeMesh));
-          }
+          onClick: _this.getUndoDeleteEdgeLineAction(edgeMesh)
         }];
+      };
+    });
+
+    _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), "onDeleteEdgeLine", function (edgeMesh) {
+      return function () {
+        _this.mainView.confirmationAlert({
+          title: "Confirm to delete",
+          message: "Are you sure you want to delete this edge?",
+          onConfirm: _this.getUndoDeleteEdgeLineAction(edgeMesh)
+        });
+      };
+    });
+
+    _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), "getUndoDeleteEdgeLineAction", function (edgeMesh) {
+      return function () {
+        return _this.mainView.getUndoManager().doIt(_this.getUndoDeleteEdge(edgeMesh));
       };
     });
 
@@ -13364,6 +13428,10 @@ var GraphItem = /*#__PURE__*/function (_NodeItem) {
         var item = _ref3.item;
         return item.getType() === _Path__WEBPACK_IMPORTED_MODULE_22__["default"].TYPE;
       }).orSome(false);
+    });
+
+    _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), "getMeshName", function (mesh) {
+      return _this.isMeshBelong2Path(mesh) ? mesh.parent.name : mesh.name;
     });
 
     _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), "exportBelongToData", function (mesh) {
@@ -13744,6 +13812,31 @@ var GraphItem = /*#__PURE__*/function (_NodeItem) {
         });
         if (is2updateServer) _this6.mainView.updateNodeInServer(_this6.name);
       });
+    }
+    /**
+     * Get edge directions from meshes
+     * @param {Array} ids : Array with vertexes ids
+     * @returns {Integer} should return always one of the following
+     *  +1  -> if target id is greater than source
+     *  0   -> if ids is not provided
+     *  -1  -> if source id is greater than target
+     */
+
+  }, {
+    key: "getDirectionFromMeshes",
+    value: function getDirectionFromMeshes(iMesh, jMesh) {
+      if (GraphItem.isInvalidEdge(iMesh, jMesh, true)) return 0;
+      var vertexI = this.getVertexIdFromMesh(iMesh);
+      var vertexJ = this.getVertexIdFromMesh(jMesh);
+
+      var _map7 = [vertexI, vertexJ].map(function (x) {
+        return Number(x);
+      }),
+          _map8 = _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_map7, 2),
+          i = _map8[0],
+          j = _map8[1];
+
+      return (j - i) / Math.abs(j - i);
     } //========================================================================================
 
     /*                                                                                      *
@@ -13889,11 +13982,14 @@ var GraphItem = /*#__PURE__*/function (_NodeItem) {
           }); // if vertices belong to same path don't build mesh
 
           if (!_this11.doMeshesBelong2SamePath(iMesh, jMesh)) {
-            var isPath2Path = [iMesh, jMesh].map(_this11.isMeshBelong2Path).every(function (x) {
-              return x;
-            });
+            // Get edge forward/backward directions
+            var forwardDirection = _this11.getDirectionFromMeshes(iMesh, jMesh);
 
-            var edgeMesh = _this11.getEdgeMesh(iVertexD, jVertexD, isPath2Path);
+            var backwardDirection = _this11.getDirectionFromMeshes(jMesh, iMesh);
+
+            var direction = forwardDirection + backwardDirection;
+
+            var edgeMesh = _this11.getEdgeMesh(iVertexD, jVertexD, direction);
 
             _this11.meshByEdgeId[_Graph_Graph__WEBPACK_IMPORTED_MODULE_16__["default"].edgeKey(i, j)] = edgeMesh;
             _this11.meshByEdgeId[_Graph_Graph__WEBPACK_IMPORTED_MODULE_16__["default"].edgeKey(j, i)] = edgeMesh;
@@ -13904,7 +14000,7 @@ var GraphItem = /*#__PURE__*/function (_NodeItem) {
   }, {
     key: "getEdgeMesh",
     value: function getEdgeMesh(iVertexD, jVertexD) {
-      var hasDirection = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var direction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
       var edgeInGlobal = [iVertexD, jVertexD].map(function (_ref20) {
         var mesh = _ref20.mesh;
         return _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_12__["default"].getGlobalCoord(mesh, mesh.position);
@@ -13912,7 +14008,7 @@ var GraphItem = /*#__PURE__*/function (_NodeItem) {
       var edgeMesh = GraphItem.getEdgeMesh(this.scene, edgeInGlobal, "edgeMesh".concat(iVertexD.id, "_").concat(jVertexD.id), _babylonjs_core__WEBPACK_IMPORTED_MODULE_13__["Color3"].Yellow());
       edgeMesh.visibility = 0.99;
       edgeMesh.material = GraphItem.getEdgeMaterial(this.scene, {
-        speed: hasDirection ? 8 : 0
+        speed: 8 * direction
       });
       edgeMesh.parent = this.mesh;
       edgeMesh.edgeIndexes = [iVertexD, jVertexD].map(function (_ref21) {
@@ -13920,6 +14016,7 @@ var GraphItem = /*#__PURE__*/function (_NodeItem) {
         return id;
       });
       edgeMesh.getMouseContextActions = this.getEdgeMouseCtxActions(edgeMesh);
+      edgeMesh.onDel = this.onDeleteEdgeLine(edgeMesh);
       this.addObserver2EdgeMesh(edgeMesh);
       this.addOnClickEdge(edgeMesh);
       return edgeMesh;
@@ -14029,18 +14126,32 @@ var GraphItem = /*#__PURE__*/function (_NodeItem) {
     }
   }, {
     key: "checkInvalidEdges",
-    value: function checkInvalidEdges(iMesh, jMesh, edgeData) {
-      var edgeMeshesArePath = [iMesh, jMesh].map(this.isMeshBelong2Path).every(function (x) {
+    value:
+    /**
+     * Check if edgeData linking Mesh1 and Mesh2 is valid
+     * @param {Mesh} iMesh : Mesh 1
+     * @param {Mesh} jMesh : Mesh 2
+     * @param {*} edgeData : Edge to be evaluated
+     * @returns {Boolean} True if is invalid and False otherwise
+     */
+    function checkInvalidEdges(iMesh, jMesh, edgeData) {
+      var _this13 = this;
+
+      // Check if at least one of the meshes is Path
+      //  returns false if any of the meshes is Path
+      var edgeMeshesContainsPath = [iMesh, jMesh].map(this.isMeshBelong2Path).some(function (x) {
         return x;
       });
-      if (!edgeMeshesArePath) return false;
+      if (!edgeMeshesContainsPath) return false; // Identify source and target meshes
+
       var srcMesh = [iMesh, jMesh].filter(function (mesh) {
-        return mesh.parent.name === edgeData.belongsSrc.name;
+        return _this13.getMeshName(mesh) === edgeData.belongsSrc.name;
       })[0];
       var trgMesh = [iMesh, jMesh].filter(function (mesh) {
-        return mesh.parent.name === edgeData.belongsTrg.name;
-      })[0];
-      return srcMesh && trgMesh ? GraphItem.isInvalidEdge(srcMesh, trgMesh) : false;
+        return _this13.getMeshName(mesh) === edgeData.belongsTrg.name;
+      })[0]; // Call GraphItem.isInvalidEdge function to validate
+
+      return srcMesh && trgMesh ? GraphItem.isInvalidEdge(srcMesh, trgMesh, true) : false;
     }
   }], [{
     key: "ofDict",
@@ -14063,7 +14174,8 @@ var GraphItem = /*#__PURE__*/function (_NodeItem) {
         }),
             _ids$map4 = _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ids$map3, 2),
             i = _ids$map4[0],
-            j = _ids$map4[1];
+            j = _ids$map4[1]; // update vertex counter
+
 
         vertexCounter = Math.max(vertexCounter, Math.max(i, j));
         var edgeMeshes = getMeshesFromEdgeData(mainView, {
@@ -14145,19 +14257,41 @@ _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default(
 _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(GraphItem, "isInvalidEdge", function (firstMesh, secondMesh) {
   var _firstMesh$parent, _secondMesh$parent;
 
+  var validateDirection = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
   var firstMeshParent = (_firstMesh$parent = firstMesh.parent) === null || _firstMesh$parent === void 0 ? void 0 : _firstMesh$parent.nodeItem;
   var secondMeshParent = (_secondMesh$parent = secondMesh.parent) === null || _secondMesh$parent === void 0 ? void 0 : _secondMesh$parent.nodeItem;
-  var validationError = []; // Invalid Edge 1 : from start of a path to the end of another path
-  // Invalid Edge 2 : from the end of a path to the end of another path
+  var validationError = []; // Validate invalid edges between paths
 
-  if (firstMeshParent.getType() === _Path__WEBPACK_IMPORTED_MODULE_22__["default"].TYPE && secondMeshParent.getType() === _Path__WEBPACK_IMPORTED_MODULE_22__["default"].TYPE) {
+  if (_Util3d_Util3d__WEBPACK_IMPORTED_MODULE_12__["default"].getNodeItemTypeFromMesh(firstMesh) === _Path__WEBPACK_IMPORTED_MODULE_22__["default"].TYPE && _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_12__["default"].getNodeItemTypeFromMesh(secondMesh) === _Path__WEBPACK_IMPORTED_MODULE_22__["default"].TYPE) {
     var origin = firstMesh.index / (firstMeshParent.keyPoints.length - 1);
-    var target = secondMesh.index / (secondMeshParent.keyPoints.length - 1); // Invalid Edge 1 validation
+    var target = secondMesh.index / (secondMeshParent.keyPoints.length - 1); // Validate direction
 
-    if (origin === 0 && target === 1) validationError.push(1); // Invalid Edge 2 validation
+    if (validateDirection) {
+      // Invalid Edge 1.1 validation
+      if (origin === 0 && target === 1) validationError.push(1.1);
+    } // Invalid Edge 2 validation
 
-    if (origin === 1 && target === 1) validationError.push(2);
-  }
+
+    if (origin === 1 && target === 1) validationError.push(2); // Invalid Edge 3 validation
+
+    if (origin === 0 && target === 0) validationError.push(3);
+  } // Validate direction
+
+
+  if (validateDirection) {
+    // Invalid Edge 1.2 validation
+    if (_Util3d_Util3d__WEBPACK_IMPORTED_MODULE_12__["default"].getNodeItemTypeFromMesh(firstMesh) === _Path__WEBPACK_IMPORTED_MODULE_22__["default"].TYPE && _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_12__["default"].getNodeItemTypeFromMesh(secondMesh) === _KeyPoint__WEBPACK_IMPORTED_MODULE_23__["default"].TYPE) {
+      if (firstMesh.index / (firstMeshParent.keyPoints.length - 1) === 0) validationError.push(1.2);
+    } // Invalid Edge 1.3 validation
+
+
+    if (_Util3d_Util3d__WEBPACK_IMPORTED_MODULE_12__["default"].getNodeItemTypeFromMesh(firstMesh) === _KeyPoint__WEBPACK_IMPORTED_MODULE_23__["default"].TYPE && _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_12__["default"].getNodeItemTypeFromMesh(secondMesh) === _Path__WEBPACK_IMPORTED_MODULE_22__["default"].TYPE) {
+      if (secondMesh.index / (secondMeshParent.keyPoints.length - 1) === 1) validationError.push(1.3);
+    }
+  } // Invalid Edge 4 validation
+
+
+  if (firstMesh.name === secondMesh.name) validationError.push(4); // Return if there's any validation error
 
   return validationError.length > 0;
 });
@@ -15992,8 +16126,8 @@ var Path = /*#__PURE__*/function (_NodeItem) {
       return item;
     }
   }, {
-    key: "deleteKeyPoint",
-    value: function deleteKeyPoint(scene, keyPointMesh, mainView) {
+    key: "deleteKeyPointWithUndo",
+    value: function deleteKeyPointWithUndo(scene, keyPointMesh, mainView) {
       var index = keyPointMesh.index;
       var name = keyPointMesh.parent.name;
       mainView.getNodeFromTree(name).forEach(function (_ref3) {
@@ -16005,6 +16139,7 @@ var Path = /*#__PURE__*/function (_NodeItem) {
         var newPoints = item.localPath.map(function (x) {
           return _Math_Vec3__WEBPACK_IMPORTED_MODULE_11__["default"].of(x).toBabylon();
         });
+        if (newPoints.length === 2) return;
         mainView.getUndoManager().doIt(Path.getUndoDeleteKeyPoint(name, index, copyPosition, newPoints, scene, item, mainView));
       });
     }
@@ -16421,7 +16556,7 @@ var getKeyPointActions = function getKeyPointActions(scene, keyPointMesh, mainVi
           }, props));
         },
         action: function action(parentView) {
-          Path.deleteKeyPoint(scene, keyPointMesh, parentView);
+          Path.deleteKeyPointWithUndo(scene, keyPointMesh, parentView);
           parentView.closeContextDial();
         },
         name: "Delete node [DEL]"
@@ -16495,6 +16630,10 @@ var createPlaceHolderKeyPoints = function createPlaceHolderKeyPoints(scene, pseu
     };
 
     kp.getMouseContextActions = getKpMouseContextActions(scene, kp, pseudoItem.name);
+
+    kp.onDel = function () {
+      return Path.deleteKeyPointWithUndo(scene, kp, mainView);
+    };
   });
   return keyPoints;
 };
@@ -16528,7 +16667,7 @@ function getKpMouseContextActions(scene, kp, pathName) {
     actions.push({
       title: "Delete point",
       onClick: function onClick() {
-        Path.deleteKeyPoint(scene, kp, mainView);
+        Path.deleteKeyPointWithUndo(scene, kp, mainView);
       }
     });
     return actions;
@@ -17149,8 +17288,8 @@ var PolygonRegion = /*#__PURE__*/function (_NodeItem) {
       return newPoints;
     }
   }, {
-    key: "deleteKeyPoint",
-    value: function deleteKeyPoint(scene, keyPointMesh, mainView) {
+    key: "deleteKeyPointWithUndo",
+    value: function deleteKeyPointWithUndo(scene, keyPointMesh, mainView) {
       var index = keyPointMesh.index;
       var name = keyPointMesh.parent.name;
       mainView.getNodeFromTree(name).forEach(function (_ref) {
@@ -17162,6 +17301,7 @@ var PolygonRegion = /*#__PURE__*/function (_NodeItem) {
         var newPoints = item.localPolygon.map(function (x) {
           return _Math_Vec3__WEBPACK_IMPORTED_MODULE_11__["default"].of(x).toBabylon();
         });
+        if (newPoints.length === 3) return;
         mainView.getUndoManager().doIt(PolygonRegion.getUndoDeleteKeyPoint(name, index, copyPosition, newPoints, scene, item, mainView));
       });
     }
@@ -17391,7 +17531,7 @@ var getKeyPointActions = function getKeyPointActions(scene, keyPointMesh, mainVi
           }, props));
         },
         action: function action(parentView) {
-          PolygonRegion.deleteKeyPoint(scene, keyPointMesh, parentView);
+          PolygonRegion.deleteKeyPointWithUndo(scene, keyPointMesh, parentView);
           parentView.closeContextDial();
         },
         name: "Delete node [DEL]"
@@ -17438,9 +17578,13 @@ var createPlaceHolderKeyPoints = function createPlaceHolderKeyPoints(scene, poly
     keyPoints.push(keyPoint);
     keyPoint.observers.add(getKeyPointObserverFunction(scene, mainView));
   });
-  keyPoints.forEach(function (x) {
-    x.onClick = function () {
-      mainView.setContextActions(getKeyPointActions(scene, x, mainView));
+  keyPoints.forEach(function (kp) {
+    kp.onClick = function () {
+      mainView.setContextActions(getKeyPointActions(scene, kp, mainView));
+    };
+
+    kp.onDel = function () {
+      return PolygonRegion.deleteKeyPointWithUndo(scene, kp, mainView);
     };
   });
   return keyPoints;
@@ -17670,6 +17814,8 @@ var Robot = /*#__PURE__*/function (_AssetNodeItem) {
       this.speed = _babylonjs_core__WEBPACK_IMPORTED_MODULE_12__["Vector3"].Zero();
       this.qSpeed = _babylonjs_core__WEBPACK_IMPORTED_MODULE_12__["Quaternion"].Zero();
       this.isOnline = false;
+      this.numberOfIte = 0;
+      this.speedStats = new _Utils_Statistics__WEBPACK_IMPORTED_MODULE_14__["default"]();
       this.stopLogger();
     }
   }, {
@@ -17721,7 +17867,7 @@ var Robot = /*#__PURE__*/function (_AssetNodeItem) {
       return function (logs) {
         robot.timeSinceLastUpdate = 0;
 
-        if (logs[0].level === "ERROR" || logs[0].level === "CRITICAL") {
+        if (logs.length > 0 && (logs[0].level === "ERROR" || logs[0].level === "CRITICAL")) {
           robot.alert = logs[0];
           robot.alertMesh.setEnabled(true);
         } // If last log is not error/critical then clean alert (set it to null)
@@ -17761,7 +17907,7 @@ var Robot = /*#__PURE__*/function (_AssetNodeItem) {
       var newOrientation = new _babylonjs_core__WEBPACK_IMPORTED_MODULE_12__["Quaternion"](newRobotTf.orientation.x, newRobotTf.orientation.y, newRobotTf.orientation.z, newRobotTf.orientation.w).normalize();
       robot.numberOfIte++;
       var isZero = robot.timeSinceLastUpdate === 0;
-      var dtInv = isZero ? 1.0 : 1.0 / robot.timeSinceLastUpdate;
+      var dtInv = isZero ? 1.0 : Math.min(1.0 / robot.timeSinceLastUpdate, 1.0);
       var speed = newPosition.subtract(lastPosition).scale(dtInv);
       var qSpeed = newOrientation.subtract(lastOrientation).scale(dtInv);
       var vel = speed.length();
@@ -17912,6 +18058,7 @@ _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()
 
   return function (robot2Animate, dt) {
     robot2Animate.timeSinceLastUpdate += dt;
+    dt = Math.min(dt, 1);
     if (_Math_Vec3__WEBPACK_IMPORTED_MODULE_8__["default"].ofBabylon(robot2Animate.speed).someNaNOrInfinite()) return;
     if (_Math_Vec3__WEBPACK_IMPORTED_MODULE_8__["default"].ofBabylon(robot2Animate.qSpeed).someNaNOrInfinite()) return;
 
@@ -18032,7 +18179,7 @@ var RobotBuilder = /*#__PURE__*/function () {
 //========================================================================================
 
 
-var SAMPLES = 15; //========================================================================================
+var SAMPLES = 30; //========================================================================================
 
 /*                                                                                      *
  *                                        EXPORT                                        *
@@ -18316,10 +18463,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Math_Vec3__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./Math/Vec3 */ "./src/Components/Viewer/Math/Vec3.js");
 /* harmony import */ var react_resize_detector__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! react-resize-detector */ "react-resize-detector");
 /* harmony import */ var react_resize_detector__WEBPACK_IMPORTED_MODULE_26___default = /*#__PURE__*/__webpack_require__.n(react_resize_detector__WEBPACK_IMPORTED_MODULE_26__);
-/* harmony import */ var _Modal_ConfirmAlertModal__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ../Modal/ConfirmAlertModal */ "./src/Components/Modal/ConfirmAlertModal.js");
-/* harmony import */ var _Modal_RobotLogModal__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ../Modal/RobotLogModal */ "./src/Components/Modal/RobotLogModal.js");
-/* harmony import */ var mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! mov-fe-lib-core */ "mov-fe-lib-core");
-/* harmony import */ var mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_29___default = /*#__PURE__*/__webpack_require__.n(mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_29__);
+/* harmony import */ var mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! mov-fe-lib-core */ "mov-fe-lib-core");
+/* harmony import */ var mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_27___default = /*#__PURE__*/__webpack_require__.n(mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_27__);
+/* harmony import */ var _Modal_ConfirmAlertModal__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ../Modal/ConfirmAlertModal */ "./src/Components/Modal/ConfirmAlertModal.js");
+/* harmony import */ var _Modal_RobotLogModal__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ../Modal/RobotLogModal */ "./src/Components/Modal/RobotLogModal.js");
+/* harmony import */ var _Utils_MeshCache__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./Utils/MeshCache */ "./src/Components/Viewer/Utils/MeshCache.js");
+/* harmony import */ var _NodeItem_Robot__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./NodeItem/Robot */ "./src/Components/Viewer/NodeItem/Robot.js");
 
 
 
@@ -18339,6 +18488,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default()(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+
 
 
 
@@ -18485,6 +18636,8 @@ var SceneViewer = /*#__PURE__*/function (_Component) {
       _Utils_SceneServerUtils__WEBPACK_IMPORTED_MODULE_18__["default"].retrieveScene(_this.sceneName, function (data) {
         var errorList = _MainView_MainViewRetriever__WEBPACK_IMPORTED_MODULE_15__["default"].importScene(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this), data.result);
 
+        _this.resizeGround();
+
         _this.setState({
           errorList: errorList
         });
@@ -18625,14 +18778,14 @@ var SceneViewer = /*#__PURE__*/function (_Component) {
     _this.sceneName = props.sceneName.Value;
     _this.sceneMemory = monet__WEBPACK_IMPORTED_MODULE_14__["Maybe"].none();
     _this.objectTree = [];
-    _this.undoManager = new mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_29__["UndoManager"](); // camera properties
+    _this.undoManager = new mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_27__["UndoManager"](); // camera properties
 
     _this.isPanned = false;
     _this.isRotated = false;
     _this.targetPos = undefined;
     _this.cameraSpeed = _babylonjs_core__WEBPACK_IMPORTED_MODULE_13__["Vector3"].Zero();
     _this.time = new Date().getTime() * 1e-3;
-    _this.robotManager = new mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_29__["RobotManager"]();
+    _this.robotManager = new mov_fe_lib_core__WEBPACK_IMPORTED_MODULE_27__["RobotManager"]();
     _this.robotAlertModal = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10___default.a.createRef();
     return _this;
   } //========================================================================================
@@ -18648,6 +18801,15 @@ var SceneViewer = /*#__PURE__*/function (_Component) {
     value: function getGraph() {
       return new _TreeObject_TreeObject__WEBPACK_IMPORTED_MODULE_21__["default"](this.objectTree).getNode(function (x) {
         return _NodeItem_GraphItem__WEBPACK_IMPORTED_MODULE_22__["default"].TYPE === x.item.getType();
+      });
+    }
+  }, {
+    key: "getRobots",
+    value: function getRobots() {
+      return this.getRootNode().children.filter(function (x) {
+        return x.item.getType() === _NodeItem_Robot__WEBPACK_IMPORTED_MODULE_31__["default"].TYPE;
+      }).map(function (el) {
+        return el.item;
       });
     }
   }, {
@@ -18693,14 +18855,60 @@ var SceneViewer = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
+    key: "resizeGround",
+    value: function resizeGround() {
+      var defaultSize = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 30;
+      this.getSceneMemory().forEach(function (memory) {
+        memory.ground.dispose();
+        var scene = memory.scene;
+
+        var _scene$getWorldExtend = scene.getWorldExtends(),
+            max = _scene$getWorldExtend.max,
+            min = _scene$getWorldExtend.min;
+
+        var diff = max.subtract(min);
+        var is2Small = false;
+
+        if (diff.length() < defaultSize) {
+          diff = new _babylonjs_core__WEBPACK_IMPORTED_MODULE_13__["Vector3"](defaultSize, 0, defaultSize);
+          is2Small = true;
+        }
+
+        memory.ground = _Utils_DefaultScene__WEBPACK_IMPORTED_MODULE_16__["default"].createMeshGround(scene, diff.x, diff.z);
+        memory.ground.position = new _babylonjs_core__WEBPACK_IMPORTED_MODULE_13__["Vector3"](min.x + (is2Small ? 0 : diff.x / 2), memory.ground.position.y, min.z + (is2Small ? 0 : diff.z / 2));
+      });
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      var _this4 = this;
+
+      this.sceneMemory.forEach(function (_ref8) {
+        var scene = _ref8.scene;
+
+        // Unsubscribe robots from robot logger
+        _this4.getRobots().forEach(function (nodeItem) {
+          nodeItem.dispose();
+          if (nodeItem.loggerSubscription) nodeItem.robot.unsubscribeToLogs(nodeItem.loggerSubscription);
+        }); // Clear observers and clean scene objects
+
+
+        _AssetsManager_AssetsManager__WEBPACK_IMPORTED_MODULE_20__["default"].getInstance().clearObserver(scene);
+        _Utils_MeshCache__WEBPACK_IMPORTED_MODULE_30__["default"].getInstance().del(scene);
+        delete _this4.objectTree;
+        delete _this4.sceneMemory;
+        delete _this4.undoManager;
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       var errorList = this.state.errorList;
 
       var resetErrorList = function resetErrorList() {
-        return _this4.setState({
+        return _this5.setState({
           errorList: []
         });
       };
@@ -18715,7 +18923,7 @@ var SceneViewer = /*#__PURE__*/function (_Component) {
         onSceneReady: this.onSceneReady,
         is2render: false,
         sceneFactory: _Utils_DefaultScene__WEBPACK_IMPORTED_MODULE_16__["default"].createScene
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10___default.a.createElement(_Modal_ConfirmAlertModal__WEBPACK_IMPORTED_MODULE_27__["default"], {
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10___default.a.createElement(_Modal_ConfirmAlertModal__WEBPACK_IMPORTED_MODULE_28__["default"], {
         onSubmit: resetErrorList,
         onCancel: resetErrorList,
         open: (errorList === null || errorList === void 0 ? void 0 : errorList.length) > 0,
@@ -18725,7 +18933,7 @@ var SceneViewer = /*#__PURE__*/function (_Component) {
         submitColor: "primary",
         cancelText: "Cancel",
         cancelColor: "secondary"
-      }, getErrorSolutionList(errorList)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10___default.a.createElement(_Modal_RobotLogModal__WEBPACK_IMPORTED_MODULE_28__["default"], {
+      }, getErrorSolutionList(errorList)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10___default.a.createElement(_Modal_RobotLogModal__WEBPACK_IMPORTED_MODULE_29__["default"], {
         ref: this.robotAlertModal,
         title: "Alert"
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10___default.a.createElement(react_resize_detector__WEBPACK_IMPORTED_MODULE_26___default.a, {
@@ -18776,9 +18984,9 @@ SceneViewer.defaultProps = {
 };
 
 function getErrorSolutionList(errorList) {
-  return !errorList ? [] : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10___default.a.createElement("ul", null, errorList.map(function (_ref8, i) {
-    var cause = _ref8.cause,
-        solution = _ref8.solution;
+  return !errorList ? [] : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10___default.a.createElement("ul", null, errorList.map(function (_ref9, i) {
+    var cause = _ref9.cause,
+        solution = _ref9.solution;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10___default.a.createElement("li", {
       key: "error" + i
     }, "".concat(cause, ", ").concat(solution));
@@ -20127,7 +20335,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babylonjs_core__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_babylonjs_core__WEBPACK_IMPORTED_MODULE_14__);
 /* harmony import */ var _NodeItem_GlobalRef__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../NodeItem/GlobalRef */ "./src/Components/Viewer/NodeItem/GlobalRef.js");
 /* harmony import */ var _NodeItem_Box__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../NodeItem/Box */ "./src/Components/Viewer/NodeItem/Box.js");
-/* harmony import */ var _Utils_MaterialCache__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../Utils/MaterialCache */ "./src/Components/Viewer/Utils/MaterialCache.js");
+/* harmony import */ var _NodeItem_Path__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../NodeItem/Path */ "./src/Components/Viewer/NodeItem/Path.js");
+/* harmony import */ var _Utils_MaterialCache__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../Utils/MaterialCache */ "./src/Components/Viewer/Utils/MaterialCache.js");
+
 
 
 
@@ -20489,6 +20699,13 @@ var Util3d = /*#__PURE__*/function () {
       var tooltipText = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
       return new _TooltipBuilder__WEBPACK_IMPORTED_MODULE_11__["default"](mesh, scene).text(tooltipText).build();
     }
+    /**
+     * Add click action to mesh in scene
+     * @param {Mesh} mesh : Mesh to add click action
+     * @param {Scene} scene : Scene object
+     * @param {Function} callback : Function to be called on click
+     */
+
   }, {
     key: "addClickActionToMesh",
     value: function addClickActionToMesh(mesh, scene, callback) {
@@ -20512,6 +20729,12 @@ var Util3d = /*#__PURE__*/function () {
         }, 10);
       }));
     }
+    /**
+     * Get node item type from mesh
+     * @param {Mesh} mesh : Node Item mesh
+     * @returns {String} NodeItem type
+     */
+
   }]);
 
   return Util3d;
@@ -20734,6 +20957,13 @@ _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()
   };
 });
 
+_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()(Util3d, "getNodeItemTypeFromMesh", function (mesh) {
+  var _mesh$parent, _mesh$parent2;
+
+  var isMeshFromPath = ((_mesh$parent = mesh.parent) === null || _mesh$parent === void 0 ? void 0 : _mesh$parent.nodeItem.getType()) === _NodeItem_Path__WEBPACK_IMPORTED_MODULE_17__["default"].TYPE;
+  return isMeshFromPath ? (_mesh$parent2 = mesh.parent) === null || _mesh$parent2 === void 0 ? void 0 : _mesh$parent2.nodeItem.getType() : mesh.nodeItem.getType();
+});
+
 var randomDigits = function randomDigits() {
   return Math.floor(Math.random() * 1e3);
 };
@@ -20765,7 +20995,7 @@ var SHADER_PRE = function SHADER_PRE(scene, shaderMaterial) {
   shaderMaterial.setVector3("lightPosition", new _babylonjs_core__WEBPACK_IMPORTED_MODULE_14__["Vector3"](0, 20, 10));
 };
 
-var MATERIAL_CACHE = _Utils_MaterialCache__WEBPACK_IMPORTED_MODULE_17__["default"].getInstance();
+var MATERIAL_CACHE = _Utils_MaterialCache__WEBPACK_IMPORTED_MODULE_18__["default"].getInstance();
 /* harmony default export */ __webpack_exports__["default"] = (Util3d);
 
 /***/ }),
@@ -21199,8 +21429,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _babylonjs_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babylonjs/core */ "@babylonjs/core");
 /* harmony import */ var _babylonjs_core__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babylonjs_core__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Util3d/Util3d */ "./src/Components/Viewer/Util3d/Util3d.js");
-/* harmony import */ var _Animator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Animator */ "./src/Components/Viewer/Utils/Animator.js");
+/* harmony import */ var _Math_Vec3__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Math/Vec3 */ "./src/Components/Viewer/Math/Vec3.js");
+/* harmony import */ var _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Util3d/Util3d */ "./src/Components/Viewer/Util3d/Util3d.js");
+/* harmony import */ var _Animator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Animator */ "./src/Components/Viewer/Utils/Animator.js");
+
 
 
 
@@ -21246,8 +21478,8 @@ _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()
 
         var panCamera = function panCamera() {
           var v = currentLocal.subtract(mainView.mousePosMove);
-          var vBabylon = _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_3__["default"].getBabylonCoordinates(v).scale(-1);
-          animateCamera(camera, vBabylon);
+          var vBabylon = getWorldVector(mainView, v);
+          animateCamera(camera, vBabylon.scale(-1));
           mainView.mousePosMove = currentLocal;
         };
 
@@ -21271,7 +21503,7 @@ _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()
 
 
 function animateCamera(camera, v) {
-  _Animator__WEBPACK_IMPORTED_MODULE_4__["Animator"].builder().initialState({
+  _Animator__WEBPACK_IMPORTED_MODULE_5__["Animator"].builder().initialState({
     camera: camera,
     time: 0,
     T: new Date().getTime()
@@ -21295,6 +21527,15 @@ function animateCamera(camera, v) {
 
 function setMouseLocationTxt(mouseLocationText, currentLocal) {
   mouseLocationText.text = "x: ".concat(currentLocal.x.toFixed(2), ", y: ").concat(currentLocal.y.toFixed(2));
+}
+
+function getWorldVector(mainView, vector3) {
+  var worldFrameMesh = mainView.getRootNode().item.mesh.parent; // compute world coordinates from GlobalRef (similar to Util3d.getBabylonCoordinates)
+
+  var matrix = _Util3d_Util3d__WEBPACK_IMPORTED_MODULE_4__["default"].getRotationMatrix(worldFrameMesh);
+  var scale = _Math_Vec3__WEBPACK_IMPORTED_MODULE_3__["default"].ofBabylon(worldFrameMesh.scaling);
+  var vBabylon = matrix.prodVec(scale.mul(_Math_Vec3__WEBPACK_IMPORTED_MODULE_3__["default"].ofBabylon(vector3))).toBabylon();
+  return vBabylon;
 }
 
 /***/ }),
@@ -21334,6 +21575,10 @@ __webpack_require__.r(__webpack_exports__);
 var DefaultScene = function DefaultScene() {
   _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, DefaultScene);
 };
+/**
+ * From https://stackoverflow.com/questions/5916900/how-can-you-detect-the-version-of-a-browser
+ */
+
 
 _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(DefaultScene, "createGizmo", function (scene) {
   var gizmoManager = new _babylonjs_core__WEBPACK_IMPORTED_MODULE_2__["RotationGizmo"](new _babylonjs_core__WEBPACK_IMPORTED_MODULE_2__["UtilityLayerRenderer"](scene));
@@ -21355,6 +21600,12 @@ _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()
   camera.checkCollisions = true;
   camera.panningSensibility = 0;
   camera.lowerRadiusLimit = 2;
+  var browser = get_browser();
+
+  if (browser.name === "Firefox" && browser.version <= 89) {
+    camera.wheelPrecision = 100;
+  }
+
   forEach(camera);
   return camera;
 });
@@ -21403,7 +21654,87 @@ _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()
   return text;
 });
 
+function get_browser() {
+  var ua = navigator.userAgent,
+      tem,
+      M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+
+  if (/trident/i.test(M[1])) {
+    tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+    return {
+      name: "IE",
+      version: tem[1] || ""
+    };
+  }
+
+  if (M[1] === "Chrome") {
+    tem = ua.match(/\bOPR|Edge\/(\d+)/);
+
+    if (tem != null) {
+      return {
+        name: "Opera",
+        version: tem[1]
+      };
+    }
+  }
+
+  M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, "-?"];
+
+  if ((tem = ua.match(/version\/(\d+)/i)) != null) {
+    M.splice(1, 1, tem[1]);
+  }
+
+  return {
+    name: M[0],
+    version: M[1]
+  };
+}
+
 /* harmony default export */ __webpack_exports__["default"] = (DefaultScene);
+
+/***/ }),
+
+/***/ "./src/Components/Viewer/Utils/LoadingScreen.js":
+/*!******************************************************!*\
+  !*** ./src/Components/Viewer/Utils/LoadingScreen.js ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/**
+ * Class implementing ILoadingScreen interface from Babylon
+ *  https://doc.babylonjs.com/typedoc/interfaces/babylon.iloadingscreen
+ *
+ * @param {String} text : Sets the text to display while loading
+ * @param {String} backgroundColor : Sets the color to use for the background
+ */
+function LoadingScreen() {
+  var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "Loading...";
+  var backgroundColor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "black";
+  // init the loader
+  this.loadingUIText = text;
+  this.loadingUIBackgroundColor = backgroundColor;
+}
+/**
+ * Function called to display the loading screen
+ */
+
+
+LoadingScreen.prototype.displayLoadingUI = function () {
+  document.getElementById("loading-scene").style.display = "block";
+};
+/**
+ * Function called to hide the loading screen
+ */
+
+
+LoadingScreen.prototype.hideLoadingUI = function () {
+  document.getElementById("loading-scene").style.display = "none";
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (LoadingScreen);
 
 /***/ }),
 
@@ -22176,7 +22507,7 @@ i18next__WEBPACK_IMPORTED_MODULE_0___default.a // load translation using xhr -> 
 /*! exports provided: Save, Ports, Inputs, Invalid data type, Create New, Workspace, Could not load workspaces, Copy, to, The copied, must have a different name, Something went wrong while copying, copied, Confirm to delete, Name, Version, Last update, User, Versioning, Home, Debug, Diff Tool, Search, Main flow view, Tree view, Parameters, Layers, Node already exists, Invalid name, Start link(s) not found, Annotations, Annotation, Callbacks, Callback, Configurations, Configuration, Flows, Flow, Nodes, Node, Layouts, Layout, Scenes, Scene, Key, key, Value, value, Type, Actions, Edit, Delete, Add, Accept, Cancel, Create new version, Open, Restore, Restore to, Compare, Invalid links found, Fix not available in view only mode., Do you want to fix this?, Fix, Sub-flows with invalid parameters, The parameters of the sub-flow should come from the flow template., The following sub-flows contains custom parameters that are not present on its template:, To fix it, you can either remove the custom parameter on the sub-flow or add the parameter on the template., Exposed port: node, not found, Developer, Client, Export App, Dashboard name, Remember me, Login, Username, Password, Loading, Callback is not defined, Please add a callback, Remappable, Launch, Properties, Env Variables, Command Line, Belongs to, Persistent, Is persistent, Not persistent, Is remappable, Not remappable, To launch, Not to launch, default, Ok, primary, Format Type Error, In Parameter, got the value, and expected one of the following formats, Backup, New Version, Yes, No, Cancel Restore, Invalid version name, Create a version of the existing work under the workspace, New name, Do you want to restore the selected version?, Please choose the name of the document to restore to, Restoring this version will overwrite the changes on the, global workspace, Do you want to backup your current work first?, This will create a new version under the workspace, Imports, Message, Edit Message, Submit, No records to display, Transport Protocol, Package, I/O Configuration, New Layer, Edit Layer, Execution Parameters, Environment Variables, Info, New parameter, Edit parameter, Path, Persistent node, After launch, the node will remain active during the flow execution., Allows, or not, the ports of the node to be remapped, Controls whether the Node is to be launched or not, Details, Paste, Start, Stop, Toggle Exposed, New Flow, New Annotation, New Configuration, New Node, New Layout, New Scene, New Callback, Invalid libs found, Fail to get running robot, Select/unselect the topics to monitor, Compare dependencies, Diff tool, Exclude property, Add Import, No widget selected, Edit description, Description, Layer successfully deleted., Delete layer, Are you sure you want to delete layer, Layers successfully saved., Delete parameter, Are you sure you want to delete, Are you sure to delete, Are you sure to delete selected nodes, Are you sure you want to delete all, children, An error occurred while loading the scene, Scene Viewer, Alert, Saved changes!, Renamed item to a existing name, please change the name, Cannot debug transition links, Topics, Logs, no data, Not connected, make sure rosbridge is running, From, Port, To, Dependencies level, All dependencies, Only From, Only To, No dependencies, Checks node dependencies, Reset, Add node, Add sub flow, Add state, Robot Configuration, Robot Config, Delete node [DEL], Add previous, Add next, null dictionary describing point cloud or null mainView, Navigation allowed, null dictionary describing polygon or null mainView, There are missing variables to build a robot, e.g, null dictionary describing wall, There are missing variables to build a TreeNode, e.g, There are missing variables to build a camera, e.g, There are missing variables to build a light, e.g, Load, Nothing selected, an, a, Select, Document, Are you sure?, Insert Text here, Confirm */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"Save\":\"Gravar\",\"Ports\":\"Portas\",\"Inputs\":\"Entradas\",\"Invalid data type\":\"Tipo de dado inválido\",\"Create New\":\"Criar Novo\",\"Workspace\":\"Área de trabalho\",\"Could not load workspaces\":\"Não foi possível carregar os espaços de trabalho\",\"Copy\":\"Copiar\",\"to\":\"para\",\"The copied\":\"A cópia\",\"must have a different name\":\"deve ter um nome diferente\",\"Something went wrong while copying\":\"Algo deu errado ao tentar criar a cópia\",\"copied\":\"copiado\",\"Confirm to delete\":\"Confirme para excluir\",\"Name\":\"Nome\",\"Version\":\"Versão\",\"Last update\":\"Última atualização\",\"User\":\"Usuário\",\"Versioning\":\"Versões\",\"Home\":\"Início\",\"Debug\":\"Depurar\",\"Diff Tool\":\"Ferramenta de comparação\",\"Search\":\"Procurar\",\"Main flow view\":\"Visualização de fluxo principal\",\"Tree view\":\"Visualização em árvore\",\"Parameters\":\"Parâmetros\",\"Layers\":\"Camadas\",\"Node already exists\":\"Este nó já existe\",\"Invalid name\":\"Nome inválido\",\"Start link(s) not found\":\"Ligação inicial não encontrada\",\"Annotations\":\"Anotações\",\"Annotation\":\"Anotação\",\"Callbacks\":\"Revogações\",\"Callback\":\"Revogação\",\"Configurations\":\"Configurações\",\"Configuration\":\"Configuração\",\"Flows\":\"Fluxos\",\"Flow\":\"Fluxo\",\"Nodes\":\"Nós\",\"Node\":\"Nó\",\"Layouts\":\"Disposições\",\"Layout\":\"Disposição\",\"Scenes\":\"Cenários\",\"Scene\":\"Cenário\",\"Key\":\"Chave\",\"key\":\"chave\",\"Value\":\"Valor\",\"value\":\"valor\",\"Type\":\"Tipo\",\"Actions\":\"Ações\",\"Edit\":\"Editar\",\"Delete\":\"Apagar\",\"Add\":\"Adicionar\",\"Accept\":\"Aceitar\",\"Cancel\":\"Cancelar\",\"Create new version\":\"Criar nova versão\",\"Open\":\"Abrir\",\"Restore\":\"Restaurar\",\"Restore to\":\"Restaurar para\",\"Compare\":\"Comparar\",\"Invalid links found\":\"Foram encontradas ligações inválidas\",\"Fix not available in view only mode.\":\"Correcção não disponível em modo de visualização.\",\"Do you want to fix this?\":\"Você deseja corrigir isto?\",\"Fix\":\"Corrigir\",\"Sub-flows with invalid parameters\":\"Sub-fluxos com parâmetros inválidos\",\"The parameters of the sub-flow should come from the flow template.\":\"Os parâmetros do sub-fluxo devem vir do modelo de fluxo.\\n\",\"The following sub-flows contains custom parameters that are not present on its template:\":\"Os seguintes subfluxos contêm parâmetros personalizados que não estão presentes em seu modelo:\\n\",\"To fix it, you can either remove the custom parameter on the sub-flow or add the parameter on the template.\":\"Para corrigir isso, você pode remover o parâmetro personalizado no subfluxo ou adicionar o parâmetro no modelo.\",\"Exposed port: node\":\"Porta exposta: nó\",\"not found\":\"not found\",\"Developer\":\"Desenvolvedor\",\"Client\":\"Cliente\",\"Export App\":\"Exportar Aplicação\",\"Dashboard name\":\"Nome do painel\",\"Remember me\":\"Lembrar-me\",\"Login\":\"Entrar\",\"Username\":\"Nome de usuário\",\"Password\":\"Senha\",\"Loading\":\"A carregar\",\"Callback is not defined\":\"Callback não definida\",\"Please add a callback\":\"Por favor, adicione uma callback\",\"Remappable\":\"Remapeável\",\"Launch\":\"Enviar\",\"Properties\":\"Propriedades\",\"Env Variables\":\"Variáveis de Ambiente\",\"Command Line\":\"Linha de Comando\",\"Belongs to\":\"Pertence a\",\"Persistent\":\"Persistente\",\"Is persistent\":\"É persistente\",\"Not persistent\":\"Não persistent\",\"Is remappable\":\"É remapeável\",\"Not remappable\":\"Não remapeável\",\"To launch\":\"Para enviar\",\"Not to launch\":\"Não enviar\",\"default\":\"defeito\",\"Ok\":\"Ok\",\"primary\":\"primário\",\"Format Type Error\":\"Erro de tipo de formatação\",\"In Parameter\":\"Em parâmetro\",\"got the value\":\"obteve o valor\",\"and expected one of the following formats\":\"e esperava um dos seguintes formatos\",\"Backup\":\"Cópia de segurança\",\"New Version\":\"Nova Versão\",\"Yes\":\"Sim\",\"No\":\"Não\",\"Cancel Restore\":\"Cancelar Restauração\",\"Invalid version name\":\"Nome de versão inválido\",\"Create a version of the existing work under the workspace\":\"Criar uma versão de um documento existente na área de trabalho\",\"New name\":\"Novo nome\",\"Do you want to restore the selected version?\":\"Você quer restaurar a versão seleccionada?\",\"Please choose the name of the document to restore to\":\"Por favor, escolha o nome do documento a ser restaurado\",\"Restoring this version will overwrite the changes on the\":\"Restaurar essa versão irá sobrescrever as mudanças na\",\"global workspace\":\"área de trabalho global\",\"Do you want to backup your current work first?\":\"Você quer fazer backup do seu trabalho atual primeiro?\",\"This will create a new version under the workspace\":\"Isso criará uma nova versão sob o espaço de trabalho\",\"Imports\":\"Importações\",\"Message\":\"Mensagem\",\"Edit Message\":\"Editar Mensagem\",\"Submit\":\"Enviar\",\"No records to display\":\"Não há dados a serem exibidos\",\"Transport Protocol\":\"Transporte / Protocolo\",\"Package\":\"Pacote\",\"I/O Configuration\":\"Configurações de Entrada/Saída\",\"New Layer\":\"Nova Camada\",\"Edit Layer\":\"Editar Camada\",\"Execution Parameters\":\"Parâmetros de execução\",\"Environment Variables\":\"Variáveis de Ambiente\",\"Info\":\"Informação\",\"New parameter\":\"Novo parâmetro\",\"Edit parameter\":\"Editar parâmetro\",\"Path\":\"Caminho\",\"Persistent node\":\"Nó persistente\",\"After launch, the node will remain active during the flow execution.\":\"Depois do início, o nó ficará ativo durante a execução do flow.\",\"Allows, or not, the ports of the node to be remapped\":\"Permite, ou não, que as portas do nó sejam remapeadas\",\"Controls whether the Node is to be launched or not\":\"Controla se o Nó deve ser lançado ou não\",\"Details\":\"Detalhes\",\"Paste\":\"Colar\",\"Start\":\"Start\",\"Stop\":\"Stop\",\"Toggle Exposed\":\"Alternar Exposto\",\"New Flow\":\"Novo Fluxo\",\"New Annotation\":\"Nova Anotação\",\"New Configuration\":\"Nova Configuração\",\"New Node\":\"Novo Nó\",\"New Layout\":\"Nova Disposição\",\"New Scene\":\"Novo Cenário\",\"New Callback\":\"Nova Revogação\",\"Invalid libs found\":\"Foram encontradas bibliotecas inválidas\",\"Fail to get running robot\":\"Falha ao obter robô em execução\",\"Select/unselect the topics to monitor\":\"Selecione/desmarque os tópicos para monitorar\",\"Compare dependencies\":\"Comparar dependências\",\"Diff tool\":\"Ferramenta de comparação\",\"Exclude property\":\"Excluir propriedade\",\"Add Import\":\"Adicionar importação\",\"No widget selected\":\"Sem ferramentas selecionadas\",\"Edit description\":\"Editar descrição\",\"Description\":\"Descrição\",\"Layer successfully deleted.\":\"Camada deletada com sucesso.\",\"Delete layer\":\"Deletar camada\",\"Are you sure you want to delete layer\":\"Tens a certeza de que deseja remover a camada\",\"Layers successfully saved.\":\"Camada guardada com sucesso.\",\"Delete parameter\":\"Deletar parâmetro\",\"Are you sure you want to delete\":\"Tem certeza de que deseja excluir\",\"Are you sure to delete\":\"Tem certeza que quer apagar\",\"Are you sure to delete selected nodes\":\"tem certeza que quer apagar os objectos selecionados\",\"Are you sure you want to delete all\":\"Tem certeza que quer apagar todos\",\"children\":\"filho\",\"An error occurred while loading the scene\":\"Um erro foi encontrado enquanto carregava o cenário\",\"Scene Viewer\":\"Visualizador de cenários\",\"Alert\":\"Alerta\",\"Saved changes!\":\"Mudanças salvas!\",\"Renamed item to a existing name, please change the name\":\"Item renomeado para um nome existente, por favor altere o nome\",\"Cannot debug transition links\":\"Não é possível depurar links de transição\",\"Topics\":\"Tópicos\",\"Logs\":\"Histórico\",\"no data\":\"no data\",\"Not connected, make sure rosbridge is running\":\"Não conectado, certifique-se de que Rosbridge está em execução\",\"From\":\"De\",\"Port\":\"Porta\",\"To\":\"Para\",\"Dependencies level\":\"Level de dependências\",\"All dependencies\":\"Todas as dependências\",\"Only From\":\"Somente De\",\"Only To\":\"Somente Para\",\"No dependencies\":\"Sem dependências\",\"Checks node dependencies\":\"Verificar dependências de nó\",\"Reset\":\"Reiniciar\",\"Add node\":\"Adicionar nó\",\"Add sub flow\":\"Adicionar subfluxo\",\"Add state\":\"Adicionar estado\",\"Robot Configuration\":\"Configuração do Robô\",\"Robot Config\":\"Configuração do Robô\",\"Delete node [DEL]\":\"Apagar nó [DEL]\",\"Add previous\":\"Adicionar anterior\",\"Add next\":\"Adicionar próximo\",\"null dictionary describing point cloud or null mainView\":\"null dictionary describing point cloud or null mainView\",\"Navigation allowed\":\"Navegação permitida\",\"null dictionary describing polygon or null mainView\":\"null dictionary describing polygon or null mainView\",\"There are missing variables to build a robot, e.g\":\"Há variáveis ausentes para construir um robô, e.g\",\"null dictionary describing wall\":\"null dictionary describing wall\",\"There are missing variables to build a TreeNode, e.g\":\"Há variáveis ausentes para construir um TreeNode, e.g\",\"There are missing variables to build a camera, e.g\":\"Há variáveis ausentes para construir uma camera, e.g\",\"There are missing variables to build a light, e.g\":\"Há variáveis ausentes para construir uma luz, e.g\",\"Load\":\"Carregar\",\"Nothing selected\":\"Nada selecionado\",\"an\":\"um\",\"a\":\"um\",\"Select\":\"Selecione\",\"Document\":\"Documento\",\"Are you sure?\":\"Tens a certeza?\",\"Insert Text here\":\"Inserir texto aqui\",\"Confirm\":\"Confirmar\"}");
+module.exports = JSON.parse("{\"Save\":\"Save\",\"Ports\":\"Ports\",\"Inputs\":\"Inputs\",\"Invalid data type\":\"Invalid data type\",\"Create New\":\"Create New\",\"Workspace\":\"Workspace\",\"Could not load workspaces\":\"Could not load workspaces\",\"Copy\":\"Copy\",\"to\":\"to\",\"The copied\":\"The copied\",\"must have a different name\":\"must have a different name\",\"Something went wrong while copying\":\"Something went wrong while copying\",\"copied\":\"copied\",\"Confirm to delete\":\"Confirm to delete\",\"Name\":\"Name\",\"Version\":\"Version\",\"Last update\":\"Last update\",\"User\":\"User\",\"Versioning\":\"Versioning\",\"Home\":\"Home\",\"Debug\":\"Debug\",\"Diff Tool\":\"Diff Tool\",\"Search\":\"Search\",\"Main flow view\":\"Main flow view\",\"Tree view\":\"Tree view\",\"Parameters\":\"Parameters\",\"Layers\":\"Layers\",\"Node already exists\":\"Node already exists\",\"Invalid name\":\"Invalid name\",\"Start link(s) not found\":\"Start link(s) not found\",\"Annotations\":\"Annotations\",\"Annotation\":\"Annotation\",\"Callbacks\":\"Callbacks\",\"Callback\":\"Callback\",\"Configurations\":\"Configurations\",\"Configuration\":\"Configuration\",\"Flows\":\"Flows\",\"Flow\":\"Flow\",\"Nodes\":\"Nodes\",\"Node\":\"Node\",\"Layouts\":\"Layouts\",\"Layout\":\"Layout\",\"Scenes\":\"Scenes\",\"Scene\":\"Scene\",\"Key\":\"Key\",\"key\":\"key\",\"Value\":\"Value\",\"value\":\"value\",\"Type\":\"Type\",\"Actions\":\"Actions\",\"Edit\":\"Edit\",\"Delete\":\"Delete\",\"Add\":\"Add\",\"Accept\":\"Accept\",\"Cancel\":\"Cancel\",\"Create new version\":\"Create new version\",\"Open\":\"Open\",\"Restore\":\"Restore\",\"Restore to\":\"Restore to\",\"Compare\":\"Compare\",\"Invalid links found\":\"Invalid links found\",\"Fix not available in view only mode.\":\"Fix not available in view only mode.\",\"Do you want to fix this?\":\"Do you want to fix this?\",\"Fix\":\"Fix\",\"Sub-flows with invalid parameters\":\"Sub-flows with invalid parameters\",\"The parameters of the sub-flow should come from the flow template.\":\"The parameters of the sub-flow should come from the flow template.\\n\",\"The following sub-flows contains custom parameters that are not present on its template:\":\"The following sub-flows contains custom parameters that are not present on its template:\\n\",\"To fix it, you can either remove the custom parameter on the sub-flow or add the parameter on the template.\":\"To fix it, you can either remove the custom parameter on the sub-flow or add the parameter on the template.\",\"Exposed port: node\":\"Exposed port: node\",\"not found\":\"not found\",\"Developer\":\"Developer\",\"Client\":\"Client\",\"Export App\":\"Export App\",\"Dashboard name\":\"Dashboard name\",\"Remember me\":\"Remember me\",\"Login\":\"Login\",\"Username\":\"Username\",\"Password\":\"Password\",\"Loading\":\"Loading\",\"Callback is not defined\":\"Callback is not defined\",\"Please add a callback\":\"Please add a callback\",\"Remappable\":\"Remappable\",\"Launch\":\"Launch\",\"Properties\":\"Properties\",\"Env Variables\":\"Env. Variables\",\"Command Line\":\"Command Line\",\"Belongs to\":\"Belongs to\",\"Persistent\":\"Persistent\",\"Is persistent\":\"Is persistent\",\"Not persistent\":\"Not persistent\",\"Is remappable\":\"Is remappable\",\"Not remappable\":\"Not remappable\",\"To launch\":\"To launch\",\"Not to launch\":\"Not to launch\",\"default\":\"default\",\"Ok\":\"Ok\",\"primary\":\"primary\",\"Format Type Error\":\"Format Type Error\",\"In Parameter\":\"In Parameter\",\"got the value\":\"got the value\",\"and expected one of the following formats\":\"and expected one of the following formats\",\"Backup\":\"Backup\",\"New Version\":\"New Version\",\"Yes\":\"Yes\",\"No\":\"No\",\"Cancel Restore\":\"Cancel Restore\",\"Invalid version name\":\"Invalid version name\",\"Create a version of the existing work under the workspace\":\"Create a version of the existing work under the workspace\",\"New name\":\"New name\",\"Do you want to restore the selected version?\":\"Do you want to restore the selected version?\",\"Please choose the name of the document to restore to\":\"Please choose the name of the document to restore to\",\"Restoring this version will overwrite the changes on the\":\"Restoring this version will overwrite the changes on the\",\"global workspace\":\"global workspace\",\"Do you want to backup your current work first?\":\"Do you want to backup your current work first?\",\"This will create a new version under the workspace\":\"This will create a new version under the workspace\",\"Imports\":\"Imports\",\"Message\":\"Message\",\"Edit Message\":\"Edit Message\",\"Submit\":\"Submit\",\"No records to display\":\"No records to display\",\"Transport Protocol\":\"Transport / Protocol\",\"Package\":\"Package\",\"I/O Configuration\":\"I/O Configuration\",\"New Layer\":\"New Layer\",\"Edit Layer\":\"Edit Layer\",\"Execution Parameters\":\"Execution Parameters\",\"Environment Variables\":\"Environment Variables\",\"Info\":\"Info\",\"New parameter\":\"New parameter\",\"Edit parameter\":\"Edit parameter\",\"Path\":\"Path\",\"Persistent node\":\"Persistent node\",\"After launch, the node will remain active during the flow execution.\":\"After launch, the node will remain active during the flow execution.\",\"Allows, or not, the ports of the node to be remapped\":\"Allows, or not, the ports of the node to be remapped\",\"Controls whether the Node is to be launched or not\":\"Controls whether the Node is to be launched or not\",\"Details\":\"Details\",\"Paste\":\"Paste\",\"Start\":\"Start\",\"Stop\":\"Stop\",\"Toggle Exposed\":\"Toggle Exposed\",\"New Flow\":\"New Flow\",\"New Annotation\":\"New Annotation\",\"New Configuration\":\"New Configuration\",\"New Node\":\"New Node\",\"New Layout\":\"New Layout\",\"New Scene\":\"New Scene\",\"New Callback\":\"New Callback\",\"Invalid libs found\":\"Invalid libs found\",\"Fail to get running robot\":\"Fail to get running robot\",\"Select/unselect the topics to monitor\":\"Select/unselect the topics to monitor\",\"Compare dependencies\":\"Compare dependencies\",\"Diff tool\":\"Diff tool\",\"Exclude property\":\"Exclude property\",\"Add Import\":\"Add Import\",\"No widget selected\":\"No widget selected\",\"Edit description\":\"Edit description\",\"Description\":\"Description\",\"Layer successfully deleted.\":\"Layer successfully deleted.\",\"Delete layer\":\"Delete layer\",\"Are you sure you want to delete layer\":\"Are you sure you want to delete layer\",\"Layers successfully saved.\":\"Layers successfully saved.\",\"Delete parameter\":\"Delete parameter\",\"Are you sure you want to delete\":\"Are you sure you want to delete\",\"Are you sure to delete\":\"Are you sure to delete\",\"Are you sure to delete selected nodes\":\"Are you sure to delete selected nodes\",\"Are you sure you want to delete all\":\"Are you sure you want to delete all\",\"children\":\"children\",\"An error occurred while loading the scene\":\"An error occurred while loading the scene\",\"Scene Viewer\":\"Scene Viewer\",\"Alert\":\"Alert\",\"Saved changes!\":\"Saved changes!\",\"Renamed item to a existing name, please change the name\":\"Renamed item to a existing name, please change the name\",\"Cannot debug transition links\":\"Cannot debug transition links\",\"Topics\":\"Topics\",\"Logs\":\"Logs\",\"no data\":\"no data\",\"Not connected, make sure rosbridge is running\":\"Not connected, make sure rosbridge is running\",\"From\":\"From\",\"Port\":\"Port\",\"To\":\"To\",\"Dependencies level\":\"Dependencies level\",\"All dependencies\":\"All dependencies\",\"Only From\":\"Only From\",\"Only To\":\"Only To\",\"No dependencies\":\"No dependencies\",\"Checks node dependencies\":\"Checks node dependencies\",\"Reset\":\"Reset\",\"Add node\":\"Add node\",\"Add sub flow\":\"Add sub flow\",\"Add state\":\"Add state\",\"Robot Configuration\":\"Robot Configuration\",\"Robot Config\":\"Robot Config\",\"Delete node [DEL]\":\"Delete node [DEL]\",\"Add previous\":\"Add previous\",\"Add next\":\"Add next\",\"null dictionary describing point cloud or null mainView\":\"null dictionary describing point cloud or null mainView\",\"Navigation allowed\":\"Navigation allowed\",\"null dictionary describing polygon or null mainView\":\"null dictionary describing polygon or null mainView\",\"There are missing variables to build a robot, e.g\":\"There are missing variables to build a robot, e.g\",\"null dictionary describing wall\":\"null dictionary describing wall\",\"There are missing variables to build a TreeNode, e.g\":\"There are missing variables to build a TreeNode, e.g\",\"There are missing variables to build a camera, e.g\":\"There are missing variables to build a camera, e.g\",\"There are missing variables to build a light, e.g\":\"There are missing variables to build a light, e.g\",\"Load\":\"Load\",\"Nothing selected\":\"Nothing selected\",\"an\":\"an\",\"a\":\"a\",\"Select\":\"Select\",\"Document\":\"Document\",\"Are you sure?\":\"Are you sure?\",\"Insert Text here\":\"Insert Text here\",\"Confirm\":\"Confirm\"}");
 
 /***/ }),
 
@@ -22184,10 +22515,10 @@ module.exports = JSON.parse("{\"Save\":\"Gravar\",\"Ports\":\"Portas\",\"Inputs\
 /*!**********************************************!*\
   !*** ./src/i18n/locales/pt/translation.json ***!
   \**********************************************/
-/*! exports provided: Save, Ports, Inputs, Invalid data type, Create New, Workspace, Could not load workspaces, Copy, to, The copied, must have a different name, Something went wrong while copying, copied, Confirm to delete, Are you sure you want to delete, Name, Version, Last update, User, Versioning, Home, Debug, Diff Tool, Search, Main flow view, Tree view, Description, Parameters, Layers, Node already exists, Invalid name, Start link(s) not found, Annotations, Annotation, Callbacks, Callback, Configurations, Configuration, Flows, Flow, Nodes, Node, Layouts, Layout, Scenes, Scene, Key, key, Value, value, Type, Actions, Edit, Add, Delete, Accept, Create new version, Cancel, Open, Restore, Restore to, Compare, Invalid links found, Fix not available in view only mode., Do you want to fix this?, Fix, Sub-flows with invalid parameters, The parameters of the sub-flow should come from the flow template., The following sub-flows contains custom parameters that are not present on its template:, To fix it, you can either remove the custom parameter on the sub-flow or add the parameter on the template., Exposed port: node, not found, Developer, Client, Export App, Dashboard name, Remember me, Login, Username, Password, Loading, Callback is not defined, Please add a callback, Remappable, Launch, Properties, Env Variables, Command Line, Belongs to, Persistent, Is persistent, Not persistent, Is remappable, Not remappable, To launch, Not to launch, default, Ok, primary, Format Type Error, In Parameter, got the value, and expected one of the following formats, Backup, New Version, Yes, No, Cancel Restore, Invalid version name, Create a version of the existing work under the workspace, New name, Do you want to restore the selected version?, Please choose the name of the document to restore to, Restoring this version will overwrite the changes on the, global workspace, Do you want to backup your current work first?, This will create a new version under the workspace, Imports, Message, Edit Message, Submit, No records to display, Transport Protocol, Package, I/O Configuration, New Layer, Edit Layer, Execution Parameters, Environment Variables, Info, New parameter, Edit parameter, Path, Persistent node, After launch, the node will remain active during the flow execution., Allows, or not, the ports of the node to be remapped, Controls whether the Node is to be launched or not, Details, Paste, Start, Stop, Toggle Exposed, New Annotation, New Configuration, New Node, New Layout, New Scene, New Callback, Invalid libs found, Fail to get running robot, Select/unselect the topics to monitor, Compare dependencies, Diff tool, Exclude property, Add Import, No widget selected, Edit description, Layer successfully deleted., Delete layer, Are you sure you want to delete layer, Layers successfully saved., Delete parameter, Are you sure to delete, Are you sure to delete selected nodes, Are you sure you want to delete all, children, An error occurred while loading the scene, Scene Viewer, Alert, Saved changes!, Renamed item to a existing name, please change the name, Cannot debug transition links, Topics, Logs, New Flow, no data, Not connected, make sure rosbridge is running, From, Port, To, Dependencies level, All dependencies, Only From, Only To, No dependencies, Checks node dependencies, Reset, Add node, Add sub flow, Add state, Robot Configuration, Robot Config, Delete node [DEL], Add previous, Add next, null dictionary describing point cloud or null mainView, Navigation allowed, null dictionary describing polygon or null mainView, There are missing variables to build a robot, e.g, null dictionary describing wall, There are missing variables to build a TreeNode, e.g, There are missing variables to build a camera, e.g, There are missing variables to build a light, e.g, Load, Nothing selected */
+/*! exports provided: Save, Ports, Inputs, Invalid data type, Create New, Workspace, Could not load workspaces, Copy, to, The copied, must have a different name, Something went wrong while copying, copied, Confirm to delete, Are you sure you want to delete, Name, Version, Last update, User, Versioning, Home, Debug, Diff Tool, Search, Main flow view, Tree view, Description, Parameters, Layers, Node already exists, Invalid name, Start link(s) not found, Annotations, Annotation, Callbacks, Callback, Configurations, Configuration, Flows, Flow, Nodes, Node, Layouts, Layout, Scenes, Scene, Key, key, Value, value, Type, Actions, Edit, Add, Delete, Accept, Create new version, Cancel, Open, Restore, Restore to, Compare, Invalid links found, Fix not available in view only mode., Do you want to fix this?, Fix, Sub-flows with invalid parameters, The parameters of the sub-flow should come from the flow template., The following sub-flows contains custom parameters that are not present on its template:, To fix it, you can either remove the custom parameter on the sub-flow or add the parameter on the template., Exposed port: node, not found, Developer, Client, Export App, Dashboard name, Remember me, Login, Username, Password, Loading, Callback is not defined, Please add a callback, Remappable, Launch, Properties, Env Variables, Command Line, Belongs to, Persistent, Is persistent, Not persistent, Is remappable, Not remappable, To launch, Not to launch, default, Ok, primary, Format Type Error, In Parameter, got the value, and expected one of the following formats, Backup, New Version, Yes, No, Cancel Restore, Invalid version name, Create a version of the existing work under the workspace, New name, Do you want to restore the selected version?, Please choose the name of the document to restore to, Restoring this version will overwrite the changes on the, global workspace, Do you want to backup your current work first?, This will create a new version under the workspace, Imports, Message, Edit Message, Submit, No records to display, Transport Protocol, Package, I/O Configuration, New Layer, Edit Layer, Execution Parameters, Environment Variables, Info, New parameter, Edit parameter, Path, Persistent node, After launch, the node will remain active during the flow execution., Allows, or not, the ports of the node to be remapped, Controls whether the Node is to be launched or not, Details, Paste, Start, Stop, Toggle Exposed, New Annotation, New Configuration, New Node, New Layout, New Scene, New Callback, Invalid libs found, Fail to get running robot, Select/unselect the topics to monitor, Compare dependencies, Diff tool, Exclude property, Add Import, No widget selected, Edit description, Layer successfully deleted., Delete layer, Are you sure you want to delete layer, Layers successfully saved., Delete parameter, Are you sure to delete, Are you sure to delete selected nodes, Are you sure you want to delete all, children, An error occurred while loading the scene, Scene Viewer, Alert, Saved changes!, Renamed item to a existing name, please change the name, Cannot debug transition links, Topics, Logs, New Flow, no data, Not connected, make sure rosbridge is running, From, Port, To, Dependencies level, All dependencies, Only From, Only To, No dependencies, Checks node dependencies, Reset, Add node, Add sub flow, Add state, Robot Configuration, Robot Config, Delete node [DEL], Add previous, Add next, null dictionary describing point cloud or null mainView, Navigation allowed, null dictionary describing polygon or null mainView, There are missing variables to build a robot, e.g, null dictionary describing wall, There are missing variables to build a TreeNode, e.g, There are missing variables to build a camera, e.g, There are missing variables to build a light, e.g, Load, Nothing selected, an, a, Select, Document, Are you sure?, Insert Text here, Confirm */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"Save\":\"Gravar\",\"Ports\":\"Portas\",\"Inputs\":\"Entradas\",\"Invalid data type\":\"Tipo de dado inválido\",\"Create New\":\"Criar Novo\",\"Workspace\":\"Área de trabalho\",\"Could not load workspaces\":\"Não foi possível carregar os espaços de trabalho\",\"Copy\":\"Copiar\",\"to\":\"para\",\"The copied\":\"A cópia\",\"must have a different name\":\"deve ter um nome diferente\",\"Something went wrong while copying\":\"Algo deu errado ao tentar criar a cópia\",\"copied\":\"copiado\",\"Confirm to delete\":\"Confirme para excluir\",\"Are you sure you want to delete\":\"Tem certeza de que deseja excluir\",\"Name\":\"Nome\",\"Version\":\"Versão\",\"Last update\":\"Última atualização\",\"User\":\"Usuário\",\"Versioning\":\"Versões\",\"Home\":\"Início\",\"Debug\":\"Depurar\",\"Diff Tool\":\"Ferramenta de comparação\",\"Search\":\"Procurar\",\"Main flow view\":\"Visualização de fluxo principal\",\"Tree view\":\"Visualização em árvore\",\"Description\":\"Descrição\",\"Parameters\":\"Parâmetros\",\"Layers\":\"Camadas\",\"Node already exists\":\"Este nó já existe\",\"Invalid name\":\"Nome inválido\",\"Start link(s) not found\":\"Ligação inicial não encontrada\",\"Annotations\":\"Anotações\",\"Annotation\":\"Anotação\",\"Callbacks\":\"Revogações\",\"Callback\":\"Revogação\",\"Configurations\":\"Configurações\",\"Configuration\":\"Configuração\",\"Flows\":\"Fluxos\",\"Flow\":\"Fluxo\",\"Nodes\":\"Nós\",\"Node\":\"Nó\",\"Layouts\":\"Disposições\",\"Layout\":\"Disposição\",\"Scenes\":\"Cenários\",\"Scene\":\"Cenário\",\"Key\":\"Chave\",\"key\":\"chave\",\"Value\":\"Valor\",\"value\":\"valor\",\"Type\":\"Tipo\",\"Actions\":\"Ações\",\"Edit\":\"Editar\",\"Add\":\"Adicionar\",\"Delete\":\"Apagar\",\"Accept\":\"Aceitar\",\"Create new version\":\"Criar nova versão\",\"Cancel\":\"Cancelar\",\"Open\":\"Abrir\",\"Restore\":\"Restaurar\",\"Restore to\":\"Restaurar para\",\"Compare\":\"Comparar\",\"Invalid links found\":\"Foram encontradas ligações inválidas\",\"Fix not available in view only mode.\":\"Correcção não disponível em modo de visualização.\",\"Do you want to fix this?\":\"Você deseja corrigir isto?\",\"Fix\":\"Corrigir\",\"Sub-flows with invalid parameters\":\"Sub-fluxos com parâmetros inválidos\",\"The parameters of the sub-flow should come from the flow template.\":\"Os parâmetros do sub-fluxo devem vir do modelo de fluxo.\\n\",\"The following sub-flows contains custom parameters that are not present on its template:\":\"Os seguintes subfluxos contêm parâmetros personalizados que não estão presentes em seu modelo:\\n\",\"To fix it, you can either remove the custom parameter on the sub-flow or add the parameter on the template.\":\"Para corrigir isso, você pode remover o parâmetro personalizado no subfluxo ou adicionar o parâmetro no modelo.\",\"Exposed port: node\":\"Porta exposta: nó\",\"not found\":\"not found\",\"Developer\":\"Desenvolvedor\",\"Client\":\"Cliente\",\"Export App\":\"Exportar Aplicação\",\"Dashboard name\":\"Nome do painel\",\"Remember me\":\"Lembrar-me\",\"Login\":\"Entrar\",\"Username\":\"Nome de usuário\",\"Password\":\"Senha\",\"Loading\":\"A carregar\",\"Callback is not defined\":\"Callback não definida\",\"Please add a callback\":\"Por favor, adicione uma callback\",\"Remappable\":\"Remapeável\",\"Launch\":\"Enviar\",\"Properties\":\"Propriedades\",\"Env Variables\":\"Variáveis de Ambiente\",\"Command Line\":\"Linha de Comando\",\"Belongs to\":\"Pertence a\",\"Persistent\":\"Persistente\",\"Is persistent\":\"É persistente\",\"Not persistent\":\"Não persistent\",\"Is remappable\":\"É remapeável\",\"Not remappable\":\"Não remapeável\",\"To launch\":\"Para enviar\",\"Not to launch\":\"Não enviar\",\"default\":\"defeito\",\"Ok\":\"Ok\",\"primary\":\"primário\",\"Format Type Error\":\"Erro de tipo de formatação\",\"In Parameter\":\"Em parâmetro\",\"got the value\":\"obteve o valor\",\"and expected one of the following formats\":\"e esperava um dos seguintes formatos\",\"Backup\":\"Cópia de segurança\",\"New Version\":\"Nova Versão\",\"Yes\":\"Sim\",\"No\":\"Não\",\"Cancel Restore\":\"Cancelar Restauração\",\"Invalid version name\":\"Nome de versão inválido\",\"Create a version of the existing work under the workspace\":\"Criar uma versão de um documento existente na área de trabalho\",\"New name\":\"Novo nome\",\"Do you want to restore the selected version?\":\"Você quer restaurar a versão seleccionada?\",\"Please choose the name of the document to restore to\":\"Por favor, escolha o nome do documento a ser restaurado\",\"Restoring this version will overwrite the changes on the\":\"Restaurar essa versão irá sobrescrever as mudanças na\",\"global workspace\":\"área de trabalho global\",\"Do you want to backup your current work first?\":\"Você quer fazer backup do seu trabalho atual primeiro?\",\"This will create a new version under the workspace\":\"Isso criará uma nova versão sob o espaço de trabalho\",\"Imports\":\"Importações\",\"Message\":\"Mensagem\",\"Edit Message\":\"Editar Mensagem\",\"Submit\":\"Enviar\",\"No records to display\":\"Não há dados a serem exibidos\",\"Transport Protocol\":\"Transporte / Protocolo\",\"Package\":\"Pacote\",\"I/O Configuration\":\"Configurações de Entrada/Saída\",\"New Layer\":\"Nova Camada\",\"Edit Layer\":\"Editar Camada\",\"Execution Parameters\":\"Parâmetros de execução\",\"Environment Variables\":\"Variáveis de Ambiente\",\"Info\":\"Informação\",\"New parameter\":\"Novo parâmetro\",\"Edit parameter\":\"Editar parâmetro\",\"Path\":\"Caminho\",\"Persistent node\":\"Nó persistente\",\"After launch, the node will remain active during the flow execution.\":\"Depois do início, o nó ficará ativo durante a execução do flow.\",\"Allows, or not, the ports of the node to be remapped\":\"Permite, ou não, que as portas do nó sejam remapeadas\",\"Controls whether the Node is to be launched or not\":\"Controla se o Nó deve ser lançado ou não\",\"Details\":\"Detalhes\",\"Paste\":\"Colar\",\"Start\":\"Start\",\"Stop\":\"Stop\",\"Toggle Exposed\":\"Alternar Exposto\",\"New Annotation\":\"Nova Anotação\",\"New Configuration\":\"Nova Configuração\",\"New Node\":\"Novo Nó\",\"New Layout\":\"Nova Disposição\",\"New Scene\":\"Novo Cenário\",\"New Callback\":\"Nova Revogação\",\"Invalid libs found\":\"Foram encontradas bibliotecas inválidas\",\"Fail to get running robot\":\"Falha ao obter robô em execução\",\"Select/unselect the topics to monitor\":\"Selecione/desmarque os tópicos para monitorar\",\"Compare dependencies\":\"Comparar dependências\",\"Diff tool\":\"Ferramenta de comparação\",\"Exclude property\":\"Excluir propriedade\",\"Add Import\":\"Adicionar importação\",\"No widget selected\":\"Sem ferramentas selecionadas\",\"Edit description\":\"Editar descrição\",\"Layer successfully deleted.\":\"Camada deletada com sucesso.\",\"Delete layer\":\"Deletar camada\",\"Are you sure you want to delete layer\":\"Tens a certeza de que deseja remover a camada\",\"Layers successfully saved.\":\"Camada guardada com sucesso.\",\"Delete parameter\":\"Deletar parâmetro\",\"Are you sure to delete\":\"Tem certeza que quer apagar\",\"Are you sure to delete selected nodes\":\"tem certeza que quer apagar os objectos selecionados\",\"Are you sure you want to delete all\":\"Tem certeza que quer apagar todos\",\"children\":\"filho\",\"An error occurred while loading the scene\":\"Um erro foi encontrado enquanto carregava o cenário\",\"Scene Viewer\":\"Visualizador de cenários\",\"Alert\":\"Alerta\",\"Saved changes!\":\"Mudanças salvas!\",\"Renamed item to a existing name, please change the name\":\"Item renomeado para um nome existente, por favor altere o nome\",\"Cannot debug transition links\":\"Não é possível depurar links de transição\",\"Topics\":\"Tópicos\",\"Logs\":\"Histórico\",\"New Flow\":\"Novo Fluxo\",\"no data\":\"no data\",\"Not connected, make sure rosbridge is running\":\"Não conectado, certifique-se de que Rosbridge está em execução\",\"From\":\"De\",\"Port\":\"Porta\",\"To\":\"Para\",\"Dependencies level\":\"Level de dependências\",\"All dependencies\":\"Todas as dependências\",\"Only From\":\"Somente De\",\"Only To\":\"Somente Para\",\"No dependencies\":\"Sem dependências\",\"Checks node dependencies\":\"Verificar dependências de nó\",\"Reset\":\"Reiniciar\",\"Add node\":\"Adicionar nó\",\"Add sub flow\":\"Adicionar subfluxo\",\"Add state\":\"Adicionar estado\",\"Robot Configuration\":\"Configuração do Robô\",\"Robot Config\":\"Configuração do Robô\",\"Delete node [DEL]\":\"Apagar nó [DEL]\",\"Add previous\":\"Adicionar anterior\",\"Add next\":\"Adicionar próximo\",\"null dictionary describing point cloud or null mainView\":\"null dictionary describing point cloud or null mainView\",\"Navigation allowed\":\"Navegação permitida\",\"null dictionary describing polygon or null mainView\":\"null dictionary describing polygon or null mainView\",\"There are missing variables to build a robot, e.g\":\"Há variáveis ausentes para construir um robô, e.g\",\"null dictionary describing wall\":\"null dictionary describing wall\",\"There are missing variables to build a TreeNode, e.g\":\"Há variáveis ausentes para construir um TreeNode, e.g\",\"There are missing variables to build a camera, e.g\":\"Há variáveis ausentes para construir uma camera, e.g\",\"There are missing variables to build a light, e.g\":\"Há variáveis ausentes para construir uma luz, e.g\",\"Load\":\"Carregar\",\"Nothing selected\":\"Nada selecionado\"}");
+module.exports = JSON.parse("{\"Save\":\"Gravar\",\"Ports\":\"Portas\",\"Inputs\":\"Entradas\",\"Invalid data type\":\"Tipo de dado inválido\",\"Create New\":\"Criar Novo\",\"Workspace\":\"Área de trabalho\",\"Could not load workspaces\":\"Não foi possível carregar os espaços de trabalho\",\"Copy\":\"Copiar\",\"to\":\"para\",\"The copied\":\"A cópia\",\"must have a different name\":\"deve ter um nome diferente\",\"Something went wrong while copying\":\"Algo deu errado ao tentar criar a cópia\",\"copied\":\"copiado\",\"Confirm to delete\":\"Confirme para excluir\",\"Are you sure you want to delete\":\"Tem certeza de que deseja excluir\",\"Name\":\"Nome\",\"Version\":\"Versão\",\"Last update\":\"Última atualização\",\"User\":\"Usuário\",\"Versioning\":\"Versões\",\"Home\":\"Início\",\"Debug\":\"Depurar\",\"Diff Tool\":\"Ferramenta de comparação\",\"Search\":\"Procurar\",\"Main flow view\":\"Visualização de fluxo principal\",\"Tree view\":\"Visualização em árvore\",\"Description\":\"Descrição\",\"Parameters\":\"Parâmetros\",\"Layers\":\"Camadas\",\"Node already exists\":\"Este nó já existe\",\"Invalid name\":\"Nome inválido\",\"Start link(s) not found\":\"Ligação inicial não encontrada\",\"Annotations\":\"Anotações\",\"Annotation\":\"Anotação\",\"Callbacks\":\"Revogações\",\"Callback\":\"Revogação\",\"Configurations\":\"Configurações\",\"Configuration\":\"Configuração\",\"Flows\":\"Fluxos\",\"Flow\":\"Fluxo\",\"Nodes\":\"Nós\",\"Node\":\"Nó\",\"Layouts\":\"Disposições\",\"Layout\":\"Disposição\",\"Scenes\":\"Cenários\",\"Scene\":\"Cenário\",\"Key\":\"Chave\",\"key\":\"chave\",\"Value\":\"Valor\",\"value\":\"valor\",\"Type\":\"Tipo\",\"Actions\":\"Ações\",\"Edit\":\"Editar\",\"Add\":\"Adicionar\",\"Delete\":\"Apagar\",\"Accept\":\"Aceitar\",\"Create new version\":\"Criar nova versão\",\"Cancel\":\"Cancelar\",\"Open\":\"Abrir\",\"Restore\":\"Restaurar\",\"Restore to\":\"Restaurar para\",\"Compare\":\"Comparar\",\"Invalid links found\":\"Foram encontradas ligações inválidas\",\"Fix not available in view only mode.\":\"Correcção não disponível em modo de visualização.\",\"Do you want to fix this?\":\"Você deseja corrigir isto?\",\"Fix\":\"Corrigir\",\"Sub-flows with invalid parameters\":\"Sub-fluxos com parâmetros inválidos\",\"The parameters of the sub-flow should come from the flow template.\":\"Os parâmetros do sub-fluxo devem vir do modelo de fluxo.\\n\",\"The following sub-flows contains custom parameters that are not present on its template:\":\"Os seguintes subfluxos contêm parâmetros personalizados que não estão presentes em seu modelo:\\n\",\"To fix it, you can either remove the custom parameter on the sub-flow or add the parameter on the template.\":\"Para corrigir isso, você pode remover o parâmetro personalizado no subfluxo ou adicionar o parâmetro no modelo.\",\"Exposed port: node\":\"Porta exposta: nó\",\"not found\":\"not found\",\"Developer\":\"Desenvolvedor\",\"Client\":\"Cliente\",\"Export App\":\"Exportar Aplicação\",\"Dashboard name\":\"Nome do painel\",\"Remember me\":\"Lembrar-me\",\"Login\":\"Entrar\",\"Username\":\"Nome de usuário\",\"Password\":\"Senha\",\"Loading\":\"A carregar\",\"Callback is not defined\":\"Callback não definida\",\"Please add a callback\":\"Por favor, adicione uma callback\",\"Remappable\":\"Remapeável\",\"Launch\":\"Enviar\",\"Properties\":\"Propriedades\",\"Env Variables\":\"Variáveis de Ambiente\",\"Command Line\":\"Linha de Comando\",\"Belongs to\":\"Pertence a\",\"Persistent\":\"Persistente\",\"Is persistent\":\"É persistente\",\"Not persistent\":\"Não persistent\",\"Is remappable\":\"É remapeável\",\"Not remappable\":\"Não remapeável\",\"To launch\":\"Para enviar\",\"Not to launch\":\"Não enviar\",\"default\":\"defeito\",\"Ok\":\"Ok\",\"primary\":\"primário\",\"Format Type Error\":\"Erro de tipo de formatação\",\"In Parameter\":\"Em parâmetro\",\"got the value\":\"obteve o valor\",\"and expected one of the following formats\":\"e esperava um dos seguintes formatos\",\"Backup\":\"Cópia de segurança\",\"New Version\":\"Nova Versão\",\"Yes\":\"Sim\",\"No\":\"Não\",\"Cancel Restore\":\"Cancelar Restauração\",\"Invalid version name\":\"Nome de versão inválido\",\"Create a version of the existing work under the workspace\":\"Criar uma versão de um documento existente na área de trabalho\",\"New name\":\"Novo nome\",\"Do you want to restore the selected version?\":\"Você quer restaurar a versão seleccionada?\",\"Please choose the name of the document to restore to\":\"Por favor, escolha o nome do documento a ser restaurado\",\"Restoring this version will overwrite the changes on the\":\"Restaurar essa versão irá sobrescrever as mudanças na\",\"global workspace\":\"área de trabalho global\",\"Do you want to backup your current work first?\":\"Você quer fazer backup do seu trabalho atual primeiro?\",\"This will create a new version under the workspace\":\"Isso criará uma nova versão sob o espaço de trabalho\",\"Imports\":\"Importações\",\"Message\":\"Mensagem\",\"Edit Message\":\"Editar Mensagem\",\"Submit\":\"Enviar\",\"No records to display\":\"Não há dados a serem exibidos\",\"Transport Protocol\":\"Transporte / Protocolo\",\"Package\":\"Pacote\",\"I/O Configuration\":\"Configurações de Entrada/Saída\",\"New Layer\":\"Nova Camada\",\"Edit Layer\":\"Editar Camada\",\"Execution Parameters\":\"Parâmetros de execução\",\"Environment Variables\":\"Variáveis de Ambiente\",\"Info\":\"Informação\",\"New parameter\":\"Novo parâmetro\",\"Edit parameter\":\"Editar parâmetro\",\"Path\":\"Caminho\",\"Persistent node\":\"Nó persistente\",\"After launch, the node will remain active during the flow execution.\":\"Depois do início, o nó ficará ativo durante a execução do flow.\",\"Allows, or not, the ports of the node to be remapped\":\"Permite, ou não, que as portas do nó sejam remapeadas\",\"Controls whether the Node is to be launched or not\":\"Controla se o Nó deve ser lançado ou não\",\"Details\":\"Detalhes\",\"Paste\":\"Colar\",\"Start\":\"Start\",\"Stop\":\"Stop\",\"Toggle Exposed\":\"Alternar Exposto\",\"New Annotation\":\"Nova Anotação\",\"New Configuration\":\"Nova Configuração\",\"New Node\":\"Novo Nó\",\"New Layout\":\"Nova Disposição\",\"New Scene\":\"Novo Cenário\",\"New Callback\":\"Nova Revogação\",\"Invalid libs found\":\"Foram encontradas bibliotecas inválidas\",\"Fail to get running robot\":\"Falha ao obter robô em execução\",\"Select/unselect the topics to monitor\":\"Selecione/desmarque os tópicos para monitorar\",\"Compare dependencies\":\"Comparar dependências\",\"Diff tool\":\"Ferramenta de comparação\",\"Exclude property\":\"Excluir propriedade\",\"Add Import\":\"Adicionar importação\",\"No widget selected\":\"Sem ferramentas selecionadas\",\"Edit description\":\"Editar descrição\",\"Layer successfully deleted.\":\"Camada deletada com sucesso.\",\"Delete layer\":\"Deletar camada\",\"Are you sure you want to delete layer\":\"Tens a certeza de que deseja remover a camada\",\"Layers successfully saved.\":\"Camada guardada com sucesso.\",\"Delete parameter\":\"Deletar parâmetro\",\"Are you sure to delete\":\"Tem certeza que quer apagar\",\"Are you sure to delete selected nodes\":\"tem certeza que quer apagar os objectos selecionados\",\"Are you sure you want to delete all\":\"Tem certeza que quer apagar todos\",\"children\":\"filho\",\"An error occurred while loading the scene\":\"Um erro foi encontrado enquanto carregava o cenário\",\"Scene Viewer\":\"Visualizador de cenários\",\"Alert\":\"Alerta\",\"Saved changes!\":\"Mudanças salvas!\",\"Renamed item to a existing name, please change the name\":\"Item renomeado para um nome existente, por favor altere o nome\",\"Cannot debug transition links\":\"Não é possível depurar links de transição\",\"Topics\":\"Tópicos\",\"Logs\":\"Histórico\",\"New Flow\":\"Novo Fluxo\",\"no data\":\"no data\",\"Not connected, make sure rosbridge is running\":\"Não conectado, certifique-se de que Rosbridge está em execução\",\"From\":\"De\",\"Port\":\"Porta\",\"To\":\"Para\",\"Dependencies level\":\"Level de dependências\",\"All dependencies\":\"Todas as dependências\",\"Only From\":\"Somente De\",\"Only To\":\"Somente Para\",\"No dependencies\":\"Sem dependências\",\"Checks node dependencies\":\"Verificar dependências de nó\",\"Reset\":\"Reiniciar\",\"Add node\":\"Adicionar nó\",\"Add sub flow\":\"Adicionar subfluxo\",\"Add state\":\"Adicionar estado\",\"Robot Configuration\":\"Configuração do Robô\",\"Robot Config\":\"Configuração do Robô\",\"Delete node [DEL]\":\"Apagar nó [DEL]\",\"Add previous\":\"Adicionar anterior\",\"Add next\":\"Adicionar próximo\",\"null dictionary describing point cloud or null mainView\":\"null dictionary describing point cloud or null mainView\",\"Navigation allowed\":\"Navegação permitida\",\"null dictionary describing polygon or null mainView\":\"null dictionary describing polygon or null mainView\",\"There are missing variables to build a robot, e.g\":\"Há variáveis ausentes para construir um robô, e.g\",\"null dictionary describing wall\":\"null dictionary describing wall\",\"There are missing variables to build a TreeNode, e.g\":\"Há variáveis ausentes para construir um TreeNode, e.g\",\"There are missing variables to build a camera, e.g\":\"Há variáveis ausentes para construir uma camera, e.g\",\"There are missing variables to build a light, e.g\":\"Há variáveis ausentes para construir uma luz, e.g\",\"Load\":\"Carregar\",\"Nothing selected\":\"Nada selecionado\",\"an\":\"um\",\"a\":\"um\",\"Select\":\"Selecione\",\"Document\":\"Documento\",\"Are you sure?\":\"Tens a certeza?\",\"Insert Text here\":\"Inserir texto aqui\",\"Confirm\":\"Confirmar\"}");
 
 /***/ }),
 

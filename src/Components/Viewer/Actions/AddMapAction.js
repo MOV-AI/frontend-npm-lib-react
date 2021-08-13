@@ -4,8 +4,8 @@ import Action from "./Action";
 import Map from "../NodeItem/Map";
 import { Maybe } from "monet";
 import React from "react";
-import GlobalRef from "../NodeItem/GlobalRef";
-import { Vector3 } from "@babylonjs/core";
+import GlobalRef, { ROS_ORIGIN } from "../NodeItem/GlobalRef";
+import { Axis, Space, Vector3, Quaternion } from "@babylonjs/core";
 import DefaultScene from "../Utils/DefaultScene";
 import { ACTIONS } from "../MainView/MainViewActions";
 import { UndoManager } from "mov-fe-lib-core";
@@ -40,13 +40,22 @@ class AddMapAction extends Action {
         .textureSrc(textureSrc)
         .build();
 
+      const [xOrigin, yOrigin, yawOrigin] = origin;
       const originPos = Vec3.of([-width / 2, -height / 2, 0]).sub(
-        Vec3.of(origin)
+        Vec3.of([xOrigin, yOrigin, 0])
       );
 
       const rootNode = parentView.getRootNode();
       const parent = rootNode.item.mesh.parent;
       parent.position = GlobalRef.inverseCoordinates(originPos.toBabylon());
+      parent.rotationQuaternion = new Quaternion(
+        ROS_ORIGIN.quaternion[1],
+        ROS_ORIGIN.quaternion[2],
+        ROS_ORIGIN.quaternion[3],
+        ROS_ORIGIN.quaternion[0]
+      );
+
+      parent.rotate(Axis.Z, -yawOrigin, Space.LOCAL);
       camera.setTarget(
         new Vector3(parent.position.x, parent.position.y, parent.position.z)
       );

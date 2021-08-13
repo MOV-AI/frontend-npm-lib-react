@@ -27,6 +27,7 @@ import {
 } from "@babylonjs/core";
 import GlobalRef from "../NodeItem/GlobalRef";
 import Box from "../NodeItem/Box";
+import Path from "../NodeItem/Path";
 import MaterialCache from "../Utils/MaterialCache";
 
 class Util3d {
@@ -546,38 +547,40 @@ class Util3d {
     });
   };
 
-  static getShaderMaterial = ({
-    name = `CustomShader${randomDigits()}`,
-    vertex = VERTEX,
-    frag = FRAG,
-    onBindObservable = SHADER_BIND,
-    preProcessShader = SHADER_PRE
-  }) => scene => {
-    /**
-     * Check this for shader re-usage, if a problem appears
-     * https://playground.babylonjs.com/#KJ3BVA#4
-     * */
-    const shaderMaterial = new ShaderMaterial(
-      name,
-      scene,
-      { vertexSource: vertex, fragmentSource: frag },
-      {
-        attributes: ["position", "normal", "uv"],
-        uniforms: [
-          "world",
-          "worldView",
-          "worldViewProjection",
-          "view",
-          "projection"
-        ]
-      }
-    );
-    preProcessShader(scene, shaderMaterial);
-    shaderMaterial.onBindObservable.add(() => {
-      onBindObservable(scene, shaderMaterial);
-    });
-    return shaderMaterial;
-  };
+  static getShaderMaterial =
+    ({
+      name = `CustomShader${randomDigits()}`,
+      vertex = VERTEX,
+      frag = FRAG,
+      onBindObservable = SHADER_BIND,
+      preProcessShader = SHADER_PRE
+    }) =>
+    scene => {
+      /**
+       * Check this for shader re-usage, if a problem appears
+       * https://playground.babylonjs.com/#KJ3BVA#4
+       * */
+      const shaderMaterial = new ShaderMaterial(
+        name,
+        scene,
+        { vertexSource: vertex, fragmentSource: frag },
+        {
+          attributes: ["position", "normal", "uv"],
+          uniforms: [
+            "world",
+            "worldView",
+            "worldViewProjection",
+            "view",
+            "projection"
+          ]
+        }
+      );
+      preProcessShader(scene, shaderMaterial);
+      shaderMaterial.onBindObservable.add(() => {
+        onBindObservable(scene, shaderMaterial);
+      });
+      return shaderMaterial;
+    };
 
   static setOrthoView(camera, scene) {
     camera.mode = Camera.ORTHOGRAPHIC_CAMERA;
@@ -638,6 +641,12 @@ class Util3d {
     return new TooltipBuilder(mesh, scene).text(tooltipText).build();
   }
 
+  /**
+   * Add click action to mesh in scene
+   * @param {Mesh} mesh : Mesh to add click action
+   * @param {Scene} scene : Scene object
+   * @param {Function} callback : Function to be called on click
+   */
   static addClickActionToMesh(mesh, scene, callback) {
     // Set mesh action manager
     const actionManager = new ActionManager(scene);
@@ -663,6 +672,18 @@ class Util3d {
       })
     );
   }
+
+  /**
+   * Get node item type from mesh
+   * @param {Mesh} mesh : Node Item mesh
+   * @returns {String} NodeItem type
+   */
+  static getNodeItemTypeFromMesh = mesh => {
+    const isMeshFromPath = mesh.parent?.nodeItem.getType() === Path.TYPE;
+    return isMeshFromPath
+      ? mesh.parent?.nodeItem.getType()
+      : mesh.nodeItem.getType();
+  };
 }
 
 const randomDigits = () => {
