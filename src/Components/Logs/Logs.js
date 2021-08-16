@@ -1,7 +1,7 @@
 import React, { Component, createRef } from "react";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import "./Logs.css";
-import { MasterDB } from "mov-fe-lib-core";
+import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import { withStyles } from "@material-ui/core/styles";
 import RobotLogModal from "../Modal/RobotLogModal";
 import {

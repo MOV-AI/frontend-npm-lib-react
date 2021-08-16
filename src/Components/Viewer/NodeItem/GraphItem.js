@@ -8,7 +8,7 @@ import Vec3 from "../Math/Vec3";
 import { Maybe } from "monet";
 import React from "react";
 import lodashGet from "lodash/get";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 import Path from "./Path";
 import KeyPoint from "./KeyPoint";
 

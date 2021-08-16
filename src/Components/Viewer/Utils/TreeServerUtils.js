@@ -1,7 +1,7 @@
 import TreeObject from "../TreeObject/TreeObject";
 import TreeNode from "../TreeObject/TreeNode";
 import GlobalRef from "../NodeItem/GlobalRef";
-import { MasterDB } from "mov-fe-lib-core";
+import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import Constants from "./Constants";
 import GraphItem from "../NodeItem/GraphItem";
 import NavigationPreviewItem from "../NodeItem/NavigationPreviewItem";

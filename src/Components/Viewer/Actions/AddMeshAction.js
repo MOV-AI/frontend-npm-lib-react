@@ -5,7 +5,7 @@ import MeshLoader from "../Utils/MeshLoader";
 import { Maybe } from "monet";
 import Mesh from "../NodeItem/Mesh";
 import { Vector3, Quaternion, Color3, StandardMaterial } from "@babylonjs/core";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 
 //
 class AddMeshAction extends Action {

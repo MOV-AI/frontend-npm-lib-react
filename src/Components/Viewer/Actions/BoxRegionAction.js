@@ -5,7 +5,7 @@ import Vec3 from "../Math/Vec3";
 import Util3d from "../Util3d/Util3d";
 import React from "react";
 import { Color3 } from "@babylonjs/core";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 
 class BoxRegionAction extends MouseKeysAction {
   constructor() {
