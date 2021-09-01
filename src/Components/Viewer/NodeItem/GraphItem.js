@@ -10,6 +10,7 @@ import React from "react";
 import lodashGet from "lodash/get";
 import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 import Path from "./Path";
+import KeyPoint from "./KeyPoint";
 
 /**
  * One graph per scene
@@ -304,6 +305,22 @@ class GraphItem extends NodeItem {
     });
   }
 
+  /**
+   * Get edge directions from meshes
+   * @param {Array} ids : Array with vertexes ids
+   * @returns {Integer} should return always one of the following
+   *  +1  -> if target id is greater than source
+   *  0   -> if ids is not provided
+   *  -1  -> if source id is greater than target
+   */
+  getDirectionFromMeshes(iMesh, jMesh) {
+    if (GraphItem.isInvalidEdge(iMesh, jMesh, true)) return 0;
+    const vertexI = this.getVertexIdFromMesh(iMesh);
+    const vertexJ = this.getVertexIdFromMesh(jMesh);
+    const [i, j] = [vertexI, vertexJ].map(x => Number(x));
+    return (j - i) / Math.abs(j - i);
+  }
+
   //========================================================================================
   /*                                                                                      *
    *                                    Private Methods                                   *
@@ -407,10 +424,11 @@ class GraphItem extends NodeItem {
         });
         // if vertices belong to same path don't build mesh
         if (!this.doMeshesBelong2SamePath(iMesh, jMesh)) {
-          const isPath2Path = [iMesh, jMesh]
-            .map(this.isMeshBelong2Path)
-            .every(x => x);
-          const edgeMesh = this.getEdgeMesh(iVertexD, jVertexD, isPath2Path);
+          // Get edge forward/backward directions
+          const forwardDirection = this.getDirectionFromMeshes(iMesh, jMesh);
+          const backwardDirection = this.getDirectionFromMeshes(jMesh, iMesh);
+          const direction = forwardDirection + backwardDirection;
+          const edgeMesh = this.getEdgeMesh(iVertexD, jVertexD, direction);
           this.meshByEdgeId[Graph.edgeKey(i, j)] = edgeMesh;
           this.meshByEdgeId[Graph.edgeKey(j, i)] = edgeMesh;
         }
@@ -418,7 +436,7 @@ class GraphItem extends NodeItem {
     );
   }
 
-  getEdgeMesh(iVertexD, jVertexD, hasDirection = false) {
+  getEdgeMesh(iVertexD, jVertexD, direction = 0) {
     const edgeInGlobal = [iVertexD, jVertexD].map(({ mesh }) =>
       Util3d.getGlobalCoord(mesh, mesh.position)
     );
@@ -430,11 +448,12 @@ class GraphItem extends NodeItem {
     );
     edgeMesh.visibility = 0.99;
     edgeMesh.material = GraphItem.getEdgeMaterial(this.scene, {
-      speed: hasDirection ? 8 : 0
+      speed: 8 * direction
     });
     edgeMesh.parent = this.mesh;
     edgeMesh.edgeIndexes = [iVertexD, jVertexD].map(({ id }) => id);
     edgeMesh.getMouseContextActions = this.getEdgeMouseCtxActions(edgeMesh);
+    edgeMesh.onDel = this.onDeleteEdgeLine(edgeMesh);
     this.addObserver2EdgeMesh(edgeMesh);
     this.addOnClickEdge(edgeMesh);
     return edgeMesh;
@@ -449,11 +468,31 @@ class GraphItem extends NodeItem {
     return [
       {
         title: "Delete",
-        onClick: () =>
-          this.mainView.getUndoManager().doIt(this.getUndoDeleteEdge(edgeMesh))
+        onClick: this.getUndoDeleteEdgeLineAction(edgeMesh)
       }
     ];
   };
+
+  /**
+   * Prompt confirmation to delete edge line
+   * @param {Mesh} edgeMesh : Edge line mesh to delete
+   * @returns Function to prompt confirmation to delete edge line
+   */
+  onDeleteEdgeLine = edgeMesh => () => {
+    this.mainView.confirmationAlert({
+      title: "Confirm to delete",
+      message: "Are you sure you want to delete this edge?",
+      onConfirm: this.getUndoDeleteEdgeLineAction(edgeMesh)
+    });
+  };
+
+  /**
+   * Use undoManager to delete edge line
+   * @param {Mesh} edgeMesh : Edge line mesh to delete
+   * @returns Function to delete edge line using undoManager
+   */
+  getUndoDeleteEdgeLineAction = edgeMesh => () =>
+    this.mainView.getUndoManager().doIt(this.getUndoDeleteEdge(edgeMesh));
 
   /**
    *
@@ -547,19 +586,41 @@ class GraphItem extends NodeItem {
       .orSome(false);
   };
 
+  /**
+   * Get item name from mesh
+   * @param {Mesh} mesh : Mesh to retrieve name
+   * @returns {String}
+   *  If mesh is a key point belonging to a path, returns parent name
+   *  and returns the mesh name otherwise
+   */
+  getMeshName = mesh => {
+    return this.isMeshBelong2Path(mesh) ? mesh.parent.name : mesh.name;
+  };
+
+  /**
+   * Check if edgeData linking Mesh1 and Mesh2 is valid
+   * @param {Mesh} iMesh : Mesh 1
+   * @param {Mesh} jMesh : Mesh 2
+   * @param {*} edgeData : Edge to be evaluated
+   * @returns {Boolean} True if is invalid and False otherwise
+   */
   checkInvalidEdges(iMesh, jMesh, edgeData) {
-    const edgeMeshesArePath = [iMesh, jMesh]
+    // Check if at least one of the meshes is Path
+    //  returns false if any of the meshes is Path
+    const edgeMeshesContainsPath = [iMesh, jMesh]
       .map(this.isMeshBelong2Path)
-      .every(x => x);
-    if (!edgeMeshesArePath) return false;
+      .some(x => x);
+    if (!edgeMeshesContainsPath) return false;
+    // Identify source and target meshes
     const srcMesh = [iMesh, jMesh].filter(
-      mesh => mesh.parent.name === edgeData.belongsSrc.name
+      mesh => this.getMeshName(mesh) === edgeData.belongsSrc.name
     )[0];
     const trgMesh = [iMesh, jMesh].filter(
-      mesh => mesh.parent.name === edgeData.belongsTrg.name
+      mesh => this.getMeshName(mesh) === edgeData.belongsTrg.name
     )[0];
+    // Call GraphItem.isInvalidEdge function to validate
     return srcMesh && trgMesh
-      ? GraphItem.isInvalidEdge(srcMesh, trgMesh)
+      ? GraphItem.isInvalidEdge(srcMesh, trgMesh, true)
       : false;
   }
 
@@ -602,6 +663,7 @@ class GraphItem extends NodeItem {
     // map directed graph -> undirected graph
     Object.values(edges).forEach(({ ids, belongsSrc, belongsTrg }) => {
       const [i, j] = ids.map(x => Number(x));
+      // update vertex counter
       vertexCounter = Math.max(vertexCounter, Math.max(i, j));
       const edgeMeshes = getMeshesFromEdgeData(mainView, {
         belongsSrc,
@@ -671,26 +733,62 @@ class GraphItem extends NodeItem {
 
   /**
    * Check if edge being draw is invalid
+   *    Invalid Edge 1   : validate direction
+   *    Invalid Edge 1.1 : not possible link from start to end, only end to start
+   *    Invalid Edge 1.2 : not possible link from start of a path to a keyPoint, only keyPoint to start of path
+   *    Invalid Edge 1.3 : not possible link from keyPoint to end of a path, only end of path to keyPoint
+   *    Invalid Edge 2   : from the end of a path to the end of another path
+   *    Invalid Edge 3   : from the start of a path to the start of another path
+   *    Invalid Edge 4   : firstMesh and secondMesh has same name (impossible to link mesh to itself)
+   *
    * @param {Mesh} firstMesh: origin/source edge mesh
    * @param {Mesh} secondMesh: destination/target edge mesh
+   * @param {Boolean} validateDirection : Flag to inform if function should validate direction (false by default)
+   * @returns {Boolean} True if has any validation error and False otherwise
    */
-  static isInvalidEdge = (firstMesh, secondMesh) => {
+  static isInvalidEdge = (firstMesh, secondMesh, validateDirection = false) => {
     const firstMeshParent = firstMesh.parent?.nodeItem;
     const secondMeshParent = secondMesh.parent?.nodeItem;
     const validationError = [];
-    // Invalid Edge 1 : from start of a path to the end of another path
-    // Invalid Edge 2 : from the end of a path to the end of another path
+    // Validate invalid edges between paths
     if (
-      firstMeshParent.getType() === Path.TYPE &&
-      secondMeshParent.getType() === Path.TYPE
+      Util3d.getNodeItemTypeFromMesh(firstMesh) === Path.TYPE &&
+      Util3d.getNodeItemTypeFromMesh(secondMesh) === Path.TYPE
     ) {
       const origin = firstMesh.index / (firstMeshParent.keyPoints.length - 1);
       const target = secondMesh.index / (secondMeshParent.keyPoints.length - 1);
-      // Invalid Edge 1 validation
-      if (origin === 0 && target === 1) validationError.push(1);
+      // Validate direction
+      if (validateDirection) {
+        // Invalid Edge 1.1 validation
+        if (origin === 0 && target === 1) validationError.push(1.1);
+      }
       // Invalid Edge 2 validation
       if (origin === 1 && target === 1) validationError.push(2);
+      // Invalid Edge 3 validation
+      if (origin === 0 && target === 0) validationError.push(3);
     }
+    // Validate direction
+    if (validateDirection) {
+      // Invalid Edge 1.2 validation
+      if (
+        Util3d.getNodeItemTypeFromMesh(firstMesh) === Path.TYPE &&
+        Util3d.getNodeItemTypeFromMesh(secondMesh) === KeyPoint.TYPE
+      ) {
+        if (firstMesh.index / (firstMeshParent.keyPoints.length - 1) === 0)
+          validationError.push(1.2);
+      }
+      // Invalid Edge 1.3 validation
+      if (
+        Util3d.getNodeItemTypeFromMesh(firstMesh) === KeyPoint.TYPE &&
+        Util3d.getNodeItemTypeFromMesh(secondMesh) === Path.TYPE
+      ) {
+        if (secondMesh.index / (secondMeshParent.keyPoints.length - 1) === 1)
+          validationError.push(1.3);
+      }
+    }
+    // Invalid Edge 4 validation
+    if (firstMesh.name === secondMesh.name) validationError.push(4);
+    // Return if there's any validation error
     return validationError.length > 0;
   };
 }

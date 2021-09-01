@@ -6,7 +6,7 @@ import { Quaternion, MeshBuilder } from "@babylonjs/core";
 
 // ROS/RVIZ default referential
 const THETA = -Math.PI / 2;
-const ROS_ORIGIN = {
+export const ROS_ORIGIN = {
   position: [0, 0, 0],
   scaling: [1, -1, 1],
   quaternion: [Math.cos(THETA / 2), Math.sin(THETA / 2), 0, 0]

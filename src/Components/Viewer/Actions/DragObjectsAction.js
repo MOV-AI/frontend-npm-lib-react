@@ -80,11 +80,10 @@ class DragObjectsAction extends MouseKeysAction {
   };
 
   onKeyUp = (evt, parentView) => {
-    const defaultAction = () => super.onKeyUp(evt, parentView);
     const predicateActionList = [
       {
         predicate: e => ["Backspace", "Delete"].includes(e.code),
-        action: this.getDeleteButtonAction(parentView)
+        action: this.getDeleteAction(parentView)
       },
       {
         predicate: e => e.ctrlKey && e.code === "KeyC",
@@ -95,7 +94,7 @@ class DragObjectsAction extends MouseKeysAction {
         action: this.getPasteAction(parentView)
       }
     ];
-    selectOneAction(predicateActionList, defaultAction)(evt);
+    selectOneAction(predicateActionList)(evt);
   };
 
   //========================================================================================
@@ -288,7 +287,7 @@ class DragObjectsAction extends MouseKeysAction {
     }
   };
 
-  getDeleteButtonAction(parentView) {
+  getDeleteAction(parentView) {
     return () => {
       const meshSelector = MeshSelector.ofMainView(parentView);
       const meshes = meshSelector.meshes();
@@ -298,9 +297,6 @@ class DragObjectsAction extends MouseKeysAction {
         maybeNode.forEach(node => parentView.onDeleteNode(node, isOne, isOne));
         maybeNode.orElseRun(() => {
           if (!isOne) return;
-          //TODO REFACTOR THIS;
-          const contextActions = parentView.getContextActions();
-          !!contextActions[0] && contextActions[0].action(parentView);
           mesh.onDel && mesh.onDel();
         });
       });

@@ -152,6 +152,8 @@ class Robot extends AssetNodeItem {
     this.speed = Vector3.Zero();
     this.qSpeed = Quaternion.Zero();
     this.isOnline = false;
+    this.numberOfIte = 0;
+    this.speedStats = new Statistics();
     this.stopLogger();
   }
 
@@ -196,7 +198,10 @@ class Robot extends AssetNodeItem {
   updateAlertState(robot) {
     return logs => {
       robot.timeSinceLastUpdate = 0;
-      if (logs[0].level === "ERROR" || logs[0].level === "CRITICAL") {
+      if (
+        logs.length > 0 &&
+        (logs[0].level === "ERROR" || logs[0].level === "CRITICAL")
+      ) {
         robot.alert = logs[0];
         robot.alertMesh.setEnabled(true);
       }
@@ -290,7 +295,7 @@ class Robot extends AssetNodeItem {
 
     robot.numberOfIte++;
     const isZero = robot.timeSinceLastUpdate === 0;
-    const dtInv = isZero ? 1.0 : 1.0 / robot.timeSinceLastUpdate;
+    const dtInv = isZero ? 1.0 : Math.min(1.0 / robot.timeSinceLastUpdate, 1.0);
 
     const speed = newPosition.subtract(lastPosition).scale(dtInv);
     const qSpeed = newOrientation.subtract(lastOrientation).scale(dtInv);
@@ -307,7 +312,6 @@ class Robot extends AssetNodeItem {
       robot.qSpeed = qSpeed;
       robot.is2UsePos = false;
     }
-
     robot.newPos = newPosition;
     robot.newOri = newOrientation;
     robot.timeSinceLastUpdate = 0;
@@ -333,6 +337,7 @@ class Robot extends AssetNodeItem {
     // Animate
     return (robot2Animate, dt) => {
       robot2Animate.timeSinceLastUpdate += dt;
+      dt = Math.min(dt, 1);
       if (Vec3.ofBabylon(robot2Animate.speed).someNaNOrInfinite()) return;
       if (Vec3.ofBabylon(robot2Animate.qSpeed).someNaNOrInfinite()) return;
       if (robot2Animate.is2UsePos) {
@@ -510,14 +515,13 @@ class RobotBuilder {
     );
   }
 }
-
 //========================================================================================
 /*                                                                                      *
  *                                       CONSTANTS                                      *
  *                                                                                      */
 //========================================================================================
 
-const SAMPLES = 15;
+const SAMPLES = 30;
 
 //========================================================================================
 /*                                                                                      *

@@ -1,4 +1,5 @@
 import { Vector3 } from "@babylonjs/core";
+import Vec3 from "../Math/Vec3";
 import Util3d from "../Util3d/Util3d";
 import { Animator } from "./Animator";
 
@@ -27,8 +28,8 @@ export default class DefaultMouseEvents {
         setMouseLocationTxt(mouseLocationText, currentLocal);
         const panCamera = () => {
           const v = currentLocal.subtract(mainView.mousePosMove);
-          const vBabylon = Util3d.getBabylonCoordinates(v).scale(-1);
-          animateCamera(camera, vBabylon);
+          const vBabylon = getWorldVector(mainView, v);
+          animateCamera(camera, vBabylon.scale(-1));
           mainView.mousePosMove = currentLocal;
         };
         const mouseButtonActions = [
@@ -72,4 +73,15 @@ function setMouseLocationTxt(mouseLocationText, currentLocal) {
   mouseLocationText.text = `x: ${currentLocal.x.toFixed(
     2
   )}, y: ${currentLocal.y.toFixed(2)}`;
+}
+
+function getWorldVector(mainView, vector3) {
+  const worldFrameMesh = mainView.getRootNode().item.mesh.parent;
+  // compute world coordinates from GlobalRef (similar to Util3d.getBabylonCoordinates)
+  const matrix = Util3d.getRotationMatrix(worldFrameMesh);
+  const scale = Vec3.ofBabylon(worldFrameMesh.scaling);
+  const vBabylon = matrix
+    .prodVec(scale.mul(Vec3.ofBabylon(vector3)))
+    .toBabylon();
+  return vBabylon;
 }

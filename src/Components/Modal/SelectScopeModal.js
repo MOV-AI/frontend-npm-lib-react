@@ -16,6 +16,7 @@ import BasicVirtualizedTree from "../Tree/BasicVirtualizedTree";
 import AbstractModal from "./AbstractModal";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import i18n from "../../i18n/i18n.js";
 
 //========================================================================================
 /*                                                                                      *
@@ -27,43 +28,43 @@ const SelectScopeModal = props => {
   const initialData = [
     {
       id: 0,
-      name: "Annotations",
+      name: i18n.t("Annotations"),
       scope: "Annotation",
       children: []
     },
     {
       id: 1,
-      name: "Callback",
+      name: i18n.t("Callback"),
       scope: "Callback",
       children: []
     },
     {
       id: 2,
-      name: "Configuration",
+      name: i18n.t("Configuration"),
       scope: "Configuration",
       children: []
     },
     {
       id: 3,
-      name: "Flow",
+      name: i18n.t("Flow"),
       scope: "Flow",
       children: []
     },
     {
       id: 4,
-      name: "Nodes",
+      name: i18n.t("Nodes"),
       scope: "Node",
       children: []
     },
     {
       id: 5,
-      name: "Layouts",
+      name: i18n.t("Layouts"),
       scope: "Layout",
       children: []
     },
     {
       id: 6,
-      name: "Scenes",
+      name: i18n.t("Scenes"),
       scope: "GraphicScene",
       children: []
     }
@@ -223,8 +224,10 @@ const SelectScopeModal = props => {
 
   const getModalTitle = scope => {
     const vowels = ["a", "e", "i", "o", "u"];
-    const pronoun = vowels.includes(scope[0].toLowerCase()) ? "an" : "a";
-    return `Select ${pronoun} ${scope}`;
+    const pronoun = vowels.includes(scope[0].toLowerCase())
+      ? i18n.t("an")
+      : i18n.t("a");
+    return `${i18n.t("Select")} ${pronoun} ${i18n.t(scope)}`;
   };
 
   return (
@@ -234,8 +237,6 @@ const SelectScopeModal = props => {
       open={props.open}
       title={getModalTitle(props.scopeList[0])}
       width="50%"
-      // ioports
-      // height="70%"
     >
       <Grid container>
         <Grid
@@ -248,14 +249,12 @@ const SelectScopeModal = props => {
           }}
         >
           <FormControl style={{ width: "50%" }}>
-            <InputLabel>Workspace</InputLabel>
+            <InputLabel>{i18n.t("Workspace")}</InputLabel>
             <Select
               value={selectedWorkspace}
-              // shared
-              // defaultValue=""
               onChange={changeWorkspace}
+              disabled={!props.allowArchive}
             >
-              {/* shared  */}
               {Object.keys(workSpaceList).map((key, index) => (
                 <MenuItem key={index} value={key}>
                   {workSpaceList[key].label}
@@ -289,7 +288,6 @@ const SelectScopeModal = props => {
           ) : (
             <BasicVirtualizedTree
               onClickNode={node => requestScopeVersions(node)}
-              // shared
               onDoubleClickNode={data => confirmNodeSelection(data)}
               data={data}
               handleChange={nodes => setData(nodes)}
@@ -299,8 +297,14 @@ const SelectScopeModal = props => {
           )}
         </Typography>
         <Grid item xs={12} style={{ textAlign: "center" }}>
-          <Typography label="Message" value={"selected"} margin="normal">
-            {selectedScopeItem === "" ? "Nothing selected" : selectedScopeItem}
+          <Typography
+            label={i18n.t("Message")}
+            value={"selected"}
+            margin="normal"
+          >
+            {selectedScopeItem === ""
+              ? i18n.t("Nothing selected")
+              : selectedScopeItem}
           </Typography>
         </Grid>
       </Grid>
@@ -309,6 +313,7 @@ const SelectScopeModal = props => {
 };
 
 SelectScopeModal.propTypes = {
+  allowArchive: PropTypes.bool,
   onSubmit: PropTypes.func,
   onCancel: PropTypes.func,
   open: PropTypes.bool,
@@ -319,8 +324,9 @@ SelectScopeModal.propTypes = {
 };
 
 SelectScopeModal.defaultProps = {
-  title: "Insert Text here",
-  message: "Are you sure?",
+  title: i18n.t("Insert Text here"),
+  message: i18n.t("Are you sure?"),
+  allowArchive: true,
   onSubmit: () => {},
   onCancel: () => {},
   open: false,

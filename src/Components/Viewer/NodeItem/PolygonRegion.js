@@ -197,13 +197,14 @@ class PolygonRegion extends NodeItem {
     return newPoints;
   }
 
-  static deleteKeyPoint(scene, keyPointMesh, mainView) {
+  static deleteKeyPointWithUndo(scene, keyPointMesh, mainView) {
     const index = keyPointMesh.index;
     const name = keyPointMesh.parent.name;
     mainView.getNodeFromTree(name).forEach(({ item }) => {
       const { mesh } = item;
       const copyPosition = { ...mesh.position };
       let newPoints = item.localPolygon.map(x => Vec3.of(x).toBabylon());
+      if (newPoints.length === 3) return;
       mainView
         .getUndoManager()
         .doIt(
@@ -482,7 +483,7 @@ const getKeyPointActions = (scene, keyPointMesh, mainView) => {
       actions.push({
         icon: props => <i className="fas fa-trash" {...props}></i>,
         action: parentView => {
-          PolygonRegion.deleteKeyPoint(scene, keyPointMesh, parentView);
+          PolygonRegion.deleteKeyPointWithUndo(scene, keyPointMesh, parentView);
           parentView.closeContextDial();
         },
         name: "Delete node [DEL]"
@@ -524,16 +525,15 @@ const createPlaceHolderKeyPoints = (scene, polygon, polygonMesh, mainView) => {
     keyPoint.position = p;
     keyPoint.index = i;
     keyPoint.observers = new Observable();
-
     keyPoints.push(keyPoint);
-
     keyPoint.observers.add(getKeyPointObserverFunction(scene, mainView));
   });
 
-  keyPoints.forEach(x => {
-    x.onClick = () => {
-      mainView.setContextActions(getKeyPointActions(scene, x, mainView));
+  keyPoints.forEach(kp => {
+    kp.onClick = () => {
+      mainView.setContextActions(getKeyPointActions(scene, kp, mainView));
     };
+    kp.onDel = () => PolygonRegion.deleteKeyPointWithUndo(scene, kp, mainView);
   });
 
   return keyPoints;

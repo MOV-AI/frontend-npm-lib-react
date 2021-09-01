@@ -17,6 +17,8 @@ import Vec3 from "./Math/Vec3";
 import ReactResizeDetector from "react-resize-detector";
 import ConfirmAlertModal from "../Modal/ConfirmAlertModal";
 import RobotLogModal from "../Modal/RobotLogModal";
+import MeshCache from "./Utils/MeshCache";
+import Robot from "./NodeItem/Robot";
 import { UndoManager, RobotManager } from "@mov-ai/mov-fe-lib-core";
 
 //========================================================================================
@@ -69,6 +71,12 @@ class SceneViewer extends Component {
     return new TreeObject(this.objectTree).getNode(
       x => GraphItem.TYPE === x.item.getType()
     );
+  }
+
+  getRobots() {
+    return this.getRootNode()
+      .children.filter(x => x.item.getType() === Robot.TYPE)
+      .map(el => el.item);
   }
 
   getUndoManager = () => this.undoManager;
@@ -201,6 +209,7 @@ class SceneViewer extends Component {
   retrieveSceneFromServer = (afterLoading = () => {}) => {
     SceneServerUtils.retrieveScene(this.sceneName, data => {
       const errorList = MainViewRetriever.importScene(this, data.result);
+      this.resizeGround();
       this.setState({ errorList });
       afterLoading();
     });
@@ -250,6 +259,26 @@ class SceneViewer extends Component {
     return scene;
   };
 
+  resizeGround(defaultSize = 30) {
+    this.getSceneMemory().forEach(memory => {
+      memory.ground.dispose();
+      const scene = memory.scene;
+      const { max, min } = scene.getWorldExtends();
+      let diff = max.subtract(min);
+      let is2Small = false;
+      if (diff.length() < defaultSize) {
+        diff = new Vector3(defaultSize, 0, defaultSize);
+        is2Small = true;
+      }
+      memory.ground = DefaultScene.createMeshGround(scene, diff.x, diff.z);
+      memory.ground.position = new Vector3(
+        min.x + (is2Small ? 0 : diff.x / 2),
+        memory.ground.position.y,
+        min.z + (is2Small ? 0 : diff.z / 2)
+      );
+    });
+  }
+
   showRobotAlertModal = alert => {
     this.robotAlertModal.current.open(alert);
   };
@@ -294,6 +323,23 @@ class SceneViewer extends Component {
     console.log("SceneViewer Did Mount!! ");
     this.loadScene();
   };
+
+  componentWillUnmount() {
+    this.sceneMemory.forEach(({ scene }) => {
+      // Unsubscribe robots from robot logger
+      this.getRobots().forEach(nodeItem => {
+        nodeItem.dispose();
+        if (nodeItem.loggerSubscription)
+          nodeItem.robot.unsubscribeToLogs(nodeItem.loggerSubscription);
+      });
+      // Clear observers and clean scene objects
+      AssetsManager.getInstance().clearObserver(scene);
+      MeshCache.getInstance().del(scene);
+      delete this.objectTree;
+      delete this.sceneMemory;
+      delete this.undoManager;
+    });
+  }
 
   render() {
     const { errorList } = this.state;
