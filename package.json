@@ -1,6 +1,6 @@
 {
   "name": "mov-fe-lib-react",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "The Mov.AI's frontend library for React.",
   "main": "./dist/index.js",
   "proxy": {
