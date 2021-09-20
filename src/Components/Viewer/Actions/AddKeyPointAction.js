@@ -5,7 +5,7 @@ import { Maybe } from "monet";
 import MouseKeysAction from "./MouseKeysAction";
 import React from "react";
 import { Color3, Axis, Vector3 } from "@babylonjs/core";
-import { UndoManager } from "mov-fe-lib-core";
+import { UndoManager } from "@mov-ai/mov-fe-lib-core";
 
 class AddKeyPointAction extends MouseKeysAction {
   constructor() {

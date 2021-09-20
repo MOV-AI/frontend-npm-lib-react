@@ -7,3 +7,5 @@ When running the lib-react locally from IDE or another app, you might have an is
 To fix it, stop the development server of IDE (or the other app), stop the buildDev of lib-react and run the following command in lib-react repository root:
 
 `sudo npm link ../mov-fe-app-ide/node_modules/react`
+
+
