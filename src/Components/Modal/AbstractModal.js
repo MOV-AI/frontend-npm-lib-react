@@ -12,6 +12,7 @@ import {
   CardActions,
   Modal
 } from "@material-ui/core";
+import i18n from "../../i18n/i18n.js";
 
 const useStyles = makeStyles(theme => {
   return {
@@ -106,12 +107,12 @@ const AbstractModal = props => {
         <CardActions>
           {props.hasSubmitButton && (
             <Button color={props.submitColor} onClick={submit}>
-              {props.submitText}
+              {`${i18n.t(props.submitText)}`}
             </Button>
           )}
           {props.hasCancelButton && (
             <Button onClick={cancel} color={props.cancelColor}>
-              {props.cancelText}
+              {`${i18n.t(props.cancelText)}`}
             </Button>
           )}
         </CardActions>

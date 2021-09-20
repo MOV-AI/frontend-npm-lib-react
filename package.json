@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-react",
-  "version": "1.0.17",
+  "version": "1.0.20",
   "description": "The Mov.AI's frontend library for React.",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
@@ -82,6 +82,9 @@
     "earcut": "^2.2.2",
     "fontsource-open-sans": "^3.0.9",
     "fontsource-roboto": "^3.0.3",
+    "i18next": "^20.4.0",
+    "i18next-browser-languagedetector": "^6.1.2",
+    "i18next-http-backend": "^1.3.0",
     "lodash": "^4.17.21",
     "lodash.isequal": "^4.5.0",
     "material-table": "^1.69.3",
@@ -89,6 +92,7 @@
     "@mov-ai/mov-fe-lib-core": "^1.0.29",
     "prop-types": "^15.7.2",
     "rbush": "^3.0.1",
+    "react-i18next": "^11.11.4",
     "react-resize-detector": "^4.2.1",
     "react-virtualized": "^9.22.2",
     "react-virtualized-tree": "^3.4.1",

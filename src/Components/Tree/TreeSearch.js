@@ -10,6 +10,7 @@ import {
 import PropTypes from "prop-types";
 import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
+import i18n from "../../i18n/i18n.js";
 
 class TreeSearch extends Component {
   searchInput = null;
@@ -58,7 +59,7 @@ class TreeSearch extends Component {
             marginLeft: 10,
             flex: 1
           }}
-          placeholder="Search"
+          placeholder={i18n.t("Search")}
           onChange={this.handleChange}
         />
         <IconButton
