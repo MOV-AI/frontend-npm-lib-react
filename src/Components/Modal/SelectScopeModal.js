@@ -98,12 +98,8 @@ const SelectScopeModal = props => {
   // Filter Results based on props.filter
   React.useEffect(() => {
     if (isLoading || selectedWorkspace !== "global" || !props.filter) return;
-    const filteredData = _cloneDeep(data);
-    data.forEach((scope, index) => {
-      filteredData[index].children = scope.children.filter(props.filter);
-    });
     // Set filtered data
-    setData(filteredData);
+    setData(filterData(data));
   }, [props.filter, isLoading]);
   /* eslint-enable react-hooks/exhaustive-deps */
 
@@ -134,11 +130,26 @@ const SelectScopeModal = props => {
             });
 
           dataToSet[index].children = sortedScopeItems;
-          setData(dataToSet);
+          setData(filterData(dataToSet));
           setIsLoading(false);
         })
         .catch(error => console.error(error));
     });
+  };
+
+  /**
+   * Filter data based filter props
+   * @param {Object} _data : Raw data
+   * @returns {Object} Filtered data
+   */
+  const filterData = _data => {
+    const filteredData = _cloneDeep(_data);
+    if (!props.filter) return filteredData;
+    // Filter data
+    _data.forEach((scope, index) => {
+      filteredData[index].children = scope.children.filter(props.filter);
+    });
+    return filteredData;
   };
 
   const requestScopeVersions = node => {
