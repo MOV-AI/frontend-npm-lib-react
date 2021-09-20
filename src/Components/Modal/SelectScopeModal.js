@@ -97,12 +97,8 @@ const SelectScopeModal = props => {
   // Filter Results based on props.filter
   React.useEffect(() => {
     if (isLoading || selectedWorkspace !== "global" || !props.filter) return;
-    const filteredData = _cloneDeep(data);
-    data.forEach((scope, index) => {
-      filteredData[index].children = scope.children.filter(props.filter);
-    });
     // Set filtered data
-    setData(filteredData);
+    setData(filterData(data));
   }, [props.filter, isLoading]);
   /* eslint-enable react-hooks/exhaustive-deps */
 
@@ -133,11 +129,26 @@ const SelectScopeModal = props => {
             });
 
           dataToSet[index].children = sortedScopeItems;
-          setData(dataToSet);
+          setData(filterData(dataToSet));
           setIsLoading(false);
         })
         .catch(error => console.error(error));
     });
+  };
+
+  /**
+   * Filter data based filter props
+   * @param {Object} _data : Raw data
+   * @returns {Object} Filtered data
+   */
+  const filterData = _data => {
+    const filteredData = _cloneDeep(_data);
+    if (!props.filter) return filteredData;
+    // Filter data
+    _data.forEach((scope, index) => {
+      filteredData[index].children = scope.children.filter(props.filter);
+    });
+    return filteredData;
   };
 
   const requestScopeVersions = node => {
@@ -234,8 +245,6 @@ const SelectScopeModal = props => {
       open={props.open}
       title={getModalTitle(props.scopeList[0])}
       width="50%"
-      // ioports
-      // height="70%"
     >
       <Grid container>
         <Grid
@@ -251,11 +260,9 @@ const SelectScopeModal = props => {
             <InputLabel>Workspace</InputLabel>
             <Select
               value={selectedWorkspace}
-              // shared
-              // defaultValue=""
               onChange={changeWorkspace}
+              disabled={!props.allowArchive}
             >
-              {/* shared  */}
               {Object.keys(workSpaceList).map((key, index) => (
                 <MenuItem key={index} value={key}>
                   {workSpaceList[key].label}
@@ -289,7 +296,6 @@ const SelectScopeModal = props => {
           ) : (
             <BasicVirtualizedTree
               onClickNode={node => requestScopeVersions(node)}
-              // shared
               onDoubleClickNode={data => confirmNodeSelection(data)}
               data={data}
               handleChange={nodes => setData(nodes)}
@@ -309,6 +315,7 @@ const SelectScopeModal = props => {
 };
 
 SelectScopeModal.propTypes = {
+  allowArchive: PropTypes.bool,
   onSubmit: PropTypes.func,
   onCancel: PropTypes.func,
   open: PropTypes.bool,
@@ -319,6 +326,7 @@ SelectScopeModal.propTypes = {
 };
 
 SelectScopeModal.defaultProps = {
+  allowArchive: true,
   title: "Insert Text here",
   message: "Are you sure?",
   onSubmit: () => {},

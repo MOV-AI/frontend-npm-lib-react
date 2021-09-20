@@ -30,6 +30,7 @@ class LoginForm extends Component {
   };
 
   sendCreds = async () => {
+    if (!this.state.password) return;
     try {
       const apiResponse = await Authentication.login(
         this.state.username,
@@ -118,13 +119,22 @@ class LoginForm extends Component {
                   Password
                 </InputLabel>
                 <Input
+                  required
                   id="component-password-error"
                   type="password"
                   value={this.state.password}
                   aria-describedby="component-password-error-text"
-                  onChange={event =>
-                    this.setState({ password: event.target.value })
-                  }
+                  onChange={event => {
+                    const isEmptyPassword = event.target.value === "";
+                    const errorMessage = isEmptyPassword
+                      ? "Password is required"
+                      : "";
+                    this.setState({
+                      password: event.target.value,
+                      error: isEmptyPassword,
+                      errorMessage
+                    });
+                  }}
                   onKeyUp={event => {
                     this.checkCapsLock(event);
                     if (event.key === "Enter") {

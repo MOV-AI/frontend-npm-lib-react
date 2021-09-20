@@ -177,8 +177,7 @@ class DrawGraphAction extends MouseKeysAction {
       //firstMousePos exists
       if (
         this.belongs2SamePath(parentView)(clickedMesh, this.firstClickedMesh) ||
-        GraphItem.isInvalidEdge(this.firstClickedMesh, clickedMesh) ||
-        this.firstClickedMesh.name === clickedMesh.name
+        GraphItem.isInvalidEdge(this.firstClickedMesh, clickedMesh)
       ) {
         this.resetPreview();
       } else {
