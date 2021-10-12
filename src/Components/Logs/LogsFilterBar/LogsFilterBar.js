@@ -22,7 +22,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import ListItemText from "@material-ui/core/ListItemText";
 import Select from "@material-ui/core/Select";
-import SettingsIcon from "@material-ui/icons/Settings";
+import TuneIcon from '@material-ui/icons/Tune';
 import Checkbox from "@material-ui/core/Checkbox";
 import {
   KeyboardDateTimePicker,
@@ -314,7 +314,7 @@ const LogsFilterBar = props => {
   const getSettings = () => {
     return (
       <FiltersIcon
-        icon={<SettingsIcon></SettingsIcon>}
+        icon={<TuneIcon></TuneIcon>}
         title={props.t("Configuration")}
       >
         {/* Advanced/Simple Mode */}
