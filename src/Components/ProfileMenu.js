@@ -7,7 +7,8 @@ import PropTypes from "prop-types";
 import Toggle from "./Toggle";
 import { makeStyles } from "@material-ui/core/styles";
 import Divider from "@material-ui/core/Divider";
-import { Typography } from "@material-ui/core";
+import { Typography, Tooltip } from "@material-ui/core";
+import i18n from "../i18n/i18n.js";
 
 const useStyles = makeStyles(theme => {
   return {
@@ -38,13 +39,15 @@ const ProfileMenu = props => {
 
   return (
     <div>
-      <IconButton
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        <SettingsIcon />
-      </IconButton>
+      <Tooltip title={i18n.t("Settings")}>
+        <IconButton
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <SettingsIcon />
+        </IconButton>
+      </Tooltip>
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
