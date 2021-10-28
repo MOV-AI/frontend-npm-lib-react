@@ -15,7 +15,7 @@ import PropTypes from "prop-types";
 const styles = theme => ({
   root: {
     padding: theme.spacing(4, 4),
-    borderRadius: 10
+    borderRadius: 40
   }
 });
 
@@ -78,7 +78,7 @@ class LoginForm extends Component {
         <Paper elevation={10} className={classes.root}>
           <Grid item>
             <img
-              src={logo ? logo : defaultLogo}
+              src={logo}
               className="center"
               alt="logo"
               style={{
@@ -167,11 +167,12 @@ class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
-  logs: PropTypes.any, // expects a svg element
+  logo: PropTypes.any, // expects a svg element
   setLoggedIn: PropTypes.func
 };
 
 LoginForm.defaultProps = {
+  logo: defaultLogo,
   setLoggedIn: loggedIn => console.log(loggedIn)
 };
 
