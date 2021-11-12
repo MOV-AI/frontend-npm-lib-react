@@ -6,6 +6,7 @@ import { withStyles } from "@material-ui/core/styles";
 import RobotLogModal from "../Modal/RobotLogModal";
 import {
   getRequestLevels,
+  getRequestService,
   getRequestTags,
   getRequestMessage,
   filterByFromToDates,
@@ -51,6 +52,14 @@ class Logs extends Component {
           { value: "INFO", label: "Robot Status" },
           { value: "ERROR", label: "Alerts" }
         ],
+    selectedService: ["BACKEND", "SPAWNER"],
+    serviceList: [
+      { value: "BACKEND", label: "Backend" },
+      { value: "SPAWNER", label: "Spawner" },
+      { value: "REDIS", label: "Redis" },
+      { value: "ROS", label: "Ros" },
+      { value: "HAPROXY", label: "ha-proxy" }
+    ],
     advancedMode: this.props.advancedMode
   };
   logsTimeout = undefined;
@@ -150,9 +159,12 @@ class Logs extends Component {
         }/api/v1/logs/?${getRequestLevels(
           this.state.levels,
           this.state.levelsList
-        )}&limit=${this.state.limit}${getRequestTags(
-          this.state.tags
-        )}${getRequestMessage(this.state.messageRegex)}`;
+        )}&limit=${this.state.limit}${getRequestService(
+          this.state.selectedService,
+          this.state.serviceList
+        )}${getRequestTags(this.state.tags)}${getRequestMessage(
+          this.state.messageRegex
+        )}`;
 
         MasterDB.get(dynamicURL, (res, e) => {
           re(res?.data || []);
@@ -166,6 +178,10 @@ class Logs extends Component {
 
   onRowClick = log => {
     this.logModal.current.open(log.rowData);
+  };
+
+  handleSelectedService = event => {
+    this.setState({ selectedService: event.target.value });
   };
 
   render() {
@@ -194,6 +210,9 @@ class Logs extends Component {
             handleLevels={event => {
               this.setState({ levels: event.target.value });
             }}
+            selectedService={this.state.selectedService}
+            serviceList={this.state.serviceList}
+            handleSelectedService={this.handleSelectedService}
             limit={this.state.limit}
             handleLimit={evt => {
               if (evt.target.value === "") {

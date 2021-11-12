@@ -127,6 +127,29 @@ export function getRequestLevels(levelsArray, levelsList) {
     return "";
   }
 }
+export function getRequestService(selectedService, serviceList) {
+  let res = "";
+  if (
+    Array.isArray(selectedService) &&
+    selectedService.length === serviceList.length
+  ) {
+    return res;
+  }
+
+  try {
+    let sep = "";
+    let services = "";
+    selectedService.forEach(service => {
+      services += `${sep}${service.toLowerCase()}`;
+      sep = ",";
+    });
+    return `&services=${services}`;
+  } catch (error) {
+    console.warn("Error Requesting Service", error);
+    return "";
+  }
+}
+
 // Converts the levels in the state for the string for the request
 //  Input: [{ key: 0, label: "UI" }, { key: 1, label: "TASKS" }]
 //  Output: "&tags=UI,TASKS"

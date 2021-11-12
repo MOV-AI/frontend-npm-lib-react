@@ -22,7 +22,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import ListItemText from "@material-ui/core/ListItemText";
 import Select from "@material-ui/core/Select";
-import TuneIcon from '@material-ui/icons/Tune';
+import TuneIcon from "@material-ui/icons/Tune";
 import Checkbox from "@material-ui/core/Checkbox";
 import {
   KeyboardDateTimePicker,
@@ -213,6 +213,40 @@ const LogsFilterBar = props => {
     );
   };
 
+  const getServices = () => {
+    return (
+      <div className={classes.toggleContainer}>
+        <FormControl className={classes.formControl}>
+          <Select
+            labelId="demo-mutiple-checkbox-label"
+            id="demo-mutiple-checkbox"
+            style={{ minWidth: "290px" }}
+            multiple
+            value={props.selectedService}
+            onChange={props.handleSelectedService}
+            input={<Input />}
+            renderValue={selected => {
+              const labels = props.serviceList
+                .filter(service => selected.includes(service.value))
+                .map(elem => elem.label);
+              return labels.join(", ");
+            }}
+            MenuProps={MenuProps}
+          >
+            {props.serviceList.map(service => (
+              <MenuItem key={service.value} value={service.value}>
+                <Checkbox
+                  checked={props.selectedService.indexOf(service.value) > -1}
+                />
+                <ListItemText primary={service.label} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+    );
+  };
+
   const getTags = isAdvancedMode => {
     return (
       <FiltersIcon
@@ -311,6 +345,13 @@ const LogsFilterBar = props => {
     );
   };
 
+  const getRenderValue = selected => {
+    const labels = props.serviceList
+      .filter(service => selected.includes(service.value))
+      .map(elem => elem.label);
+    return labels.join(", ");
+  };
+
   const getSettings = () => {
     return (
       <FiltersIcon
@@ -374,11 +415,7 @@ const LogsFilterBar = props => {
               value={props.columns}
               onChange={props.handleColumns}
               input={<Input />}
-              renderValue={selected =>
-                selected
-                  .map(elem => _get(props, `columnList[${elem}].label`, ""))
-                  .join(`, `)
-              }
+              renderValue={getRenderValue}
               MenuProps={MenuProps}
             >
               {Object.keys(props.columnList).map((column, index) => {
@@ -404,6 +441,8 @@ const LogsFilterBar = props => {
         {getSearchInput()}
         {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
         {getLevels()}
+        {/* Toggle: BACKEND, SPAWNER */}
+        {getServices()}
         {/* Tags */}
         {getTags(props.advancedMode)}
         {/* Date time filter */}
@@ -431,6 +470,9 @@ LogsFilterBar.propTypes = {
   levels: PropTypes.array,
   levelsList: PropTypes.array,
   handleLevels: PropTypes.func,
+  selectedService: PropTypes.array,
+  serviceList: PropTypes.array,
+  handleSelectedService: PropTypes.func,
   limit: PropTypes.number,
   handleLimit: PropTypes.func,
   columns: PropTypes.array,
@@ -453,6 +495,9 @@ LogsFilterBar.defaultProps = {
   levels: [],
   levelsList: [],
   handleLevels: () => {},
+  selectedService: [],
+  serviceList: [],
+  handleSelectedService: () => {},
   limit: 1,
   handleLimit: () => {},
   columns: [],
