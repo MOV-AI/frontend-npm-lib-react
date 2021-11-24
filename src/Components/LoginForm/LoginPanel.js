@@ -24,8 +24,7 @@ class NotAuthorized extends Component {
         container
         direction="column"
         alignItems="center"
-        justify="space-evenly"
-        justifyContent="flex-end"
+        justifyContent="space-evenly"
       >
         <Paper elevation={10} className={classes.root}>
           <Grid item>

@@ -14,7 +14,7 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --mode=production",
-    "buildDev": "webpack --mode=development --watch=true",
+    "buildDev": "webpack --mode=development --watch",
     "clean": "rm -rf node_modules/ package-lock.json",
     "storybook": "start-storybook -p 3001",
     "build-storybook": "build-storybook"

@@ -2,10 +2,10 @@ import React from "react";
 
 import Logs from "../src/Components/Logs/Logs";
 import { ThemeProvider } from "@material-ui/styles";
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 
 const Themes = {
-  dark: createMuiTheme({
+  dark: createTheme({
     label: "dark",
     palette: {
       type: "dark", // Switching the dark mode on, is a single property value change.
@@ -20,7 +20,7 @@ const Themes = {
       }
     }
   }),
-  light: createMuiTheme({
+  light: createTheme({
     label: "light",
     palette: {
       primary: {
