@@ -38,10 +38,10 @@ const VerticalBar = props => {
       <div className={classes.logoArea}>{props.upperElement}</div>
       {props.useDividers && <Divider />}
       {props.creatorElement && (
-        <div>
+        <>
           <div className={classes.logoArea}>{props.creatorElement}</div>
           {props.useDividers && <Divider />}
-        </div>
+        </>
       )}
       <div className={classes.navigationArea}>
         {props.navigationList.map((element, index) => {
