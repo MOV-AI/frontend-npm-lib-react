@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../src/Components/Button";
 import { snackbar } from "../src/Components/Snackbar/Snackbar";
-import { createMuiTheme, useTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import { Paper, Typography } from "@material-ui/core";
 import MatButton from "@material-ui/core/Button";
@@ -9,7 +9,7 @@ import Table from "../src/Components/Table";
 import AutoRenew from "@material-ui/icons/Autorenew";
 
 const Themes = {
-  dark: createMuiTheme({
+  dark: createTheme({
     label: "dark",
     palette: {
       type: "dark", // Switching the dark mode on, is a single property value change.
@@ -24,7 +24,7 @@ const Themes = {
       }
     }
   }),
-  light: createMuiTheme({
+  light: createTheme({
     label: "light",
     palette: {
       primary: {
