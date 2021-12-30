@@ -1,44 +1,26 @@
-name: "CI - On branch dev Push"
+name: "CI - On main/dev/release branches"
 on:
   pull_request:
     branches:
       - dev
       - main
+      - 'releases/**'
     paths-ignore:
       - 'package.json'
       - 'package-lock.json'
 
 jobs:
-  Test-NPM-Component:
-    runs-on: ubuntu-20.04
-    container:
-      image: registry.cloud.mov.ai/devops/npm-buildserver:latest
-      credentials:
-        username: ${{secrets.PORTUS_APP_USER}} 
-        password: ${{secrets.PORTUS_APP_TOKEN}} 
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-
-      - name: Setup Github as proxy Registry 
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16.x'
-          registry-url: 'https://npm.pkg.github.com/mov-ai'
-
-      - name: Install dependencies
-        run: npm ci --loglevel verbose
-
-      - name: Build
-        run: npm run build
-
-      - name: Check NPM log on failure
-        if: ${{ failure() }}
-        run: cat /github/home/.npm/_logs/*.log
-
-      # temporary comment till tests are fixed
-      #- name: Run tests
-      #  run: npm run test
-
+  CI:
+    uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@v1
+    with:
+      deploy: 'false'
+      run_tests: 'false'
+    secrets:
+      auto_commit_user: ${{ secrets.RAISE_BOT_COMMIT_USER }}
+      auto_commit_mail: ${{ secrets.RAISE_BOT_COMMIT_MAIL }}
+      registry_user: ${{ secrets.PORTUS_APP_USER }}
+      registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      sonar_token: ${{ secrets.SONAR_TOKEN }}
+      npm_token: ${{ secrets.NPM_TOKEN }}
+      
