@@ -122,7 +122,7 @@ export function getRequestLevels(levelsArray, levelsList) {
         res = `${res},${level.toLowerCase()}`;
       }
     });
-    return `level=${res}`;
+    return `&level=${res}`;
   } catch (error) {
     return "";
   }
@@ -130,8 +130,9 @@ export function getRequestLevels(levelsArray, levelsList) {
 export function getRequestService(selectedService, serviceList) {
   let res = "";
   if (
-    Array.isArray(selectedService) &&
-    selectedService.length === serviceList.length
+    (Array.isArray(selectedService) &&
+      selectedService.length === serviceList.length) ||
+    selectedService.length === 0
   ) {
     return res;
   }
@@ -146,6 +147,22 @@ export function getRequestService(selectedService, serviceList) {
     return `&services=${services}`;
   } catch (error) {
     console.warn("Error Requesting Service", error);
+    return "";
+  }
+}
+
+export function getRequestDate(selectedFromDate, selectedToDate) {
+  let res = "";
+  try {
+    if (selectedFromDate) {
+      res += `&fromDate=${selectedFromDate / 1000}`;
+    }
+    if (selectedToDate) {
+      res += `&toDate=${selectedToDate / 1000}`;
+    }
+    return res;
+  } catch (error) {
+    console.warn("Error Requesting Data", error);
     return "";
   }
 }
@@ -170,6 +187,7 @@ export function getRequestTags(tagsArray) {
 
   return `&tags=${res}`;
 }
+
 // Converts the levels in the state for the string for the request
 //  Input: "r'started\.$"
 //  Output: "&message=r'started\.$"

@@ -225,12 +225,7 @@ const LogsFilterBar = props => {
             value={props.selectedService}
             onChange={props.handleSelectedService}
             input={<Input />}
-            renderValue={selected => {
-              const labels = props.serviceList
-                .filter(service => selected.includes(service.value))
-                .map(elem => elem.label);
-              return labels.join(", ");
-            }}
+            renderValue={getRenderValue}
             MenuProps={MenuProps}
           >
             {props.serviceList.map(service => (
