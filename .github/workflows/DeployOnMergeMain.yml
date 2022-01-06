@@ -11,7 +11,7 @@ on:
 
 jobs:
   CI:
-    uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@feature/v1
+    uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@v1
     with:
       deploy: 'true'
       run_tests: 'false'
