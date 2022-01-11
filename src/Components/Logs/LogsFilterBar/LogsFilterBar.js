@@ -380,13 +380,12 @@ const LogsFilterBar = props => {
             onChange={props.handleLimit}
             className={classes.limitText}
             id="outlined-number"
-            // label="limit"
             placeholder={props.t("limit")}
             type="number"
             InputLabelProps={{
               shrink: true
             }}
-            // variant="outlined"
+            InputProps={{ inputProps: { min: 1 } }}
             size="small"
           />
         </div>
