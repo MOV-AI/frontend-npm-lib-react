@@ -213,6 +213,13 @@ const LogsFilterBar = props => {
     );
   };
 
+  const getRenderValue = selected => {
+    const labels = props.serviceList
+      .filter(service => selected.includes(service.value))
+      .map(elem => elem.label);
+    return labels.join(", ");
+  };
+
   const getServices = () => {
     return (
       <div className={classes.toggleContainer}>
@@ -338,13 +345,6 @@ const LogsFilterBar = props => {
         </MuiPickersUtilsProvider>
       </FiltersIcon>
     );
-  };
-
-  const getRenderValue = selected => {
-    const labels = props.serviceList
-      .filter(service => selected.includes(service.value))
-      .map(elem => elem.label);
-    return labels.join(", ");
   };
 
   const getSettings = () => {

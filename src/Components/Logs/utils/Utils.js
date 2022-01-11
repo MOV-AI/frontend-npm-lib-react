@@ -110,7 +110,10 @@ export function findsUniqueKey(array, keyName) {
 //  Output: "level=info,debug"
 export function getRequestLevels(levelsArray, levelsList) {
   let res = "";
-  if (Array.isArray(levelsArray) && levelsArray.length === levelsList.length) {
+  if (
+    (Array.isArray(levelsArray) && levelsArray.length === levelsList.length) ||
+    levelsArray.length === 0
+  ) {
     return res;
   }
 

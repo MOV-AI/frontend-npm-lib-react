@@ -159,12 +159,12 @@ class Logs extends Component {
         }${getRequestLevels(
           this.state.levels,
           this.state.levelsList
-        )}${getRequestDate(
-          this.state.selectedFromDate?.getTime() || "",
-          this.state.selectedToDate?.getTime() || ""
         )}${getRequestService(
           this.state.selectedService,
           this.state.serviceList
+        )}${getRequestDate(
+          this.state.selectedFromDate?.getTime() || "",
+          this.state.selectedToDate?.getTime() || ""
         )}${getRequestTags(this.state.tags)}${getRequestMessage(
           this.state.messageRegex
         )}`;
@@ -222,12 +222,12 @@ class Logs extends Component {
             updateRobotSelection={this.updateRobotSelection}
             levels={this.state.levels}
             levelsList={this.state.levelsList}
-            handleLevels={getHandleLevels}
+            handleLevels={this.getHandleLevels}
             selectedService={this.state.selectedService}
             serviceList={this.state.serviceList}
             handleSelectedService={this.handleSelectedService}
             limit={this.state.limit}
-            handleLimit={getHandleLimit}
+            handleLimit={this.getHandleLimit}
             columns={this.state.columns}
             columnList={this.props.columnList}
             handleColumns={event => {
