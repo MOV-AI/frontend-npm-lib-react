@@ -5,10 +5,11 @@ import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import { withStyles } from "@material-ui/core/styles";
 import RobotLogModal from "../Modal/RobotLogModal";
 import {
+  getRequestDate,
   getRequestLevels,
+  getRequestService,
   getRequestTags,
   getRequestMessage,
-  filterByFromToDates,
   findsUniqueKey,
   getJustDateFromServer,
   getJustTimeFromServer
@@ -51,6 +52,14 @@ class Logs extends Component {
           { value: "INFO", label: "Robot Status" },
           { value: "ERROR", label: "Alerts" }
         ],
+    selectedService: ["BACKEND", "SPAWNER"],
+    serviceList: [
+      { value: "BACKEND", label: "Backend" },
+      { value: "SPAWNER", label: "Spawner" },
+      { value: "REDIS", label: "Redis" },
+      { value: "ROS", label: "Ros" },
+      { value: "HAPROXY", label: "ha-proxy" }
+    ],
     advancedMode: this.props.advancedMode
   };
   logsTimeout = undefined;
@@ -145,11 +154,18 @@ class Logs extends Component {
       }, 2000);
 
       if (robotSelected.ip) {
-        const dynamicURL = `http://${robotSelected.ip}/api/v1/logs/${
-          robotSelected.name
-        }?${getRequestLevels(this.state.levels, this.state.levelsList)}&limit=${
+        const dynamicURL = `http://${robotSelected.ip}/api/v1/logs/?limit=${
           this.state.limit
-        }${getRequestTags(this.state.tags)}${getRequestMessage(
+        }${getRequestLevels(
+          this.state.levels,
+          this.state.levelsList
+        )}${getRequestService(
+          this.state.selectedService,
+          this.state.serviceList
+        )}${getRequestDate(
+          this.state.selectedFromDate?.getTime() || "",
+          this.state.selectedToDate?.getTime() || ""
+        )}${getRequestTags(this.state.tags)}${getRequestMessage(
           this.state.messageRegex
         )}`;
 
@@ -165,6 +181,22 @@ class Logs extends Component {
 
   onRowClick = log => {
     this.logModal.current.open(log.rowData);
+  };
+
+  handleSelectedService = event => {
+    this.setState({ selectedService: event.target.value });
+  };
+
+  getHandleLevels = event => {
+    this.setState({ levels: event.target.value });
+  };
+
+  getHandleLimit = evt => {
+    if (evt.target.value === "") {
+      this.setState({ limit: 0 });
+    } else {
+      this.setState({ limit: evt.target.value });
+    }
   };
 
   render() {
@@ -190,17 +222,12 @@ class Logs extends Component {
             updateRobotSelection={this.updateRobotSelection}
             levels={this.state.levels}
             levelsList={this.state.levelsList}
-            handleLevels={event => {
-              this.setState({ levels: event.target.value });
-            }}
+            handleLevels={this.getHandleLevels}
+            selectedService={this.state.selectedService}
+            serviceList={this.state.serviceList}
+            handleSelectedService={this.handleSelectedService}
             limit={this.state.limit}
-            handleLimit={evt => {
-              if (evt.target.value === "") {
-                this.setState({ limit: 0 });
-              } else {
-                this.setState({ limit: evt.target.value });
-              }
-            }}
+            handleLimit={this.getHandleLimit}
             columns={this.state.columns}
             columnList={this.props.columnList}
             handleColumns={event => {
@@ -261,11 +288,7 @@ class Logs extends Component {
             <LogsTable
               columns={this.state.columns}
               columnList={this.props.columnList}
-              logsData={filterByFromToDates(
-                this.state.logsData,
-                this.state.selectedFromDate,
-                this.state.selectedToDate
-              )}
+              logsData={this.state.logsData}
               height={this.state.height}
               levelsList={this.state.levelsList}
               onRowClick={this.onRowClick}
