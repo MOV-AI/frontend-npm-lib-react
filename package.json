@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-react",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "The Mov.AI's frontend library for React.",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
@@ -14,7 +14,7 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --mode=production",
-    "buildDev": "webpack --mode=development --watch=true",
+    "buildDev": "webpack --mode=development --watch",
     "clean": "rm -rf node_modules/ package-lock.json",
     "storybook": "start-storybook -p 3001",
     "build-storybook": "build-storybook"
@@ -82,9 +82,9 @@
     "@babylonjs/gui": "^4.2.0",
     "@babylonjs/inspector": "^4.2.0",
     "@babylonjs/loaders": "^4.2.0",
-    "@date-io/date-fns": "^2.11.0",
+    "@date-io/date-fns": "^1.3.13",
     "@material-ui/pickers": "^3.3.10",
-    "@mov-ai/mov-fe-lib-core": "^1.0.31",
+    "@mov-ai/mov-fe-lib-core": "^1.0.33",
     "clsx": "^1.1.1",
     "date-fns": "^2.24.0",
     "earcut": "^2.2.3",
