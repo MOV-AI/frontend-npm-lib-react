@@ -154,9 +154,9 @@ class Logs extends Component {
       }, 2000);
 
       if (robotSelected.ip) {
-        const dynamicURL = `http://${robotSelected.ip}/api/v1/logs/?limit=${
-          this.state.limit
-        }${getRequestLevels(
+        const dynamicURL = `http://${robotSelected.ip}/api/v1/logs/${
+          robotSelected.name
+        }?limit=${this.state.limit}${getRequestLevels(
           this.state.levels,
           this.state.levelsList
         )}${getRequestService(
