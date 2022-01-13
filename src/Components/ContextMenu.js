@@ -79,7 +79,7 @@ const ContextMenu = props => {
                 }}
                 key={index}
               >
-                <ListItemIcon>{item.icon}</ListItemIcon>
+                {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
                 <ListItemText primary={item.label || item.element} />
               </StyledMenuItem>
             );
@@ -119,7 +119,9 @@ ContextMenu.propTypes = {
   navigationList: PropTypes.array,
   lowerElement: PropTypes.node.isRequired,
   width: PropTypes.string,
-  backgroundColor: PropTypes.string
+  backgroundColor: PropTypes.string,
+  isStyled: PropTypes.bool,
+  styledMenuProps: PropTypes.object,
 };
 ContextMenu.defaultProps = {
   element: <div>Ahaha</div>,
@@ -133,7 +135,9 @@ ContextMenu.defaultProps = {
   lowerElement: <div></div>,
   width: "68px",
   backgroundColor: "#424242",
-  style: {}
+  style: {},
+  isStyled: false,
+  styledMenuProps: {},
 };
 
 export default ContextMenu;
