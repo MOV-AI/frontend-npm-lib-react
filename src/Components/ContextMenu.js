@@ -59,57 +59,31 @@ const ContextMenu = props => {
           handleClick(evt); // opens the contextMenu
         }
       })}
-      {props.isStyled ? (
-        <StyledMenu
-          id="customized-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          {...props.styledMenuProps}
-        >
-          {props.menuList.map((item, index) => {
-            return (
-              <StyledMenuItem
-                onClick={evt => {
-                  item.onClick();
-                  if (item.onClose || item.onClose === undefined) {
-                    handleClose(evt);
-                  }
-                }}
-                key={index}
-              >
-                {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-                <ListItemText primary={item.label || item.element} />
-              </StyledMenuItem>
-            );
-          })}
-        </StyledMenu>
-      ) : (
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          {props.menuList.map((item, index) => {
-            return (
-              <MenuItem
-                onClick={evt => {
-                  item.onClick();
-                  if (item.onClose || item.onClose === undefined) {
-                    handleClose(evt);
-                  }
-                }}
-                key={index}
-              >
-                {item.label || item.element}
-              </MenuItem>
-            );
-          })}
-        </Menu>
-      )}
+      <StyledMenu
+        id="customized-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        {...props.styledMenuProps}
+      >
+        {props.menuList.map((item, index) => {
+          return (
+            <StyledMenuItem
+              onClick={evt => {
+                item.onClick();
+                if (item.onClose || item.onClose === undefined) {
+                  handleClose(evt);
+                }
+              }}
+              key={index}
+            >
+              {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
+              <ListItemText primary={item.label || item.element} />
+            </StyledMenuItem>
+          );
+        })}
+      </StyledMenu>
     </div>
   );
 };
@@ -120,7 +94,6 @@ ContextMenu.propTypes = {
   lowerElement: PropTypes.node.isRequired,
   width: PropTypes.string,
   backgroundColor: PropTypes.string,
-  isStyled: PropTypes.bool,
   styledMenuProps: PropTypes.object,
 };
 ContextMenu.defaultProps = {
@@ -136,7 +109,6 @@ ContextMenu.defaultProps = {
   width: "68px",
   backgroundColor: "#424242",
   style: {},
-  isStyled: false,
   styledMenuProps: {},
 };
 
