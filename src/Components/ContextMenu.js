@@ -2,17 +2,51 @@ import React from "react";
 import PropTypes from "prop-types";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import { withStyles } from "@material-ui/core/styles";
+
+const StyledMenu = props => (
+  <Menu
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "center"
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "center"
+    }}
+    {...props}
+  />
+);
+
+const StyledMenuItem = withStyles(theme => ({
+  root: {
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: theme.palette.common.white
+      }
+    }
+  }
+}))(MenuItem);
 
 const ContextMenu = props => {
   const { style } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = evt => {
+    setAnchorEl(evt.currentTarget);
+    // Loose focus of active element (remove default focused background of first menu item)
+    setImmediate(() => {
+      document.activeElement.blur();
+    });
   };
 
-  const handleClose = () => {
+  const handleClose = evt => {
     setAnchorEl(null);
+    evt.stopPropagation();
   };
 
   return (
@@ -20,37 +54,62 @@ const ContextMenu = props => {
       {React.cloneElement(props.element, {
         onClick: evt => {
           if (props.element.props.onClick !== undefined) {
-            props.element.props.onClick(); // If user defined a onClick
+            props.element.props.onClick(); // If user defined an onClick
           }
           handleClick(evt); // opens the contextMenu
         }
       })}
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        {props.menuList.reduce((result, item, index) => {
-          if (item && typeof item !== "function") {
-            result.push(
-              <MenuItem
-                onClick={() => {
+      {props.isStyled ? (
+        <StyledMenu
+          id="customized-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          {...props.styledMenuProps}
+        >
+          {props.menuList.map((item, index) => {
+            return (
+              <StyledMenuItem
+                onClick={evt => {
                   item.onClick();
                   if (item.onClose || item.onClose === undefined) {
-                    handleClose();
+                    handleClose(evt);
                   }
                 }}
                 key={index}
               >
-                {item.element}
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.label || item.element} />
+              </StyledMenuItem>
+            );
+          })}
+        </StyledMenu>
+      ) : (
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          {props.menuList.map((item, index) => {
+            return (
+              <MenuItem
+                onClick={evt => {
+                  item.onClick();
+                  if (item.onClose || item.onClose === undefined) {
+                    handleClose(evt);
+                  }
+                }}
+                key={index}
+              >
+                {item.label || item.element}
               </MenuItem>
             );
-          }
-          return result;
-        }, [])}
-      </Menu>
+          })}
+        </Menu>
+      )}
     </div>
   );
 };
