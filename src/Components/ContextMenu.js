@@ -11,11 +11,11 @@ const StyledMenu = props => (
     getContentAnchorEl={null}
     anchorOrigin={{
       vertical: "bottom",
-      horizontal: "center"
+      horizontal: "left"
     }}
     transformOrigin={{
       vertical: "top",
-      horizontal: "center"
+      horizontal: "left"
     }}
     {...props}
   />
