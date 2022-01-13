@@ -11,11 +11,11 @@ const StyledMenu = props => (
     getContentAnchorEl={null}
     anchorOrigin={{
       vertical: "bottom",
-      horizontal: "center"
+      horizontal: "left"
     }}
     transformOrigin={{
       vertical: "top",
-      horizontal: "center"
+      horizontal: "left"
     }}
     {...props}
   />
@@ -54,62 +54,36 @@ const ContextMenu = props => {
       {React.cloneElement(props.element, {
         onClick: evt => {
           if (props.element.props.onClick !== undefined) {
-            props.element.props.onClick(); // If user defined an onClick
+            props.element.props.onClick(evt); // If user defined an onClick
           }
           handleClick(evt); // opens the contextMenu
         }
       })}
-      {props.isStyled ? (
-        <StyledMenu
-          id="customized-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          {...props.styledMenuProps}
-        >
-          {props.menuList.map((item, index) => {
-            return (
-              <StyledMenuItem
-                onClick={evt => {
-                  item.onClick();
-                  if (item.onClose || item.onClose === undefined) {
-                    handleClose(evt);
-                  }
-                }}
-                key={index}
-              >
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.label || item.element} />
-              </StyledMenuItem>
-            );
-          })}
-        </StyledMenu>
-      ) : (
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          {props.menuList.map((item, index) => {
-            return (
-              <MenuItem
-                onClick={evt => {
-                  item.onClick();
-                  if (item.onClose || item.onClose === undefined) {
-                    handleClose(evt);
-                  }
-                }}
-                key={index}
-              >
-                {item.label || item.element}
-              </MenuItem>
-            );
-          })}
-        </Menu>
-      )}
+      <StyledMenu
+        id="customized-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        {...props.styledMenuProps}
+      >
+        {props.menuList.map((item, index) => {
+          return (
+            <StyledMenuItem
+              onClick={evt => {
+                item.onClick();
+                if (item.onClose || item.onClose === undefined) {
+                  handleClose(evt);
+                }
+              }}
+              key={index}
+            >
+              {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
+              <ListItemText primary={item.label || item.element} />
+            </StyledMenuItem>
+          );
+        })}
+      </StyledMenu>
     </div>
   );
 };
@@ -119,7 +93,8 @@ ContextMenu.propTypes = {
   navigationList: PropTypes.array,
   lowerElement: PropTypes.node.isRequired,
   width: PropTypes.string,
-  backgroundColor: PropTypes.string
+  backgroundColor: PropTypes.string,
+  styledMenuProps: PropTypes.object,
 };
 ContextMenu.defaultProps = {
   element: <div>Ahaha</div>,
@@ -133,7 +108,8 @@ ContextMenu.defaultProps = {
   lowerElement: <div></div>,
   width: "68px",
   backgroundColor: "#424242",
-  style: {}
+  style: {},
+  styledMenuProps: {},
 };
 
 export default ContextMenu;
