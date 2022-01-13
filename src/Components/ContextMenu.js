@@ -54,7 +54,7 @@ const ContextMenu = props => {
       {React.cloneElement(props.element, {
         onClick: evt => {
           if (props.element.props.onClick !== undefined) {
-            props.element.props.onClick(); // If user defined an onClick
+            props.element.props.onClick(evt); // If user defined an onClick
           }
           handleClick(evt); // opens the contextMenu
         }
