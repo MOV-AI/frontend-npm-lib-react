@@ -264,10 +264,14 @@ const LogsFilterBar = props => {
             onChange={evt => setTagText(evt.target.value)}
             onKeyUp={event => {
               // User pressed Enter
-              if (event.keyCode === 13) {
+              if (event.key === 13) {
                 props.handleAddTag(tagText);
                 setTagText("");
               }
+            }}
+            // Fix bug FP-1365 : Lose focus of input when trying to type "T"
+            onKeyDown={evt => {
+              if (evt.key === "t" || evt.key === "T") evt.stopPropagation();
             }}
             label="Add Tag"
             InputProps={{
