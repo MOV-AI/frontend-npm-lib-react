@@ -249,11 +249,21 @@ const LogsFilterBar = props => {
     );
   };
 
+  const handleKeyUp = event => {
+    // User pressed Enter
+    if (event.key === 13) {
+      props.handleAddTag(tagText);
+      setTagText("");
+    }
+  };
+
+  const handleOnChangeKey = evt => setTagText(evt.target.value);
+
   const getTags = isAdvancedMode => {
     return (
       <FiltersIcon
         icon={<LabelIcon></LabelIcon>}
-        title="Tags"
+        title="&#8288;Tags"
         disabled={!isAdvancedMode}
         isActive={props.tags.length > 0}
       >
@@ -261,18 +271,8 @@ const LogsFilterBar = props => {
           <TextField
             className={classes.addTagText}
             value={tagText}
-            onChange={evt => setTagText(evt.target.value)}
-            onKeyUp={event => {
-              // User pressed Enter
-              if (event.key === 13) {
-                props.handleAddTag(tagText);
-                setTagText("");
-              }
-            }}
-            // Fix bug FP-1365 : Lose focus of input when trying to type "T"
-            onKeyDown={evt => {
-              if (evt.key === "t" || evt.key === "T") evt.stopPropagation();
-            }}
+            onChange={handleOnChangeKey}
+            onKeyUp={handleKeyUp}
             label="Add Tag"
             InputProps={{
               endAdornment: (
