@@ -259,11 +259,11 @@ const LogsFilterBar = props => {
 
   const handleOnChangeKey = evt => setTagText(evt.target.value);
 
-  const getTags = isAdvancedMode => {
+  const getTagsPopover = isAdvancedMode => {
     return (
       <FiltersIcon
         icon={<LabelIcon></LabelIcon>}
-        title="&#8288;Tags"
+        title="Tags"
         disabled={!isAdvancedMode}
         isActive={props.tags.length > 0}
       >
@@ -442,7 +442,7 @@ const LogsFilterBar = props => {
         {/* Toggle: BACKEND, SPAWNER */}
         {getServices()}
         {/* Tags */}
-        {getTags(props.advancedMode)}
+        {getTagsPopover(props.advancedMode)}
         {/* Date time filter */}
         {getTimeFilters()}
         <div style={{ flexGrow: 1 }}></div>

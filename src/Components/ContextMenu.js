@@ -94,7 +94,7 @@ ContextMenu.propTypes = {
   lowerElement: PropTypes.node.isRequired,
   width: PropTypes.string,
   backgroundColor: PropTypes.string,
-  styledMenuProps: PropTypes.object,
+  styledMenuProps: PropTypes.object
 };
 ContextMenu.defaultProps = {
   element: <div>Ahaha</div>,
@@ -109,7 +109,7 @@ ContextMenu.defaultProps = {
   width: "68px",
   backgroundColor: "#424242",
   style: {},
-  styledMenuProps: {},
+  styledMenuProps: {}
 };
 
 export default ContextMenu;

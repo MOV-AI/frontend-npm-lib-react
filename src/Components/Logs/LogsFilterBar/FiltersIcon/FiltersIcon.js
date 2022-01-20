@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Menu from "@material-ui/core/Menu";
+import Popover from "@material-ui/core/Popover";
 import { Typography, Tooltip } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles/colorManipulator";
+import { alpha } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import PropTypes from "prop-types";
 
@@ -15,7 +15,7 @@ const styles = theme => ({
   iconActive: {
     color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
-    backgroundColor: fade(theme.palette.primary.main, 0.1)
+    backgroundColor: alpha(theme.palette.primary.main, 0.1)
   },
   buttonApplyFilters: {
     background: theme.palette.primary.main,
@@ -28,10 +28,6 @@ const styles = theme => ({
     "&:hover": { background: theme.palette.primary.dark }
   },
   icon: {
-    // fontSize: "18px",
-    // height: "21px",
-    // width: "15px",
-    //color: theme.palette.primary.main,
     "&:hover": { cursor: "pointer" }
   },
   height: { height: "100%" },
@@ -44,14 +40,13 @@ const styles = theme => ({
 
 const StyledMenu = withStyles(theme => ({
   paper: {
-    // border: "1px solid #F0F0F0",
     borderRadius: "8px",
     width: "242px",
     height: "411px",
     boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.25)"
   }
 }))(props => (
-  <Menu
+  <Popover
     elevation={0}
     getContentAnchorEl={null}
     anchorOrigin={{
@@ -82,7 +77,7 @@ class FilterIcon extends Component {
   };
 
   render() {
-    const { classes, t, disabled, tooltip, title } = this.props;
+    const { classes, disabled, tooltip, title } = this.props;
     return (
       <React.Fragment>
         <Tooltip title={tooltip || title}>
