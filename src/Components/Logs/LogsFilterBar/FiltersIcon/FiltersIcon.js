@@ -77,7 +77,7 @@ class FilterIcon extends Component {
   };
 
   render() {
-    const { classes, disabled, tooltip, title } = this.props;
+    const { classes, t, disabled, tooltip, title } = this.props;
     return (
       <React.Fragment>
         <Tooltip title={tooltip || title}>

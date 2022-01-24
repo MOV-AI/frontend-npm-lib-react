@@ -259,12 +259,12 @@ const LogsFilterBar = props => {
 
   const handleOnChangeKey = evt => setTagText(evt.target.value);
 
-  const getTagsPopover = isAdvancedMode => {
+  const getTagsPopover = () => {
     return (
       <FiltersIcon
         icon={<LabelIcon></LabelIcon>}
         title="Tags"
-        disabled={!isAdvancedMode}
+        disabled={!props.advancedMode}
         isActive={props.tags.length > 0}
       >
         <div className={classes.tagsContainer}>
@@ -293,14 +293,13 @@ const LogsFilterBar = props => {
           <div className={classes.tagsList}>
             {props.tags.map(data => {
               return (
-                <li key={data.key}>
-                  <Chip
-                    label={data.label}
-                    onDelete={() => props.handleDeleteTag(data)}
-                    className={classes.chip}
-                    size="small"
-                  />
-                </li>
+                <Chip
+                  key={data.key}
+                  label={data.label}
+                  onDelete={() => props.handleDeleteTag(data)}
+                  className={classes.chip}
+                  size="small"
+                />
               );
             })}
           </div>
@@ -442,7 +441,7 @@ const LogsFilterBar = props => {
         {/* Toggle: BACKEND, SPAWNER */}
         {getServices()}
         {/* Tags */}
-        {getTagsPopover(props.advancedMode)}
+        {getTagsPopover()}
         {/* Date time filter */}
         {getTimeFilters()}
         <div style={{ flexGrow: 1 }}></div>
