@@ -249,26 +249,30 @@ const LogsFilterBar = props => {
     );
   };
 
-  const getTags = isAdvancedMode => {
+  const handleKeyUp = event => {
+    // User pressed Enter
+    if (event.key === 13) {
+      props.handleAddTag(tagText);
+      setTagText("");
+    }
+  };
+
+  const handleOnChangeKey = evt => setTagText(evt.target.value);
+
+  const getTagsPopover = () => {
     return (
       <FiltersIcon
         icon={<LabelIcon></LabelIcon>}
         title="Tags"
-        disabled={!isAdvancedMode}
+        disabled={!props.advancedMode}
         isActive={props.tags.length > 0}
       >
         <div className={classes.tagsContainer}>
           <TextField
             className={classes.addTagText}
             value={tagText}
-            onChange={evt => setTagText(evt.target.value)}
-            onKeyUp={event => {
-              // User pressed Enter
-              if (event.keyCode === 13) {
-                props.handleAddTag(tagText);
-                setTagText("");
-              }
-            }}
+            onChange={handleOnChangeKey}
+            onKeyUp={handleKeyUp}
             label="Add Tag"
             InputProps={{
               endAdornment: (
@@ -289,14 +293,13 @@ const LogsFilterBar = props => {
           <div className={classes.tagsList}>
             {props.tags.map(data => {
               return (
-                <li key={data.key}>
-                  <Chip
-                    label={data.label}
-                    onDelete={() => props.handleDeleteTag(data)}
-                    className={classes.chip}
-                    size="small"
-                  />
-                </li>
+                <Chip
+                  key={data.key}
+                  label={data.label}
+                  onDelete={() => props.handleDeleteTag(data)}
+                  className={classes.chip}
+                  size="small"
+                />
               );
             })}
           </div>
@@ -438,7 +441,7 @@ const LogsFilterBar = props => {
         {/* Toggle: BACKEND, SPAWNER */}
         {getServices()}
         {/* Tags */}
-        {getTags(props.advancedMode)}
+        {getTagsPopover()}
         {/* Date time filter */}
         {getTimeFilters()}
         <div style={{ flexGrow: 1 }}></div>
