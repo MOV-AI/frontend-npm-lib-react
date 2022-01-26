@@ -22,7 +22,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import ListItemText from "@material-ui/core/ListItemText";
 import Select from "@material-ui/core/Select";
-import TuneIcon from '@material-ui/icons/Tune';
+import TuneIcon from "@material-ui/icons/Tune";
 import Checkbox from "@material-ui/core/Checkbox";
 import {
   KeyboardDateTimePicker,
@@ -213,26 +213,66 @@ const LogsFilterBar = props => {
     );
   };
 
-  const getTags = isAdvancedMode => {
+  const getRenderValue = selected => {
+    const labels = props.serviceList
+      .filter(service => selected.includes(service.value))
+      .map(elem => elem.label);
+    return labels.join(", ");
+  };
+
+  const getServices = () => {
+    return (
+      <div className={classes.toggleContainer}>
+        <FormControl className={classes.formControl}>
+          <Select
+            labelId="demo-mutiple-checkbox-label"
+            id="demo-mutiple-checkbox"
+            style={{ minWidth: "290px" }}
+            multiple
+            value={props.selectedService}
+            onChange={props.handleSelectedService}
+            input={<Input />}
+            renderValue={getRenderValue}
+            MenuProps={MenuProps}
+          >
+            {props.serviceList.map(service => (
+              <MenuItem key={service.value} value={service.value}>
+                <Checkbox
+                  checked={props.selectedService.indexOf(service.value) > -1}
+                />
+                <ListItemText primary={service.label} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+    );
+  };
+
+  const handleKeyUp = event => {
+    // User pressed Enter
+    if (event.key === 13) {
+      props.handleAddTag(tagText);
+      setTagText("");
+    }
+  };
+
+  const handleOnChangeKey = evt => setTagText(evt.target.value);
+
+  const getTagsPopover = () => {
     return (
       <FiltersIcon
         icon={<LabelIcon></LabelIcon>}
         title="Tags"
-        disabled={!isAdvancedMode}
+        disabled={!props.advancedMode}
         isActive={props.tags.length > 0}
       >
         <div className={classes.tagsContainer}>
           <TextField
             className={classes.addTagText}
             value={tagText}
-            onChange={evt => setTagText(evt.target.value)}
-            onKeyUp={event => {
-              // User pressed Enter
-              if (event.keyCode === 13) {
-                props.handleAddTag(tagText);
-                setTagText("");
-              }
-            }}
+            onChange={handleOnChangeKey}
+            onKeyUp={handleKeyUp}
             label="Add Tag"
             InputProps={{
               endAdornment: (
@@ -253,14 +293,13 @@ const LogsFilterBar = props => {
           <div className={classes.tagsList}>
             {props.tags.map(data => {
               return (
-                <li key={data.key}>
-                  <Chip
-                    label={data.label}
-                    onDelete={() => props.handleDeleteTag(data)}
-                    className={classes.chip}
-                    size="small"
-                  />
-                </li>
+                <Chip
+                  key={data.key}
+                  label={data.label}
+                  onDelete={() => props.handleDeleteTag(data)}
+                  className={classes.chip}
+                  size="small"
+                />
               );
             })}
           </div>
@@ -344,13 +383,12 @@ const LogsFilterBar = props => {
             onChange={props.handleLimit}
             className={classes.limitText}
             id="outlined-number"
-            // label="limit"
             placeholder={props.t("limit")}
             type="number"
             InputLabelProps={{
               shrink: true
             }}
-            // variant="outlined"
+            InputProps={{ inputProps: { min: 1 } }}
             size="small"
           />
         </div>
@@ -374,11 +412,7 @@ const LogsFilterBar = props => {
               value={props.columns}
               onChange={props.handleColumns}
               input={<Input />}
-              renderValue={selected =>
-                selected
-                  .map(elem => _get(props, `columnList[${elem}].label`, ""))
-                  .join(`, `)
-              }
+              renderValue={getRenderValue}
               MenuProps={MenuProps}
             >
               {Object.keys(props.columnList).map((column, index) => {
@@ -404,8 +438,10 @@ const LogsFilterBar = props => {
         {getSearchInput()}
         {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
         {getLevels()}
+        {/* Toggle: BACKEND, SPAWNER */}
+        {getServices()}
         {/* Tags */}
-        {getTags(props.advancedMode)}
+        {getTagsPopover()}
         {/* Date time filter */}
         {getTimeFilters()}
         <div style={{ flexGrow: 1 }}></div>
@@ -431,6 +467,9 @@ LogsFilterBar.propTypes = {
   levels: PropTypes.array,
   levelsList: PropTypes.array,
   handleLevels: PropTypes.func,
+  selectedService: PropTypes.array,
+  serviceList: PropTypes.array,
+  handleSelectedService: PropTypes.func,
   limit: PropTypes.number,
   handleLimit: PropTypes.func,
   columns: PropTypes.array,
@@ -453,6 +492,9 @@ LogsFilterBar.defaultProps = {
   levels: [],
   levelsList: [],
   handleLevels: () => {},
+  selectedService: [],
+  serviceList: [],
+  handleSelectedService: () => {},
   limit: 1,
   handleLimit: () => {},
   columns: [],
