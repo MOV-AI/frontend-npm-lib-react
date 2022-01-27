@@ -63,7 +63,7 @@ const ProfileMenu = props => {
           {props.extraItems?.map(item => (
             <MenuItem
               className={classes.menuItemSpacing}
-              onClick={() => item.func}
+              onClick={() => item.func()}
             >
               {item.label}
             </MenuItem>
