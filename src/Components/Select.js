@@ -4,7 +4,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import MaterialSelect from "@material-ui/core/Select";
+import ListItemText from "@material-ui/core/ListItemText";
 import PropTypes from "prop-types";
+import { Checkbox } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -39,12 +41,17 @@ const Select = props => {
         value={props.value}
         onChange={props.onChange}
         inputProps={props.inputProps}
+        multiple={props.multiple}
+        renderValue={props.renderValue}
       >
         {noneOption}
         {props.options.map((element, index) => {
           return (
             <MenuItem key={index} value={element}>
-              {element}
+              {props.multiple && (
+                <Checkbox checked={props.value.indexOf(element) > -1} />
+              )}
+              <ListItemText primary={element} />
             </MenuItem>
           );
         })}
