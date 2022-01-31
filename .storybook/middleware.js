@@ -6,6 +6,6 @@ module.exports = function expressMiddleware(router) {
 
   for (let domain in proxyConfig) {
     console.log(domain);
-    router.use(domain, proxy(proxyConfig[domain]));
+    router.use(domain, proxy.createProxyMiddleware(proxyConfig[domain]));
   }
 };
