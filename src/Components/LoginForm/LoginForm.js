@@ -25,6 +25,19 @@ const styles = theme => ({
   },
   formControl: {
     width: "50%"
+  },
+  advancedSectionFormControl: {
+    width: "50%",
+    justifyContent: "space-between",
+    paddingLeft: "1px",
+    paddingRight: "0px",
+    marginTop: "12px"
+  },
+  advancedSectionLabel: {
+    fontSize: "11px"
+  },
+  domainSelectorInput: {
+    display: "flex"
   }
 });
 
@@ -182,7 +195,7 @@ class LoginForm extends Component {
             <Typography align="center" variant="subtitle1" gutterBottom>
               <div style={{ flexGrow: 1 }}>
                 <Button
-                  className={classes.formControl}
+                  className={classes.advancedSectionFormControl}
                   endIcon={
                     this.state.advancedMenuOpen ? (
                       <ExpandLess />
@@ -193,16 +206,15 @@ class LoginForm extends Component {
                   onClick={this.handleAdvancedMenuToggle}
                   disabled={!authenticationProviders?.length}
                 >
-                  Advanced
+                  <InputLabel className={classes.advancedSectionLabel}>
+                    Advanced
+                  </InputLabel>
                 </Button>
                 {authenticationProviders?.length > 0 && (
                   <Collapse in={this.state.advancedMenuOpen}>
                     <List dense={true} component="div">
                       <Typography component="div">
-                        <Grid
-                          container
-                          style={{ padding: "20px", justifyContent: "center" }}
-                        >
+                        <Grid container style={{ justifyContent: "center" }}>
                           <FormControl
                             className={classes.formControl}
                             error={
@@ -211,12 +223,13 @@ class LoginForm extends Component {
                             }
                           >
                             <InputLabel htmlFor="component-authentication-selector">
-                              Authentication
+                              Domain
                             </InputLabel>
                             <Select
                               id="component-authentication-selector"
                               aria-describedby="component-authentication-error-text"
                               value={this.state.authenticationProvider}
+                              classes={{ root: classes.domainSelectorInput }}
                               onChange={this.handleAuthenticationProviderChange}
                               disabled={false}
                             >
