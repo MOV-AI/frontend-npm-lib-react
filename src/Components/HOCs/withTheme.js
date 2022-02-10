@@ -21,7 +21,7 @@ export default function withTheme(Component, ThemeProvider, ApplicationTheme) {
       setTheme(currentTheme);
       document.body.style.background =
         ApplicationTheme[currentTheme].backgroundColor;
-    }, [theme]);
+    }, []);
 
     return (
       <ThemeProvider theme={ApplicationTheme[theme]}>
