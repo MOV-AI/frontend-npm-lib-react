@@ -60,8 +60,7 @@ const Themes = {
     themeFactory({
       label: "dark",
       textColor: CONSTANTS.dark.textColor,
-      backgroundColor:
-        "linear-gradient(114.01deg, #212121 0%, #050505 100.43%)",
+      backgroundColor: "#050505",
       bottomNavigation: { background: "#212121" },
       globalStats: {
         borderColor: "#474747",
