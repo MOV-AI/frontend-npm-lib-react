@@ -25,10 +25,12 @@ import SelectScopeModal from "./src/Components/Modal/SelectScopeModal";
 // import HOCs
 import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
 import withAuthentication from "./src/Components/HOCs/withAuthentication";
+import withTheme from "./src/Components/HOCs/withTheme";
 
 export {
   withOfflineValidation,
   withAuthentication,
+  withTheme,
   Button,
   AbstractModal,
   ConfirmAlertModal,
