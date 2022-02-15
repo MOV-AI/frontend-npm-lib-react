@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 export default function withTheme(Component, ThemeProvider, ApplicationTheme) {
   return function (props) {
-    const [theme, setTheme] = useState("dark");
+    const [theme, setTheme] = useState(ApplicationTheme.getTheme());
 
     /**
      * Handle theme toggle
@@ -13,15 +13,11 @@ export default function withTheme(Component, ThemeProvider, ApplicationTheme) {
       setTheme(newTheme);
     };
 
-    /**
-     * Update current theme on app start
-     */
     React.useEffect(() => {
       const currentTheme = ApplicationTheme.getTheme();
-      setTheme(currentTheme);
       document.body.style.background =
         ApplicationTheme[currentTheme].backgroundColor;
-    }, []);
+    }, [theme]);
 
     return (
       <ThemeProvider theme={ApplicationTheme[theme]}>
