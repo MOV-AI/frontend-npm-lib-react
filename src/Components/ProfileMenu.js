@@ -116,8 +116,7 @@ ProfileMenu.defaultProps = {
   version: "",
   extraItems: [],
   isDarkTheme: true,
-  handleLogout: () => console.log("logout"),
-  handleToggleTheme: () => console.log("toggle")
+  handleLogout: () => console.log("logout")
 };
 
 export default ProfileMenu;
