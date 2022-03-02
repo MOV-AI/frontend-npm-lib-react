@@ -11,7 +11,7 @@ import ReactResizeDetector from "react-resize-detector";
 import PropTypes from "prop-types";
 import { SCENE_BACKGROUND } from "../Utils/Constants";
 import LoadingScreen from "../Utils/LoadingScreen";
-import loader from "../../../../resources/movai_red.svg";
+import loader from "../../../../resources/favicon.png";
 import { LinearProgress } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => {
