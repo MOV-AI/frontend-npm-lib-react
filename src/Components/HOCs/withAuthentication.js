@@ -61,7 +61,7 @@ export default function withAuthentication(Component, appName) {
      */
     useEffect(() => {
       Authentication.getProviders()
-        .then(setAuthenticationProviders)
+        .then(response => setAuthenticationProviders(response.domains))
         .catch(e =>
           console.log(
             "Error while fetching authentication providers: ",

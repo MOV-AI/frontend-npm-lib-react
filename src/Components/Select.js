@@ -38,6 +38,7 @@ const Select = props => {
         id={props.id}
         value={props.value}
         onChange={props.onChange}
+        multiple={props.multiple}
         inputProps={props.inputProps}
       >
         {noneOption}

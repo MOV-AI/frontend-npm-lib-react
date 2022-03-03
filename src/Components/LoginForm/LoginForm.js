@@ -103,6 +103,9 @@ class LoginForm extends Component {
 
   render() {
     const { classes, logo, authenticationProviders } = this.props;
+    const showAdvancedSection =
+      authenticationProviders?.length > 1 &&
+      authenticationProviders.some(ap => ap != Authentication.DEFAULT_PROVIDER);
     return (
       <Grid
         style={{ paddingTop: "5%" }}
@@ -193,24 +196,24 @@ class LoginForm extends Component {
           </Grid>
           <Grid>
             <Typography align="center" variant="subtitle1" gutterBottom>
-              <div style={{ flexGrow: 1 }}>
-                <Button
-                  className={classes.advancedSectionFormControl}
-                  endIcon={
-                    this.state.advancedMenuOpen ? (
-                      <ExpandLess />
-                    ) : (
-                      <ExpandMore />
-                    )
-                  }
-                  onClick={this.handleAdvancedMenuToggle}
-                  disabled={!authenticationProviders?.length}
-                >
-                  <InputLabel className={classes.advancedSectionLabel}>
-                    Advanced
-                  </InputLabel>
-                </Button>
-                {authenticationProviders?.length > 0 && (
+              {showAdvancedSection && (
+                <div style={{ flexGrow: 1 }}>
+                  <Button
+                    className={classes.advancedSectionFormControl}
+                    endIcon={
+                      this.state.advancedMenuOpen ? (
+                        <ExpandLess />
+                      ) : (
+                        <ExpandMore />
+                      )
+                    }
+                    onClick={this.handleAdvancedMenuToggle}
+                    disabled={!authenticationProviders?.length}
+                  >
+                    <InputLabel className={classes.advancedSectionLabel}>
+                      Advanced
+                    </InputLabel>
+                  </Button>
                   <Collapse in={this.state.advancedMenuOpen}>
                     <List dense={true} component="div">
                       <Typography component="div">
@@ -233,9 +236,9 @@ class LoginForm extends Component {
                               onChange={this.handleAuthenticationProviderChange}
                               disabled={false}
                             >
-                              {authenticationProviders.map(({ id, text }) => (
-                                <MenuItem key={id} value={id}>
-                                  {text}
+                              {authenticationProviders.map(name => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
                                 </MenuItem>
                               ))}
                             </Select>
@@ -244,8 +247,8 @@ class LoginForm extends Component {
                       </Typography>
                     </List>
                   </Collapse>
-                )}
-              </div>
+                </div>
+              )}
             </Typography>
           </Grid>
           <Grid>
