@@ -1,18 +1,12 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import defaultLogo from "./movai_red.svg";
 import Paper from "@material-ui/core/Paper";
-import { withStyles } from "@material-ui/core/styles";
 import { LinearProgress } from "@material-ui/core";
-import PropTypes from "prop-types";
-
-const styles = theme => ({
-  root: {
-    padding: theme.spacing(4, 4),
-    borderRadius: 40
-  }
-});
+import { withStyles } from "@material-ui/core/styles";
+import { styles } from "./style";
+import defaultLogo from "../../../resources/favicon.png";
 
 class NotAuthorized extends Component {
   render() {
@@ -20,7 +14,7 @@ class NotAuthorized extends Component {
 
     return (
       <Grid
-        style={{ paddingTop: "5%" }}
+        className={classes.container}
         container
         direction="column"
         alignItems="center"
@@ -30,14 +24,8 @@ class NotAuthorized extends Component {
           <Grid item>
             <img
               src={logo}
-              className="center"
               alt="logo"
-              style={{
-                display: "block",
-                marginLeft: "auto",
-                marginRight: "auto",
-                width: "50%"
-              }}
+              className={`center ${classes.logoImage}`}
             />
           </Grid>
           <Grid>
@@ -46,7 +34,7 @@ class NotAuthorized extends Component {
             </Typography>
             <Typography align="center" variant="subtitle1" gutterBottom>
               {message}
-              {progress && <LinearProgress />}
+              {progress && <LinearProgress color="secondary" />}
             </Typography>
           </Grid>
         </Paper>
