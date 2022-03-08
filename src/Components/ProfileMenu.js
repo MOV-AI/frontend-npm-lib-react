@@ -61,10 +61,7 @@ const ProfileMenu = props => {
           </div>
           <Divider variant="middle" />
           {props.extraItems?.map(item => (
-            <MenuItem
-              className={classes.menuItemSpacing}
-              onClick={() => item.func()}
-            >
+            <MenuItem className={classes.menuItemSpacing} onClick={item.func}>
               {item.label}
             </MenuItem>
           ))}
