@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import defaultLogo from "./movai_red.svg";
+import defaultLogo from "../../../resources/favicon.png";
 import Paper from "@material-ui/core/Paper";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import { withStyles } from "@material-ui/core/styles";
+import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import PropTypes from "prop-types";
 import LoginFormAdvanced from "./LoginFormAdvanced";
@@ -34,6 +35,15 @@ class LoginForm extends Component {
     selectedProvider: Authentication.DEFAULT_PROVIDER
   };
 
+  //========================================================================================
+  /*                                                                                      *
+   *                                    Private Methods                                   *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * Call authentication login method to send credentials
+   */
   sendCreds = async () => {
     if (!this.state.password) return;
     try {
@@ -61,6 +71,10 @@ class LoginForm extends Component {
     }
   };
 
+  /**
+   * Check if caps lock is on
+   * @param {Event} event : On key up event
+   */
   checkCapsLock = event => {
     if (event.key === "CapsLock" && this.state.capsLockOn)
       this.setState({ capsLockOn: false });
@@ -83,7 +97,7 @@ class LoginForm extends Component {
       authenticationProviders.some(ap => ap != Authentication.DEFAULT_PROVIDER);
     return (
       <Grid
-        style={{ paddingTop: "5%" }}
+        className={classes.container}
         container
         direction="column"
         alignItems="center"
@@ -93,14 +107,8 @@ class LoginForm extends Component {
           <Grid item>
             <img
               src={logo}
-              className="center"
               alt="logo"
-              style={{
-                display: "block",
-                marginLeft: "auto",
-                marginRight: "auto",
-                width: "50%"
-              }}
+              className={`center ${classes.logoImage}`}
             />
           </Grid>
           <Grid>
@@ -116,9 +124,7 @@ class LoginForm extends Component {
                   id="component-username-error"
                   value={this.state.username}
                   aria-describedby="component-username-error-text"
-                  onChange={event =>
-                    this.setState({ username: event.target.value })
-                  }
+                  onChange={this.onChangeUsername}
                 />
               </FormControl>
             </Typography>
@@ -138,23 +144,8 @@ class LoginForm extends Component {
                   type="password"
                   value={this.state.password}
                   aria-describedby="component-password-error-text"
-                  onChange={event => {
-                    const isEmptyPassword = event.target.value === "";
-                    const errorMessage = isEmptyPassword
-                      ? "Password is required"
-                      : "";
-                    this.setState({
-                      password: event.target.value,
-                      error: isEmptyPassword,
-                      errorMessage
-                    });
-                  }}
-                  onKeyUp={event => {
-                    this.checkCapsLock(event);
-                    if (event.key === "Enter") {
-                      this.sendCreds();
-                    }
-                  }}
+                  onChange={this.onChangePassword}
+                  onKeyUp={this.onKeyUpPassword}
                 />
                 {this.state.error && (
                   <FormHelperText id="component-error-text">

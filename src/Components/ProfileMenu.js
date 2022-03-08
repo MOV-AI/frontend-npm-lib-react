@@ -65,13 +65,15 @@ const ProfileMenu = props => {
               {item.label}
             </MenuItem>
           ))}
-          <div className={classes.menuItemSpacing}>
-            {props.darkThemeLabel}
-            <Toggle
-              onToggle={() => props.handleToggleTheme()}
-              toggle={props.isDarkTheme}
-            ></Toggle>
-          </div>
+          {props.handleToggleTheme && (
+            <div className={classes.menuItemSpacing}>
+              {props.darkThemeLabel}
+              <Toggle
+                onToggle={props.handleToggleTheme}
+                toggle={props.isDarkTheme}
+              ></Toggle>
+            </div>
+          )}
           <MenuItem
             className={(classes.menuItemSpacing, classes.cursorPointer)}
             onClick={props.handleLogout}
@@ -111,8 +113,7 @@ ProfileMenu.defaultProps = {
   version: "",
   extraItems: [],
   isDarkTheme: true,
-  handleLogout: () => console.log("logout"),
-  handleToggleTheme: () => console.log("toggle")
+  handleLogout: () => console.log("logout")
 };
 
 export default ProfileMenu;

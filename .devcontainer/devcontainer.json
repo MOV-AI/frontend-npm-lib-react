@@ -12,6 +12,7 @@
         "waderyan.gitblame",
         "eamodio.gitlens",
         "dbaeumer.vscode-eslint",
+        "Makogan.hermes-comments",
         "burkeholland.simple-react-snippets"
     ],
     "postCreateCommand": "npm ci",
