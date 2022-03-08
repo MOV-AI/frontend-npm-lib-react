@@ -2,21 +2,16 @@ import React, { Component } from "react";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import Collapse from "@material-ui/core/Collapse";
 import defaultLogo from "./movai_red.svg";
 import Paper from "@material-ui/core/Paper";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
-import List from "@material-ui/core/List";
 import { withStyles } from "@material-ui/core/styles";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import PropTypes from "prop-types";
+import LoginFormAdvanced from "./LoginFormAdvanced";
 
 const styles = theme => ({
   root: {
@@ -25,19 +20,6 @@ const styles = theme => ({
   },
   formControl: {
     width: "50%"
-  },
-  advancedSectionFormControl: {
-    width: "50%",
-    justifyContent: "space-between",
-    paddingLeft: "1px",
-    paddingRight: "0px",
-    marginTop: "12px"
-  },
-  advancedSectionLabel: {
-    fontSize: "11px"
-  },
-  domainSelectorInput: {
-    display: "flex"
   }
 });
 
@@ -49,8 +31,7 @@ class LoginForm extends Component {
     error: false,
     errorMessage: "",
     capsLockOn: false,
-    advancedMenuOpen: false,
-    authenticationProvider: Authentication.DEFAULT_PROVIDER
+    selectedProvider: Authentication.DEFAULT_PROVIDER
   };
 
   sendCreds = async () => {
@@ -60,7 +41,7 @@ class LoginForm extends Component {
         this.state.username,
         this.state.password,
         this.state.remember,
-        this.state.authenticationProvider
+        this.state.selectedProvider
       );
       // If successfully logged in
       if (!apiResponse.error) {
@@ -91,13 +72,7 @@ class LoginForm extends Component {
 
   handleAuthenticationProviderChange = e => {
     this.setState({
-      authenticationProvider: e.target.value
-    });
-  };
-
-  handleAdvancedMenuToggle = () => {
-    this.setState({
-      advancedMenuOpen: !this.state.advancedMenuOpen
+      selectedProvider: e.target.value
     });
   };
 
@@ -197,63 +172,17 @@ class LoginForm extends Component {
           <Grid>
             <Typography align="center" variant="subtitle1" gutterBottom>
               {showAdvancedSection && (
-                <div style={{ flexGrow: 1 }}>
-                  <Button
-                    className={classes.advancedSectionFormControl}
-                    endIcon={
-                      this.state.advancedMenuOpen ? (
-                        <ExpandLess />
-                      ) : (
-                        <ExpandMore />
-                      )
-                    }
-                    onClick={this.handleAdvancedMenuToggle}
-                    disabled={!authenticationProviders?.length}
-                  >
-                    <InputLabel className={classes.advancedSectionLabel}>
-                      Advanced
-                    </InputLabel>
-                  </Button>
-                  <Collapse in={this.state.advancedMenuOpen}>
-                    <List dense={true} component="div">
-                      <Typography component="div">
-                        <Grid container style={{ justifyContent: "center" }}>
-                          <FormControl
-                            className={classes.formControl}
-                            error={
-                              this.state.authenticationProvider == null ||
-                              this.state.authenticationProvider == undefined
-                            }
-                          >
-                            <InputLabel htmlFor="component-authentication-selector">
-                              Domain
-                            </InputLabel>
-                            <Select
-                              id="component-authentication-selector"
-                              aria-describedby="component-authentication-error-text"
-                              value={this.state.authenticationProvider}
-                              classes={{ root: classes.domainSelectorInput }}
-                              onChange={this.handleAuthenticationProviderChange}
-                              disabled={false}
-                            >
-                              {authenticationProviders.map(name => (
-                                <MenuItem key={name} value={name}>
-                                  {name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      </Typography>
-                    </List>
-                  </Collapse>
-                </div>
+                <LoginFormAdvanced
+                  selectedProvider={this.state.selectedProvider}
+                  providers={authenticationProviders}
+                  onProviderChange={this.handleAuthenticationProviderChange}
+                />
               )}
             </Typography>
           </Grid>
           <Grid>
             <Typography align="center" gutterBottom>
-              <Button onClick={() => this.sendCreds()}>Login</Button>
+              <Button onClick={this.sendCreds}>Login</Button>
             </Typography>
           </Grid>
         </Paper>
