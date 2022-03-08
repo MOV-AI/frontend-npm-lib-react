@@ -38,14 +38,18 @@ const Select = props => {
         id={props.id}
         value={props.value}
         onChange={props.onChange}
-        multiple={props.multiple}
         inputProps={props.inputProps}
+        multiple={props.multiple}
+        renderValue={props.renderValue}
       >
         {noneOption}
         {props.options.map((element, index) => {
           return (
             <MenuItem key={index} value={element}>
-              {element}
+              {props.multiple && (
+                <Checkbox checked={props.value.indexOf(element) > -1} />
+              )}
+              <ListItemText primary={element} />
             </MenuItem>
           );
         })}
