@@ -11,35 +11,10 @@ import List from "@material-ui/core/List";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles(theme => ({
-  container: {
-    flexGrow: 1
-  },
-  formControl: {
-    width: "50%"
-  },
-  expandCollapseButton: {
-    width: "50%",
-    justifyContent: "space-between",
-    paddingLeft: "1px",
-    paddingRight: "0px",
-    marginTop: "12px"
-  },
-  label: {
-    fontSize: "11px"
-  },
-  providerSelectorInput: {
-    display: "flex"
-  },
-  grid: {
-    justifyContent: "center"
-  }
-}));
+import { advancedLoginArea } from "./styles";
 
 const LoginFormAdvanced = props => {
-  const classes = useStyles();
+  const classes = advancedLoginArea();
   const [open, setOpen] = useState(false);
 
   return (
