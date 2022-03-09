@@ -11,10 +11,13 @@ import List from "@material-ui/core/List";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import PropTypes from "prop-types";
-import { advancedLoginArea } from "./styles";
+import { advancedSectionStyles } from "./style";
+import { makeStyles } from "@material-ui/core";
+
+const advancedLoginStyles = makeStyles(advancedSectionStyles);
 
 const LoginFormAdvanced = props => {
-  const classes = advancedLoginArea();
+  const classes = advancedLoginStyles();
   const [open, setOpen] = useState(false);
 
   return (
