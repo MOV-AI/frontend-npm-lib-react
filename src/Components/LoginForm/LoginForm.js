@@ -14,16 +14,6 @@ import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import PropTypes from "prop-types";
 import LoginFormAdvanced from "./LoginFormAdvanced";
 
-const styles = theme => ({
-  root: {
-    padding: theme.spacing(4, 4),
-    borderRadius: 40
-  },
-  formControl: {
-    width: "50%"
-  }
-});
-
 class LoginForm extends Component {
   state = {
     username: "",
@@ -89,6 +79,51 @@ class LoginForm extends Component {
       selectedProvider: e.target.value
     });
   };
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                       Handlers                                       *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * On change username
+   * @param {Event} event : On change event
+   */
+  onChangeUsername = event => {
+    this.setState({ username: event.target.value });
+  };
+
+  /**
+   * On change password
+   * @param {Event} event : On change event
+   */
+  onChangePassword = event => {
+    const isEmptyPassword = event.target.value === "";
+    const errorMessage = isEmptyPassword ? "Password is required" : "";
+    this.setState({
+      password: event.target.value,
+      error: isEmptyPassword,
+      errorMessage
+    });
+  };
+
+  /**
+   * On key up password input
+   * @param {Event} event : On keyUp event
+   */
+  onKeyUpPassword = event => {
+    this.checkCapsLock(event);
+    if (event.key === "Enter") {
+      this.sendCreds();
+    }
+  };
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Render                                        *
+   *                                                                                      */
+  //========================================================================================
 
   render() {
     const { classes, logo, authenticationProviders } = this.props;
