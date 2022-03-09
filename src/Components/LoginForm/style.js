@@ -1,6 +1,6 @@
 const common = {
   formControl: {
-    width: "50%"
+    width: "40%"
   }
 };
 const styles = theme => ({
@@ -26,7 +26,7 @@ const advancedSectionStyles = theme => ({
     flexGrow: 1
   },
   expandCollapseButton: {
-    width: "50%",
+    width: "40%",
     justifyContent: "space-between",
     paddingLeft: "1px",
     paddingRight: "0px",
