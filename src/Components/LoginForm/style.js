@@ -1,10 +1,10 @@
-const commonStyles = {
+const common = {
   formControl: {
     width: "50%"
   }
 };
 const styles = theme => ({
-  ...commonStyles,
+  ...common,
   root: {
     padding: theme.spacing(4, 4),
     borderRadius: 40
@@ -21,7 +21,7 @@ const styles = theme => ({
 });
 
 const advancedSectionStyles = theme => ({
-  ...commonStyles,
+  ...common,
   container: {
     flexGrow: 1
   },
