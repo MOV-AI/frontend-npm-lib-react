@@ -18,7 +18,6 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center"
   },
   navigationArea: {
-    flexGrow: 1,
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
@@ -46,13 +45,16 @@ const VerticalBar = props => {
       <div className={classes.navigationArea}>
         {props.navigationList.map((element, index) => {
           return (
-            <div key={index} style={{ padding: "15px 0px" }}>
-              {element}
-            </div>
+            <>
+              <div key={index} style={{ padding: "15px 0px" }}>
+                {element}
+              </div>
+              {props.useDividers && <Divider style={{width: "100%"}} />}
+            </>
           );
         })}
-        {props.useDividers && <Divider />}
       </div>
+      <div style={{ flexGrow: 1 }}></div>
       <div className={classes.accountArea}>{props.lowerElement}</div>
     </div>
   );
