@@ -4,7 +4,7 @@ import ConfirmAlertModal from "./src/Components/Modal/ConfirmAlertModal";
 import RobotLogModal from "./src/Components/Modal/RobotLogModal";
 import Drawer from "./src/Components/Drawer";
 import Collapse from "./src/Components/Collapse";
-import VerticalBar from "./src/Components/VerticalBar";
+import VerticalBar from "./src/Components/VerticalBar/VerticalBar";
 import ContextMenu from "./src/Components/ContextMenu";
 import Table from "./src/Components/Table";
 import Tabs from "./src/Components/Tabs";
