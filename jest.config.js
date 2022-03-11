@@ -1,4 +1,5 @@
 module.exports = {
   verbose: true,
-  transformIgnorePatterns: ["/node_modules/@babylon/core"]
+  transformIgnorePatterns: ["/node_modules/@babylon/core"],
+  testEnvironment: "jsdom"
 };
