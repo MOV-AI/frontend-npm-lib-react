@@ -41,14 +41,15 @@ const tableIcons = {
   Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
+  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
 // More information in: https://material-table.com/#/docs/all-props
 
-const Table = (props) => {
+const Table = props => {
   return (
     <MaterialTable
+      {...props}
       style={props.style}
       title={props.title}
       columns={props.columns}
@@ -70,7 +71,7 @@ Table.propTypes = {
   actions: PropTypes.array,
   options: PropTypes.object,
   components: PropTypes.object,
-  localization: PropTypes.object,
+  localization: PropTypes.object
 };
 Table.defaultProps = {
   style: {},
@@ -85,9 +86,9 @@ Table.defaultProps = {
     search: false,
     toolbar: false,
     searchFieldAlignment: "left",
-    paging: false,
+    paging: false
   },
-  components: {},
+  components: {}
 };
 
 export default Table;

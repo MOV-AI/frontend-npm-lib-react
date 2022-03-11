@@ -1,58 +1,41 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Divider } from "@material-ui/core";
 import PropTypes from "prop-types";
-
-const useStyles = makeStyles(theme => ({
-  container: {
-    width: 65,
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: props => props.backgroundColor
-  },
-  logoArea: {
-    padding: "17px",
-    textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  navigationArea: {
-    flexGrow: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  accountArea: {
-    padding: props => (props.unsetAccountAreaPadding ? "unset" : "17px"),
-    textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center"
-  }
-}));
+import { Divider } from "@material-ui/core";
+import { verticalBarStyles } from "./styles";
 
 const VerticalBar = props => {
-  const classes = useStyles(props);
+  // Style hook
+  const classes = verticalBarStyles(props);
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Render                                        *
+   *                                                                                      */
+  //========================================================================================
+
   return (
     <div className={classes.container}>
       <div className={classes.logoArea}>{props.upperElement}</div>
-      {props.useDividers && <Divider />}
+      {props.useDividers && <Divider className={classes.divider} />}
       {props.creatorElement && (
         <>
           <div className={classes.logoArea}>{props.creatorElement}</div>
-          {props.useDividers && <Divider />}
+          {props.useDividers && <Divider className={classes.divider} />}
         </>
       )}
       <div className={classes.navigationArea}>
         {props.navigationList.map((element, index) => {
           return (
-            <div key={index} style={{ padding: "15px 0px" }}>
-              {element}
+            <div key={index}>
+              <div className={classes.navigationItem}>
+                {element}
+              </div>
+              {props.useDividers && <Divider className={classes.divider} />}
             </div>
           );
         })}
-        {props.useDividers && <Divider />}
       </div>
+      <div className={classes.growArea}></div>
       <div className={classes.accountArea}>{props.lowerElement}</div>
     </div>
   );
