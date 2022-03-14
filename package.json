@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-react",
-  "version": "1.0.34",
+  "version": "0.0.1590",
   "description": "The Mov.AI's frontend library for React.",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
@@ -105,7 +105,7 @@
     "react-resize-detector": "^6.7.6",
     "react-virtualized": "^9.22.3",
     "react-virtualized-tree": "^3.4.1",
-    "roslib": "^1.1.0",
+    "roslib": "^1.2.0",
     "styled-components": "^5.3.1"
   },
   "files": [
