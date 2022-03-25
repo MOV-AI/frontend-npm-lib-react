@@ -6,7 +6,8 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 const HTMLPopper = props => {
   const classes = infoButtonStyles();
-  const { clickableElement, children, hideOnClickAway } = props;
+  const { clickableElement, children, hideOnClickAway, popperPlacement } =
+    props;
 
   const [openPopper, setOpenPopper] = React.useState(false);
   const anchorPopperRef = useRef();
