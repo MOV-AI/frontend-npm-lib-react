@@ -58,7 +58,7 @@ const HTMLPopper = props => {
         className={classes.popper}
         open={openPopper}
         anchorEl={anchorPopperRef.current}
-        placement={POPPER_PLACEMENT}
+        placement={popperPlacement}
         transition
       >
         {({ TransitionProps }) => (
