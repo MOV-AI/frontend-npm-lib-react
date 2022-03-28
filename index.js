@@ -22,6 +22,7 @@ import ProfileMenu from "./src/Components/ProfileMenu/ProfileMenu";
 import ResetPasswordModal from "./src/Components/ProfileMenu/ResetPassword";
 import FilterIcon from "./src/Components/Logs/LogsFilterBar/FiltersIcon/FiltersIcon";
 import SelectScopeModal from "./src/Components/Modal/SelectScopeModal";
+import HTMLPopper from "./src/Components/Popper/HTMLPopper";
 // import HOCs
 import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
 import withAuthentication from "./src/Components/HOCs/withAuthentication";
@@ -54,5 +55,6 @@ export {
   FilterIcon,
   LoginForm,
   ProfileMenu,
-  ResetPasswordModal
+  ResetPasswordModal,
+  HTMLPopper
 };
