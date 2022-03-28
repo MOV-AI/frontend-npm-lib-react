@@ -1,5 +1,5 @@
 import React from "react";
-import VerticalBar from "../src/Components/VerticalBar";
+import VerticalBar from "../src/Components/VerticalBar/VerticalBar";
 import AddBox from "@material-ui/icons/AddBox";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import PermDataSettingIcon from "@material-ui/icons/PermDataSettingOutlined";
@@ -11,18 +11,6 @@ export default {
 };
 
 export const simple = () => {
-  return (
-    <div style={{ height: "100vh" }}>
-      <VerticalBar width="150px"></VerticalBar>
-    </div>
-  );
-};
-
-simple.story = {
-  name: "Default Bar"
-};
-
-export const figma = () => {
   return (
     <div style={{ height: "100vh" }}>
       <VerticalBar
@@ -39,6 +27,6 @@ export const figma = () => {
   );
 };
 
-figma.story = {
-  name: "Figma"
+simple.story = {
+  name: "Default Bar"
 };
