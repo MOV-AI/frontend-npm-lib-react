@@ -1,5 +1,5 @@
 import React from "react";
-import ProfileMenu from "../src/Components/ProfileMenu";
+import ProfileMenu from "../src/Components/ProfileMenu/ProfileMenu";
 import Themes from "../src/styles/Themes";
 import { ThemeProvider } from "@material-ui/styles";
 
@@ -122,7 +122,7 @@ export default {
 export const profileMenu = args => {
   return (
     <ThemeProvider theme={Themes["dark"]}>
-      <ProfileMenu {...args} />
+      <ProfileMenu {...args} handleToggleTheme={() => {}} />
     </ThemeProvider>
   );
 };

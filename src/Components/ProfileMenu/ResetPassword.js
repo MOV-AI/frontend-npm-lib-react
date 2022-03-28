@@ -1,0 +1,296 @@
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  forwardRef,
+  useCallback,
+  useImperativeHandle
+} from "react";
+import PropTypes from "prop-types";
+import _isEmpty from "lodash/isEmpty";
+import TextField from "@material-ui/core/TextField";
+import { Rest } from "@mov-ai/mov-fe-lib-core";
+import { useTranslation } from "react-i18next";
+import { resetPasswordStyles } from "./styles";
+import { ALERT_SEVERITY } from "../../Utils/Constants";
+import { snackbar } from "../Snackbar/Snackbar";
+import AbstractModal from "../Modal/AbstractModal";
+
+//========================================================================================
+/*                                                                                      *
+ *                                       Constants                                      *
+ *                                                                                      */
+//========================================================================================
+
+const VARIANT_OPTIONS = {
+  CHANGE: "change",
+  RESET: "reset"
+};
+
+const FORM_FIELDS = {
+  CURRENT_PASSWORD: "currentPassword",
+  NEW_PASSWORD: "newPassword",
+  CONFIRM_PASSWORD: "confirmPassword"
+};
+
+const DEFAULT_VALUES = {
+  [FORM_FIELDS.CURRENT_PASSWORD]: "",
+  [FORM_FIELDS.NEW_PASSWORD]: "",
+  [FORM_FIELDS.CONFIRM_PASSWORD]: ""
+};
+
+const DEFAULT_ERRORS = {
+  [FORM_FIELDS.CURRENT_PASSWORD]: false,
+  [FORM_FIELDS.NEW_PASSWORD]: false,
+  [FORM_FIELDS.CONFIRM_PASSWORD]: false
+};
+
+const DEFAULT_TOUCH_STATE = {
+  [FORM_FIELDS.CURRENT_PASSWORD]: false,
+  [FORM_FIELDS.NEW_PASSWORD]: false,
+  [FORM_FIELDS.CONFIRM_PASSWORD]: false
+};
+
+const REQUIRED_INPUTS = {
+  [VARIANT_OPTIONS.CHANGE]: Object.values(FORM_FIELDS),
+  [VARIANT_OPTIONS.RESET]: [
+    FORM_FIELDS.NEW_PASSWORD,
+    FORM_FIELDS.CONFIRM_PASSWORD
+  ]
+};
+
+/**
+ * Reset Password Modal Component
+ */
+const ResetPasswordModal = forwardRef((props, ref) => {
+  // Props
+  const { variant, userData } = props;
+  // State hooks
+  const [form, setForm] = useState({ ...DEFAULT_VALUES });
+  const [errors, setErrors] = useState({ ...DEFAULT_ERRORS });
+  const [openState, setOpenState] = useState(false);
+  // Other hooks
+  const classes = resetPasswordStyles();
+  const { t } = useTranslation();
+  // Refs
+  const touchRef = useRef(DEFAULT_TOUCH_STATE);
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                    Private Methods                                   *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * @private Get modal title
+   * @returns {string} Modal title by variant
+   */
+  const getTitle = () => {
+    const TITLE_BY_VARIANT = {
+      [VARIANT_OPTIONS.CHANGE]: t("Change Password"),
+      [VARIANT_OPTIONS.RESET]: t("Reset Password")
+    };
+    return variant in TITLE_BY_VARIANT
+      ? TITLE_BY_VARIANT[variant]
+      : t("Change Password");
+  };
+
+  /**
+   * @private Submit password change
+   * @returns {Promise<{success: boolean}>} Response promise
+   */
+  const changePassword = async () => {
+    const userId = userData.Label;
+    const body = {
+      current_password: form[FORM_FIELDS.CURRENT_PASSWORD],
+      new_password: form[FORM_FIELDS.NEW_PASSWORD],
+      confirm_password: form[FORM_FIELDS.CONFIRM_PASSWORD]
+    };
+    // Request password update
+    return Rest.post({ path: `v1/User/${userId}/reset-password/`, body })
+      .then(response => {
+        if (!response.success) throw new Error(response.statusText);
+        const message = t("Password Updated");
+        snackbar({ message, severity: ALERT_SEVERITY.SUCCESS });
+        return response;
+      })
+      .catch(err => {
+        const message = err.message ? err.message : err.statusText;
+        snackbar({ message, severity: ALERT_SEVERITY.ERROR });
+        console.warn(message, err);
+        return err;
+      });
+  };
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                    Public Methods                                    *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * Open Modal
+   */
+  const open = () => {
+    // Reset state
+    touchRef.current = { ...DEFAULT_TOUCH_STATE };
+    setForm({ ...DEFAULT_VALUES });
+    // Open modal
+    setOpenState(true);
+  };
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                      Validation                                      *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * Validate form required fields
+   * @param {*} data : Data to be validated
+   * @returns {{currentPassword: boolean, newPassword: boolean, confirmPassword: boolean}} Form errors
+   */
+  const validateRequiredFields = data => {
+    const formErrors = {};
+    const requiredFields =
+      REQUIRED_INPUTS[variant] || REQUIRED_INPUTS[VARIANT_OPTIONS.CHANGE];
+
+    requiredFields.forEach(key => {
+      formErrors[key] = _isEmpty(data[key]) && touchRef.current[key];
+    });
+
+    return formErrors;
+  };
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                       Handlers                                       *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * Handle change inputs
+   * @param {Event} event : Change event
+   * @param {string} name : Input name
+   */
+  const handleChange = useCallback(name => {
+    return event => {
+      event.persist();
+      setForm(prevState => ({ ...prevState, [name]: event.target.value }));
+      touchRef.current[name] = true;
+    };
+  }, []);
+
+  /**
+   * Handle confirmation
+   */
+  const handleConfirm = useCallback(() => {
+    // Touch all
+    Object.values(FORM_FIELDS).forEach(field => {
+      touchRef.current[field] = true;
+    });
+
+    // Validate form
+    const validation = validateRequiredFields(form);
+    if (Object.values(validation).every(val => val === false)) {
+      // Submit request to update password
+      changePassword().then(res => {
+        if (res.success) handleCancel();
+      });
+    } else {
+      setErrors(validation);
+    }
+  }, [form]);
+
+  /**
+   * Handle close modal
+   */
+  const handleCancel = () => {
+    setOpenState(false);
+  };
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                    React Lifecycle                                   *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * Update validation error state when form data changes
+   */
+  useEffect(() => {
+    setErrors(validateRequiredFields(form));
+  }, [form]);
+
+  /**
+   * Expose open method
+   */
+  useImperativeHandle(ref, () => ({
+    open
+  }));
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Render                                        *
+   *                                                                                      */
+  //========================================================================================
+
+  return (
+    <AbstractModal
+      onSubmit={handleConfirm}
+      onCancel={handleCancel}
+      title={getTitle()}
+      open={openState}
+      cancelText={t("Cancel")}
+      submitText={t("Save")}
+    >
+      <div className={classes.root}>
+        <React.Fragment>
+          <form autoComplete="off" className={classes.formGroup}>
+            {variant === VARIANT_OPTIONS.CHANGE && (
+              <TextField
+                type="password"
+                autocomplete="off"
+                label={t("Current Password")}
+                autoFocus={true}
+                className={classes.input}
+                onChange={handleChange(FORM_FIELDS.CURRENT_PASSWORD)}
+                variant="outlined"
+              />
+            )}
+            <TextField
+              type="password"
+              autocomplete="off"
+              label={t("New Password")}
+              className={classes.input}
+              onChange={handleChange(FORM_FIELDS.NEW_PASSWORD)}
+              variant="outlined"
+              required
+              error={errors.newPassword}
+            />
+            <TextField
+              type="password"
+              autocomplete="off"
+              label={t("Confirm Password")}
+              className={classes.input}
+              onChange={handleChange(FORM_FIELDS.CONFIRM_PASSWORD)}
+              variant="outlined"
+              required
+              error={errors.confirmPassword}
+            />
+          </form>
+        </React.Fragment>
+      </div>
+    </AbstractModal>
+  );
+});
+
+ResetPasswordModal.propTypes = {
+  variant: PropTypes.oneOf(Object.values(VARIANT_OPTIONS)), // change password or reset password
+  userData: PropTypes.object.isRequired
+};
+ResetPasswordModal.defaultProps = {
+  variant: VARIANT_OPTIONS.CHANGE
+};
+
+export default ResetPasswordModal;
