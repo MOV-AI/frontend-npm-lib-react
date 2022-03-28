@@ -1,12 +1,17 @@
 import React from "react";
+import { IconButton, Icon } from "@material-ui/core";
 import HTMLPopper from "../src/Components/Popper/HTMLPopper";
 
 export default {
-  title: "Chips"
+  title: "HTMLPopper"
 };
 
 const getIcon = () => {
-  return <button>Info</button>;
+  return (
+    <IconButton>
+      <Icon>info</Icon>
+    </IconButton>
+  );
 };
 
 const renderHTML = () => {
@@ -17,14 +22,18 @@ const renderHTML = () => {
   );
 };
 
-export const chipActive = () => (
+export const popper = () => (
   <div style={{ height: "100vh" }}>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
     <HTMLPopper clickableElement={getIcon()} hideOnClickAway={true}>
       {renderHTML()}
     </HTMLPopper>
   </div>
 );
 
-chipActive.story = {
+popper.story = {
   name: "HTML Popper"
 };
