@@ -2,6 +2,7 @@ import React, {
   useRef,
   useEffect,
   useState,
+  useMemo,
   forwardRef,
   useCallback,
   useImperativeHandle
@@ -9,7 +10,7 @@ import React, {
 import PropTypes from "prop-types";
 import _isEmpty from "lodash/isEmpty";
 import TextField from "@material-ui/core/TextField";
-import { Rest } from "@mov-ai/mov-fe-lib-core";
+import { User } from "@mov-ai/mov-fe-lib-core";
 import { useTranslation } from "react-i18next";
 import { resetPasswordStyles } from "./styles";
 import { ALERT_SEVERITY } from "../../Utils/Constants";
@@ -64,12 +65,13 @@ const REQUIRED_INPUTS = {
  */
 const ResetPasswordModal = forwardRef((props, ref) => {
   // Props
-  const { variant, userData } = props;
+  const { variant } = props;
   // State hooks
   const [form, setForm] = useState({ ...DEFAULT_VALUES });
   const [errors, setErrors] = useState({ ...DEFAULT_ERRORS });
   const [openState, setOpenState] = useState(false);
   // Other hooks
+  const user = useMemo(() => new User(), []);
   const classes = resetPasswordStyles();
   const { t } = useTranslation();
   // Refs
@@ -96,18 +98,29 @@ const ResetPasswordModal = forwardRef((props, ref) => {
   };
 
   /**
+   * @private Get user method to be called (either reset or change password)
+   * @returns {function} Function to be called
+   */
+  const updatePassword = useCallback(() => {
+    const METHOD = {
+      [VARIANT_OPTIONS.CHANGE]: user.changePassword,
+      [VARIANT_OPTIONS.RESET]: user.resetPassword
+    };
+    return variant in METHOD ? METHOD[variant] : user.changePassword;
+  }, [variant]);
+
+  /**
    * @private Submit password change
    * @returns {Promise<{success: boolean}>} Response promise
    */
   const changePassword = async () => {
-    const userId = userData.Label;
     const body = {
       current_password: form[FORM_FIELDS.CURRENT_PASSWORD],
       new_password: form[FORM_FIELDS.NEW_PASSWORD],
       confirm_password: form[FORM_FIELDS.CONFIRM_PASSWORD]
     };
     // Request password update
-    return Rest.post({ path: `v1/User/${userId}/reset-password/`, body })
+    return updatePassword(body)
       .then(response => {
         if (!response.success) throw new Error(response.statusText);
         const message = t("Password Updated");
@@ -131,13 +144,13 @@ const ResetPasswordModal = forwardRef((props, ref) => {
   /**
    * Open Modal
    */
-  const open = () => {
+  const open = useCallback(() => {
     // Reset state
     touchRef.current = { ...DEFAULT_TOUCH_STATE };
     setForm({ ...DEFAULT_VALUES });
     // Open modal
     setOpenState(true);
-  };
+  }, []);
 
   //========================================================================================
   /*                                                                                      *
@@ -150,17 +163,20 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    * @param {*} data : Data to be validated
    * @returns {{currentPassword: boolean, newPassword: boolean, confirmPassword: boolean}} Form errors
    */
-  const validateRequiredFields = data => {
-    const formErrors = {};
-    const requiredFields =
-      REQUIRED_INPUTS[variant] || REQUIRED_INPUTS[VARIANT_OPTIONS.CHANGE];
+  const validateRequiredFields = useCallback(
+    data => {
+      const formErrors = {};
+      const requiredFields =
+        REQUIRED_INPUTS[variant] || REQUIRED_INPUTS[VARIANT_OPTIONS.CHANGE];
 
-    requiredFields.forEach(key => {
-      formErrors[key] = _isEmpty(data[key]) && touchRef.current[key];
-    });
+      requiredFields.forEach(key => {
+        formErrors[key] = _isEmpty(data[key]) && touchRef.current[key];
+      });
 
-    return formErrors;
-  };
+      return formErrors;
+    },
+    [variant]
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -205,9 +221,9 @@ const ResetPasswordModal = forwardRef((props, ref) => {
   /**
    * Handle close modal
    */
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setOpenState(false);
-  };
+  }, []);
 
   //========================================================================================
   /*                                                                                      *
@@ -286,8 +302,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
 });
 
 ResetPasswordModal.propTypes = {
-  variant: PropTypes.oneOf(Object.values(VARIANT_OPTIONS)), // change password or reset password
-  userData: PropTypes.object.isRequired
+  variant: PropTypes.oneOf(Object.values(VARIANT_OPTIONS)) // change password or reset password
 };
 ResetPasswordModal.defaultProps = {
   variant: VARIANT_OPTIONS.CHANGE

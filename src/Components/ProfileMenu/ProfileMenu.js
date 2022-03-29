@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef
+} from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -42,24 +48,24 @@ const ProfileMenu = props => {
    * Handle click to open ProfileMenu
    * @param {Event} event : Click event
    */
-  const handleClick = event => {
+  const handleClick = useCallback(event => {
     setAnchorEl(event.currentTarget);
-  };
+  }, []);
 
   /**
    * Handle close ProfileMenu
    */
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
 
   /**
    * Open Password Reset modal
    */
-  const handlePasswordReset = () => {
+  const handlePasswordReset = useCallback(() => {
     resetModalRef.current.open();
     handleClose();
-  };
+  }, [handleClose]);
 
   //========================================================================================
   /*                                                                                      *
@@ -141,7 +147,6 @@ const ProfileMenu = props => {
       {/* Password Modal */}
       <ResetPasswordModal
         ref={resetModalRef}
-        userData={userData}
         variant="change"
       ></ResetPasswordModal>
     </div>
