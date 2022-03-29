@@ -154,14 +154,19 @@ export function getRequestService(selectedService, serviceList) {
   }
 }
 
+export function getDateWithoutSeconds(date) {
+  return (date / 1000) | 0;
+}
+
 export function getRequestDate(selectedFromDate, selectedToDate) {
   let res = "";
   try {
     if (selectedFromDate) {
-      res += `&fromDate=${selectedFromDate / 1000}`;
+      res += `&fromDate=${getDateWithoutSeconds(selectedFromDate)}`;
     }
     if (selectedToDate) {
-      res += `&toDate=${selectedToDate / 1000}`;
+      const test = getDateWithoutSeconds(selectedToDate) + 59;
+      res += `&toDate=${test}`;
     }
     return res;
   } catch (error) {
