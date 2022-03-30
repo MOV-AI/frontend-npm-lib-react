@@ -19,14 +19,13 @@ export default function withAuthentication(Component, appName) {
 
     const authenticate = useCallback(() => {
       const user = new User();
-
       Promise.all([
         Authentication.checkLogin(),
         new Promise(resolve => setTimeout(resolve, 2000)),
-        user.getAllowedApps(),
-        user.isSuperUser()
+        user.getCurrentUserWithPermissions()
       ])
-        .then(([loggedIn, _, apps, isSuperUser]) => {
+        .then(([loggedIn, _, user]) => {
+          const { Applications: apps, Superuser: isSuperUser } = user;
           const hasPermissions =
             isSuperUser || apps.includes(appName) || !appName;
 
