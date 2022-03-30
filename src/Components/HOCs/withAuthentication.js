@@ -94,9 +94,10 @@ export default function withAuthentication(Component, appName) {
 
     /**
      * handleLogOut - log out the user
+     * @param {string} redirect : Redirect URL location
      */
-    const handleLogOut = () => {
-      Authentication.logout();
+    const handleLogOut = redirect => {
+      Authentication.logout(redirect);
     };
 
     /**
