@@ -12,7 +12,6 @@ import Text from "./src/Components/Text";
 import Toggle from "./src/Components/Toggle";
 import SearchInput from "./src/Components/SearchInput";
 import Breadcrumb from "./src/Components/Breadcrumb";
-import SceneViewer from "./src/Components/Viewer/SceneViewer";
 import Select from "./src/Components/Select";
 import { snackbar } from "./src/Components/Snackbar/Snackbar";
 import Themes from "./src/styles/Themes";
@@ -22,6 +21,7 @@ import LoginForm from "./src/Components/LoginForm/LoginForm";
 import ProfileMenu from "./src/Components/ProfileMenu";
 import FilterIcon from "./src/Components/Logs/LogsFilterBar/FiltersIcon/FiltersIcon";
 import SelectScopeModal from "./src/Components/Modal/SelectScopeModal";
+import HTMLPopper from "./src/Components/Popper/HTMLPopper";
 // import HOCs
 import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
 import withAuthentication from "./src/Components/HOCs/withAuthentication";
@@ -47,12 +47,12 @@ export {
   Toggle,
   SearchInput,
   Breadcrumb,
-  SceneViewer,
   Select,
   snackbar,
   Style,
   Logs,
   FilterIcon,
   LoginForm,
-  ProfileMenu
+  ProfileMenu,
+  HTMLPopper
 };

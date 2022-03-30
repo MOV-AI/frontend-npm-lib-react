@@ -97,7 +97,7 @@ export default function withAuthentication(Component, appName) {
                   loggedIn: res
                 }));
               })
-              .catch(e =>
+              .catch(error =>
                 console.log("Error while trying to refresh the tokens", error)
               ),
           timeToRun
@@ -114,9 +114,10 @@ export default function withAuthentication(Component, appName) {
 
     /**
      * handleLogOut - log out the user
+     * @param {string} redirect : Redirect URL location
      */
-    const handleLogOut = () => {
-      Authentication.logout();
+    const handleLogOut = redirect => {
+      Authentication.logout(redirect);
     };
 
     /**

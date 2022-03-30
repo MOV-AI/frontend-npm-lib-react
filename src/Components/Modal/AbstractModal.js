@@ -107,12 +107,12 @@ const AbstractModal = props => {
         <CardActions>
           {props.hasSubmitButton && (
             <Button color={props.submitColor} onClick={submit}>
-              {`${i18n.t(props.submitText)}`}
+              {props.submitText}
             </Button>
           )}
           {props.hasCancelButton && (
             <Button onClick={cancel} color={props.cancelColor}>
-              {`${i18n.t(props.cancelText)}`}
+              {props.cancelText}
             </Button>
           )}
         </CardActions>
@@ -141,10 +141,10 @@ AbstractModal.defaultProps = {
   onSubmit: () => {},
   onCancel: () => {},
   open: false,
-  title: "New",
-  submitText: "Confirm",
+  title: i18n.t("New"),
+  submitText: i18n.t("Confirm"),
   submitColor: "primary",
-  cancelText: "Cancel",
+  cancelText: i18n.t("Cancel"),
   cancelColor: "secondary",
   width: "25%",
   height: "25%",
