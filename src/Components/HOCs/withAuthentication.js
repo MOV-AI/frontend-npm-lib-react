@@ -15,6 +15,7 @@ export default function withAuthentication(Component, appName) {
       loggedIn: false,
       hasPermissions: false
     });
+    const [authenticationProviders, setAuthenticationProviders] = useState([]);
 
     const authenticate = useCallback(() => {
       const user = new User();
@@ -25,9 +26,7 @@ export default function withAuthentication(Component, appName) {
         user.getAllowedApps(),
         user.isSuperUser()
       ])
-        .then(values => {
-          const [loggedIn, _, apps, isSuperUser] = values;
-
+        .then(([loggedIn, _, apps, isSuperUser]) => {
           const hasPermissions =
             isSuperUser || apps.includes(appName) || !appName;
 
@@ -35,10 +34,18 @@ export default function withAuthentication(Component, appName) {
             firstRender.current = false;
           }
 
-          setState({ loading: false, loggedIn, hasPermissions });
+          setState({
+            loading: false,
+            loggedIn,
+            hasPermissions
+          });
         })
         .catch(e => {
-          setState({ loggedIn: false, loading: false, hasPermissions: false });
+          setState({
+            loggedIn: false,
+            loading: false,
+            hasPermissions: false
+          });
         });
     }, []);
 
@@ -47,6 +54,20 @@ export default function withAuthentication(Component, appName) {
      */
     useEffect(() => {
       authenticate();
+    }, []);
+
+    /**
+     * Updates the Access Token and the Refresh Token
+     */
+    useEffect(() => {
+      Authentication.getProviders()
+        .then(response => setAuthenticationProviders(response.domains))
+        .catch(e =>
+          console.log(
+            "Error while fetching authentication providers: ",
+            e.error
+          )
+        );
     }, []);
 
     /**
@@ -111,6 +132,7 @@ export default function withAuthentication(Component, appName) {
         renderLoading()
       ) : (
         <LoginForm
+          authenticationProviders={authenticationProviders}
           setLoggedIn={value => {
             setState(prevState => ({ ...prevState, loading: true }));
             authenticate();
@@ -156,6 +178,7 @@ export default function withAuthentication(Component, appName) {
             />
             <Modal open={!state.loggedIn}>
               <LoginForm
+                authenticationProviders={authenticationProviders}
                 setLoggedIn={value =>
                   setState(prevState => ({ ...prevState, loggedIn: value }))
                 }

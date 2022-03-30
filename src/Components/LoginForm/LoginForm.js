@@ -12,6 +12,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import PropTypes from "prop-types";
+import LoginFormAdvanced from "./LoginFormAdvanced";
 
 class LoginForm extends Component {
   state = {
@@ -20,7 +21,8 @@ class LoginForm extends Component {
     remember: false,
     error: false,
     errorMessage: "",
-    capsLockOn: false
+    capsLockOn: false,
+    selectedProvider: Authentication.DEFAULT_PROVIDER
   };
 
   //========================================================================================
@@ -38,7 +40,8 @@ class LoginForm extends Component {
       const apiResponse = await Authentication.login(
         this.state.username,
         this.state.password,
-        this.state.remember
+        this.state.remember,
+        this.state.selectedProvider
       );
       // If successfully logged in
       if (!apiResponse.error) {
@@ -69,6 +72,12 @@ class LoginForm extends Component {
       const capsLock = event.getModifierState("CapsLock");
       this.setState({ capsLockOn: capsLock });
     }
+  };
+
+  handleAuthenticationProviderChange = e => {
+    this.setState({
+      selectedProvider: e.target.value
+    });
   };
 
   //========================================================================================
@@ -117,8 +126,10 @@ class LoginForm extends Component {
   //========================================================================================
 
   render() {
-    const { classes, logo } = this.props;
-
+    const { classes, logo, authenticationProviders } = this.props;
+    const showAdvancedSection =
+      authenticationProviders?.length > 1 &&
+      authenticationProviders.some(ap => ap != Authentication.DEFAULT_PROVIDER);
     return (
       <Grid
         className={classes.container}
@@ -185,6 +196,17 @@ class LoginForm extends Component {
             </Typography>
           </Grid>
           <Grid>
+            <Typography align="center" variant="subtitle1" gutterBottom>
+              {showAdvancedSection && (
+                <LoginFormAdvanced
+                  selectedProvider={this.state.selectedProvider}
+                  providers={authenticationProviders}
+                  onProviderChange={this.handleAuthenticationProviderChange}
+                />
+              )}
+            </Typography>
+          </Grid>
+          <Grid>
             <Typography align="center" gutterBottom>
               <Button onClick={this.sendCreds}>Login</Button>
             </Typography>
@@ -196,11 +218,13 @@ class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
+  authenticationProviders: PropTypes.array,
   logo: PropTypes.any, // expects a svg element
   setLoggedIn: PropTypes.func
 };
 
 LoginForm.defaultProps = {
+  authenticationProviders: [],
   logo: defaultLogo,
   setLoggedIn: loggedIn => console.log(loggedIn)
 };
