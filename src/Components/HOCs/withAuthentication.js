@@ -13,7 +13,8 @@ export default function withAuthentication(Component, appName) {
     const [state, setState] = useState({
       loading: true,
       loggedIn: false,
-      hasPermissions: false
+      hasPermissions: false,
+      currentUser: {}
     });
     const [authenticationProviders, setAuthenticationProviders] = useState([]);
 
@@ -25,7 +26,10 @@ export default function withAuthentication(Component, appName) {
         user.getCurrentUserWithPermissions()
       ])
         .then(([loggedIn, _, user]) => {
-          const { Applications: apps, Superuser: isSuperUser } = user;
+          const {
+            Resources: { Applications: apps },
+            Superuser: isSuperUser
+          } = user;
           const hasPermissions =
             isSuperUser || apps.includes(appName) || !appName;
 
@@ -36,7 +40,8 @@ export default function withAuthentication(Component, appName) {
           setState({
             loading: false,
             loggedIn,
-            hasPermissions
+            hasPermissions,
+            currentUser: user
           });
         })
         .catch(e => {
@@ -171,6 +176,7 @@ export default function withAuthentication(Component, appName) {
         ) : state.hasPermissions ? (
           <React.Fragment>
             <Component
+              currentUser={state.currentUser}
               handleLogOut={handleLogOut}
               loggedIn={state.loggedIn}
               {...props}
