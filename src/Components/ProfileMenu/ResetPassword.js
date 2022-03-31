@@ -101,13 +101,18 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    * @private Get user method to be called (either reset or change password)
    * @returns {function} Function to be called
    */
-  const updatePassword = useCallback(() => {
-    const METHOD = {
-      [VARIANT_OPTIONS.CHANGE]: user.changePassword,
-      [VARIANT_OPTIONS.RESET]: user.resetPassword
-    };
-    return variant in METHOD ? METHOD[variant] : user.changePassword;
-  }, [variant]);
+  const updatePassword = useCallback(
+    body => {
+      const METHOD = {
+        [VARIANT_OPTIONS.CHANGE]: user.changePassword,
+        [VARIANT_OPTIONS.RESET]: user.resetPassword
+      };
+      return variant in METHOD
+        ? METHOD[variant](body)
+        : user.changePassword(body);
+    },
+    [variant]
+  );
 
   /**
    * @private Submit password change
