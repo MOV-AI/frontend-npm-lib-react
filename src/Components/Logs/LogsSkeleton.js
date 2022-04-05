@@ -2,6 +2,7 @@ import React from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 const LogsSkeleton = () => {
+  const tableSkeleton = ["row1", "row2", "row3"];
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -9,9 +10,9 @@ const LogsSkeleton = () => {
   //========================================================================================
   return (
     <>
-      <Skeleton animation="wave" />
-      <Skeleton animation="wave" />
-      <Skeleton animation="wave" />
+      {tableSkeleton.map(el => (
+        <Skeleton animation="wave" key={el} />
+      ))}
     </>
   );
 };
