@@ -180,8 +180,8 @@ class Logs extends Component {
   };
 
   updateLogs = robotLogs => {
-    const newLogs = robotLogs.reduce((storedLogs, robotLogArray) => {
-      return [...storedLogs, ...(robotLogArray || [])];
+    const newLogs = robotLogs.reduce((storedLogs, robotLogArray = []) => {
+      return [...storedLogs, ...robotLogArray];
     }, []);
 
     this.setState(prevState => {
