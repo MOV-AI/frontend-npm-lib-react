@@ -58,7 +58,8 @@ const MuiVirtualizedTable = props => {
   } = props;
   const classes = useStyles();
 
-  const isNumericColumn = columnIndex != null && columns[columnIndex].numeric;
+  const isNumericColumn = columnIndex =>
+    columnIndex != null && columns[columnIndex]?.numeric;
 
   const getRowClassName = ({ index }) => {
     const { data } = props;
@@ -82,7 +83,7 @@ const MuiVirtualizedTable = props => {
           className={`${classes.tableCell} ${classes.flexContainer}`}
           variant="body"
           style={{ height: rowHeight }}
-          align={isNumericColumn || false ? "right" : "left"}
+          align={isNumericColumn(columnIndex) || false ? "right" : "left"}
         >
           {render ? render(cellData) : cellData}
         </TableCell>
@@ -100,7 +101,7 @@ const MuiVirtualizedTable = props => {
         )}
         variant="head"
         style={{ height: headerHeight }}
-        align={isNumericColumn ? "right" : "left"}
+        align={isNumericColumn(columnIndex) ? "right" : "left"}
       >
         <span>{label}</span>
       </TableCell>
