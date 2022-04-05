@@ -31,7 +31,6 @@ import {
 import LogsSkeleton from "./LogsSkeleton";
 import { Typography } from "@material-ui/core";
 import i18n from "../../i18n/i18n";
-import { logsStyle } from "./styles";
 
 const UI_TAG = { key: 0, label: "ui" };
 
