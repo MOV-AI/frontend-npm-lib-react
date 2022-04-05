@@ -180,7 +180,7 @@ class Logs extends Component {
   };
 
   updateLogs = robotLogs => {
-    const newLogs = robotLogs.reduce((storedLogs, robotLogArray) => {
+    const newLogs = robotLogs.reduce((storedLogs, robotLogArray = []) => {
       return [...storedLogs, ...robotLogArray];
     }, []);
 
@@ -266,9 +266,11 @@ class Logs extends Component {
   };
 
   getHandleLimit = event => {
-    this.setState({
-      limit: event.target.value === "" ? DEFAULT_LIMIT : event.target.value
-    });
+    let limit = DEFAULT_LIMIT;
+
+    if (event.target.value !== "") limit = event.target.value;
+
+    this.setState({ limit });
   };
 
   getHandleColumns = event => {
@@ -286,12 +288,18 @@ class Logs extends Component {
   getHandleAdvancedMode = () => {
     // Toggle advanced mode: change the levels
     const advancedMode = !this.state.advancedMode;
+    let levelsList = this.SIMPLE_LEVELS_LIST;
+    let tags = [UI_TAG];
+
+    if (advancedMode) {
+      levelsList = this.ADVANCED_LEVELS_LIST;
+      tags = [];
+    }
+
     this.setState({
-      advancedMode: advancedMode,
-      levelsList: this.state.advancedMode
-        ? this.SIMPLE_LEVELS_LIST
-        : this.ADVANCED_LEVELS_LIST,
-      tags: advancedMode ? [] : [UI_TAG]
+      advancedMode,
+      levelsList,
+      tags
     });
   };
 
