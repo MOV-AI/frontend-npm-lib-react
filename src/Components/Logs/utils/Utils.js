@@ -165,8 +165,7 @@ export function getRequestDate(selectedFromDate, selectedToDate) {
       res += `&fromDate=${getDateWithoutSeconds(selectedFromDate)}`;
     }
     if (selectedToDate) {
-      const test = getDateWithoutSeconds(selectedToDate) + 59;
-      res += `&toDate=${test}`;
+      res += `&toDate=${getDateWithoutSeconds(selectedToDate) + 59}`;
     }
     return res;
   } catch (error) {

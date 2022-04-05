@@ -59,7 +59,7 @@ const MuiVirtualizedTable = props => {
   const classes = useStyles();
 
   const isNumericColumn = columnIndex =>
-    columnIndex != null && columns[columnIndex]?.numeric;
+    columnIndex !== null && columns[columnIndex]?.numeric;
 
   const getRowClassName = ({ index }) => {
     const { data } = props;
