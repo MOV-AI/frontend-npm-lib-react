@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import CloseIcon from "@material-ui/icons/Close";
-import { makeStyles } from "@material-ui/core/styles";
 import _debounce from "lodash/debounce";
 import {
   Card,
@@ -12,62 +11,75 @@ import {
   CardActions,
   Modal
 } from "@material-ui/core";
+import { modalStyles } from "./styles";
 import i18n from "../../i18n/i18n.js";
 
-const useStyles = makeStyles(theme => {
-  return {
-    card: {
-      margin: "auto",
-      position: "absolute",
-      overflow: "auto",
-      display: "flex",
-      flexDirection: "column",
-      maxHeight: "98%"
-    },
-    closeButton: {
-      cursor: "pointer",
-      position: "absolute",
-      color: theme.textColor,
-      top: 15,
-      right: 15,
-      "&:hover": {
-        color: "gray"
-      }
-    }
-  };
-});
-
 const AbstractModal = props => {
-  const classes = useStyles();
+  // Props
+  const {
+    disableActions,
+    onSubmit,
+    onCancel,
+    open,
+    title,
+    hasSubmitButton,
+    hasCancelButton,
+    submitText,
+    cancelText,
+    submitColor,
+    cancelColor
+  } = props;
+  // Styles hook
+  const classes = modalStyles();
 
-  const debounceSubmit = _debounce(() => {
-    props.onSubmit();
-  }, 50);
+  //========================================================================================
+  /*                                                                                      *
+   *                                       Handlers                                       *
+   *                                                                                      */
+  //========================================================================================
 
-  const onKeyPress = e => {
-    if (e.key === "Enter") {
-      submit();
-    }
-  };
+  /**
+   * Handle modal close
+   */
+  const handleClose = useCallback(() => {
+    onCancel();
+  }, [onCancel]);
 
-  const submit = () => {
+  /**
+   * Handle Submit button click
+   */
+  const handleSubmit = useCallback(() => {
+    const debounceSubmit = _debounce(() => {
+      onSubmit();
+    }, 50);
+
     debounceSubmit();
-  };
+  }, [onSubmit]);
 
-  const cancel = () => {
-    props.onCancel();
-  };
+  /**
+   * @param {Event} event : KeyPress event
+   */
+  const handleKeyPress = useCallback(
+    event => {
+      if (event.key === "Enter") {
+        handleSubmit();
+      }
+    },
+    [handleSubmit]
+  );
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Render                                        *
+   *                                                                                      */
+  //========================================================================================
 
   return (
     <Modal
-      onKeyPress={onKeyPress}
-      open={props.open}
-      onClose={cancel}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }}
+      onKeyPress={handleKeyPress}
+      open={open}
+      onClose={handleClose}
+      className={classes.root}
     >
       <Card
         className={classes.card}
@@ -77,42 +89,38 @@ const AbstractModal = props => {
           minHeight: props.height
         }}
       >
-        <CardContent
-          style={{
-            flexGrow: 1,
-            maxHeight: "calc(100% - 70px)",
-            overflowY: "auto"
-          }}
-        >
-          <Typography variant="h5">{props.title}</Typography>
+        <CardContent className={classes.cardContent}>
+          <Typography variant="h5">{title}</Typography>
           <Typography
             component="div"
             className={classes.closeButton}
-            onClick={() => props.onCancel()}
+            onClick={handleClose}
           >
             <CloseIcon></CloseIcon>
           </Typography>
-          <Divider style={{ marginBottom: "12px" }} />
-          <div
-            style={{
-              maxHeight: "calc(100% - 35px)",
-              overflowY: "auto",
-              paddingTop: 5
-            }}
-          >
+          <Divider className={classes.divider} />
+          <Typography component="div" className={classes.childrenContainer}>
             {props.children}
-          </div>
+          </Typography>
         </CardContent>
         <Divider />
         <CardActions>
-          {props.hasSubmitButton && (
-            <Button color={props.submitColor} onClick={submit}>
-              {props.submitText}
+          {hasSubmitButton && (
+            <Button
+              color={submitColor}
+              onClick={handleSubmit}
+              disabled={disableActions}
+            >
+              {submitText}
             </Button>
           )}
-          {props.hasCancelButton && (
-            <Button onClick={cancel} color={props.cancelColor}>
-              {props.cancelText}
+          {hasCancelButton && (
+            <Button
+              color={cancelColor}
+              onClick={handleClose}
+              disabled={disableActions}
+            >
+              {cancelText}
             </Button>
           )}
         </CardActions>
@@ -133,6 +141,7 @@ AbstractModal.propTypes = {
   width: PropTypes.string,
   height: PropTypes.string,
   style: PropTypes.object,
+  disableActions: PropTypes.bool,
   hasSubmitButton: PropTypes.bool,
   hasCancelButton: PropTypes.bool
 };
@@ -149,6 +158,7 @@ AbstractModal.defaultProps = {
   width: "25%",
   height: "25%",
   style: {},
+  disableActions: false,
   hasSubmitButton: true,
   hasCancelButton: true
 };

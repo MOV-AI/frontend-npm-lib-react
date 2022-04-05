@@ -22,13 +22,12 @@ const ProfileMenu = props => {
   const user = useMemo(() => new User(), []);
   const classes = profileMenuStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [userData, setUserData] = useState({});
+  const [username, setUsername] = useState("");
   // Refs
   const resetModalRef = useRef();
   // Props
   const {
     welcomeLabel,
-    userName,
     extraItems,
     handleToggleTheme,
     darkThemeLabel,
@@ -75,13 +74,9 @@ const ProfileMenu = props => {
 
   // On component mount
   useEffect(() => {
-    user
-      .getData()
-      .then(data => {
-        setUserData(data?.response || {});
-      })
-      .catch(err => console.warn("Failed to get user data", err));
-  });
+    // Set authenticated user name
+    setUsername(user.getUsername());
+  }, [user]);
 
   //========================================================================================
   /*                                                                                      *
@@ -104,7 +99,7 @@ const ProfileMenu = props => {
       >
         <Typography component="div" variant="body1">
           <div className={classes.menuItemSpacing}>
-            {welcomeLabel}, {userName}
+            {welcomeLabel}, {username}
           </div>
           <Divider variant="middle" />
           {extraItems?.map(item => (
@@ -113,14 +108,12 @@ const ProfileMenu = props => {
             </MenuItem>
           ))}
           <Divider variant="middle" />
-          {userData.Superuser && (
-            <MenuItem
-              className={classes.menuItemSpacing}
-              onClick={handlePasswordReset}
-            >
-              {i18n.t("Change Password")}
-            </MenuItem>
-          )}
+          <MenuItem
+            className={classes.menuItemSpacing}
+            onClick={handlePasswordReset}
+          >
+            {i18n.t("Change Password")}
+          </MenuItem>
           {handleToggleTheme && (
             <div className={classes.menuItemSpacing}>
               {darkThemeLabel}
@@ -154,7 +147,6 @@ const ProfileMenu = props => {
 };
 ProfileMenu.propTypes = {
   welcomeLabel: PropTypes.string,
-  userName: PropTypes.string,
   darkThemeLabel: PropTypes.string,
   logoutLabel: PropTypes.string,
   version: PropTypes.string,
@@ -166,7 +158,6 @@ ProfileMenu.propTypes = {
 
 ProfileMenu.defaultProps = {
   welcomeLabel: "Hello",
-  userName: "User",
   darkThemeLabel: "Dark Theme",
   logoutLabel: "Logout",
   version: "",

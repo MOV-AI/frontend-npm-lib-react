@@ -83,7 +83,7 @@
     "@babel/runtime": "^7.15.4",
     "@date-io/date-fns": "^1.3.13",
     "@material-ui/pickers": "^3.3.10",
-    "@mov-ai/mov-fe-lib-core": "^1.0.33",
+    "@mov-ai/mov-fe-lib-core": "^1.0.40",
     "clsx": "^1.1.1",
     "fontsource-open-sans": "^3.0.9",
     "fontsource-roboto": "^3.0.3",

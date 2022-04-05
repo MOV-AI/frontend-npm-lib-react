@@ -10,6 +10,7 @@ import React, {
 import PropTypes from "prop-types";
 import _isEmpty from "lodash/isEmpty";
 import TextField from "@material-ui/core/TextField";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { User } from "@mov-ai/mov-fe-lib-core";
 import { useTranslation } from "react-i18next";
 import { resetPasswordStyles } from "./styles";
@@ -70,6 +71,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
   const [form, setForm] = useState({ ...DEFAULT_VALUES });
   const [errors, setErrors] = useState({ ...DEFAULT_ERRORS });
   const [openState, setOpenState] = useState(false);
+  const [loading, setLoading] = useState(false);
   // Other hooks
   const user = useMemo(() => new User(), []);
   const classes = resetPasswordStyles();
@@ -125,6 +127,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
       confirm_password: form[FORM_FIELDS.CONFIRM_PASSWORD]
     };
     // Request password update
+    setLoading(true);
     return updatePassword(body)
       .then(response => {
         if (!response.success) throw new Error(response.statusText);
@@ -137,8 +140,18 @@ const ResetPasswordModal = forwardRef((props, ref) => {
         snackbar({ message, severity: ALERT_SEVERITY.ERROR });
         console.warn(message, err);
         return err;
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
+
+  /**
+   * Get submit modal text
+   */
+  const getSubmitText = useCallback(() => {
+    return loading ? <CircularProgress color="primary" size={16} /> : t("Save");
+  }, [loading]);
 
   //========================================================================================
   /*                                                                                      *
@@ -262,8 +275,9 @@ const ResetPasswordModal = forwardRef((props, ref) => {
       onCancel={handleCancel}
       title={getTitle()}
       open={openState}
+      disableActions={loading}
       cancelText={t("Cancel")}
-      submitText={t("Save")}
+      submitText={getSubmitText()}
     >
       <div className={classes.root}>
         <React.Fragment>
