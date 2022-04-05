@@ -19,7 +19,6 @@ class LoginForm extends Component {
     username: "",
     password: "",
     remember: false,
-    error: false,
     errorMessage: "",
     capsLockOn: false,
     selectedProvider: Authentication.DEFAULT_PROVIDER
@@ -49,13 +48,11 @@ class LoginForm extends Component {
       } else {
         // Show the error in red
         this.setState({
-          error: true,
           errorMessage: apiResponse.error
         });
       }
     } catch (e) {
       this.setState({
-        error: true,
         errorMessage: e
       });
     }
@@ -126,10 +123,12 @@ class LoginForm extends Component {
   //========================================================================================
 
   render() {
-    const { classes, logo, authenticationProviders } = this.props;
+    const { classes, logo, authenticationProviders, permissionErrors } =
+      this.props;
     const showAdvancedSection =
       authenticationProviders?.length > 1 &&
       authenticationProviders.some(ap => ap != Authentication.DEFAULT_PROVIDER);
+    const invalidLoginMessage = this.state.errorMessage || permissionErrors;
     return (
       <Grid
         className={classes.container}
@@ -150,7 +149,7 @@ class LoginForm extends Component {
             <Typography align="center" variant="subtitle1" gutterBottom>
               <FormControl
                 className={classes.formControl}
-                error={this.state.error}
+                error={!!invalidLoginMessage}
               >
                 <InputLabel htmlFor="component-username-error">
                   Username
@@ -168,7 +167,7 @@ class LoginForm extends Component {
             <Typography align="center" variant="subtitle1" gutterBottom>
               <FormControl
                 className={classes.formControl}
-                error={this.state.error}
+                error={!!invalidLoginMessage}
               >
                 <InputLabel htmlFor="component-password-error">
                   Password
@@ -182,9 +181,9 @@ class LoginForm extends Component {
                   onChange={this.onChangePassword}
                   onKeyUp={this.onKeyUpPassword}
                 />
-                {this.state.error && (
+                {invalidLoginMessage && (
                   <FormHelperText id="component-error-text">
-                    {this.state.errorMessage}
+                    {invalidLoginMessage}
                   </FormHelperText>
                 )}
                 {this.state.capsLockOn && (
@@ -220,12 +219,15 @@ class LoginForm extends Component {
 LoginForm.propTypes = {
   authenticationProviders: PropTypes.array,
   logo: PropTypes.any, // expects a svg element
-  setLoggedIn: PropTypes.func
+  setLoggedIn: PropTypes.func,
+  permissionErrors: PropTypes.string,
+  onLoginError: PropTypes.func
 };
 
 LoginForm.defaultProps = {
   authenticationProviders: [],
   logo: defaultLogo,
+  permissionErrors: "",
   setLoggedIn: loggedIn => console.log(loggedIn)
 };
 

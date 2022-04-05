@@ -14,7 +14,8 @@ export default function withAuthentication(Component, appName) {
       loading: true,
       loggedIn: false,
       hasPermissions: false,
-      currentUser: {}
+      currentUser: {},
+      errorMessage: ""
     });
     const [authenticationProviders, setAuthenticationProviders] = useState([]);
 
@@ -48,7 +49,8 @@ export default function withAuthentication(Component, appName) {
           setState({
             loggedIn: false,
             loading: false,
-            hasPermissions: false
+            hasPermissions: false,
+            errorMessage: e?.statusText ?? ""
           });
         });
     }, []);
@@ -137,8 +139,13 @@ export default function withAuthentication(Component, appName) {
       ) : (
         <LoginForm
           authenticationProviders={authenticationProviders}
+          permissionErrors={state.errorMessage}
           setLoggedIn={value => {
-            setState(prevState => ({ ...prevState, loading: true }));
+            setState(prevState => ({
+              ...prevState,
+              loading: true,
+              errorMessage: ""
+            }));
             authenticate();
           }}
         />
