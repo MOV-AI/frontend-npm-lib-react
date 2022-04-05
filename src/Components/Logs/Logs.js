@@ -1,6 +1,7 @@
 import React, { Component, createRef } from "react";
-import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
-import "./Logs.css";
+import PropTypes from "prop-types";
+import _isEqual from "lodash/isEqual";
+import _uniqWith from "lodash/uniqWith";
 import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import { withStyles } from "@material-ui/core/styles";
 import RobotLogModal from "../Modal/RobotLogModal";
@@ -15,8 +16,21 @@ import {
   getJustTimeFromServer
 } from "./utils/Utils";
 import LogsTable from "./LogsTable/LogsTable";
-import _isEqual from "lodash/isEqual";
-import PropTypes from "prop-types";
+import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
+import "./Logs.css";
+import {
+  ADVANCED_LEVELS_LIST,
+  DEFAULT_LIMIT,
+  DEFAULT_SELECTED_COLUMNS,
+  DEFAULT_SELECTED_LEVELS,
+  DEFAULT_SELECTED_SERVICES,
+  ROBOT_LOG_TYPE,
+  SERVICE_LIST,
+  SIMPLE_LEVELS_LIST
+} from "./utils/Constants";
+import LogsSkeleton from "./LogsSkeleton";
+import { Typography } from "@material-ui/core";
+import i18n from "../../i18n/i18n";
 
 const UI_TAG = { key: 0, label: "ui" };
 
@@ -25,58 +39,51 @@ const styles = theme => ({
     flexGrow: 1,
     minHeight: 0,
     overflow: "hidden"
+  },
+  externalDiv: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column"
+  },
+  noRows: {
+    display: "flex",
+    fontSize: "20px",
+    justifyContent: "center",
+    padding: "32px"
+  },
+  wrapper: {
+    flexGrow: "1",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column"
   }
 });
 
 class Logs extends Component {
   state = {
     selectedRobots: [],
-    levels: ["INFO", "ERROR"],
-    limit: 50,
+    levels: DEFAULT_SELECTED_LEVELS,
+    limit: DEFAULT_LIMIT,
     logsData: [],
     messageRegex: "",
+    requestManuallyChanged: false,
+    requestTimestamp: null,
     selectedFromDate: null,
     selectedToDate: null,
-    columns: ["Time", "Robot", "Message"],
+    columns: DEFAULT_SELECTED_COLUMNS,
     tags: this.props.advancedMode ? [] : [UI_TAG],
     height: 0, //LogsTable height
     levelsList: this.props.advancedMode
-      ? [
-          { value: "INFO", label: "Info" },
-          { value: "WARNING", label: "Warnings" },
-          { value: "DEBUG", label: "Debug" },
-          { value: "ERROR", label: "Error" },
-          { value: "CRITICAL", label: "Critical" }
-        ]
-      : [
-          { value: "INFO", label: "Robot Status" },
-          { value: "ERROR", label: "Alerts" }
-        ],
-    selectedService: ["BACKEND", "SPAWNER"],
-    serviceList: [
-      { value: "BACKEND", label: "Backend" },
-      { value: "SPAWNER", label: "Spawner" },
-      { value: "REDIS", label: "Redis" },
-      { value: "ROS", label: "Ros" },
-      { value: "HAPROXY", label: "ha-proxy" }
-    ],
-    advancedMode: this.props.advancedMode
+      ? ADVANCED_LEVELS_LIST
+      : SIMPLE_LEVELS_LIST,
+    selectedService: DEFAULT_SELECTED_SERVICES,
+    serviceList: SERVICE_LIST,
+    advancedMode: this.props.advancedMode,
+    loading: true
   };
-  logsTimeout = undefined;
+  logsTimeout = 0;
   logModal = createRef();
-
-  simpleLevelsList = [
-    { value: "INFO", label: "Robot Status" },
-    { value: "ERROR", label: "Alerts" }
-  ];
-
-  advancedLevelsList = [
-    { value: "INFO", label: "Info" },
-    { value: "WARNING", label: "Warnings" },
-    { value: "DEBUG", label: "Debug" },
-    { value: "ERROR", label: "Error" },
-    { value: "CRITICAL", label: "Critical" }
-  ];
 
   resizeHandler() {
     const height = this.divElement.clientHeight;
@@ -88,9 +95,24 @@ class Logs extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.queryParameterChanged(prevState)) {
+      this.setState({
+        requestManuallyChanged: true,
+        loading: true,
+        requestTimestamp: this.state.selectedFromDate,
+        logsData: []
+      });
+
+      if (!this.logsTimeout) this.getLogs(prevState.selectedRobots);
+    }
     if (_isEqual(prevProps.robotsData, this.props.robotsData)) return;
     this.updateSelectedRobots();
   }
+
+  resetLogsTimeout = () => {
+    clearTimeout(this.logsTimeout);
+    this.logsTimeout = null;
+  };
 
   updateSelectedRobots = () => {
     if (
@@ -103,9 +125,34 @@ class Logs extends Component {
   };
 
   componentWillUnmount() {
-    if (this.logsTimeout) {
+    if (!!this.logsTimeout) {
       clearTimeout(this.logsTimeout);
     }
+  }
+
+  queryParameterChanged(prevState) {
+    const fromDateChanged =
+      prevState.selectedFromDate !== this.state.selectedFromDate;
+
+    const toDateChanged =
+      prevState.selectedToDate !== this.state.selectedToDate;
+
+    const levelsChanged = prevState.levels !== this.state.levels;
+    const limitChanged = prevState.limit !== this.state.limit;
+
+    const selectedServiceChanged =
+      prevState.selectedService !== this.state.selectedService;
+
+    const messageRegexChanged =
+      prevState.messageRegex !== this.state.messageRegex;
+    return (
+      fromDateChanged ||
+      toDateChanged ||
+      selectedServiceChanged ||
+      messageRegexChanged ||
+      limitChanged ||
+      levelsChanged
+    );
   }
 
   // This function is responsible to check/unckeck the list of robots
@@ -118,7 +165,7 @@ class Logs extends Component {
   };
 
   setSelectedRobots = selectedRobots => {
-    clearTimeout(this.logsTimeout);
+    this.resetLogsTimeout();
     this.setState({ selectedRobots });
     this.getLogs(selectedRobots);
   };
@@ -129,19 +176,44 @@ class Logs extends Component {
         .filter(robot => robot.robotState !== this.props.robotStates.off) // If robot is offline doesn't bother making the request
         .filter(robot => robot.isSelected)
         .map(robot => this.getRobotLogData(robot))
-    ).then(dataArrays => {
-      this.setState(prevState => {
-        const finalArray = dataArrays.reduce((all, dataArray) => {
-          dataArray && dataArray.forEach(data => all.push(data));
-          return all;
-        }, []);
-        this.logsTimeout = setTimeout(
-          this.getLogs,
-          3000,
-          prevState.selectedRobots
-        );
-        return { logsData: finalArray.sort((a, b) => b.time - a.time) };
-      });
+    ).then(this.updateLogs);
+  };
+
+  updateLogs = robotLogs => {
+    const newLogs = robotLogs.reduce((storedLogs, robotLogArray) => {
+      return [...storedLogs, ...robotLogArray];
+    }, []);
+
+    this.setState(prevState => {
+      const logsData = _uniqWith([...prevState.logsData, ...newLogs], _isEqual)
+        .sort((a, b) => b.time - a.time)
+        .slice(0, this.state.limit);
+
+      if (this.state.requestManuallyChanged) {
+        this.resetLogsTimeout();
+        this.getLogs(prevState.selectedRobots);
+      } else {
+        if (
+          !(
+            this.state.selectedToDate &&
+            this.state.selectedToDate < this.state.requestTimestamp
+          )
+        ) {
+          this.setState({ requestTimestamp: new Date() }, () => {
+            this.logsTimeout = setTimeout(
+              this.getLogs,
+              3000,
+              prevState.selectedRobots
+            );
+          });
+        }
+      }
+
+      return {
+        logsData,
+        requestManuallyChanged: false,
+        loading: false
+      };
     });
   };
 
@@ -165,8 +237,8 @@ class Logs extends Component {
           this.state.selectedService,
           this.state.serviceList
         )}${getRequestDate(
-          this.state.selectedFromDate?.getTime() || "",
-          this.state.selectedToDate?.getTime() || ""
+          this.state.requestTimestamp || "",
+          this.state.selectedToDate || ""
         )}${getRequestTags(this.state.tags)}${getRequestMessage(
           this.state.messageRegex
         )}`;
@@ -193,32 +265,78 @@ class Logs extends Component {
     this.setState({ levels: event.target.value });
   };
 
-  getHandleLimit = evt => {
-    if (evt.target.value === "") {
-      this.setState({ limit: 0 });
-    } else {
-      this.setState({ limit: evt.target.value });
+  getHandleLimit = event => {
+    this.setState({
+      limit: event.target.value === "" ? DEFAULT_LIMIT : event.target.value
+    });
+  };
+
+  getHandleColumns = event => {
+    // make sure columns are always with the same order
+    const columns = Object.keys(this.props.columnList).filter(elem =>
+      event.target.value.includes(elem)
+    );
+    this.setState({ columns });
+  };
+
+  getHandleDateChange = (newDate, keyToChange) => {
+    this.setState({ [keyToChange]: newDate });
+  };
+
+  getHandleAdvancedMode = () => {
+    // Toggle advanced mode: change the levels
+    const advancedMode = !this.state.advancedMode;
+    this.setState({
+      advancedMode: advancedMode,
+      levelsList: this.state.advancedMode
+        ? this.SIMPLE_LEVELS_LIST
+        : this.ADVANCED_LEVELS_LIST,
+      tags: advancedMode ? [] : [UI_TAG]
+    });
+  };
+
+  handleContainerRef = divElement => {
+    this.divElement = divElement;
+  };
+
+  handleNoRows = () => {
+    return (
+      <Typography variant="h2">
+        {this.state.loading ? (
+          <LogsSkeleton></LogsSkeleton>
+        ) : (
+          <div className={this.props.classes.noRows}>
+            {i18n.t("No matches found")}
+          </div>
+        )}
+      </Typography>
+    );
+  };
+
+  getHandleMessageRegex = text => this.setState({ messageRegex: text });
+
+  addTag = tagText => {
+    const { tags } = this.state;
+    // Don't add tag if it's empty or duplicate
+    if (tagText !== "" && tags.findIndex(elem => elem.label === tagText) < 0) {
+      tags.push({
+        key: findsUniqueKey(tags, "key"),
+        label: tagText
+      });
+      this.setState({ tags });
     }
+  };
+
+  deleteTag = tagToDelete => {
+    const { tags } = this.state;
+    const filteredTags = tags.filter(tag => tag.key !== tagToDelete.key);
+    this.setState({ tags: filteredTags });
   };
 
   render() {
     return (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column"
-        }}
-      >
-        <div
-          style={{
-            flexGrow: "1",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column"
-          }}
-        >
+      <div className={this.props.classes.externalDiv}>
+        <div className={this.props.classes.wrapper}>
           <LogsFilterBar
             selectedRobots={this.state.selectedRobots}
             updateRobotSelection={this.updateRobotSelection}
@@ -232,59 +350,20 @@ class Logs extends Component {
             handleLimit={this.getHandleLimit}
             columns={this.state.columns}
             columnList={this.props.columnList}
-            handleColumns={event => {
-              // make sure columns are always with the same order
-              const columns = Object.keys(this.props.columnList).filter(elem =>
-                event.target.value.includes(elem)
-              );
-              this.setState({ columns });
-            }}
+            handleColumns={this.getHandleColumns}
             tags={this.state.tags}
-            handleAddTag={tagText => {
-              const { tags } = this.state;
-              // Don't add tag if it's empty or duplicate
-              if (
-                tagText !== "" &&
-                tags.findIndex(elem => elem.label === tagText) < 0
-              ) {
-                tags.push({
-                  key: findsUniqueKey(tags, "key"),
-                  label: tagText
-                });
-                this.setState({ tags });
-              }
-            }}
-            handleDeleteTag={tagToDelete => {
-              const { tags } = this.state;
-              const filteredTags = tags.filter(
-                tag => tag.key !== tagToDelete.key
-              );
-              this.setState({ tags: filteredTags });
-            }}
+            handleAddTag={this.addTag}
+            handleDeleteTag={this.deleteTag}
             messageRegex={this.state.messageRegex}
-            handleMessageRegex={text => this.setState({ messageRegex: text })}
+            handleMessageRegex={this.getHandleMessageRegex}
             selectedFromDate={this.state.selectedFromDate}
             selectedToDate={this.state.selectedToDate}
-            handleDateChange={(newDate, keyToChange) => {
-              this.setState({ [keyToChange]: newDate });
-            }}
+            handleDateChange={this.getHandleDateChange}
             advancedMode={this.state.advancedMode}
-            handleAdvancedMode={evt => {
-              // Toggle advanced mode: change the levels
-              const advancedMode = !this.state.advancedMode;
-              this.setState({
-                advancedMode: advancedMode,
-                levelsList: this.state.advancedMode
-                  ? this.simpleLevelsList
-                  : this.advancedLevelsList,
-                tags: advancedMode ? [] : [UI_TAG]
-              });
-            }}
+            handleAdvancedMode={this.getHandleAdvancedMode}
           ></LogsFilterBar>
           <div
-            ref={divElement => {
-              this.divElement = divElement;
-            }}
+            ref={this.handleContainerRef}
             className={this.props.classes.tableContainer}
           >
             <LogsTable
@@ -294,12 +373,13 @@ class Logs extends Component {
               height={this.state.height}
               levelsList={this.state.levelsList}
               onRowClick={this.onRowClick}
+              noRowsRenderer={this.handleNoRows}
             ></LogsTable>
           </div>
         </div>
         <RobotLogModal
           ref={this.logModal}
-          props={["module", "service"]}
+          props={ROBOT_LOG_TYPE}
         ></RobotLogModal>
       </div>
     );

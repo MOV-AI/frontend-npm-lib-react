@@ -48,8 +48,18 @@ const useStyles = makeStyles(theme => {
 });
 
 const MuiVirtualizedTable = props => {
-  const { columns, rowHeight, headerHeight, onRowClick, ...tableProps } = props;
+  const {
+    columns,
+    rowHeight,
+    noRowsRenderer,
+    headerHeight,
+    onRowClick,
+    ...tableProps
+  } = props;
   const classes = useStyles();
+
+  const isNumericColumn = columnIndex =>
+    columnIndex != null && columns[columnIndex]?.numeric;
 
   const getRowClassName = ({ index }) => {
     const { data } = props;
@@ -64,23 +74,21 @@ const MuiVirtualizedTable = props => {
     );
   };
 
-  const cellRenderer = render => ({ cellData, columnIndex }) => {
-    return (
-      <TableCell
-        component="div"
-        className={`${classes.tableCell} ${classes.flexContainer}`}
-        variant="body"
-        style={{ height: rowHeight }}
-        align={
-          (columnIndex != null && columns[columnIndex].numeric) || false
-            ? "right"
-            : "left"
-        }
-      >
-        {render ? render(cellData) : cellData}
-      </TableCell>
-    );
-  };
+  const cellRenderer =
+    render =>
+    ({ cellData, columnIndex }) => {
+      return (
+        <TableCell
+          component="div"
+          className={`${classes.tableCell} ${classes.flexContainer}`}
+          variant="body"
+          style={{ height: rowHeight }}
+          align={isNumericColumn(columnIndex) || false ? "right" : "left"}
+        >
+          {render ? render(cellData) : cellData}
+        </TableCell>
+      );
+    };
 
   const headerRenderer = ({ label, columnIndex }) => {
     return (
@@ -93,7 +101,7 @@ const MuiVirtualizedTable = props => {
         )}
         variant="head"
         style={{ height: headerHeight }}
-        align={columns[columnIndex].numeric || false ? "right" : "left"}
+        align={isNumericColumn(columnIndex) ? "right" : "left"}
       >
         <span>{label}</span>
       </TableCell>
@@ -106,6 +114,7 @@ const MuiVirtualizedTable = props => {
         <Table
           height={height}
           width={width}
+          noRowsRenderer={noRowsRenderer}
           onRowClick={onRowClick}
           rowHeight={rowHeight}
           gridStyle={{
@@ -152,6 +161,7 @@ export default function LogsTable(props) {
       data={props.logsData}
       columns={props.columns.map(elem => props.columnList[elem])}
       onRowClick={props.onRowClick}
+      noRowsRenderer={props.noRowsRenderer}
     />
   );
 }
