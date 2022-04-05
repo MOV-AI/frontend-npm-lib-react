@@ -19,10 +19,12 @@ import i18n from "../../i18n/i18n.js";
 import ResetPasswordModal from "./ResetPassword";
 
 const ProfileMenu = props => {
-  const user = useMemo(() => new User(), []);
-  const classes = profileMenuStyles();
+  // State hooks
   const [anchorEl, setAnchorEl] = useState(null);
   const [username, setUsername] = useState("");
+  // Other hooks
+  const user = useMemo(() => new User(), []);
+  const classes = profileMenuStyles();
   // Refs
   const resetModalRef = useRef();
   // Props
@@ -65,6 +67,13 @@ const ProfileMenu = props => {
     resetModalRef.current.open();
     handleClose();
   }, [handleClose]);
+
+  /*
+   * Handle Logout click
+   */
+  const handleLogoutClick = useCallback(() => {
+    handleLogout();
+  }, []);
 
   //========================================================================================
   /*                                                                                      *
@@ -125,7 +134,7 @@ const ProfileMenu = props => {
           )}
           <MenuItem
             className={(classes.menuItemSpacing, classes.cursorPointer)}
-            onClick={handleLogout}
+            onClick={handleLogoutClick}
           >
             {logoutLabel}
           </MenuItem>
