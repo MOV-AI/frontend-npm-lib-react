@@ -18,7 +18,7 @@ const advancedLoginStyles = makeStyles(advancedSectionStyles);
 
 const LoginFormAdvanced = props => {
   const classes = advancedLoginStyles();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   return (
     <div classes={classes.container}>
