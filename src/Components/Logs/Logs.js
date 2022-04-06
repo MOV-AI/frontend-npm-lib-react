@@ -67,8 +67,8 @@ class Logs extends Component {
     limit: DEFAULT_LIMIT,
     logsData: [],
     messageRegex: "",
-    requestManuallyChanged: false,
-    requestTimestamp: null,
+    requestChanged: false,
+    currentTimestamp: null,
     selectedFromDate: null,
     selectedToDate: null,
     columns: DEFAULT_SELECTED_COLUMNS,
@@ -97,9 +97,9 @@ class Logs extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.queryParameterChanged(prevState)) {
       this.setState({
-        requestManuallyChanged: true,
+        requestChanged: true,
         loading: true,
-        requestTimestamp: this.state.selectedFromDate,
+        currentTimestamp: this.state.selectedFromDate,
         logsData: []
       });
 
@@ -189,29 +189,28 @@ class Logs extends Component {
         .sort((a, b) => b.time - a.time)
         .slice(0, this.state.limit);
 
-      if (this.state.requestManuallyChanged) {
+      if (this.state.requestChanged) {
         this.resetLogsTimeout();
         this.getLogs(prevState.selectedRobots);
-      } else {
-        if (
-          !(
-            this.state.selectedToDate &&
-            this.state.selectedToDate < this.state.requestTimestamp
-          )
-        ) {
-          this.setState({ requestTimestamp: new Date() }, () => {
-            this.logsTimeout = setTimeout(
-              this.getLogs,
-              3000,
-              prevState.selectedRobots
-            );
-          });
-        }
+      } else if (
+        !(
+          this.state.selectedToDate &&
+          this.state.selectedToDate <
+            (this.state.requestTimestamp || new Date())
+        )
+      ) {
+        this.setState({ currentTimestamp: new Date() }, () => {
+          this.logsTimeout = setTimeout(
+            this.getLogs,
+            3000,
+            prevState.selectedRobots
+          );
+        });
       }
 
       return {
         logsData,
-        requestManuallyChanged: false,
+        requestChanged: false,
         loading: false
       };
     });
@@ -237,7 +236,7 @@ class Logs extends Component {
           this.state.selectedService,
           this.state.serviceList
         )}${getRequestDate(
-          this.state.requestTimestamp || "",
+          this.state.currentTimestamp || "",
           this.state.selectedToDate || ""
         )}${getRequestTags(this.state.tags)}${getRequestMessage(
           this.state.messageRegex
@@ -429,7 +428,7 @@ Logs.defaultProps = {
     Date: {
       label: "Date",
       dataKey: "time",
-      width: 100,
+      width: 110,
       render: time => getJustDateFromServer(time)
     },
     Time: {
@@ -446,7 +445,7 @@ Logs.defaultProps = {
     Module: {
       label: "Module",
       dataKey: "module",
-      width: 100
+      width: 150
     },
     Robot: {
       label: "Robot",
