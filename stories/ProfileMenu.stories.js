@@ -122,7 +122,7 @@ export default {
 export const profileMenu = args => {
   return (
     <ThemeProvider theme={Themes["dark"]}>
-      <ProfileMenu {...args} />
+      <ProfileMenu {...args} handleToggleTheme={() => {}} />
     </ThemeProvider>
   );
 };
