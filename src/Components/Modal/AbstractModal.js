@@ -39,16 +39,10 @@ const AbstractModal = props => {
   //========================================================================================
 
   /**
-   * Handle modal close
-   */
-  const handleClose = useCallback(() => {
-    onCancel();
-  }, [onCancel]);
-
-  /**
    * Handle Submit button click
    */
   const handleSubmit = useCallback(() => {
+    // TODO: check what is causing this workaround - FP-1648
     const debounceSubmit = _debounce(() => {
       onSubmit();
     }, 50);
@@ -78,7 +72,7 @@ const AbstractModal = props => {
     <Modal
       onKeyPress={handleKeyPress}
       open={open}
-      onClose={handleClose}
+      onClose={onCancel}
       className={classes.root}
     >
       <Card
@@ -94,7 +88,7 @@ const AbstractModal = props => {
           <Typography
             component="div"
             className={classes.closeButton}
-            onClick={handleClose}
+            onClick={onCancel}
           >
             <CloseIcon></CloseIcon>
           </Typography>
@@ -117,7 +111,7 @@ const AbstractModal = props => {
           {hasCancelButton && (
             <Button
               color={cancelColor}
-              onClick={handleClose}
+              onClick={onCancel}
               disabled={disableActions}
             >
               {cancelText}

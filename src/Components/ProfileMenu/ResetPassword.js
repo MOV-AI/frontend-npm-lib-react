@@ -205,14 +205,12 @@ const ResetPasswordModal = forwardRef((props, ref) => {
   /**
    * Handle change inputs
    * @param {Event} event : Change event
-   * @param {string} name : Input name
    */
-  const handleChange = useCallback(name => {
-    return event => {
-      event.persist();
-      setForm(prevState => ({ ...prevState, [name]: event.target.value }));
-      touchRef.current[name] = true;
-    };
+  const handleChange = useCallback(event => {
+    const name = event.target.id;
+    event.persist();
+    setForm(prevState => ({ ...prevState, [name]: event.target.value }));
+    touchRef.current[name] = true;
   }, []);
 
   /**
@@ -226,12 +224,14 @@ const ResetPasswordModal = forwardRef((props, ref) => {
 
     // Validate form
     const validation = validateRequiredFields(form);
+    // If validation pass
     if (Object.values(validation).every(val => val === false)) {
       // Submit request to update password
       changePassword().then(res => {
         if (res.success) handleCancel();
       });
     } else {
+      // Show validation errors
       setErrors(validation);
     }
   }, [form]);
@@ -289,7 +289,8 @@ const ResetPasswordModal = forwardRef((props, ref) => {
                 label={t("Current Password")}
                 autoFocus={true}
                 className={classes.input}
-                onChange={handleChange(FORM_FIELDS.CURRENT_PASSWORD)}
+                id={FORM_FIELDS.CURRENT_PASSWORD}
+                onChange={handleChange}
                 variant="outlined"
               />
             )}
@@ -298,7 +299,8 @@ const ResetPasswordModal = forwardRef((props, ref) => {
               autocomplete="off"
               label={t("New Password")}
               className={classes.input}
-              onChange={handleChange(FORM_FIELDS.NEW_PASSWORD)}
+              id={FORM_FIELDS.NEW_PASSWORD}
+              onChange={handleChange}
               variant="outlined"
               required
               error={errors.newPassword}
@@ -308,7 +310,8 @@ const ResetPasswordModal = forwardRef((props, ref) => {
               autocomplete="off"
               label={t("Confirm Password")}
               className={classes.input}
-              onChange={handleChange(FORM_FIELDS.CONFIRM_PASSWORD)}
+              id={FORM_FIELDS.CONFIRM_PASSWORD}
+              onChange={handleChange}
               variant="outlined"
               required
               error={errors.confirmPassword}
