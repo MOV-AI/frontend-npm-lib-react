@@ -228,7 +228,7 @@ LoginForm.defaultProps = {
   authenticationProviders: [],
   logo: defaultLogo,
   permissionErrors: "",
-  setLoggedIn: loggedIn => console.log(loggedIn)
+  setLoggedIn: loggedIn => console.warn("setLoggedIn: ", loggedIn)
 };
 
 export default withStyles(styles, { withTheme: true })(LoginForm);
