@@ -148,6 +148,11 @@ export default function withAuthentication(Component, appName) {
             }));
             authenticate();
           }}
+          setLoading={value => {
+            setState({
+              loading: value
+            });
+          }}
         />
       );
     };

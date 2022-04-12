@@ -36,6 +36,7 @@ class LoginForm extends Component {
   sendCreds = async () => {
     if (!this.state.password) return;
     try {
+      this.props.setLoading(true);
       const apiResponse = await Authentication.login(
         this.state.username,
         this.state.password,
