@@ -117,12 +117,14 @@ const ProfileMenu = props => {
             </MenuItem>
           ))}
           <Divider variant="middle" />
-          <MenuItem
-            className={classes.menuItemSpacing}
-            onClick={handlePasswordReset}
-          >
-            {i18n.t("Change Password")}
-          </MenuItem>
+          {user.isInternalUser() && (
+            <MenuItem
+              className={classes.menuItemSpacing}
+              onClick={handlePasswordReset}
+            >
+              {i18n.t("Change Password")}
+            </MenuItem>
+          )}
           {handleToggleTheme && (
             <div className={classes.menuItemSpacing}>
               {darkThemeLabel}
