@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import { useTranslation } from "react-i18next";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
@@ -77,14 +78,15 @@ const useStyles = makeStyles(theme => ({
   columnsFilter: {
     display: "flex",
     flexDirection: "column",
-    marginTop: 6
+    marginTop: "6px"
   },
   iconButton: {
     color: "#0B6A8A",
     "&:hover": {
       color: "#22c7ff"
     }
-  }
+  },
+  iconAdornment: { marginRight: "15px" }
 }));
 
 const LogsFilterBar = props => {
@@ -99,21 +101,6 @@ const LogsFilterBar = props => {
   const getRobotSelector = () => {
     return (
       <div className={classes.toggleContainer}>
-        <svg
-          width="20"
-          height="18"
-          viewBox="0 0 30 27"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ paddingTop: "5px", paddingRight: "5px" }}
-        >
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M16.7753 1.35706L15.9587 2.61119L16.3648 2.87846L18.4001 4.18898L17.1052 6.20016H25.437C26.5487 6.20016 27.45 7.10137 27.45 8.21307V12.8244H28.0955C28.6514 12.8244 29.102 13.275 29.102 13.8308V16.0643C29.102 16.6201 28.6514 17.0707 28.0955 17.0707H27.45V21.2901C27.45 22.4018 26.5487 23.303 25.437 23.303H4.12161C3.00991 23.303 2.1087 22.4017 2.1087 21.29V17.0707H1.42467C0.868819 17.0707 0.418213 16.6201 0.418213 16.0643V13.8308C0.418213 13.275 0.868819 12.8244 1.42467 12.8244H2.1087V8.21307C2.1087 7.10137 3.00991 6.20016 4.12161 6.20016H13.5141L14.8252 4.16395L13.2875 3.15192L13.2966 3.13812L13.2875 3.1322L15.1377 0.290771L16.7753 1.35706ZM24.4306 9.21953H5.12807V20.2836H24.4306V9.21953ZM7.18098 12.1324C6.68518 12.1324 6.28325 12.5343 6.28325 13.0301C6.28325 13.5259 6.68518 13.9278 7.18098 13.9278H9.04635C9.54216 13.9278 9.94409 13.5259 9.94409 13.0301C9.94409 12.5343 9.54216 12.1324 9.04635 12.1324H7.18098ZM20.6901 12.1324C20.1943 12.1324 19.7924 12.5343 19.7924 13.0301C19.7924 13.5259 20.1943 13.9278 20.6901 13.9278H22.5555C23.0513 13.9278 23.4532 13.5259 23.4532 13.0301C23.4532 12.5343 23.0513 12.1324 22.5555 12.1324H20.6901ZM9.17669 17.6512H11.3239V19.253H9.17669V17.6512ZM14.3432 17.6513H12.196V19.253H14.3432V17.6513ZM15.2154 17.6513H17.3626V19.253H15.2154V17.6513ZM20.382 17.6513H18.2348V19.253H20.382V17.6513ZM10.9568 23.69H18.6019V25.7029C18.6019 26.2587 18.1513 26.7093 17.5954 26.7093H11.9632C11.4074 26.7093 10.9568 26.2587 10.9568 25.7029V23.69Z"
-            fill="#9E9E9E"
-          />
-        </svg>
         <FormControl className={classes.formControl}>
           <Select
             labelId="select-label"
@@ -130,11 +117,11 @@ const LogsFilterBar = props => {
                 : selectedNames.join(" , ");
             }}
             input={<Input />}
+            startAdornment={
+              <i className={`fas fa-robot ${classes.iconAdornment}`}></i>
+            }
             MenuProps={MenuProps}
           >
-            {/* <MenuItem key={`robotList-Default`} value={robotDefault}>
-              Default
-            </MenuItem> */}
             {props.selectedRobots.map((robot, robotIndex) => {
               return (
                 <MenuItem key={`robotList-${robotIndex}`} value={robot.id}>
@@ -150,16 +137,17 @@ const LogsFilterBar = props => {
   };
 
   const getSearchInput = () => {
+    const { t } = useTranslation();
+
     return (
       <TextField
         className={classes.searchText}
-        label=""
-        placeholder="Search (regex)"
+        placeholder={t("Search")}
         value={props.messageRegex}
         onChange={evt => props.handleMessageRegex(evt.target.value)}
         InputProps={{
           startAdornment: (
-            <InputAdornment style={{ paddingRight: 8 }}>
+            <InputAdornment className={classes.iconAdornment} position="start">
               <SearchIcon fontSize="small" />
             </InputAdornment>
           ),
@@ -276,7 +264,7 @@ const LogsFilterBar = props => {
             label="Add Tag"
             InputProps={{
               endAdornment: (
-                <InputAdornment>
+                <InputAdornment position="end">
                   <IconButton
                     onClick={() => {
                       props.handleAddTag(tagText);

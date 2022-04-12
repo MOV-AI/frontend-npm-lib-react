@@ -19,6 +19,7 @@ import Style from "./src/styles/Style";
 import Logs from "./src/Components/Logs/Logs";
 import LoginForm from "./src/Components/LoginForm/LoginForm";
 import ProfileMenu from "./src/Components/ProfileMenu/ProfileMenu";
+import ResetPasswordModal from "./src/Components/ProfileMenu/ResetPassword";
 import FilterIcon from "./src/Components/Logs/LogsFilterBar/FiltersIcon/FiltersIcon";
 import SelectScopeModal from "./src/Components/Modal/SelectScopeModal";
 import HTMLPopper from "./src/Components/Popper/HTMLPopper";
@@ -54,5 +55,6 @@ export {
   FilterIcon,
   LoginForm,
   ProfileMenu,
+  ResetPasswordModal,
   HTMLPopper
 };
