@@ -13,20 +13,24 @@ export default function withAuthentication(Component, appName) {
     const [state, setState] = useState({
       loading: true,
       loggedIn: false,
-      hasPermissions: false
+      hasPermissions: false,
+      currentUser: {},
+      errorMessage: ""
     });
     const [authenticationProviders, setAuthenticationProviders] = useState([]);
 
     const authenticate = useCallback(() => {
       const user = new User();
-
       Promise.all([
         Authentication.checkLogin(),
         new Promise(resolve => setTimeout(resolve, 2000)),
-        user.getAllowedApps(),
-        user.isSuperUser()
+        user.getCurrentUserWithPermissions()
       ])
-        .then(([loggedIn, _, apps, isSuperUser]) => {
+        .then(([loggedIn, _, user]) => {
+          const {
+            Resources: { Applications: apps },
+            Superuser: isSuperUser
+          } = user;
           const hasPermissions =
             isSuperUser || apps.includes(appName) || !appName;
 
@@ -37,14 +41,16 @@ export default function withAuthentication(Component, appName) {
           setState({
             loading: false,
             loggedIn,
-            hasPermissions
+            hasPermissions,
+            currentUser: user
           });
         })
         .catch(e => {
           setState({
             loggedIn: false,
             loading: false,
-            hasPermissions: false
+            hasPermissions: false,
+            errorMessage: e?.statusText ?? ""
           });
         });
     }, []);
@@ -133,8 +139,13 @@ export default function withAuthentication(Component, appName) {
       ) : (
         <LoginForm
           authenticationProviders={authenticationProviders}
+          permissionErrors={state.errorMessage}
           setLoggedIn={value => {
-            setState(prevState => ({ ...prevState, loading: true }));
+            setState(prevState => ({
+              ...prevState,
+              loading: true,
+              errorMessage: ""
+            }));
             authenticate();
           }}
         />
@@ -172,6 +183,7 @@ export default function withAuthentication(Component, appName) {
         ) : state.hasPermissions ? (
           <React.Fragment>
             <Component
+              currentUser={state.currentUser}
               handleLogOut={handleLogOut}
               loggedIn={state.loggedIn}
               {...props}
