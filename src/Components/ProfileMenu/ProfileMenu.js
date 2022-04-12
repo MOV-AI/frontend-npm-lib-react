@@ -1,4 +1,10 @@
-import React, { useState, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef
+} from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -7,18 +13,23 @@ import PropTypes from "prop-types";
 import Toggle from "../Toggle";
 import { profileMenuStyles } from "./styles";
 import Divider from "@material-ui/core/Divider";
+import { User } from "@mov-ai/mov-fe-lib-core";
 import { Typography, Tooltip } from "@material-ui/core";
 import i18n from "../../i18n/i18n.js";
+import ResetPasswordModal from "./ResetPassword";
 
 const ProfileMenu = props => {
   // State hooks
   const [anchorEl, setAnchorEl] = useState(null);
+  const [username, setUsername] = useState("");
   // Other hooks
+  const user = useMemo(() => new User(), []);
   const classes = profileMenuStyles();
+  // Refs
+  const resetModalRef = useRef();
   // Props
   const {
     welcomeLabel,
-    userName,
     extraItems,
     handleToggleTheme,
     darkThemeLabel,
@@ -50,11 +61,31 @@ const ProfileMenu = props => {
   }, []);
 
   /**
+   * Open Password Reset modal
+   */
+  const handlePasswordReset = useCallback(() => {
+    resetModalRef.current.open();
+    handleClose();
+  }, [handleClose]);
+
+  /*
    * Handle Logout click
    */
   const handleLogoutClick = useCallback(() => {
     handleLogout();
   }, []);
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                    React Lifecycle                                   *
+   *                                                                                      */
+  //========================================================================================
+
+  // On component mount
+  useEffect(() => {
+    // Set authenticated user name
+    setUsername(user.getUsername());
+  }, [user]);
 
   //========================================================================================
   /*                                                                                      *
@@ -77,7 +108,7 @@ const ProfileMenu = props => {
       >
         <Typography component="div" variant="body1">
           <div className={classes.menuItemSpacing}>
-            {welcomeLabel}, {userName}
+            {welcomeLabel}, {username}
           </div>
           <Divider variant="middle" />
           {extraItems?.map(item => (
@@ -86,6 +117,12 @@ const ProfileMenu = props => {
             </MenuItem>
           ))}
           <Divider variant="middle" />
+          <MenuItem
+            className={classes.menuItemSpacing}
+            onClick={handlePasswordReset}
+          >
+            {i18n.t("Change Password")}
+          </MenuItem>
           {handleToggleTheme && (
             <div className={classes.menuItemSpacing}>
               {darkThemeLabel}
@@ -109,12 +146,16 @@ const ProfileMenu = props => {
           </div>
         </Typography>
       </Menu>
+      {/* Password Modal */}
+      <ResetPasswordModal
+        ref={resetModalRef}
+        variant="change"
+      ></ResetPasswordModal>
     </div>
   );
 };
 ProfileMenu.propTypes = {
   welcomeLabel: PropTypes.string,
-  userName: PropTypes.string,
   darkThemeLabel: PropTypes.string,
   logoutLabel: PropTypes.string,
   version: PropTypes.string,
@@ -126,7 +167,6 @@ ProfileMenu.propTypes = {
 
 ProfileMenu.defaultProps = {
   welcomeLabel: "Hello",
-  userName: "User",
   darkThemeLabel: "Dark Theme",
   logoutLabel: "Logout",
   version: "",
