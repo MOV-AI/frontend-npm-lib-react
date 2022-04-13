@@ -14,3 +14,18 @@ export const profileMenuStyles = makeStyles(theme => {
     }
   };
 });
+
+export const resetPasswordStyles = makeStyles(theme => ({
+  root: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  input: {
+    fontSize: "13px",
+    margin: "10px"
+  },
+  formGroup: {
+    display: "flex",
+    flexFlow: "column"
+  }
+}));

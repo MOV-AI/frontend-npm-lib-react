@@ -1,4 +1,3 @@
-import React from "react";
 import _isEmpty from "lodash/isEmpty";
 
 // export const levels = [
