@@ -14,14 +14,17 @@ import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import PropTypes from "prop-types";
 import LoginFormAdvanced from "./LoginFormAdvanced";
 
+const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
+
 class LoginForm extends Component {
   state = {
     username: "",
     password: "",
     remember: false,
-    errorMessage: "",
     capsLockOn: false,
-    selectedProvider: Authentication.DEFAULT_PROVIDER
+    selectedProvider:
+      localStorage.getItem(SELECTED_DOMAIN_KEY) ||
+      Authentication.DEFAULT_PROVIDER
   };
 
   //========================================================================================
@@ -48,14 +51,10 @@ class LoginForm extends Component {
         this.props.setLoggedIn(true);
       } else {
         // Show the error in red
-        this.setState({
-          errorMessage: apiResponse.error
-        });
+        this.props.setErrorMessage(apiResponse.error);
       }
     } catch (e) {
-      this.setState({
-        errorMessage: e
-      });
+      this.props.setErrorMessage(e);
     }
   };
 
@@ -76,6 +75,7 @@ class LoginForm extends Component {
     this.setState({
       selectedProvider: e.target.value
     });
+    localStorage.setItem(SELECTED_DOMAIN_KEY, e.target.value);
   };
 
   //========================================================================================
@@ -100,10 +100,9 @@ class LoginForm extends Component {
     const isEmptyPassword = event.target.value === "";
     const errorMessage = isEmptyPassword ? "Password is required" : "";
     this.setState({
-      password: event.target.value,
-      error: isEmptyPassword,
-      errorMessage
+      password: event.target.value
     });
+    errorMessage && this.props.setErrorMessage(errorMessage);
   };
 
   /**
@@ -124,12 +123,10 @@ class LoginForm extends Component {
   //========================================================================================
 
   render() {
-    const { classes, logo, authenticationProviders, permissionErrors } =
-      this.props;
+    const { classes, logo, authenticationProviders, errorMessage } = this.props;
     const showAdvancedSection =
       authenticationProviders?.length > 1 &&
       authenticationProviders.some(ap => ap != Authentication.DEFAULT_PROVIDER);
-    const invalidLoginMessage = this.state.errorMessage || permissionErrors;
     return (
       <Grid
         className={classes.container}
@@ -150,7 +147,7 @@ class LoginForm extends Component {
             <Typography align="center" variant="subtitle1" gutterBottom>
               <FormControl
                 className={classes.formControl}
-                error={!!invalidLoginMessage}
+                error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-username-error">
                   Username
@@ -168,7 +165,7 @@ class LoginForm extends Component {
             <Typography align="center" variant="subtitle1" gutterBottom>
               <FormControl
                 className={classes.formControl}
-                error={!!invalidLoginMessage}
+                error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-password-error">
                   Password
@@ -182,9 +179,9 @@ class LoginForm extends Component {
                   onChange={this.onChangePassword}
                   onKeyUp={this.onKeyUpPassword}
                 />
-                {invalidLoginMessage && (
+                {errorMessage && (
                   <FormHelperText id="component-error-text">
-                    {invalidLoginMessage}
+                    {errorMessage}
                   </FormHelperText>
                 )}
                 {this.state.capsLockOn && (

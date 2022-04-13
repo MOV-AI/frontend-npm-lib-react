@@ -11,16 +11,17 @@ export default function withAuthentication(Component, appName) {
 
     const firstRender = useRef(true);
     const [state, setState] = useState({
-      loading: true,
       loggedIn: false,
       hasPermissions: false,
-      currentUser: {},
-      errorMessage: ""
+      currentUser: {}
     });
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const [authenticationProviders, setAuthenticationProviders] = useState([]);
 
     const authenticate = useCallback(() => {
       const user = new User();
+      setLoading(true);
       Promise.all([
         Authentication.checkLogin(),
         new Promise(resolve => setTimeout(resolve, 2000)),
@@ -39,7 +40,6 @@ export default function withAuthentication(Component, appName) {
           }
 
           setState({
-            loading: false,
             loggedIn,
             hasPermissions,
             currentUser: user
@@ -48,11 +48,10 @@ export default function withAuthentication(Component, appName) {
         .catch(e => {
           setState({
             loggedIn: false,
-            loading: false,
-            hasPermissions: false,
-            errorMessage: e?.statusText ?? ""
+            hasPermissions: false
           });
-        });
+        })
+        .finally(_ => setLoading(false));
     }, []);
 
     /**
@@ -134,24 +133,22 @@ export default function withAuthentication(Component, appName) {
      * @returns React Component
      */
     const handleFirstRender = () => {
-      return state.loading ? (
+      console.log("errorMessage: ", errorMessage);
+      return loading ? (
         renderLoading()
       ) : (
         <LoginForm
           authenticationProviders={authenticationProviders}
-          permissionErrors={state.errorMessage}
+          errorMessage={errorMessage}
           setLoggedIn={value => {
-            setState(prevState => ({
-              ...prevState,
-              loading: true,
-              errorMessage: ""
-            }));
             authenticate();
           }}
           setLoading={value => {
-            setState({
-              loading: value
-            });
+            setLoading(value);
+          }}
+          setErrorMessage={errorMessage => {
+            setErrorMessage(errorMessage);
+            setLoading(false);
           }}
         />
       );
