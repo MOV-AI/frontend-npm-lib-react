@@ -133,7 +133,6 @@ export default function withAuthentication(Component, appName) {
      * @returns React Component
      */
     const handleFirstRender = () => {
-      console.log("errorMessage: ", errorMessage);
       return loading ? (
         renderLoading()
       ) : (
