@@ -92,6 +92,7 @@ const Alert = props => {
 
   return (
     <div
+      data-testid="section_alert"
       className={clsx(
         classes.root,
         classes[`${variant}${capitalize(color || severity)}`],
@@ -100,7 +101,7 @@ const Alert = props => {
       {...other}
     >
       {icon !== false ? (
-        <div className={classes.icon}>
+        <div data-testid="output_icon" className={classes.icon}>
           {icon || iconMapping[severity] || defaultIconMapping[severity]}
         </div>
       ) : null}
@@ -109,6 +110,7 @@ const Alert = props => {
       {action == null && onClose ? (
         <div className={classes.action}>
           <IconButton
+            inputProps={{ "data-testid": "input_button" }}
             size="small"
             aria-label={closeText}
             title={closeText}

@@ -23,7 +23,9 @@ const HTMLPopper = props => {
       <Paper>
         <React.Fragment>
           <div className={classes.transitionIn}>
-            <div className={classes.childWrapper}>{children}</div>
+            <div data-testid="section_wrapper" className={classes.childWrapper}>
+              {children}
+            </div>
           </div>
         </React.Fragment>
       </Paper>
@@ -51,11 +53,16 @@ const HTMLPopper = props => {
   //========================================================================================
   return (
     <>
-      <span onClick={handlePopperOpen} ref={anchorPopperRef}>
+      <span
+        data-testid="input_clickable"
+        onClick={handlePopperOpen}
+        ref={anchorPopperRef}
+      >
         {clickableElement}
       </span>
 
       <Popper
+        data-testid="section_popper"
         className={classes.popper}
         open={openPopper}
         anchorEl={anchorPopperRef.current}
