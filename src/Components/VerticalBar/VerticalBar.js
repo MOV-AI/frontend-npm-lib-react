@@ -14,29 +14,33 @@ const VerticalBar = props => {
   //========================================================================================
 
   return (
-    <div className={classes.container}>
-      <div className={classes.logoArea}>{props.upperElement}</div>
+    <div data-testid="section_vertical-bar" className={classes.container}>
+      <div data-testid="section_logo-wrapper" className={classes.logoArea}>
+        {props.upperElement}
+      </div>
       {props.useDividers && <Divider className={classes.divider} />}
       {props.creatorElement && (
         <>
-          <div className={classes.logoArea}>{props.creatorElement}</div>
+          <div data-testid="section_logo-area" className={classes.logoArea}>
+            {props.creatorElement}
+          </div>
           {props.useDividers && <Divider className={classes.divider} />}
         </>
       )}
-      <div className={classes.navigationArea}>
+      <div data-testid="section_navigation" className={classes.navigationArea}>
         {props.navigationList.map((element, index) => {
           return (
             <div key={index}>
-              <div className={classes.navigationItem}>
-                {element}
-              </div>
+              <div className={classes.navigationItem}>{element}</div>
               {props.useDividers && <Divider className={classes.divider} />}
             </div>
           );
         })}
       </div>
-      <div className={classes.growArea}></div>
-      <div className={classes.accountArea}>{props.lowerElement}</div>
+      <div data-testid="section_grow" className={classes.growArea}></div>
+      <div data-testid="section_account" className={classes.accountArea}>
+        {props.lowerElement}
+      </div>
     </div>
   );
 };

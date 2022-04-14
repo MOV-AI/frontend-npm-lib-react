@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core";
 
 export const infoButtonStyles = makeStyles(theme => ({
   childWrapper: {
-    padding: "15px",
+    padding: "10px 0",
     top: "auto",
     left: "auto",
     opacity: 1,
