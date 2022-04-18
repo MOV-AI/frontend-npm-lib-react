@@ -32,8 +32,10 @@ const Toggle = props => {
   const classes = useStyles();
   return (
     <FormControlLabel
+      data-testid="section_toggle"
       control={
         <Switch
+          data-testid="input_switch"
           checked={props.toggle}
           onChange={props.onToggle}
           color={props.color}

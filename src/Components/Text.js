@@ -1,9 +1,13 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import PropTypes from "prop-types";
 
 const Text = props => {
-  return <TextField {...props}></TextField>;
+  return (
+    <TextField
+      inputProps={{ "data-testid": "input_textfield" }}
+      {...props}
+    ></TextField>
+  );
 };
 
 Text.propTypes = {};
