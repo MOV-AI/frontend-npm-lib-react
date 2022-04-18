@@ -133,24 +133,7 @@ export default function withAuthentication(Component, appName) {
      * @returns React Component
      */
     const handleFirstRender = () => {
-      return loading ? (
-        renderLoading()
-      ) : (
-        <LoginForm
-          authenticationProviders={authenticationProviders}
-          errorMessage={errorMessage}
-          setLoggedIn={value => {
-            authenticate();
-          }}
-          setLoading={value => {
-            setLoading(value);
-          }}
-          setErrorMessage={errorMessage => {
-            setErrorMessage(errorMessage);
-            setLoading(false);
-          }}
-        />
-      );
+      return loading ? renderLoading() : renderLoginForm();
     };
 
     /**
@@ -160,6 +143,27 @@ export default function withAuthentication(Component, appName) {
     const renderLoading = () => {
       return <LoginPanel message={"Preparing the bots"} progress={true} />;
     };
+
+    /**
+     * renderLoginForm - Renders the login form
+     * @returns React Component
+     */
+    const renderLoginForm = (enableLoading = true) => (
+      <LoginForm
+        authenticationProviders={authenticationProviders}
+        errorMessage={errorMessage}
+        setLoggedIn={value => {
+          authenticate();
+        }}
+        setLoading={value => {
+          enableLoading && setLoading(value);
+        }}
+        setErrorMessage={errorMessage => {
+          setErrorMessage(errorMessage);
+          setLoading(false);
+        }}
+      />
+    );
 
     /**
      * renderNotAuthorized - Renders the not authorized panel
@@ -189,14 +193,7 @@ export default function withAuthentication(Component, appName) {
               loggedIn={state.loggedIn}
               {...props}
             />
-            <Modal open={!state.loggedIn}>
-              <LoginForm
-                authenticationProviders={authenticationProviders}
-                setLoggedIn={value =>
-                  setState(prevState => ({ ...prevState, loggedIn: value }))
-                }
-              />
-            </Modal>
+            <Modal open={!state.loggedIn}>{renderLoginForm(false)}</Modal>
           </React.Fragment>
         ) : (
           renderNotAuthorized()
