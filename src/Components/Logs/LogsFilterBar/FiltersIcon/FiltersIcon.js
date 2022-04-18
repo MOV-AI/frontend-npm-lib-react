@@ -82,6 +82,7 @@ class FilterIcon extends Component {
       <React.Fragment>
         <Tooltip title={tooltip || title}>
           <IconButton
+            data-testid="input_button"
             size="small"
             onClick={this.handleClick}
             disabled={disabled}
@@ -98,6 +99,7 @@ class FilterIcon extends Component {
           className={classes.height}
         >
           <div
+            data-testid="section_filters-icon"
             style={{
               display: "flex",
               flexDirection: "column",
@@ -113,6 +115,7 @@ class FilterIcon extends Component {
               }}
             >
               <Typography
+                data-testid="output_title"
                 component="div"
                 style={{
                   fontSize: "24px",
@@ -129,6 +132,7 @@ class FilterIcon extends Component {
                 }}
               ></Typography>
               <Typography
+                data-testid="input_close"
                 component="div"
                 onClick={this.handleClose}
                 className={classes.icon}
