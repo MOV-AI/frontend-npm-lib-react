@@ -122,9 +122,9 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    */
   const changePassword = async () => {
     const body = {
-      CurrentPassword: form[FORM_FIELDS.CURRENT_PASSWORD],
-      NewPassword: form[FORM_FIELDS.NEW_PASSWORD],
-      ConfirmPassword: form[FORM_FIELDS.CONFIRM_PASSWORD]
+      current_password: form[FORM_FIELDS.CURRENT_PASSWORD],
+      new_password: form[FORM_FIELDS.NEW_PASSWORD],
+      confirm_password: form[FORM_FIELDS.CONFIRM_PASSWORD]
     };
     // Request password update
     setLoading(true);
