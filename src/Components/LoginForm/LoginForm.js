@@ -20,6 +20,7 @@ class LoginForm extends Component {
   state = {
     username: "",
     password: "",
+    formErrors: "",
     remember: false,
     capsLockOn: false,
     selectedProvider:
@@ -38,24 +39,13 @@ class LoginForm extends Component {
    */
   sendCreds = async () => {
     if (!this.state.password) return;
-    try {
-      this.props.setLoading(true);
-      const apiResponse = await Authentication.login(
-        this.state.username,
-        this.state.password,
-        this.state.remember,
-        this.state.selectedProvider
-      );
-      // If successfully logged in
-      if (!apiResponse.error) {
-        this.props.setLoggedIn(true);
-      } else {
-        // Show the error in red
-        this.props.setErrorMessage(apiResponse.error);
-      }
-    } catch (e) {
-      this.props.setErrorMessage(e);
-    }
+    const { username, password, remember, selectedProvider } = this.state;
+    this.props.onLoginSubmit({
+      username,
+      password,
+      remember,
+      selectedProvider
+    });
   };
 
   /**
@@ -102,7 +92,7 @@ class LoginForm extends Component {
     this.setState({
       password: event.target.value
     });
-    errorMessage && this.props.setErrorMessage(errorMessage);
+    this.setState({ formErrors: errorMessage });
   };
 
   /**
@@ -123,10 +113,11 @@ class LoginForm extends Component {
   //========================================================================================
 
   render() {
-    const { classes, logo, authenticationProviders, errorMessage } = this.props;
+    const { classes, logo, domains, authErrorMessage } = this.props;
     const showAdvancedSection =
-      authenticationProviders?.length > 1 &&
-      authenticationProviders.some(ap => ap != Authentication.DEFAULT_PROVIDER);
+      domains?.length > 1 &&
+      domains.some(ap => ap != Authentication.DEFAULT_PROVIDER);
+    const errorMessage = this.state.formErrors || authErrorMessage;
     return (
       <Grid
         className={classes.container}
@@ -197,7 +188,7 @@ class LoginForm extends Component {
               {showAdvancedSection && (
                 <LoginFormAdvanced
                   selectedProvider={this.state.selectedProvider}
-                  providers={authenticationProviders}
+                  domains={domains}
                   onProviderChange={this.handleAuthenticationProviderChange}
                 />
               )}
@@ -215,18 +206,16 @@ class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
-  authenticationProviders: PropTypes.array,
+  domains: PropTypes.array,
   logo: PropTypes.any, // expects a svg element
-  setLoggedIn: PropTypes.func,
   permissionErrors: PropTypes.string,
-  onLoginError: PropTypes.func
+  onLoginSubmit: PropTypes.func
 };
 
 LoginForm.defaultProps = {
-  authenticationProviders: [],
+  domains: [],
   logo: defaultLogo,
-  permissionErrors: "",
-  setLoggedIn: loggedIn => console.warn("setLoggedIn: ", loggedIn)
+  permissionErrors: ""
 };
 
 export default withStyles(styles, { withTheme: true })(LoginForm);

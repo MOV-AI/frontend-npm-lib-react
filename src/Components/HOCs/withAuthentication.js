@@ -15,7 +15,7 @@ export default function withAuthentication(Component, appName) {
       hasPermissions: false,
       currentUser: {}
     });
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const [authenticationProviders, setAuthenticationProviders] = useState([]);
 
@@ -137,6 +137,32 @@ export default function withAuthentication(Component, appName) {
     };
 
     /**
+     * handleLoginSubmit - handle the user login credentials submit
+     * @param {{ username, password, remember, selectedProvider }}
+     */
+    const handleLoginSubmit = async ({
+      username,
+      password,
+      remember,
+      selectedProvider
+    }) => {
+      try {
+        setLoading(true);
+        const apiResponse = await Authentication.login(
+          username,
+          password,
+          remember,
+          selectedProvider
+        );
+        if (apiResponse.error) throw new Error(apiResponse.error);
+        authenticate();
+      } catch (e) {
+        setErrorMessage(e.message);
+        setLoading(false);
+      }
+    };
+
+    /**
      * renderLoading - Renders the loading panel
      * @returns React Component
      */
@@ -148,20 +174,11 @@ export default function withAuthentication(Component, appName) {
      * renderLoginForm - Renders the login form
      * @returns React Component
      */
-    const renderLoginForm = (enableLoading = true) => (
+    const renderLoginForm = () => (
       <LoginForm
-        authenticationProviders={authenticationProviders}
-        errorMessage={errorMessage}
-        setLoggedIn={value => {
-          authenticate();
-        }}
-        setLoading={value => {
-          enableLoading && setLoading(value);
-        }}
-        setErrorMessage={errorMessage => {
-          setErrorMessage(errorMessage);
-          setLoading(false);
-        }}
+        domains={authenticationProviders}
+        authErrorMessage={errorMessage}
+        onLoginSubmit={handleLoginSubmit}
       />
     );
 
@@ -193,7 +210,7 @@ export default function withAuthentication(Component, appName) {
               loggedIn={state.loggedIn}
               {...props}
             />
-            <Modal open={!state.loggedIn}>{renderLoginForm(false)}</Modal>
+            <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
           </React.Fragment>
         ) : (
           renderNotAuthorized()
