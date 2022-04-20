@@ -30,7 +30,7 @@ export default function withAuthentication(Component, appName) {
         .then(([loggedIn, _, user]) => {
           const {
             Resources: { Applications: apps = [] },
-            Superuser: isSuperUser
+            SuperUser: isSuperUser
           } = user;
           const hasPermissions =
             isSuperUser || apps.includes(appName) || !appName;
