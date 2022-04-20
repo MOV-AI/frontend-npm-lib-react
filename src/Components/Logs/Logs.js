@@ -145,13 +145,17 @@ class Logs extends Component {
 
     const messageRegexChanged =
       prevState.messageRegex !== this.state.messageRegex;
+
+    const tagsChanged = prevState.tags !== this.state.tags;
+
     return (
       fromDateChanged ||
       toDateChanged ||
       selectedServiceChanged ||
       messageRegexChanged ||
       limitChanged ||
-      levelsChanged
+      levelsChanged ||
+      tagsChanged
     );
   }
 
@@ -284,21 +288,21 @@ class Logs extends Component {
     this.setState({ [keyToChange]: newDate });
   };
 
-  getHandleAdvancedMode = () => {
+  handleToggleAdvancedMode = () => {
     // Toggle advanced mode: change the levels
-    const advancedMode = !this.state.advancedMode;
-    let levelsList = this.SIMPLE_LEVELS_LIST;
-    let tags = [UI_TAG];
+    this.setState(prevState => {
+      const newAdvancedMode = !prevState.advancedMode;
+      const newState = {
+        advancedMode: newAdvancedMode,
+        levelsList: SIMPLE_LEVELS_LIST,
+        tags: [UI_TAG]
+      };
 
-    if (advancedMode) {
-      levelsList = this.ADVANCED_LEVELS_LIST;
-      tags = [];
-    }
-
-    this.setState({
-      advancedMode,
-      levelsList,
-      tags
+      if (newAdvancedMode) {
+        newState.levelsList = ADVANCED_LEVELS_LIST;
+        newState.tags = [];
+      }
+      return newState;
     });
   };
 
@@ -323,15 +327,22 @@ class Logs extends Component {
   getHandleMessageRegex = text => this.setState({ messageRegex: text });
 
   addTag = tagText => {
-    const { tags } = this.state;
-    // Don't add tag if it's empty or duplicate
-    if (tagText !== "" && tags.findIndex(elem => elem.label === tagText) < 0) {
-      tags.push({
-        key: findsUniqueKey(tags, "key"),
-        label: tagText
-      });
-      this.setState({ tags });
-    }
+    this.setState(prevState => {
+      // Don't add tag if it's empty or duplicate
+      if (
+        tagText !== "" &&
+        prevState.tags.findIndex(elem => elem.label === tagText) < 0
+      ) {
+        const newTags = [
+          ...prevState.tags,
+          {
+            key: findsUniqueKey(prevState.tags, "key"),
+            label: tagText
+          }
+        ];
+        return { tags: newTags };
+      }
+    });
   };
 
   deleteTag = tagToDelete => {
@@ -367,7 +378,7 @@ class Logs extends Component {
             selectedToDate={this.state.selectedToDate}
             handleDateChange={this.getHandleDateChange}
             advancedMode={this.state.advancedMode}
-            handleAdvancedMode={this.getHandleAdvancedMode}
+            handleAdvancedMode={this.handleToggleAdvancedMode}
           ></LogsFilterBar>
           <div
             ref={this.handleContainerRef}
