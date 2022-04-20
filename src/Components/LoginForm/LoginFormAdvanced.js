@@ -23,6 +23,7 @@ const LoginFormAdvanced = props => {
   return (
     <div classes={classes.container}>
       <Button
+        disableRipple
         className={classes.expandCollapseButton}
         endIcon={open ? <ExpandLess /> : <ExpandMore />}
         onClick={() => setOpen(!open)}
