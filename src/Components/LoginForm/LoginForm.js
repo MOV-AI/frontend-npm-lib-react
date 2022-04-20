@@ -79,6 +79,7 @@ class LoginForm extends Component {
    * @param {Event} event : On change event
    */
   onChangeUsername = event => {
+    this.state.username && this.props.onChanges();
     this.setState({ username: event.target.value });
   };
 
@@ -87,12 +88,14 @@ class LoginForm extends Component {
    * @param {Event} event : On change event
    */
   onChangePassword = event => {
-    const isEmptyPassword = event.target.value === "";
+    const password = event.target.value;
+    const isEmptyPassword = password === "";
     const errorMessage = isEmptyPassword ? "Password is required" : "";
+    this.state.password && this.props.onChanges();
     this.setState({
-      password: event.target.value
+      password,
+      formErrors: errorMessage
     });
-    this.setState({ formErrors: errorMessage });
   };
 
   /**
@@ -209,13 +212,16 @@ LoginForm.propTypes = {
   domains: PropTypes.array,
   logo: PropTypes.any, // expects a svg element
   permissionErrors: PropTypes.string,
-  onLoginSubmit: PropTypes.func
+  onLoginSubmit: PropTypes.func,
+  onChanges: PropTypes.func
 };
 
 LoginForm.defaultProps = {
   domains: [],
   logo: defaultLogo,
-  permissionErrors: ""
+  permissionErrors: "",
+  onLoginSubmit: () => {},
+  onChanges: () => {}
 };
 
 export default withStyles(styles, { withTheme: true })(LoginForm);

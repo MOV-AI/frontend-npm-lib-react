@@ -140,27 +140,25 @@ export default function withAuthentication(Component, appName) {
      * handleLoginSubmit - handle the user login credentials submit
      * @param {{ username, password, remember, selectedProvider }}
      */
-    const handleLoginSubmit = async ({
-      username,
-      password,
-      remember,
-      selectedProvider
-    }) => {
-      try {
-        setLoading(true);
-        const apiResponse = await Authentication.login(
-          username,
-          password,
-          remember,
-          selectedProvider
-        );
-        if (apiResponse.error) throw new Error(apiResponse.error);
-        authenticate();
-      } catch (e) {
-        setErrorMessage(e.message);
-        setLoading(false);
-      }
-    };
+    const handleLoginSubmit = useCallback(
+      async ({ username, password, remember, selectedProvider }) => {
+        try {
+          setLoading(true);
+          const apiResponse = await Authentication.login(
+            username,
+            password,
+            remember,
+            selectedProvider
+          );
+          if (apiResponse.error) throw new Error(apiResponse.error);
+          authenticate();
+        } catch (e) {
+          setErrorMessage(e.message);
+          setLoading(false);
+        }
+      },
+      []
+    );
 
     /**
      * renderLoading - Renders the loading panel
@@ -179,6 +177,7 @@ export default function withAuthentication(Component, appName) {
         domains={authenticationProviders}
         authErrorMessage={errorMessage}
         onLoginSubmit={handleLoginSubmit}
+        onChanges={setErrorMessage}
       />
     );
 
