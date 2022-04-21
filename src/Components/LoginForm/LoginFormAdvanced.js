@@ -23,10 +23,11 @@ const LoginFormAdvanced = props => {
   return (
     <div classes={classes.container}>
       <Button
+        disableRipple
         className={classes.expandCollapseButton}
         endIcon={open ? <ExpandLess /> : <ExpandMore />}
         onClick={() => setOpen(!open)}
-        disabled={!props.providers?.length}
+        disabled={!props.domains?.length}
       >
         <InputLabel className={classes.label}>Advanced</InputLabel>
       </Button>
@@ -52,7 +53,7 @@ const LoginFormAdvanced = props => {
                   onChange={props.onProviderChange}
                   disabled={false}
                 >
-                  {props.providers.map(name => (
+                  {props.domains.map(name => (
                     <MenuItem key={name} value={name}>
                       {name}
                     </MenuItem>
@@ -69,7 +70,7 @@ const LoginFormAdvanced = props => {
 
 LoginFormAdvanced.propTypes = {
   selectedProvider: PropTypes.string,
-  providers: PropTypes.array,
+  domains: PropTypes.array,
   onProviderChange: PropTypes.func
 };
 

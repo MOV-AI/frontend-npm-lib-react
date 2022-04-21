@@ -11,16 +11,17 @@ export default function withAuthentication(Component, appName) {
 
     const firstRender = useRef(true);
     const [state, setState] = useState({
-      loading: true,
       loggedIn: false,
       hasPermissions: false,
-      currentUser: {},
-      errorMessage: ""
+      currentUser: {}
     });
+    const [loading, setLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState("");
     const [authenticationProviders, setAuthenticationProviders] = useState([]);
 
     const authenticate = useCallback(() => {
       const user = new User();
+      setLoading(true);
       Promise.all([
         Authentication.checkLogin(),
         new Promise(resolve => setTimeout(resolve, 2000)),
@@ -28,7 +29,7 @@ export default function withAuthentication(Component, appName) {
       ])
         .then(([loggedIn, _, user]) => {
           const {
-            Resources: { Applications: apps },
+            Resources: { Applications: apps = [] },
             Superuser: isSuperUser
           } = user;
           const hasPermissions =
@@ -39,7 +40,6 @@ export default function withAuthentication(Component, appName) {
           }
 
           setState({
-            loading: false,
             loggedIn,
             hasPermissions,
             currentUser: user
@@ -48,11 +48,10 @@ export default function withAuthentication(Component, appName) {
         .catch(e => {
           setState({
             loggedIn: false,
-            loading: false,
-            hasPermissions: false,
-            errorMessage: e?.statusText ?? ""
+            hasPermissions: false
           });
-        });
+        })
+        .finally(_ => setLoading(false));
     }, []);
 
     /**
@@ -134,23 +133,32 @@ export default function withAuthentication(Component, appName) {
      * @returns React Component
      */
     const handleFirstRender = () => {
-      return state.loading ? (
-        renderLoading()
-      ) : (
-        <LoginForm
-          authenticationProviders={authenticationProviders}
-          permissionErrors={state.errorMessage}
-          setLoggedIn={value => {
-            setState(prevState => ({
-              ...prevState,
-              loading: true,
-              errorMessage: ""
-            }));
-            authenticate();
-          }}
-        />
-      );
+      return loading ? renderLoading() : renderLoginForm();
     };
+
+    /**
+     * handleLoginSubmit - handle the user login credentials submit
+     * @param {{ username, password, remember, selectedProvider }}
+     */
+    const handleLoginSubmit = useCallback(
+      async ({ username, password, remember, selectedProvider }) => {
+        try {
+          setLoading(true);
+          const apiResponse = await Authentication.login(
+            username,
+            password,
+            remember,
+            selectedProvider
+          );
+          if (apiResponse.error) throw new Error(apiResponse.error);
+          authenticate();
+        } catch (e) {
+          setErrorMessage(e.message);
+          setLoading(false);
+        }
+      },
+      []
+    );
 
     /**
      * renderLoading - Renders the loading panel
@@ -159,6 +167,19 @@ export default function withAuthentication(Component, appName) {
     const renderLoading = () => {
       return <LoginPanel message={"Preparing the bots"} progress={true} />;
     };
+
+    /**
+     * renderLoginForm - Renders the login form
+     * @returns React Component
+     */
+    const renderLoginForm = () => (
+      <LoginForm
+        domains={authenticationProviders}
+        authErrorMessage={errorMessage}
+        onLoginSubmit={handleLoginSubmit}
+        onChanges={setErrorMessage}
+      />
+    );
 
     /**
      * renderNotAuthorized - Renders the not authorized panel
@@ -188,14 +209,7 @@ export default function withAuthentication(Component, appName) {
               loggedIn={state.loggedIn}
               {...props}
             />
-            <Modal open={!state.loggedIn}>
-              <LoginForm
-                authenticationProviders={authenticationProviders}
-                setLoggedIn={value =>
-                  setState(prevState => ({ ...prevState, loggedIn: value }))
-                }
-              />
-            </Modal>
+            <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
           </React.Fragment>
         ) : (
           renderNotAuthorized()

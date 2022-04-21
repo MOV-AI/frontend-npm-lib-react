@@ -14,14 +14,18 @@ import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import PropTypes from "prop-types";
 import LoginFormAdvanced from "./LoginFormAdvanced";
 
+const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
+
 class LoginForm extends Component {
   state = {
     username: "",
     password: "",
+    formErrors: "",
     remember: false,
-    errorMessage: "",
     capsLockOn: false,
-    selectedProvider: Authentication.DEFAULT_PROVIDER
+    selectedProvider:
+      localStorage.getItem(SELECTED_DOMAIN_KEY) ||
+      Authentication.DEFAULT_PROVIDER
   };
 
   //========================================================================================
@@ -35,27 +39,13 @@ class LoginForm extends Component {
    */
   sendCreds = async () => {
     if (!this.state.password) return;
-    try {
-      const apiResponse = await Authentication.login(
-        this.state.username,
-        this.state.password,
-        this.state.remember,
-        this.state.selectedProvider
-      );
-      // If successfully logged in
-      if (!apiResponse.error) {
-        this.props.setLoggedIn(true);
-      } else {
-        // Show the error in red
-        this.setState({
-          errorMessage: apiResponse.error
-        });
-      }
-    } catch (e) {
-      this.setState({
-        errorMessage: e
-      });
-    }
+    const { username, password, remember, selectedProvider } = this.state;
+    this.props.onLoginSubmit({
+      username,
+      password,
+      remember,
+      selectedProvider
+    });
   };
 
   /**
@@ -75,6 +65,7 @@ class LoginForm extends Component {
     this.setState({
       selectedProvider: e.target.value
     });
+    localStorage.setItem(SELECTED_DOMAIN_KEY, e.target.value);
   };
 
   //========================================================================================
@@ -88,6 +79,7 @@ class LoginForm extends Component {
    * @param {Event} event : On change event
    */
   onChangeUsername = event => {
+    this.state.username && this.props.onChanges();
     this.setState({ username: event.target.value });
   };
 
@@ -96,12 +88,13 @@ class LoginForm extends Component {
    * @param {Event} event : On change event
    */
   onChangePassword = event => {
-    const isEmptyPassword = event.target.value === "";
+    const password = event.target.value;
+    const isEmptyPassword = password === "";
     const errorMessage = isEmptyPassword ? "Password is required" : "";
+    this.state.password && this.props.onChanges();
     this.setState({
-      password: event.target.value,
-      error: isEmptyPassword,
-      errorMessage
+      password,
+      formErrors: errorMessage
     });
   };
 
@@ -123,12 +116,11 @@ class LoginForm extends Component {
   //========================================================================================
 
   render() {
-    const { classes, logo, authenticationProviders, permissionErrors } =
-      this.props;
+    const { classes, logo, domains, authErrorMessage } = this.props;
     const showAdvancedSection =
-      authenticationProviders?.length > 1 &&
-      authenticationProviders.some(ap => ap != Authentication.DEFAULT_PROVIDER);
-    const invalidLoginMessage = this.state.errorMessage || permissionErrors;
+      domains?.length > 1 &&
+      domains.some(ap => ap != Authentication.DEFAULT_PROVIDER);
+    const errorMessage = this.state.formErrors || authErrorMessage;
     return (
       <Grid
         className={classes.container}
@@ -149,7 +141,7 @@ class LoginForm extends Component {
             <Typography align="center" variant="subtitle1" gutterBottom>
               <FormControl
                 className={classes.formControl}
-                error={!!invalidLoginMessage}
+                error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-username-error">
                   Username
@@ -167,7 +159,7 @@ class LoginForm extends Component {
             <Typography align="center" variant="subtitle1" gutterBottom>
               <FormControl
                 className={classes.formControl}
-                error={!!invalidLoginMessage}
+                error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-password-error">
                   Password
@@ -181,9 +173,9 @@ class LoginForm extends Component {
                   onChange={this.onChangePassword}
                   onKeyUp={this.onKeyUpPassword}
                 />
-                {invalidLoginMessage && (
+                {errorMessage && (
                   <FormHelperText id="component-error-text">
-                    {invalidLoginMessage}
+                    {errorMessage}
                   </FormHelperText>
                 )}
                 {this.state.capsLockOn && (
@@ -199,7 +191,7 @@ class LoginForm extends Component {
               {showAdvancedSection && (
                 <LoginFormAdvanced
                   selectedProvider={this.state.selectedProvider}
-                  providers={authenticationProviders}
+                  domains={domains}
                   onProviderChange={this.handleAuthenticationProviderChange}
                 />
               )}
@@ -217,18 +209,19 @@ class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
-  authenticationProviders: PropTypes.array,
+  domains: PropTypes.array,
   logo: PropTypes.any, // expects a svg element
-  setLoggedIn: PropTypes.func,
   permissionErrors: PropTypes.string,
-  onLoginError: PropTypes.func
+  onLoginSubmit: PropTypes.func,
+  onChanges: PropTypes.func
 };
 
 LoginForm.defaultProps = {
-  authenticationProviders: [],
+  domains: [],
   logo: defaultLogo,
   permissionErrors: "",
-  setLoggedIn: loggedIn => console.warn("setLoggedIn: ", loggedIn)
+  onLoginSubmit: () => {},
+  onChanges: () => {}
 };
 
 export default withStyles(styles, { withTheme: true })(LoginForm);
