@@ -100,9 +100,13 @@ const LogsFilterBar = props => {
   };
   const getRobotSelector = () => {
     return (
-      <div className={classes.toggleContainer}>
+      <div
+        data-testid="section_robot-selector"
+        className={classes.toggleContainer}
+      >
         <FormControl className={classes.formControl}>
           <Select
+            data-testid="input_change-robot"
             labelId="select-label"
             id="select"
             multiple
@@ -125,8 +129,14 @@ const LogsFilterBar = props => {
             {props.selectedRobots.map((robot, robotIndex) => {
               return (
                 <MenuItem key={`robotList-${robotIndex}`} value={robot.id}>
-                  <Checkbox checked={robot.isSelected} />
-                  <ListItemText primary={robot.name} />
+                  <Checkbox
+                    data-testid="output_icon"
+                    checked={robot.isSelected}
+                  />
+                  <ListItemText
+                    data-testid="output_label"
+                    primary={robot.name}
+                  />
                 </MenuItem>
               );
             })}
@@ -145,23 +155,30 @@ const LogsFilterBar = props => {
         placeholder={t("Search")}
         value={props.messageRegex}
         onChange={evt => props.handleMessageRegex(evt.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment className={classes.iconAdornment} position="start">
-              <SearchIcon fontSize="small" />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                disabled={!props.messageRegex}
-                onClick={() => props.handleMessageRegex("")}
+        InputProps={
+          ({ "data-testid": "output_search" },
+          {
+            startAdornment: (
+              <InputAdornment
+                className={classes.iconAdornment}
+                position="start"
               >
-                <ResetSearch color="inherit" fontSize="small" />
-              </IconButton>
-            </InputAdornment>
-          )
-        }}
+                <SearchIcon data-testid="output_icon" fontSize="small" />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  data-testid="output_button"
+                  disabled={!props.messageRegex}
+                  onClick={() => props.handleMessageRegex("")}
+                >
+                  <ResetSearch color="inherit" fontSize="small" />
+                </IconButton>
+              </InputAdornment>
+            )
+          })
+        }
         size="small"
       />
     );
@@ -169,9 +186,10 @@ const LogsFilterBar = props => {
 
   const getLevels = () => {
     return (
-      <div className={classes.toggleContainer}>
+      <div data-testid="section_levels" className={classes.toggleContainer}>
         <FormControl className={classes.formControl}>
           <Select
+            inputProps={{ "data-testid": "input_select" }}
             labelId="demo-mutiple-checkbox-label"
             id="demo-mutiple-checkbox"
             style={{ minWidth: "290px" }}
@@ -191,8 +209,14 @@ const LogsFilterBar = props => {
           >
             {props.levelsList.map(level => (
               <MenuItem key={level.value} value={level.value}>
-                <Checkbox checked={props.levels.indexOf(level.value) > -1} />
-                <ListItemText primary={level.label} />
+                <Checkbox
+                  data-testid="output_checkbox"
+                  checked={props.levels.indexOf(level.value) > -1}
+                />
+                <ListItemText
+                  data-testid="output_label"
+                  primary={level.label}
+                />
               </MenuItem>
             ))}
           </Select>
@@ -210,9 +234,10 @@ const LogsFilterBar = props => {
 
   const getServices = () => {
     return (
-      <div className={classes.toggleContainer}>
+      <div data-testid="section_services" className={classes.toggleContainer}>
         <FormControl className={classes.formControl}>
           <Select
+            inputProps={{ "data-testid": "input_select" }}
             labelId="demo-mutiple-checkbox-label"
             id="demo-mutiple-checkbox"
             style={{ minWidth: "290px" }}
@@ -226,9 +251,13 @@ const LogsFilterBar = props => {
             {props.serviceList.map(service => (
               <MenuItem key={service.value} value={service.value}>
                 <Checkbox
+                  inputProps={{ "data-testid": "input_checkbox" }}
                   checked={props.selectedService.indexOf(service.value) > -1}
                 />
-                <ListItemText primary={service.label} />
+                <ListItemText
+                  data-testid="output_label"
+                  primary={service.label}
+                />
               </MenuItem>
             ))}
           </Select>
@@ -250,12 +279,12 @@ const LogsFilterBar = props => {
   const getTagsPopover = () => {
     return (
       <FiltersIcon
-        icon={<LabelIcon></LabelIcon>}
+        icon={<LabelIcon data-testid="output_icon"></LabelIcon>}
         title="Tags"
         disabled={!props.advancedMode}
         isActive={props.tags.length > 0}
       >
-        <div className={classes.tagsContainer}>
+        <div data-testid="section_tags" className={classes.tagsContainer}>
           <TextField
             className={classes.addTagText}
             value={tagText}
@@ -266,6 +295,7 @@ const LogsFilterBar = props => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
+                    inputProps={{ "data-testid": "input_button" }}
                     onClick={() => {
                       props.handleAddTag(tagText);
                       setTagText("");
@@ -282,6 +312,7 @@ const LogsFilterBar = props => {
             {props.tags.map(data => {
               return (
                 <Chip
+                  data-testid="output_chip"
                   key={data.key}
                   label={data.label}
                   onDelete={() => props.handleDeleteTag(data)}
@@ -420,7 +451,7 @@ const LogsFilterBar = props => {
 
   return (
     <AppBar position="static" color="inherit">
-      <Toolbar variant="dense">
+      <Toolbar data-testid="section_logs-filter-bar" variant="dense">
         {getRobotSelector()}
         {/* Search Input */}
         {getSearchInput()}

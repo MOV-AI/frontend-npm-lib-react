@@ -20,17 +20,26 @@ const Collapse = props => {
   };
 
   return (
-    <List>
+    <List data-testid="section_collapse">
       <ListItem button onClick={handleClickFactory(props.onClick)}>
         {open ? (
-          <ExpandMore style={{ ...props.iconStyle }} />
+          <ExpandMore
+            data-testid="output_expand-icon"
+            style={{ ...props.iconStyle }}
+          />
         ) : (
-          <ChevronRightIcon style={{ ...props.iconStyle }} />
+          <ChevronRightIcon
+            data-testid="output_collapse-icon"
+            style={{ ...props.iconStyle }}
+          />
         )}
-        <div style={{ width: "100%" }}>{props.item}</div>
+        <div data-testid="output_item" style={{ width: "100%" }}>
+          {props.item}
+        </div>
       </ListItem>
       {props.divided ? <Divider /> : []}
       <MaterialCollapse
+        data-testid="section_children"
         className={props.className}
         style={props.style}
         in={open}

@@ -49,6 +49,7 @@ const tableIcons = {
 const Table = props => {
   return (
     <MaterialTable
+      data-testid="section_material-table"
       {...props}
       style={props.style}
       title={props.title}

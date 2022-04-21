@@ -5,6 +5,7 @@ import MaterialDrawer from "@material-ui/core/Drawer";
 const Drawer = props => {
   return (
     <MaterialDrawer
+      data-testid="section_drawer"
       style={props.style}
       anchor={props.anchor}
       open={props.open}

@@ -279,11 +279,12 @@ const ResetPasswordModal = forwardRef((props, ref) => {
       cancelText={t("Cancel")}
       submitText={getSubmitText()}
     >
-      <div className={classes.root}>
+      <div data-testid="section_reset-password" className={classes.root}>
         <React.Fragment>
           <form autoComplete="off" className={classes.formGroup}>
             {variant === VARIANT_OPTIONS.CHANGE && (
               <TextField
+                inputProps={{ "data-testid": "input_current-password" }}
                 type="password"
                 autocomplete="off"
                 label={t("Current Password")}
@@ -295,6 +296,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
               />
             )}
             <TextField
+              inputProps={{ "data-testid": "input_new-password" }}
               type="password"
               autocomplete="off"
               label={t("New Password")}
@@ -306,6 +308,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
               error={errors.newPassword}
             />
             <TextField
+              inputProps={{ "data-testid": "input_confirm-password" }}
               type="password"
               autocomplete="off"
               label={t("Confirm Password")}

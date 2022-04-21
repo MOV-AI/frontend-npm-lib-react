@@ -131,6 +131,7 @@ class LoginForm extends Component {
     const invalidLoginMessage = this.state.errorMessage || permissionErrors;
     return (
       <Grid
+        data-testid="section_login-form"
         className={classes.container}
         container
         direction="column"
@@ -140,6 +141,7 @@ class LoginForm extends Component {
         <Paper elevation={10} className={classes.root}>
           <Grid item>
             <img
+              data-testid="output_logo"
               src={logo}
               alt="logo"
               className={`center ${classes.logoImage}`}
@@ -148,6 +150,7 @@ class LoginForm extends Component {
           <Grid>
             <Typography align="center" variant="subtitle1" gutterBottom>
               <FormControl
+                data-testid="section_form-control"
                 className={classes.formControl}
                 error={!!invalidLoginMessage}
               >
@@ -155,6 +158,7 @@ class LoginForm extends Component {
                   Username
                 </InputLabel>
                 <Input
+                  inputProps={{ "data-testid": "input_username" }}
                   id="component-username-error"
                   value={this.state.username}
                   aria-describedby="component-username-error-text"
@@ -173,6 +177,7 @@ class LoginForm extends Component {
                   Password
                 </InputLabel>
                 <Input
+                  inputProps={{ "data-testid": "input_password" }}
                   required
                   id="component-password-error"
                   type="password"
@@ -207,7 +212,9 @@ class LoginForm extends Component {
           </Grid>
           <Grid>
             <Typography align="center" gutterBottom>
-              <Button onClick={this.sendCreds}>Login</Button>
+              <Button data-testid="input_login" onClick={this.sendCreds}>
+                Login
+              </Button>
             </Typography>
           </Grid>
         </Paper>
