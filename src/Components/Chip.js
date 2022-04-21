@@ -33,6 +33,7 @@ const Chip = props => {
   const classes = useStyles();
   return (
     <MaterialChip
+      data-testid="input_chip"
       label={props.label}
       color="primary"
       className={props.active ? classes.chipActive : classes.chipDefault}

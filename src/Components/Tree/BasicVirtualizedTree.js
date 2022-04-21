@@ -138,7 +138,7 @@ class BasicVirtualizedTree extends Component {
     const iconStyle = <i className="fas fa-home" />;
     const nodes = this.props.data;
     return (
-      <div>
+      <div data-testid="section_basic-virtualized-tree">
         <ListItemsTreeWithSearch
           style={{
             overflow: "auto"
@@ -162,6 +162,7 @@ class BasicVirtualizedTree extends Component {
                 // Render tree element
                 return (
                   <div
+                    data-testid="section_tree"
                     style={style}
                     onClick={() => this.props.onClickNode(node)}
                     onDoubleClick={() => this.props.onDoubleClickNode(node)}
@@ -175,6 +176,7 @@ class BasicVirtualizedTree extends Component {
                         {_get(node, `children`, false) &&
                           node.state?.expanded && (
                             <ExpandMoreIcon
+                              data-testid="input_collapse"
                               onClick={evt =>
                                 this.handleExpansion(evt, nodes, node, false)
                               }
@@ -183,6 +185,7 @@ class BasicVirtualizedTree extends Component {
                         {_get(node, `children`, false) &&
                           !node.state?.expanded && (
                             <ChevronRightIcon
+                              data-testid="input_expand"
                               onClick={evt =>
                                 this.handleExpansion(evt, nodes, node, true)
                               }

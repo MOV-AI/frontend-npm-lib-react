@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 const Breadcrumb = props => {
   const classes = useStyles();
   return (
-    <div className={classes.root}>
+    <div data-testid="section_breadcrumb" className={classes.root}>
       <Breadcrumbs
         separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb"
@@ -40,6 +40,7 @@ const Breadcrumb = props => {
           if (props.pathList.length - 1 !== index) {
             return (
               <Typography
+                data-testid="input_button"
                 key={index}
                 color="primary"
                 variant="inherit"
@@ -51,7 +52,11 @@ const Breadcrumb = props => {
             );
           }
         })}
-        <Typography color="textPrimary" className={classes.lastLabel}>
+        <Typography
+          data-testid="output_path-list"
+          color="textPrimary"
+          className={classes.lastLabel}
+        >
           {props.pathList[props.pathList.length - 1].label}
         </Typography>
       </Breadcrumbs>

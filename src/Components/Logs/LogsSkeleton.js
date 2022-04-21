@@ -11,7 +11,7 @@ const LogsSkeleton = () => {
   return (
     <>
       {tableSkeleton.map(el => (
-        <Skeleton animation="wave" key={el} />
+        <Skeleton data-testid="output_skeleton" animation="wave" key={el} />
       ))}
     </>
   );

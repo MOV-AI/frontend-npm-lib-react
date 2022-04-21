@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 const Button = props => {
   return (
     <MaterialButton
+      data-testid="input_button"
       className={props.className}
       style={props.style}
       onClick={props.onClick}

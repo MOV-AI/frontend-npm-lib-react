@@ -50,7 +50,7 @@ const ContextMenu = props => {
   };
 
   return (
-    <div style={style}>
+    <div data-testid="section_context-menu" style={style}>
       {React.cloneElement(props.element, {
         onClick: evt => {
           if (props.element.props.onClick !== undefined) {
@@ -60,6 +60,7 @@ const ContextMenu = props => {
         }
       })}
       <StyledMenu
+        data-testid="section_menu"
         id="customized-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -70,6 +71,7 @@ const ContextMenu = props => {
         {props.menuList.map((item, index) => {
           return (
             <StyledMenuItem
+              data-testid="input_menu-item"
               onClick={evt => {
                 item.onClick();
                 if (item.onClose || item.onClose === undefined) {

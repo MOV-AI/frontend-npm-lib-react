@@ -25,6 +25,7 @@ class LogsList extends Component {
         rowIndex={index}
       >
         <ListItem
+          data-testid="section_item"
           key={index}
           style={{
             ...style,
@@ -34,6 +35,7 @@ class LogsList extends Component {
           }}
         >
           <ListItemText
+            data-testid="output_item-text"
             primary={this.props.logsData[index]}
             primaryTypographyProps={{
               style: { fontSize: "0.9rem" }
@@ -52,6 +54,7 @@ class LogsList extends Component {
       <AutoSizer>
         {({ height, width }) => (
           <List
+            data-testid="section_logs-list"
             className="List"
             width={width}
             height={height}

@@ -28,13 +28,17 @@ const Select = props => {
 
   return (
     <FormControl
+      data-testid="section_select-wrapper"
       variant={props.variant}
       className={classes.formControl}
       style={props.style}
       hiddenLabel={props.label === undefined ? true : false}
     >
-      <InputLabel id="movai-react-select">{props.label}</InputLabel>
+      <InputLabel data-testid="input_label" id="movai-react-select">
+        {props.label}
+      </InputLabel>
       <MaterialSelect
+        data-testid="section_select"
         labelId="movai-react-select"
         id={props.id}
         value={props.value}
@@ -46,9 +50,16 @@ const Select = props => {
         {noneOption}
         {props.options.map((element, index) => {
           return (
-            <MenuItem key={index} value={element}>
+            <MenuItem
+              data-testid="output_menu-item"
+              key={index}
+              value={element}
+            >
               {props.multiple && (
-                <Checkbox checked={props.value.indexOf(element) > -1} />
+                <Checkbox
+                  data-testid="output_checkbox"
+                  checked={props.value.indexOf(element) > -1}
+                />
               )}
               <ListItemText primary={element} />
             </MenuItem>

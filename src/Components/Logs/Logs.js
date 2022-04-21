@@ -312,7 +312,7 @@ class Logs extends Component {
 
   handleNoRows = () => {
     return (
-      <Typography variant="h2">
+      <Typography data-testid="output_no-rows" variant="h2">
         {this.state.loading ? (
           <LogsSkeleton></LogsSkeleton>
         ) : (
@@ -347,7 +347,7 @@ class Logs extends Component {
   render() {
     return (
       <div className={this.props.classes.externalDiv}>
-        <div className={this.props.classes.wrapper}>
+        <div data-testid="section_logs" className={this.props.classes.wrapper}>
           <LogsFilterBar
             selectedRobots={this.state.selectedRobots}
             updateRobotSelection={this.updateRobotSelection}
@@ -374,6 +374,7 @@ class Logs extends Component {
             handleAdvancedMode={this.handleToggleAdvancedMode}
           ></LogsFilterBar>
           <div
+            data-testid="section_table-container"
             ref={this.handleContainerRef}
             className={this.props.classes.tableContainer}
           >

@@ -14,8 +14,8 @@ const ConfirmAlertModal = props => {
       cancelText={props.cancelText}
       cancelColor={props.cancelColor}
     >
-      <div>{props.message}</div>
-      <div>{props.children}</div>
+      <div data-testid="output_message">{props.message}</div>
+      <div data-testid="output_children">{props.children}</div>
     </AbstractModal>
   );
 };

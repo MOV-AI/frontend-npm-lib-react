@@ -14,6 +14,7 @@ class NotAuthorized extends Component {
 
     return (
       <Grid
+        data-testid="section_login-panel"
         className={classes.container}
         container
         direction="column"
@@ -23,16 +24,27 @@ class NotAuthorized extends Component {
         <Paper elevation={10} className={classes.root}>
           <Grid item>
             <img
+              data-testid="output_logo"
               src={logo}
               alt="logo"
               className={`center ${classes.logoImage}`}
             />
           </Grid>
           <Grid>
-            <Typography align="center" variant="h2" gutterBottom>
+            <Typography
+              data-testid="output_title"
+              align="center"
+              variant="h2"
+              gutterBottom
+            >
               {title}
             </Typography>
-            <Typography align="center" variant="subtitle1" gutterBottom>
+            <Typography
+              data-testid="output_message"
+              align="center"
+              variant="subtitle1"
+              gutterBottom
+            >
               {message}
               {progress && <LinearProgress color="secondary" />}
             </Typography>

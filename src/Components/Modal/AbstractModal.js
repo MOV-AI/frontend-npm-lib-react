@@ -70,6 +70,7 @@ const AbstractModal = props => {
 
   return (
     <Modal
+      data-testid="section_abstract-modal"
       onKeyPress={handleKeyPress}
       open={open}
       onClose={onCancel}
@@ -84,8 +85,11 @@ const AbstractModal = props => {
         }}
       >
         <CardContent className={classes.cardContent}>
-          <Typography variant="h5">{title}</Typography>
+          <Typography data-testid="output_title" variant="h5">
+            {title}
+          </Typography>
           <Typography
+            data-testid="input_close"
             component="div"
             className={classes.closeButton}
             onClick={onCancel}
@@ -101,6 +105,7 @@ const AbstractModal = props => {
         <CardActions>
           {hasSubmitButton && (
             <Button
+              data-testid="input_submit"
               color={submitColor}
               onClick={handleSubmit}
               disabled={disableActions}
@@ -110,6 +115,7 @@ const AbstractModal = props => {
           )}
           {hasCancelButton && (
             <Button
+              data-testid="input_cancel"
               color={cancelColor}
               onClick={onCancel}
               disabled={disableActions}
