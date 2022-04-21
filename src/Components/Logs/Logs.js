@@ -327,15 +327,22 @@ class Logs extends Component {
   getHandleMessageRegex = text => this.setState({ messageRegex: text });
 
   addTag = tagText => {
-    const { tags } = this.state;
-    // Don't add tag if it's empty or duplicate
-    if (tagText !== "" && tags.findIndex(elem => elem.label === tagText) < 0) {
-      tags.push({
-        key: findsUniqueKey(tags, "key"),
-        label: tagText
-      });
-      this.setState({ tags });
-    }
+    this.setState(prevState => {
+      // Don't add tag if it's empty or duplicate
+      if (
+        tagText !== "" &&
+        prevState.tags.findIndex(elem => elem.label === tagText) < 0
+      ) {
+        const newTags = [
+          ...prevState.tags,
+          {
+            key: findsUniqueKey(prevState.tags, "key"),
+            label: tagText
+          }
+        ];
+        return { tags: newTags };
+      }
+    });
   };
 
   deleteTag = tagToDelete => {
