@@ -23,10 +23,27 @@ class LoginForm extends Component {
     formErrors: "",
     remember: false,
     capsLockOn: false,
-    selectedProvider:
-      localStorage.getItem(SELECTED_DOMAIN_KEY) ||
-      Authentication.DEFAULT_PROVIDER
+    selectedProvider: Authentication.DEFAULT_PROVIDER
   };
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                    React Lifecycle                                   *
+   *                                                                                      */
+  //========================================================================================
+
+  componentDidUpdate(prevProps) {
+    if (
+      !this.hasMultipleDomains() ||
+      prevProps.domains.length === this.props.domains.length
+    )
+      return;
+    this.setState({
+      selectedProvider:
+        localStorage.getItem(SELECTED_DOMAIN_KEY) ||
+        Authentication.DEFAULT_PROVIDER
+    });
+  }
 
   //========================================================================================
   /*                                                                                      *
@@ -109,6 +126,10 @@ class LoginForm extends Component {
     }
   };
 
+  hasMultipleDomains = () =>
+    this.props.domains?.length > 1 &&
+    this.props.domains.some(ap => ap != Authentication.DEFAULT_PROVIDER);
+
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -117,9 +138,6 @@ class LoginForm extends Component {
 
   render() {
     const { classes, logo, domains, authErrorMessage } = this.props;
-    const showAdvancedSection =
-      domains?.length > 1 &&
-      domains.some(ap => ap != Authentication.DEFAULT_PROVIDER);
     const errorMessage = this.state.formErrors || authErrorMessage;
     return (
       <Grid
@@ -188,7 +206,7 @@ class LoginForm extends Component {
           </Grid>
           <Grid>
             <Typography align="center" variant="subtitle1" gutterBottom>
-              {showAdvancedSection && (
+              {this.hasMultipleDomains() && (
                 <LoginFormAdvanced
                   selectedProvider={this.state.selectedProvider}
                   domains={domains}
