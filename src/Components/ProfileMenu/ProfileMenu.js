@@ -94,19 +94,28 @@ const ProfileMenu = props => {
   //========================================================================================
 
   return (
-    <div>
+    <div data-testid="section_profile-menu">
       <Tooltip title={i18n.t("Settings")}>
-        <IconButton aria-haspopup="true" onClick={handleClick}>
+        <IconButton
+          data-testid="input_button"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
           <SettingsIcon />
         </IconButton>
       </Tooltip>
       <Menu
+        data-testid="section_menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <Typography component="div" variant="body1">
+        <Typography
+          data-testid="section_welcome"
+          component="div"
+          variant="body1"
+        >
           <div className={classes.menuItemSpacing}>
             {welcomeLabel}, {username}
           </div>
@@ -118,6 +127,7 @@ const ProfileMenu = props => {
           ))}
           <Divider variant="middle" />
           <MenuItem
+            data-testid="input_reset-password"
             className={classes.menuItemSpacing}
             onClick={handlePasswordReset}
           >
@@ -140,6 +150,7 @@ const ProfileMenu = props => {
           </MenuItem>
           <Divider variant="middle" />
           <div
+            data-testid="section_footer"
             className={`${classes.menuItemSpacing} ${classes.profileMenuFooter}`}
           >
             {version}

@@ -70,21 +70,21 @@ class RobotLogModal extends Component {
     const { data } = this.state;
     const { props, classes } = this.props;
     return (
-      <Typography component="div">
+      <Typography data-testid="section_robot-log-modal" component="div">
         <List style={{ width: "100%" }}>
           <ListItem>
             <ListItemAvatar>
               <Avatar>
-                <i className="fas fa-robot"></i>
+                <i data-testid="output_robot-icon" className="fas fa-robot"></i>
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={data.robot} />
+            <ListItemText data-testid="output_text" primary={data.robot} />
           </ListItem>
           <Divider variant="inset" component="li" />
           <ListItem>
             <ListItemAvatar>
               <Avatar>
-                <ScheduleIcon />
+                <ScheduleIcon data-testid="output_icon" />
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary={data.time} />
@@ -95,7 +95,7 @@ class RobotLogModal extends Component {
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <WarningIcon />
+                    <WarningIcon data-testid="output_warning-icon" />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -111,7 +111,7 @@ class RobotLogModal extends Component {
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <ViewModuleIcon />
+                    <ViewModuleIcon data-testid="output_module-icon" />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -125,7 +125,7 @@ class RobotLogModal extends Component {
           <ListItem>
             <ListItemAvatar>
               <Avatar>
-                <ChatIcon />
+                <ChatIcon data-testid="output_chat-icon" />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
@@ -135,7 +135,7 @@ class RobotLogModal extends Component {
           </ListItem>
         </List>
         {data.action && (
-          <div>
+          <div data-testid="output_action">
             <Divider />
             <List style={{ width: "100%" }}>
               <ListItem>

@@ -10,6 +10,7 @@ function TabPanel(props) {
 
   return (
     <Typography
+      data-testid="section_tab"
       component="div"
       role="tabpanel"
       hidden={selectedTab !== index}
@@ -63,7 +64,7 @@ export default function Tabs(props) {
   };
 
   return (
-    <div className={classes.root}>
+    <div data-testid="section_tabs-wrapper" className={classes.root}>
       <MaterialTabs
         value={selectedTab}
         onChange={handleChange}

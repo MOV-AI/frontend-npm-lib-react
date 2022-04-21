@@ -65,7 +65,11 @@ class SearchInput extends Component {
   render() {
     const { classes, style, placeholder } = this.props;
     return (
-      <div className={classes.search} style={style}>
+      <div
+        data-testid="section_search"
+        className={classes.search}
+        style={style}
+      >
         <div className={classes.searchIcon}>
           <SearchIcon />
         </div>
@@ -76,7 +80,7 @@ class SearchInput extends Component {
             root: classes.inputRoot,
             input: classes.inputInput
           }}
-          inputProps={{ "aria-label": "search" }}
+          inputProps={{ "aria-label": "search", "data-testid": "input_base" }}
           onChange={this.handleChange}
         />
       </div>

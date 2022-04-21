@@ -79,6 +79,7 @@ const MuiVirtualizedTable = props => {
     ({ cellData, columnIndex }) => {
       return (
         <TableCell
+          data-testid="section_table-cell"
           component="div"
           className={`${classes.tableCell} ${classes.flexContainer}`}
           variant="body"
@@ -93,6 +94,7 @@ const MuiVirtualizedTable = props => {
   const headerRenderer = ({ label, columnIndex }) => {
     return (
       <TableCell
+        data-testid="section_header-cell"
         component="div"
         className={clsx(
           classes.tableCell,
@@ -103,7 +105,7 @@ const MuiVirtualizedTable = props => {
         style={{ height: headerHeight }}
         align={isNumericColumn(columnIndex) ? "right" : "left"}
       >
-        <span>{label}</span>
+        <span data-testid="output_label">{label}</span>
       </TableCell>
     );
   };
@@ -112,6 +114,7 @@ const MuiVirtualizedTable = props => {
     <AutoSizer>
       {({ height, width }) => (
         <Table
+          data-testid="section_logs-table"
           height={height}
           width={width}
           noRowsRenderer={noRowsRenderer}

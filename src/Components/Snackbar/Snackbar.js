@@ -101,17 +101,12 @@ class ReactConfirmAlert extends Component {
   };
 
   render() {
-    const {
-      message,
-      customUI,
-      severity,
-      closeText,
-      closable,
-      theme
-    } = this.props;
+    const { message, customUI, severity, closeText, closable, theme } =
+      this.props;
 
     return (
       <div
+        data-testid="section_confirm-alert"
         className="react-confirm-alert-overlay"
         ref={dom => (this.overlay = dom)}
         onClick={this.handleClickOverlay}
@@ -128,15 +123,14 @@ class ReactConfirmAlert extends Component {
                 severity={severity}
                 closeText={closeText}
                 action={
-                  closable ? (
+                  closable && (
                     <div
+                      data-testid="output_icon"
                       className="icon-container"
                       onClick={() => this.close()}
                     >
                       {svgIcons.Close}
                     </div>
-                  ) : (
-                    undefined
                   )
                 }
               >

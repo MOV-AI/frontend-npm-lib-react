@@ -45,6 +45,7 @@ class TreeSearch extends Component {
   render() {
     return (
       <Typography
+        data-testid="section_tree-search"
         component="div"
         style={{
           padding: "2px 4px",
@@ -54,6 +55,7 @@ class TreeSearch extends Component {
         }}
       >
         <InputBase
+          inputProps={{ "data-testid": "input_search" }}
           ref={this.inputRef}
           style={{
             marginLeft: 10,
@@ -63,6 +65,7 @@ class TreeSearch extends Component {
           onChange={this.handleChange}
         />
         <IconButton
+          data-testid="input_icon"
           style={{ padding: 10 }}
           onClick={() => {
             if (!this.isEmpty()) {
@@ -84,6 +87,7 @@ class TreeSearch extends Component {
 const ListItemsTree = props => {
   return (
     <List
+      data-testid="section_list"
       style={{ paddingLeft: "0px", paddingRight: "0px", ...props.style }}
       dense={true}
       component="div"
@@ -98,7 +102,9 @@ const ListItemsTreeWithTitle = props => {
   return (
     <ListItemsTree>
       <ListItem>
-        <Typography component={props.variant}>{props.title}</Typography>
+        <Typography data-testid="output_title" component={props.variant}>
+          {props.title}
+        </Typography>
       </ListItem>
       <Divider />
       {props.children}
@@ -113,6 +119,7 @@ const ListItemsTreeWithTitle = props => {
 const ListItemsTreeWithSearch = props => {
   return (
     <ListItemsTree
+      data-testid="section_list-items"
       style={{ flexGrow: 1, paddingBottom: "0px", paddingTop: "0px" }}
       onKeyUp={props.onKeyUp}
     >

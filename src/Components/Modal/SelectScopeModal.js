@@ -249,7 +249,7 @@ const SelectScopeModal = props => {
       title={getModalTitle(props.scopeList[0])}
       width="50%"
     >
-      <Grid container>
+      <Grid data-testid="section_select-scope-modal" container>
         <Grid
           item
           xs={12}
@@ -260,8 +260,11 @@ const SelectScopeModal = props => {
           }}
         >
           <FormControl style={{ width: "50%" }}>
-            <InputLabel>{i18n.t("Workspace")}</InputLabel>
+            <InputLabel data-testid="input_workspace">
+              {i18n.t("Workspace")}
+            </InputLabel>
             <Select
+              inputProps={{ "data-testid": "input-select" }}
               value={selectedWorkspace}
               onChange={changeWorkspace}
               disabled={!props.allowArchive}
@@ -275,6 +278,7 @@ const SelectScopeModal = props => {
           </FormControl>
         </Grid>
         <Typography
+          data-testid="section_basic-virtualized-tree"
           component="div"
           style={{
             overflowY: "auto",
@@ -309,6 +313,7 @@ const SelectScopeModal = props => {
         </Typography>
         <Grid item xs={12} style={{ textAlign: "center" }}>
           <Typography
+            data-testid="output_message"
             label={i18n.t("Message")}
             value={"selected"}
             margin="normal"
