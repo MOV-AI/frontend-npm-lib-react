@@ -30,7 +30,10 @@ const advancedSectionStyles = theme => ({
     justifyContent: "space-between",
     paddingLeft: "1px",
     paddingRight: "0px",
-    marginTop: "12px"
+    marginTop: "12px",
+    "&:focus-visible": {
+      backgroundColor: "rgba(0, 0, 0, 0.04)"
+    }
   },
   label: {
     fontSize: "11px"
