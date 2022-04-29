@@ -12,16 +12,38 @@ import { withStyles } from "@material-ui/core/styles";
 import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import PropTypes from "prop-types";
+import LoginFormAdvanced from "./LoginFormAdvanced";
+
+const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
 
 class LoginForm extends Component {
   state = {
     username: "",
     password: "",
+    formErrors: "",
     remember: false,
-    error: false,
-    errorMessage: "",
-    capsLockOn: false
+    capsLockOn: false,
+    selectedProvider: Authentication.DEFAULT_PROVIDER
   };
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                    React Lifecycle                                   *
+   *                                                                                      */
+  //========================================================================================
+
+  componentDidUpdate(prevProps) {
+    if (
+      !this.hasMultipleDomains() ||
+      prevProps.domains.length === this.props.domains.length
+    )
+      return;
+    this.setState({
+      selectedProvider:
+        localStorage.getItem(SELECTED_DOMAIN_KEY) ||
+        Authentication.DEFAULT_PROVIDER
+    });
+  }
 
   //========================================================================================
   /*                                                                                      *
@@ -34,28 +56,13 @@ class LoginForm extends Component {
    */
   sendCreds = async () => {
     if (!this.state.password) return;
-    try {
-      const apiResponse = await Authentication.login(
-        this.state.username,
-        this.state.password,
-        this.state.remember
-      );
-      // If successfully logged in
-      if (!apiResponse.error) {
-        this.props.setLoggedIn(true);
-      } else {
-        // Show the error in red
-        this.setState({
-          error: true,
-          errorMessage: apiResponse.error
-        });
-      }
-    } catch (e) {
-      this.setState({
-        error: true,
-        errorMessage: e
-      });
-    }
+    const { username, password, remember, selectedProvider } = this.state;
+    this.props.onLoginSubmit({
+      username,
+      password,
+      remember,
+      selectedProvider
+    });
   };
 
   /**
@@ -71,6 +78,13 @@ class LoginForm extends Component {
     }
   };
 
+  handleAuthenticationProviderChange = e => {
+    this.setState({
+      selectedProvider: e.target.value
+    });
+    localStorage.setItem(SELECTED_DOMAIN_KEY, e.target.value);
+  };
+
   //========================================================================================
   /*                                                                                      *
    *                                       Handlers                                       *
@@ -82,6 +96,7 @@ class LoginForm extends Component {
    * @param {Event} event : On change event
    */
   onChangeUsername = event => {
+    this.state.username && this.props.onChanges();
     this.setState({ username: event.target.value });
   };
 
@@ -90,12 +105,13 @@ class LoginForm extends Component {
    * @param {Event} event : On change event
    */
   onChangePassword = event => {
-    const isEmptyPassword = event.target.value === "";
+    const password = event.target.value;
+    const isEmptyPassword = password === "";
     const errorMessage = isEmptyPassword ? "Password is required" : "";
+    this.state.password && this.props.onChanges();
     this.setState({
-      password: event.target.value,
-      error: isEmptyPassword,
-      errorMessage
+      password,
+      formErrors: errorMessage
     });
   };
 
@@ -110,6 +126,10 @@ class LoginForm extends Component {
     }
   };
 
+  hasMultipleDomains = () =>
+    this.props.domains?.length > 1 &&
+    this.props.domains.some(ap => ap != Authentication.DEFAULT_PROVIDER);
+
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -117,8 +137,8 @@ class LoginForm extends Component {
   //========================================================================================
 
   render() {
-    const { classes, logo } = this.props;
-
+    const { classes, logo, domains, authErrorMessage } = this.props;
+    const errorMessage = this.state.formErrors || authErrorMessage;
     return (
       <Grid
         data-testid="section_login-form"
@@ -142,7 +162,7 @@ class LoginForm extends Component {
               <FormControl
                 data-testid="section_form-control"
                 className={classes.formControl}
-                error={this.state.error}
+                error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-username-error">
                   Username
@@ -161,7 +181,7 @@ class LoginForm extends Component {
             <Typography align="center" variant="subtitle1" gutterBottom>
               <FormControl
                 className={classes.formControl}
-                error={this.state.error}
+                error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-password-error">
                   Password
@@ -176,9 +196,9 @@ class LoginForm extends Component {
                   onChange={this.onChangePassword}
                   onKeyUp={this.onKeyUpPassword}
                 />
-                {this.state.error && (
+                {errorMessage && (
                   <FormHelperText id="component-error-text">
-                    {this.state.errorMessage}
+                    {errorMessage}
                   </FormHelperText>
                 )}
                 {this.state.capsLockOn && (
@@ -187,6 +207,17 @@ class LoginForm extends Component {
                   </FormHelperText>
                 )}
               </FormControl>
+            </Typography>
+          </Grid>
+          <Grid>
+            <Typography align="center" variant="subtitle1" gutterBottom>
+              {this.hasMultipleDomains() && (
+                <LoginFormAdvanced
+                  selectedProvider={this.state.selectedProvider}
+                  domains={domains}
+                  onProviderChange={this.handleAuthenticationProviderChange}
+                />
+              )}
             </Typography>
           </Grid>
           <Grid>
@@ -203,13 +234,19 @@ class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
+  domains: PropTypes.array,
   logo: PropTypes.any, // expects a svg element
-  setLoggedIn: PropTypes.func
+  permissionErrors: PropTypes.string,
+  onLoginSubmit: PropTypes.func,
+  onChanges: PropTypes.func
 };
 
 LoginForm.defaultProps = {
+  domains: [],
   logo: defaultLogo,
-  setLoggedIn: loggedIn => console.log(loggedIn)
+  permissionErrors: "",
+  onLoginSubmit: () => {},
+  onChanges: () => {}
 };
 
 export default withStyles(styles, { withTheme: true })(LoginForm);
