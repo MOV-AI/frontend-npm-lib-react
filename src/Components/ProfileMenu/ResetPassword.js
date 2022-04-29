@@ -66,7 +66,7 @@ const REQUIRED_INPUTS = {
  */
 const ResetPasswordModal = forwardRef((props, ref) => {
   // Props
-  const { variant, userId } = props;
+  const { variant, userId = "" } = props;
   // State hooks
   const [form, setForm] = useState({ ...DEFAULT_VALUES });
   const [errors, setErrors] = useState({ ...DEFAULT_ERRORS });
@@ -327,8 +327,7 @@ ResetPasswordModal.propTypes = {
   userId: PropTypes.string
 };
 ResetPasswordModal.defaultProps = {
-  variant: VARIANT_OPTIONS.CHANGE,
-  userId: ""
+  variant: VARIANT_OPTIONS.CHANGE
 };
 
 export default ResetPasswordModal;
