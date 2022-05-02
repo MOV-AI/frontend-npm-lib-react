@@ -5,6 +5,7 @@ import AppsIcon from "@material-ui/icons/Apps";
 import { HomeMenuPopperStyles } from "./styles";
 import HomeMenuSkeleton from "./HomeMenuSkeleton";
 import HTMLPopper from "../Popper/HTMLPopper";
+import { APP_TYPES } from "../../Utils/Constants";
 
 const HomeMenuPopper = () => {
   const classes = HomeMenuPopperStyles();
@@ -73,12 +74,14 @@ const HomeMenuPopper = () => {
   const renderHTML = () => {
     if (currentApps) {
       const arrayOfApplications = currentApps.filter(
-        app => app.Type === "application" && app.Label !== "launcher"
+        app => app.Type === APP_TYPES.APPLICATION && app.Label !== "launcher"
       );
       const arrayOfExternalApps = currentApps.filter(
-        app => app.Type === "external"
+        app => app.Type === APP_TYPES.EXTERNAL
       );
-      const arrayOfLayouts = currentApps.filter(app => app.Type === "layout");
+      const arrayOfLayouts = currentApps.filter(
+        app => app.Type === APP_TYPES.LAYOUT
+      );
       return (
         <>
           <div className={classes.menuWrapper}>
