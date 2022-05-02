@@ -39,9 +39,9 @@ const ContextMenu = props => {
   const handleClick = evt => {
     setAnchorEl(evt.currentTarget);
     // Loose focus of active element (remove default focused background of first menu item)
-    setImmediate(() => {
+    setTimeout(() => {
       document.activeElement.blur();
-    });
+    }, 0);
   };
 
   const handleClose = evt => {
