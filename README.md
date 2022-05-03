@@ -4,7 +4,6 @@
 
 # Troubleshooting
 
-
 ## Invalid hook
 
 When running the lib-react locally from IDE or another app, you might have an issue with invalid hooks with the following message: "Error: Invalid hook call. Hooks can only be called inside of the body of a function component."
