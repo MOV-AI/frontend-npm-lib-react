@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { Button, Divider, IconButton } from "@material-ui/core";
 import { User, Utils } from "@mov-ai/mov-fe-lib-core";
 import AppsIcon from "@material-ui/icons/Apps";
@@ -8,10 +8,26 @@ import HTMLPopper from "../Popper/HTMLPopper";
 import { APP_TYPES } from "../../Utils/Constants";
 
 const HomeMenuPopper = () => {
+  // State hooks
   const classes = HomeMenuPopperStyles();
   const [currentApps, setCurrentApps] = React.useState();
 
-  const currentUser = new User();
+  // Other hooks
+  const currentUser = useMemo(() => new User(), []);
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                      SUBSCRIBERS                                     *
+   *                                                                                      */
+  //========================================================================================
+  /**
+   * subscribe to Applications updates
+   */
+  useEffect(() => {
+    currentUser.getAllApps().then(res => {
+      res.success && setCurrentApps(res.result);
+    });
+  }, [currentUser]);
 
   //========================================================================================
   /*                                                                                      *
