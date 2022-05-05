@@ -1,6 +1,7 @@
 export const SIMPLE_LEVELS_LIST = [
-  { value: "INFO", label: "Robot Status" },
-  { value: "ERROR", label: "Alerts" }
+  { value: "INFO", label: "Info" },
+  { value: "ERROR", label: "Error" },
+  { value: "CRITICAL", label: "Critical" }
 ];
 
 export const ADVANCED_LEVELS_LIST = [

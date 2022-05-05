@@ -1,13 +1,5 @@
 import _isEmpty from "lodash/isEmpty";
 
-// export const levels = [
-//   { value: "INFO", label: i18n.t("Robot Status") },
-//   // { value: "WARNING", label: "Warnings" },
-//   // { value: "DEBUG", label: "Debug" },
-//   { value: "ERROR", label: i18n.t("Alerts") }
-//   // { value: "CRITICAL", label: "Critical" }
-// ];
-
 export const colorCoding = {
   INFO: {
     backgroundColor: "rgba(33, 150, 243, 0.1)"
