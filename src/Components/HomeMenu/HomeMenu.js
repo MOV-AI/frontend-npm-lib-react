@@ -9,7 +9,7 @@ import { APP_TYPES } from "../../Utils/Constants";
 
 const HomeMenuPopper = () => {
   const classes = HomeMenuPopperStyles();
-  const [currentApps, setCurrentApps] = React.useState(false);
+  const [currentApps, setCurrentApps] = React.useState();
 
   const currentUser = new User();
 
@@ -32,7 +32,7 @@ const HomeMenuPopper = () => {
    * @param {object} element : App object
    */
   const onAppClick = (event, app) => {
-    if (app.Label !== undefined) {
+    if (app.Label) {
       Utils.loadResources(event, app);
     }
   };
@@ -73,15 +73,20 @@ const HomeMenuPopper = () => {
 
   const renderHTML = () => {
     if (currentApps) {
-      const arrayOfApplications = currentApps.filter(
-        app => app.Type === APP_TYPES.APPLICATION && app.Label !== "launcher"
-      );
-      const arrayOfExternalApps = currentApps.filter(
-        app => app.Type === APP_TYPES.EXTERNAL
-      );
-      const arrayOfLayouts = currentApps.filter(
-        app => app.Type === APP_TYPES.LAYOUT
-      );
+      const arrayOfApplications = [];
+      const arrayOfExternalApps = [];
+      const arrayOfLayouts = [];
+
+      currentApps.forEach(app => {
+        const appType = app.Type;
+
+        if (appType === APP_TYPES.APPLICATION && app.Label !== "launcher")
+          arrayOfApplications.push(app);
+
+        if (appType === APP_TYPES.EXTERNAL) arrayOfExternalApps.push(app);
+
+        if (appType === APP_TYPES.LAYOUT) arrayOfLayouts.push(app);
+      });
       return (
         <>
           <div className={classes.menuWrapper}>
@@ -115,7 +120,7 @@ const HomeMenuPopper = () => {
     <HTMLPopper
       clickableElement={getIcon()}
       hideOnClickAway={true}
-      popperPlacement="center"
+      popperPlacement="bottom"
     >
       {renderHTML()}
     </HTMLPopper>
