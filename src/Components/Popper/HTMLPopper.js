@@ -71,13 +71,15 @@ const HTMLPopper = props => {
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
-            {hideOnClickAway ? (
-              <ClickAwayListener onClickAway={handlePopperClose}>
-                {renderPaper()}
-              </ClickAwayListener>
-            ) : (
-              renderPaper()
-            )}
+            <>
+              {hideOnClickAway ? (
+                <ClickAwayListener onClickAway={handlePopperClose}>
+                  {renderPaper()}
+                </ClickAwayListener>
+              ) : (
+                renderPaper()
+              )}
+            </>
           </Fade>
         )}
       </Popper>
