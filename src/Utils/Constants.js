@@ -4,3 +4,9 @@ export const ALERT_SEVERITY = {
   INFO: "info",
   SUCCESS: "success"
 };
+
+export const APP_TYPES = {
+  APPLICATION: "application",
+  EXTERNAL: "external",
+  LAYOUT: "layout"
+};
