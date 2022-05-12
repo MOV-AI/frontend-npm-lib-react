@@ -127,16 +127,6 @@ export default function withAuthentication(Component, appName) {
     };
 
     /**
-     * handleFirstRender
-     * Renders the loading panel while checking the user authentication and permissions
-     * Renders the login form when the user is not authenticated
-     * @returns React Component
-     */
-    const handleFirstRender = () => {
-      return loading ? renderLoading() : renderLoginForm();
-    };
-
-    /**
      * handleLoginSubmit - handle the user login credentials submit
      * @param {{ username, password, remember, selectedProvider }}
      */
@@ -197,23 +187,18 @@ export default function withAuthentication(Component, appName) {
     /**
      * renders the Login form if the user is not logged in
      */
+    if (loading) return renderLoading();
+    if (!state.loggedIn && firstRender.current) return renderLoginForm();
+    if (!state.hasPermissions) return renderNotAuthorized();
     return (
       <React.Fragment>
-        {!state.loggedIn && firstRender.current ? (
-          handleFirstRender()
-        ) : state.hasPermissions ? (
-          <React.Fragment>
-            <Component
-              currentUser={state.currentUser}
-              handleLogOut={handleLogOut}
-              loggedIn={state.loggedIn}
-              {...props}
-            />
-            <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
-          </React.Fragment>
-        ) : (
-          renderNotAuthorized()
-        )}
+        <Component
+          currentUser={state.currentUser}
+          handleLogOut={handleLogOut}
+          loggedIn={state.loggedIn}
+          {...props}
+        />
+        <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
       </React.Fragment>
     );
   };
