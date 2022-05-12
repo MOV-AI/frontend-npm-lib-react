@@ -89,8 +89,10 @@ export default function withAuthentication(Component, appName) {
         // check if token expiration time is still valid
         const expDelta = exp - now;
 
-        const timeToRun =
-          10000 || Math.max(expDelta * 1000 - RECHECK_VALID_DELAY, 10000);
+        const timeToRun = Math.max(
+          expDelta * 1000 - RECHECK_VALID_DELAY,
+          10000
+        );
 
         const timeOut = setTimeout(
           () =>
@@ -98,7 +100,7 @@ export default function withAuthentication(Component, appName) {
               .then(res => {
                 setState(prevState => ({
                   ...prevState,
-                  loggedIn: false
+                  loggedIn: res
                 }));
               })
               .catch(error =>
