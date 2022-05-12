@@ -127,16 +127,6 @@ export default function withAuthentication(Component, appName) {
     };
 
     /**
-     * handleFirstRender
-     * Renders the loading panel while checking the user authentication and permissions
-     * Renders the login form when the user is not authenticated
-     * @returns React Component
-     */
-    const handleFirstRender = () => {
-      return loading ? renderLoading() : renderLoginForm();
-    };
-
-    /**
      * handleLoginSubmit - handle the user login credentials submit
      * @param {{ username, password, remember, selectedProvider }}
      */
@@ -172,14 +162,17 @@ export default function withAuthentication(Component, appName) {
      * renderLoginForm - Renders the login form
      * @returns React Component
      */
-    const renderLoginForm = () => (
-      <LoginForm
-        domains={authenticationProviders}
-        authErrorMessage={errorMessage}
-        onLoginSubmit={handleLoginSubmit}
-        onChanges={setErrorMessage}
-      />
-    );
+    const renderLoginForm = () => {
+      if (loading) return renderLoading();
+      return (
+        <LoginForm
+          domains={authenticationProviders}
+          authErrorMessage={errorMessage}
+          onLoginSubmit={handleLoginSubmit}
+          onChanges={setErrorMessage}
+        />
+      );
+    };
 
     /**
      * renderNotAuthorized - Renders the not authorized panel
@@ -200,15 +193,17 @@ export default function withAuthentication(Component, appName) {
     return (
       <React.Fragment>
         {!state.loggedIn && firstRender.current ? (
-          handleFirstRender()
+          renderLoginForm()
         ) : state.hasPermissions ? (
           <React.Fragment>
-            <Component
-              currentUser={state.currentUser}
-              handleLogOut={handleLogOut}
-              loggedIn={state.loggedIn}
-              {...props}
-            />
+            {!loading && (
+              <Component
+                currentUser={state.currentUser}
+                handleLogOut={handleLogOut}
+                loggedIn={state.loggedIn}
+                {...props}
+              />
+            )}
             <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
           </React.Fragment>
         ) : (
