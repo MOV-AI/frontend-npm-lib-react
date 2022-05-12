@@ -1,0 +1,11 @@
+{
+  "sonarlint.connectedMode.connections.sonarqube": [
+    {
+      "serverUrl": "https://sonarqube.aws.cloud.mov.ai",
+      "token": "${localEnv:SONAR_TOKEN}"
+    }
+  ],
+  "sonarlint.connectedMode.project": {
+    "projectKey": "${workspaceFolderBasename}"
+  }
+}
