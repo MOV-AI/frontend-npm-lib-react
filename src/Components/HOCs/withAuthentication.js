@@ -162,17 +162,14 @@ export default function withAuthentication(Component, appName) {
      * renderLoginForm - Renders the login form
      * @returns React Component
      */
-    const renderLoginForm = () => {
-      if (loading) return renderLoading();
-      return (
-        <LoginForm
-          domains={authenticationProviders}
-          authErrorMessage={errorMessage}
-          onLoginSubmit={handleLoginSubmit}
-          onChanges={setErrorMessage}
-        />
-      );
-    };
+    const renderLoginForm = () => (
+      <LoginForm
+        domains={authenticationProviders}
+        authErrorMessage={errorMessage}
+        onLoginSubmit={handleLoginSubmit}
+        onChanges={setErrorMessage}
+      />
+    );
 
     /**
      * renderNotAuthorized - Renders the not authorized panel
@@ -190,18 +187,17 @@ export default function withAuthentication(Component, appName) {
     /**
      * renders the Login form if the user is not logged in
      */
+    if (loading) return renderLoading();
     if (!state.loggedIn && firstRender.current) return renderLoginForm();
     if (!state.hasPermissions) return renderNotAuthorized();
     return (
       <React.Fragment>
-        {!loading && (
-          <Component
-            currentUser={state.currentUser}
-            handleLogOut={handleLogOut}
-            loggedIn={state.loggedIn}
-            {...props}
-          />
-        )}
+        <Component
+          currentUser={state.currentUser}
+          handleLogOut={handleLogOut}
+          loggedIn={state.loggedIn}
+          {...props}
+        />
         <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
       </React.Fragment>
     );
