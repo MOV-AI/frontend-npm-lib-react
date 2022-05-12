@@ -7,9 +7,9 @@ import HomeMenuSkeleton from "./HomeMenuSkeleton";
 import HTMLPopper from "../Popper/HTMLPopper";
 import { APP_TYPES } from "../../Utils/Constants";
 
-const HomeMenuPopper = props => {
+const HomeMenuPopper = () => {
   // State hooks
-  const classes = HomeMenuPopperStyles(props);
+  const classes = HomeMenuPopperStyles();
   const [currentApps, setCurrentApps] = React.useState();
 
   // Other hooks

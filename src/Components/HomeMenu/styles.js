@@ -12,7 +12,7 @@ export const HomeMenuPopperStyles = makeStyles(theme => ({
     flexBasis: "29%"
   },
   appMiniature: {
-    color: props => props.colorStyle,
+    color: theme.palette.getContrastText("#fff"),
     width: "60px",
     height: "32px",
     display: "flex",
@@ -23,7 +23,7 @@ export const HomeMenuPopperStyles = makeStyles(theme => ({
     marginBottom: "10px"
   },
   appIcon: {
-    color: props => props.colorStyle,
+    color: theme.palette.getContrastText("#fff"),
     fontSize: "48px",
     marginBottom: "10px",
     marginTop: "20px"
