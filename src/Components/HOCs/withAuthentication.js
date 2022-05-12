@@ -89,10 +89,8 @@ export default function withAuthentication(Component, appName) {
         // check if token expiration time is still valid
         const expDelta = exp - now;
 
-        const timeToRun = Math.max(
-          expDelta * 1000 - RECHECK_VALID_DELAY,
-          10000
-        );
+        const timeToRun =
+          10000 || Math.max(expDelta * 1000 - RECHECK_VALID_DELAY, 10000);
 
         const timeOut = setTimeout(
           () =>
@@ -100,7 +98,7 @@ export default function withAuthentication(Component, appName) {
               .then(res => {
                 setState(prevState => ({
                   ...prevState,
-                  loggedIn: res
+                  loggedIn: false
                 }));
               })
               .catch(error =>
@@ -190,25 +188,19 @@ export default function withAuthentication(Component, appName) {
     /**
      * renders the Login form if the user is not logged in
      */
+    if (!state.loggedIn && firstRender.current) return renderLoginForm();
+    if (!state.hasPermissions) return renderNotAuthorized();
     return (
       <React.Fragment>
-        {!state.loggedIn && firstRender.current ? (
-          renderLoginForm()
-        ) : state.hasPermissions ? (
-          <React.Fragment>
-            {!loading && (
-              <Component
-                currentUser={state.currentUser}
-                handleLogOut={handleLogOut}
-                loggedIn={state.loggedIn}
-                {...props}
-              />
-            )}
-            <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
-          </React.Fragment>
-        ) : (
-          renderNotAuthorized()
+        {!loading && (
+          <Component
+            currentUser={state.currentUser}
+            handleLogOut={handleLogOut}
+            loggedIn={state.loggedIn}
+            {...props}
+          />
         )}
+        <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
       </React.Fragment>
     );
   };
