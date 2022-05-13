@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
 export const HomeMenuPopperStyles = makeStyles(theme => ({
   iconButton: { cursor: "pointer", height: "100%" },
@@ -12,7 +12,7 @@ export const HomeMenuPopperStyles = makeStyles(theme => ({
     flexBasis: "29%"
   },
   appMiniature: {
-    color: "#fff",
+    color: theme.palette.getContrastText("#fff"),
     width: "60px",
     height: "32px",
     display: "flex",
@@ -22,6 +22,12 @@ export const HomeMenuPopperStyles = makeStyles(theme => ({
     fontWeight: "bold",
     marginBottom: "10px"
   },
+  appIcon: {
+    color: theme.palette.getContrastText("#fff"),
+    fontSize: "48px",
+    marginBottom: "10px",
+    marginTop: "20px"
+  },
   menuButton: {
     margin: "5px",
     padding: "0px",
@@ -29,12 +35,6 @@ export const HomeMenuPopperStyles = makeStyles(theme => ({
   },
   menuTooltip: {
     zIndex: 999999
-  },
-  appIcon: {
-    color: "#fff",
-    fontSize: "48px",
-    marginBottom: "10px",
-    marginTop: "20px"
   },
   logo: {
     flexGrow: 1,
