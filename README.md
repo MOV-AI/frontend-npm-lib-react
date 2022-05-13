@@ -2,9 +2,9 @@
 
 ![Movai](https://www.mov.ai/wp-content/uploads/2021/06/MOV.AI-logo-3.png)
 
-# Troubleshooting
+## Troubleshooting
 
-# Invalid hook
+## Invalid hook
 
 When running the lib-react locally from IDE or another app, you might have an issue with invalid hooks with the following message: "Error: Invalid hook call. Hooks can only be called inside of the body of a function component."
 
