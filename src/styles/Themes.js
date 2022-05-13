@@ -9,7 +9,8 @@ const CONSTANTS = {
     background: {
       primary: "#424242",
       secondary: "#212121"
-    }
+    },
+    iconColor: "white"
   },
   light: {
     borderBottom: "1px solid #ccc",
@@ -17,7 +18,8 @@ const CONSTANTS = {
     background: {
       primary: "#e2e2e2",
       secondary: "#b2b2b2"
-    }
+    },
+    iconColor: "#007197"
   }
 };
 
@@ -86,7 +88,8 @@ const Themes = {
           background: "#f5f5f9",
           color: "rgba(0, 0, 0, 0.87)",
           border: "#dadde9"
-        }
+        },
+        getContrastText: () => CONSTANTS.dark.iconColor
       },
       icon: { color: "#c6c6c6", hoverColor: "white" },
       table: { stripColor: "#505050" },
@@ -218,7 +221,8 @@ const Themes = {
           background: "whitesmoke",
           color: CONSTANTS.light.textColor,
           border: "darkgray"
-        }
+        },
+        getContrastText: () => CONSTANTS.light.iconColor
       },
       verticalBar: {
         iconColor: "#616161"
