@@ -2,7 +2,7 @@
 
 ![Movai](https://www.mov.ai/wp-content/uploads/2021/06/MOV.AI-logo-3.png)
 
-# Troubleshooting
+## Troubleshooting
 
 ## Invalid hook
 
