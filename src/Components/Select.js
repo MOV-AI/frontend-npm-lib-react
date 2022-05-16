@@ -20,8 +20,8 @@ const Select = props => {
   let noneOption = <div></div>;
   if (props.noneOption) {
     noneOption = (
-      <MenuItem value="">
-        <em>None</em>
+      <MenuItem value={props.noneOptionConfig.value}>
+        <em>{props.noneOptionConfig.text}</em>
       </MenuItem>
     );
   }
@@ -74,6 +74,10 @@ Select.propTypes = {
   value: PropTypes.string,
   options: PropTypes.array,
   noneOption: PropTypes.bool,
+  noneOptionConfig: PropTypes.objectOf({
+    value: PropTypes.string,
+    text: PropTypes.text
+  }),
   label: PropTypes.string,
   variant: PropTypes.string,
   style: PropTypes.object,
@@ -86,6 +90,10 @@ Select.defaultProps = {
   options: ["option1", "option2", "option3"],
   variant: "filled",
   noneOption: true,
+  noneOptionConfig: {
+    value: "",
+    text: "None"
+  },
   onChange: evt => console.log(evt.target.value),
   id: "movai-react-select"
 };

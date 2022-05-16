@@ -120,19 +120,25 @@ const ProfileMenu = props => {
             {welcomeLabel}, {username}
           </div>
           <Divider variant="middle" />
-          {extraItems?.map(item => (
-            <MenuItem className={classes.menuItemSpacing} onClick={item.func}>
+          {extraItems?.map((item, index) => (
+            <MenuItem
+              className={classes.menuItemSpacing}
+              onClick={item.func}
+              key={`extraItem-${item.label}-${index}`}
+            >
               {item.label}
             </MenuItem>
           ))}
           <Divider variant="middle" />
-          <MenuItem
-            data-testid="input_reset-password"
-            className={classes.menuItemSpacing}
-            onClick={handlePasswordReset}
-          >
-            {i18n.t("Change Password")}
-          </MenuItem>
+          {user.isInternalUser() && (
+            <MenuItem
+              data-testid="input_reset-password"
+              className={classes.menuItemSpacing}
+              onClick={handlePasswordReset}
+            >
+              {i18n.t("Change Password")}
+            </MenuItem>
+          )}
           {handleToggleTheme && (
             <div className={classes.menuItemSpacing}>
               {darkThemeLabel}
