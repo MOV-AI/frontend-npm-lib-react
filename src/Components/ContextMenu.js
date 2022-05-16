@@ -73,7 +73,7 @@ const ContextMenu = props => {
             <StyledMenuItem
               data-testid="input_menu-item"
               onClick={evt => {
-                item.onClick();
+                item.onClick(evt);
                 if (item.onClose || item.onClose === undefined) {
                   handleClose(evt);
                 }

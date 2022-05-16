@@ -55,11 +55,14 @@ const Table = props => {
       title={props.title}
       columns={props.columns}
       data={props.data}
-      icons={tableIcons}
       actions={props.actions}
       options={props.options}
       components={props.components}
       localization={props.localization}
+      icons={{
+        ...tableIcons,
+        ...props.icons
+      }}
     />
   );
 };
@@ -72,7 +75,8 @@ Table.propTypes = {
   actions: PropTypes.array,
   options: PropTypes.object,
   components: PropTypes.object,
-  localization: PropTypes.object
+  localization: PropTypes.object,
+  icons: PropTypes.object
 };
 Table.defaultProps = {
   style: {},
@@ -80,6 +84,7 @@ Table.defaultProps = {
   columns: [],
   data: [],
   actions: [],
+  icons: {},
   options: {
     actionsColumnIndex: -1,
     draggable: false,
