@@ -13,10 +13,12 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import PropTypes from "prop-types";
 import { advancedSectionStyles } from "./style";
 import { makeStyles } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 const advancedLoginStyles = makeStyles(advancedSectionStyles);
 
 const LoginFormAdvanced = props => {
+  const { t } = useTranslation();
   const classes = advancedLoginStyles();
   const [open, setOpen] = useState(true);
 
@@ -29,7 +31,7 @@ const LoginFormAdvanced = props => {
         onClick={() => setOpen(!open)}
         disabled={!props.domains?.length}
       >
-        <InputLabel className={classes.label}>Advanced</InputLabel>
+        <InputLabel className={classes.label}>{t("Advanced")}</InputLabel>
       </Button>
       <Collapse in={open}>
         <List dense={true} component="div">
@@ -43,12 +45,13 @@ const LoginFormAdvanced = props => {
                 }
               >
                 <InputLabel htmlFor="component-authentication-selector">
-                  Domain
+                  {t("Domain")}
                 </InputLabel>
                 <Select
                   id="component-authentication-selector"
                   aria-describedby="component-authentication-error-text"
                   value={props.selectedProvider}
+                  inputProps={{ "data-testid": "input_domain" }}
                   classes={{ root: classes.providerSelectorInput }}
                   onChange={props.onProviderChange}
                   disabled={false}
