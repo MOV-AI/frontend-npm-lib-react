@@ -13,7 +13,10 @@ import Toggle from "./src/Components/Toggle";
 import SearchInput from "./src/Components/SearchInput";
 import Breadcrumb from "./src/Components/Breadcrumb";
 import Select from "./src/Components/Select";
-import { snackbar } from "./src/Components/Snackbar/Snackbar";
+import {
+  snackbar,
+  SnackbarUtilsConfigurator
+} from "./src/Components/Snackbar/Snackbar";
 import Themes from "./src/styles/Themes";
 import Style from "./src/styles/Style";
 import Logs from "./src/Components/Logs/Logs";
@@ -28,11 +31,13 @@ import HomeMenuSkeleton from "./src/Components/HomeMenu/HomeMenuSkeleton";
 // import HOCs
 import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
 import withAuthentication from "./src/Components/HOCs/withAuthentication";
+import withNotification from "./src/Components/HOCs/withNotification";
 import withTheme from "./src/Components/HOCs/withTheme";
 
 export {
   withOfflineValidation,
   withAuthentication,
+  withNotification,
   withTheme,
   Button,
   AbstractModal,
@@ -52,6 +57,7 @@ export {
   Breadcrumb,
   Select,
   snackbar,
+  SnackbarUtilsConfigurator,
   Style,
   Logs,
   FilterIcon,
