@@ -30,6 +30,8 @@ export const snackbar = (props, theme) => {
     closable = true,
     horizontal = "left",
     vertical = "bottom",
+    closeButtonText = "Dismiss",
+    severity = "default",
     ...otherProps
   } = props;
   const action = key => {
@@ -37,7 +39,7 @@ export const snackbar = (props, theme) => {
       return (
         <Fragment>
           <Button data-testid="output_icon" onClick={closeSnackbar(key)}>
-            Dismiss
+            {closeButtonText}
           </Button>
         </Fragment>
       );
@@ -46,6 +48,7 @@ export const snackbar = (props, theme) => {
   useSnackbarRef.enqueueSnackbar(message, {
     ...otherProps,
     action,
+    variant: severity,
     anchorOrigin: {
       vertical,
       horizontal

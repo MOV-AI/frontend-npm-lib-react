@@ -13,10 +13,7 @@ import Toggle from "./src/Components/Toggle";
 import SearchInput from "./src/Components/SearchInput";
 import Breadcrumb from "./src/Components/Breadcrumb";
 import Select from "./src/Components/Select";
-import {
-  snackbar,
-  SnackbarUtilsConfigurator
-} from "./src/Components/Snackbar/Snackbar";
+import { snackbar } from "./src/Components/Snackbar/Snackbar";
 import Themes from "./src/styles/Themes";
 import Style from "./src/styles/Style";
 import Logs from "./src/Components/Logs/Logs";
@@ -57,7 +54,6 @@ export {
   Breadcrumb,
   Select,
   snackbar,
-  SnackbarUtilsConfigurator,
   Style,
   Logs,
   FilterIcon,
