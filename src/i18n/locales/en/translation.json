@@ -1,4 +1,6 @@
 {
+  "Advanced": "Advanced",
+  "Domain": "Domain",
   "Save": "Save",
   "Ports": "Ports",
   "Invalid data type": "Invalid data type",
@@ -46,5 +48,7 @@
   "Insert Text here": "Insert Text here",
   "Confirm": "Confirm",
   "Settings": "Settings",
-  "Change Password": "Change Password"
+  "Change Password": "Change Password",
+  "PasswordRequired": "Password is required",
+  "UsernameRequired": "Username is required"
 }

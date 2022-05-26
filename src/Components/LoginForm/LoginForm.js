@@ -13,6 +13,7 @@ import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import PropTypes from "prop-types";
 import LoginFormAdvanced from "./LoginFormAdvanced";
+import { withTranslation } from "react-i18next";
 
 const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
 
@@ -55,7 +56,7 @@ class LoginForm extends Component {
    * Call authentication login method to send credentials
    */
   sendCreds = async () => {
-    if (!this.state.password) return;
+    if (!this.state.password || !this.state.username) return;
     const { username, password, remember, selectedProvider } = this.state;
     this.props.onLoginSubmit({
       username,
@@ -78,7 +79,7 @@ class LoginForm extends Component {
     }
   };
 
-  handleAuthenticationProviderChange = e => {
+  handleProviderChange = e => {
     this.setState({
       selectedProvider: e.target.value
     });
@@ -96,8 +97,10 @@ class LoginForm extends Component {
    * @param {Event} event : On change event
    */
   onChangeUsername = event => {
+    const username = event.target.value || "";
+    const errorMessage = !username ? this.props.t("UsernameRequired") : "";
     this.state.username && this.props.onChanges();
-    this.setState({ username: event.target.value });
+    this.setState({ username: event.target.value, formErrors: errorMessage });
   };
 
   /**
@@ -105,9 +108,8 @@ class LoginForm extends Component {
    * @param {Event} event : On change event
    */
   onChangePassword = event => {
-    const password = event.target.value;
-    const isEmptyPassword = password === "";
-    const errorMessage = isEmptyPassword ? "Password is required" : "";
+    const password = event.target.value || "";
+    const errorMessage = !password ? this.props.t("PasswordRequired") : "";
     this.state.password && this.props.onChanges();
     this.setState({
       password,
@@ -215,7 +217,7 @@ class LoginForm extends Component {
                 <LoginFormAdvanced
                   selectedProvider={this.state.selectedProvider}
                   domains={domains}
-                  onProviderChange={this.handleAuthenticationProviderChange}
+                  onProviderChange={this.handleProviderChange}
                 />
               )}
             </Typography>
@@ -249,4 +251,6 @@ LoginForm.defaultProps = {
   onChanges: () => {}
 };
 
-export default withStyles(styles, { withTheme: true })(LoginForm);
+export default withTranslation()(
+  withStyles(styles, { withTheme: true })(LoginForm)
+);
