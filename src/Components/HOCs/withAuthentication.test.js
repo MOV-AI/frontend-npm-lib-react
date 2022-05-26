@@ -1,11 +1,9 @@
-import React, { useState as useStateMock } from "react";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import React from "react";
+import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { Authentication, User } from "@mov-ai/mov-fe-lib-core";
 import withAuthentication from "./withAuthentication";
-import jwtDecode from "jwt-decode";
 
-const MockComponent = props => <div></div>;
+const MockComponent = () => <div></div>;
 
 jest.mock("jwt-decode", () => {
   return function () {
@@ -13,7 +11,6 @@ jest.mock("jwt-decode", () => {
   };
 });
 
-// results in a ReferenceError
 jest.mock("@mov-ai/mov-fe-lib-core", () => {
   return {
     Authentication: {
@@ -40,11 +37,10 @@ describe("Render", () => {
   it("renders the component (smoke test)", async () => {
     const HOC = withAuthentication(MockComponent, "testApp");
 
-    const { getByTestId, getByText } = render(<HOC />);
+    const { findByTestId, getByText } = render(<HOC />);
 
-    const listNode = getByTestId("section_login-panel");
+    const listNode = await findByTestId("section_login-panel");
     const loadingText = getByText("Preparing the bots");
-    screen.debug();
 
     expect(listNode).toBeInTheDocument();
     expect(loadingText).toBeInTheDocument();
