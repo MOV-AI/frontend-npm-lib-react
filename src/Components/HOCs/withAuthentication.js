@@ -37,8 +37,9 @@ export default function withAuthentication(Component, appName) {
 
           setState({ loading: false, loggedIn, hasPermissions });
         })
-        .catch(e => {
+        .catch(error => {
           setState({ loggedIn: false, loading: false, hasPermissions: false });
+          console.warn("Failed login:", error);
         });
     }, []);
 
@@ -111,7 +112,7 @@ export default function withAuthentication(Component, appName) {
         renderLoading()
       ) : (
         <LoginForm
-          setLoggedIn={value => {
+          setLoggedIn={() => {
             setState(prevState => ({ ...prevState, loading: true }));
             authenticate();
           }}
@@ -141,30 +142,38 @@ export default function withAuthentication(Component, appName) {
     };
 
     /**
+     * Render app with Login modal to ask for a new authentication when necessary
+     * @returns {Component} App main component or notAuthorized modal
+     */
+    const renderApp = () => {
+      return state.hasPermissions ? (
+        <React.Fragment>
+          <Component
+            handleLogOut={handleLogOut}
+            loggedIn={state.loggedIn}
+            {...props}
+          />
+          <Modal open={!state.loggedIn}>
+            <LoginForm
+              setLoggedIn={value =>
+                setState(prevState => ({ ...prevState, loggedIn: value }))
+              }
+            />
+          </Modal>
+        </React.Fragment>
+      ) : (
+        renderNotAuthorized()
+      );
+    };
+
+    /**
      * renders the Login form if the user is not logged in
      */
     return (
       <React.Fragment>
-        {!state.loggedIn && firstRender.current ? (
-          handleFirstRender()
-        ) : state.hasPermissions ? (
-          <React.Fragment>
-            <Component
-              handleLogOut={handleLogOut}
-              loggedIn={state.loggedIn}
-              {...props}
-            />
-            <Modal open={!state.loggedIn}>
-              <LoginForm
-                setLoggedIn={value =>
-                  setState(prevState => ({ ...prevState, loggedIn: value }))
-                }
-              />
-            </Modal>
-          </React.Fragment>
-        ) : (
-          renderNotAuthorized()
-        )}
+        {!state.loggedIn && firstRender.current
+          ? handleFirstRender()
+          : renderApp()}
       </React.Fragment>
     );
   };
