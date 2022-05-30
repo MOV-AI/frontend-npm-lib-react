@@ -15,6 +15,7 @@ jest.mock("@mov-ai/mov-fe-lib-core", () => {
   return {
     Authentication: {
       checkLogin: jest.fn().mockResolvedValue(false),
+      refreshTokens: jest.fn().mockResolvedValue(true),
       getToken: jest.fn().mockReturnValue("token"),
       getProviders: jest
         .fn()
