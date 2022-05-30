@@ -99,11 +99,11 @@ export function findsUniqueKey(array, keyName) {
 // Converts the levels in the state for the string for the request
 //  Input: ["INFO", "DEBUG"]
 //  Output: "level=info,debug"
-export function getRequestLevels(levelsArray, levelsList) {
+export function getRequestLevels(levelsArray, levelsList = []) {
   let res = "";
   if (
-    (Array.isArray(levelsArray) && levelsArray.length === levelsList.length) ||
-    levelsArray.length === 0
+    Array.isArray(levelsArray) &&
+    (levelsArray.length === levelsList.length || levelsArray.length === 0)
   ) {
     return res;
   }

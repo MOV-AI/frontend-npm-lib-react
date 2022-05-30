@@ -27,11 +27,11 @@ export default function withAuthentication(Component, appName) {
         new Promise(resolve => setTimeout(resolve, 2000)),
         user.getCurrentUserWithPermissions()
       ])
-        .then(([loggedIn, _, user]) => {
+        .then(([loggedIn, _, _user]) => {
           const {
             Resources: { Applications: apps = [] },
             Superuser: isSuperUser
-          } = user;
+          } = _user;
           const hasPermissions =
             isSuperUser || apps.includes(appName) || !appName;
 
@@ -42,10 +42,11 @@ export default function withAuthentication(Component, appName) {
           setState({
             loggedIn,
             hasPermissions,
-            currentUser: user
+            currentUser: _user
           });
         })
-        .catch(e => {
+        .catch(error => {
+          console.warn("Failed login", error);
           setState({
             loggedIn: false,
             hasPermissions: false

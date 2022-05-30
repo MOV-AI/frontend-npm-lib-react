@@ -1,4 +1,6 @@
 {
+  "Advanced": "Opções",
+  "Domain": "Domínio",
   "Save": "Gravar",
   "Ports": "Portas",
   "Invalid data type": "Tipo de dado inválido",
@@ -46,5 +48,7 @@
   "Insert Text here": "Inserir texto aqui",
   "Confirm": "Confirmar",
   "Settings": "Configurações",
-  "Change Password": "Alterar senha"
+  "Change Password": "Alterar senha",
+  "PasswordRequired": "Senha é obrigatória",
+  "UsernameRequired": "Utilizador é obrigatório"
 }
