@@ -5,20 +5,20 @@ import withTheme from "./withTheme";
 
 export default function withDefaults(appOptions, themeOptions) {
   const { name: appName, component: appComponent } = appOptions;
-  const { ThemeProvider, ApplicationTheme } = themeOptions;
+  const { provider: themeProvider, theme: applicationTheme } = themeOptions;
   console.log("appName: ", appName, " appComponent: ", appComponent);
   console.log(
     "themeProvider: ",
-    ThemeProvider,
+    themeProvider,
     "ApplicationTheme: ",
-    ApplicationTheme
+    applicationTheme
   );
   return withTheme(
     withAuthentication(
       withNotification(withOfflineValidation(appComponent)),
       appName
     ),
-    ThemeProvider,
-    ApplicationTheme
+    themeProvider,
+    applicationTheme
   );
 }
