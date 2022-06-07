@@ -11,7 +11,7 @@ export default function withDefaults(appOptions, themeOptions = {}) {
   } = appOptions;
   let componentWithDefaults = { ...appComponent };
   if (offlineValidation)
-    componentWithDefaults = withOfflineValidation(appComponent);
+    componentWithDefaults = withOfflineValidation(componentWithDefaults);
   return withTheme(
     withAuthentication(withNotification(componentWithDefaults), appName),
     themeOptions.provider,
