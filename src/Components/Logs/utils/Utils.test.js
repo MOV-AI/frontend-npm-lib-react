@@ -26,10 +26,9 @@ test("test getRequestLevels", () => {
   const levelsArray = ["INFO", "DEBUG"];
   expect(getRequestLevels(undefined)).toStrictEqual("");
   expect(getRequestLevels("")).toStrictEqual("");
-  expect(getRequestLevels(levelsArray)).toStrictEqual("level=info,debug");
-  expect(
-    getRequestLevels(["INFO", "WARNING", "DEBUG", "ERROR", "CRITICAL"])
-  ).toStrictEqual("");
+  expect(getRequestLevels(levelsArray)).toStrictEqual("&level=info,debug");
+  const levels = ["INFO", "WARNING", "DEBUG", "ERROR", "CRITICAL"];
+  expect(getRequestLevels(levels, levels)).toStrictEqual("");
 });
 
 test("test getRequestTags", () => {

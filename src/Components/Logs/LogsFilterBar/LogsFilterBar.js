@@ -282,7 +282,7 @@ const LogsFilterBar = props => {
         icon={<LabelIcon data-testid="output_icon"></LabelIcon>}
         title="Tags"
         disabled={!props.advancedMode}
-        isActive={props.tags.length > 0}
+        isActive={props.tags?.length > 0}
       >
         <div data-testid="section_tags" className={classes.tagsContainer}>
           <TextField
@@ -309,7 +309,7 @@ const LogsFilterBar = props => {
             size="small"
           />
           <div className={classes.tagsList}>
-            {props.tags.map(data => {
+            {props.tags?.map(data => {
               return (
                 <Chip
                   data-testid="output_chip"
@@ -534,6 +534,7 @@ LogsFilterBar.defaultProps = {
 
 //The function returns true when the compared props equal, preventing the component from re-rendering
 function arePropsEqual(prevProps, nextProps) {
+  console.log("arePropsEqual: ", prevProps, nextProps);
   return _isEqual(prevProps, nextProps);
 }
 

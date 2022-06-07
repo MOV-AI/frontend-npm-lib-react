@@ -2,7 +2,7 @@ import React, { Component, createRef } from "react";
 import PropTypes from "prop-types";
 import _isEqual from "lodash/isEqual";
 import _uniqWith from "lodash/uniqWith";
-import { MasterDB } from "@mov-ai/mov-fe-lib-core";
+import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { withStyles } from "@material-ui/core/styles";
 import RobotLogModal from "../Modal/RobotLogModal";
 import {
@@ -30,35 +30,10 @@ import {
 } from "./utils/Constants";
 import LogsSkeleton from "./LogsSkeleton";
 import { Typography } from "@material-ui/core";
+import { styles } from "./styles";
 import i18n from "../../i18n/i18n";
 
 const UI_TAG = { key: 0, label: "ui" };
-
-const styles = theme => ({
-  tableContainer: {
-    flexGrow: 1,
-    minHeight: 0,
-    overflow: "hidden"
-  },
-  externalDiv: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column"
-  },
-  noRows: {
-    display: "flex",
-    fontSize: "20px",
-    justifyContent: "center",
-    padding: "32px"
-  },
-  wrapper: {
-    flexGrow: "1",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column"
-  }
-});
 
 class Logs extends Component {
   state = {
@@ -221,7 +196,7 @@ class Logs extends Component {
   };
 
   getRobotLogData = robotSelected => {
-    return new Promise((re, rej) => {
+    return new Promise((re, _) => {
       // Failsafe timer to prevent the promise all from hanging
       const timeoutHandle = setTimeout(() => {
         console.error("MOV.AI: One of the promises reached timeout");
@@ -229,11 +204,9 @@ class Logs extends Component {
       }, 2000);
 
       if (robotSelected.name) {
-        const protocol = window.location.protocol;
-        const host = window.location.hostname;
-        const dynamicURL = `${protocol}//${host}/api/v1/logs/${
-          robotSelected.name
-        }?limit=${this.state.limit}${getRequestLevels(
+        const dynamicURL = `v1/logs/${robotSelected.name}?limit=${
+          this.state.limit
+        }${getRequestLevels(
           this.state.levels,
           this.state.levelsList
         )}${getRequestService(
@@ -246,14 +219,14 @@ class Logs extends Component {
           this.state.messageRegex
         )}`;
 
-        MasterDB.get(dynamicURL, (res, e) => {
+        Rest.get({ path: dynamicURL }).then(res => {
           re(res?.data || []);
           clearTimeout(timeoutHandle);
         });
       } else {
         re([]);
       }
-    }).catch(() => console.log("Failed getRobotLogData"));
+    }).catch(err => console.warn("Failed getRobotLogData", err));
   };
 
   onRowClick = log => {
