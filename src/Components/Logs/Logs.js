@@ -6,6 +6,7 @@ import LogsTable from "./LogsTable/LogsTable";
 import LogsSkeleton from "./LogsSkeleton";
 import {
   ROBOT_STATES,
+  DATE_KEY_OPTION,
   ADVANCED_LEVELS_LIST,
   COLUMN_LIST,
   DEFAULT_LIMIT,
@@ -321,8 +322,8 @@ const Logs = props => {
    */
   const onChangeDate = useCallback((newDate, keyToChange) => {
     const setDate = {
-      selectedFromDate: date => setSelectedFromDate(date),
-      selectedToDate: date => setSelectedToDate(date)
+      [DATE_KEY_OPTION.FROM]: date => setSelectedFromDate(date),
+      [DATE_KEY_OPTION.TO]: date => setSelectedToDate(date)
     };
     lastRequestTimeRef.current = {};
     setDate[keyToChange](newDate);
@@ -459,7 +460,11 @@ const Logs = props => {
           selectedToDate={selectedToDate}
           advancedMode={advancedMode}
         ></LogsFilterBar>
-        <div data-testid="section_table-container" ref={handleContainerRef} className={classes.tableContainer}>
+        <div
+          data-testid="section_table-container"
+          ref={handleContainerRef}
+          className={classes.tableContainer}
+        >
           <LogsTable
             columns={columns}
             columnList={COLUMN_LIST}

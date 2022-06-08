@@ -68,3 +68,8 @@ export const DEFAULT_SELECTED_LEVELS = ["INFO", "ERROR", "CRITICAL"];
 export const DEFAULT_SELECTED_COLUMNS = ["Time", "Robot", "Message"];
 export const DEFAULT_LIMIT = 50;
 export const ROBOT_LOG_TYPE = ["module", "service"];
+
+export const DATE_KEY_OPTION = {
+  FROM: "selectedFromDate",
+  TO: "selectedToDate"
+};
