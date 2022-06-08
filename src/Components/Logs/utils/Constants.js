@@ -1,3 +1,5 @@
+import { getJustDateFromServer, getJustTimeFromServer } from "./Utils";
+
 export const SIMPLE_LEVELS_LIST = [
   { value: "INFO", label: "Robot Status" },
   { value: "ERROR", label: "Alerts" }
@@ -18,6 +20,47 @@ export const SERVICE_LIST = [
   { value: "ROS", label: "Ros" },
   { value: "HAPROXY", label: "ha-proxy" }
 ];
+
+export const ROBOT_STATES = {
+  ERROR: "ALERT",
+  ACTIVE: "ACTIVE",
+  OFFLINE: "OFFLINE"
+};
+
+export const COLUMN_LIST = {
+  Date: {
+    label: "Date",
+    dataKey: "time",
+    width: 110,
+    render: time => getJustDateFromServer(time)
+  },
+  Time: {
+    label: "Time",
+    dataKey: "time",
+    width: 100,
+    render: time => getJustTimeFromServer(time)
+  },
+  Level: {
+    label: "Level",
+    dataKey: "level",
+    width: 100
+  },
+  Module: {
+    label: "Module",
+    dataKey: "module",
+    width: 150
+  },
+  Robot: {
+    label: "Robot",
+    dataKey: "robot",
+    width: 100
+  },
+  Message: {
+    label: "Message",
+    dataKey: "message",
+    width: 100
+  }
+};
 
 export const DEFAULT_SELECTED_SERVICES = ["BACKEND", "SPAWNER"];
 export const DEFAULT_SELECTED_LEVELS = ["INFO", "ERROR", "CRITICAL"];
