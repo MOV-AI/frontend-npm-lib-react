@@ -30,12 +30,14 @@ import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
 import withAuthentication from "./src/Components/HOCs/withAuthentication";
 import withNotification from "./src/Components/HOCs/withNotification";
 import withTheme from "./src/Components/HOCs/withTheme";
+import withDefaults from "./src/Components/HOCs/withDefaults";
 
 export {
   withOfflineValidation,
   withAuthentication,
   withNotification,
   withTheme,
+  withDefaults,
   Button,
   AbstractModal,
   ConfirmAlertModal,
