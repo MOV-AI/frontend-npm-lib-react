@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
@@ -9,7 +10,8 @@ import {
   FormControlLabel,
   Switch,
   TextField,
-  Toolbar
+  Toolbar,
+  Typography
 } from "@material-ui/core";
 import ResetSearch from "@material-ui/icons/Close";
 import FiltersIcon from "./FiltersIcon/FiltersIcon";
@@ -17,7 +19,6 @@ import LabelIcon from "@material-ui/icons/Label";
 import Chip from "@material-ui/core/Chip";
 import AddIcon from "@material-ui/icons/Add";
 import TodayIcon from "@material-ui/icons/Today";
-import { Typography } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -30,9 +31,8 @@ import {
   MuiPickersUtilsProvider
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import PropTypes from "prop-types";
 import _isEqual from "lodash/isEqual";
-import _get from "lodash/get";
+import { SERVICE_LIST, COLUMN_LIST } from "../utils/Constants";
 
 const useStyles = makeStyles(theme => ({
   input: {
@@ -88,6 +88,10 @@ const useStyles = makeStyles(theme => ({
   },
   iconAdornment: { marginRight: "15px" }
 }));
+
+const EMPTY_FUNCTION = () => {
+  /** Empty on purpose */
+};
 
 const LogsFilterBar = props => {
   const classes = useStyles();
@@ -226,9 +230,9 @@ const LogsFilterBar = props => {
   };
 
   const getRenderValue = selected => {
-    const labels = props.serviceList
-      .filter(service => selected.includes(service.value))
-      .map(elem => elem.label);
+    const labels = SERVICE_LIST.filter(service =>
+      selected.includes(service.value)
+    ).map(elem => elem.label);
     return labels.join(", ");
   };
 
@@ -248,7 +252,7 @@ const LogsFilterBar = props => {
             renderValue={getRenderValue}
             MenuProps={MenuProps}
           >
-            {props.serviceList.map(service => (
+            {SERVICE_LIST.map(service => (
               <MenuItem key={service.value} value={service.value}>
                 <Checkbox
                   inputProps={{ "data-testid": "input_checkbox" }}
@@ -268,7 +272,7 @@ const LogsFilterBar = props => {
 
   const handleKeyUp = event => {
     // User pressed Enter
-    if (event.key === 13) {
+    if (event.key === "Enter") {
       props.handleAddTag(tagText);
       setTagText("");
     }
@@ -431,14 +435,14 @@ const LogsFilterBar = props => {
               value={props.columns}
               onChange={props.handleColumns}
               input={<Input />}
-              renderValue={getRenderValue}
+              renderValue={selected => selected.join(", ")}
               MenuProps={MenuProps}
             >
-              {Object.keys(props.columnList).map((column, index) => {
+              {Object.keys(COLUMN_LIST).map((column, index) => {
                 return (
                   <MenuItem key={index} value={column}>
                     <Checkbox checked={props.columns.indexOf(column) > -1} />
-                    <ListItemText primary={props.columnList[column].label} />
+                    <ListItemText primary={COLUMN_LIST[column].label} />
                   </MenuItem>
                 );
               })}
@@ -487,18 +491,16 @@ LogsFilterBar.propTypes = {
   levelsList: PropTypes.array,
   handleLevels: PropTypes.func,
   selectedService: PropTypes.array,
-  serviceList: PropTypes.array,
   handleSelectedService: PropTypes.func,
   limit: PropTypes.number,
   handleLimit: PropTypes.func,
   columns: PropTypes.array,
-  columnList: PropTypes.object,
   handleColumns: PropTypes.func,
   handleDeleteTag: PropTypes.func,
   messageRegex: PropTypes.string,
   handleMessageRegex: PropTypes.func,
   selectedFromDate: PropTypes.string,
-  selectToDate: PropTypes.string,
+  selectedToDate: PropTypes.string,
   handleDateChange: PropTypes.func,
   selectedRobots: PropTypes.array,
   updateRobotSelection: PropTypes.func,
@@ -510,25 +512,21 @@ LogsFilterBar.propTypes = {
 LogsFilterBar.defaultProps = {
   levels: [],
   levelsList: [],
-  handleLevels: () => {},
+  handleLevels: EMPTY_FUNCTION,
   selectedService: [],
-  serviceList: [],
-  handleSelectedService: () => {},
+  handleSelectedService: EMPTY_FUNCTION,
   limit: 1,
-  handleLimit: () => {},
+  handleLimit: EMPTY_FUNCTION,
   columns: [],
-  columnList: {},
-  handleColumns: () => {},
-  handleDeleteTag: () => {},
+  handleColumns: EMPTY_FUNCTION,
+  handleDeleteTag: EMPTY_FUNCTION,
   messageRegex: "",
-  handleMessageRegex: () => {},
-  selectedFromDate: "",
-  selectToDate: "",
-  handleDateChange: () => {},
+  handleMessageRegex: EMPTY_FUNCTION,
+  handleDateChange: EMPTY_FUNCTION,
   selectedRobots: [],
-  updateRobotSelection: () => {},
+  updateRobotSelection: EMPTY_FUNCTION,
   advancedMode: false,
-  handleAdvancedMode: () => {},
+  handleAdvancedMode: EMPTY_FUNCTION,
   t: string => string
 };
 

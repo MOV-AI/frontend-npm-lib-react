@@ -51,12 +51,6 @@ export const logStory = () => {
               ip: undefined
             }
           ]}
-          robotStates={{
-            error: "error",
-            temp: "temp",
-            okay: "okay",
-            off: "off"
-          }}
         ></Logs>
       </ThemeProvider>
     </div>

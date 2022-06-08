@@ -1,4 +1,6 @@
-export const styles = () => ({
+import { makeStyles } from "@material-ui/core/styles";
+
+export const useStyles = makeStyles(_theme => ({
   tableContainer: {
     flexGrow: 1,
     minHeight: 0,
@@ -22,4 +24,4 @@ export const styles = () => ({
     display: "flex",
     flexDirection: "column"
   }
-});
+}));

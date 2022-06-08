@@ -1,4 +1,4 @@
-import _isEmpty from "lodash/isEmpty";
+import { SERVICE_LIST } from "./Constants";
 
 export const colorCoding = {
   INFO: {
@@ -17,61 +17,6 @@ export const colorCoding = {
     backgroundColor: "rgba(255, 19, 1, 0.1)"
   }
 };
-
-// export const fixedColumns = {
-//   Date: {
-//     label: i18n.t("Date"),
-//     dataKey: "time",
-//     width: 100,
-//     render: time => getJustDateFromServer(time)
-//   },
-//   Time: {
-//     label: i18n.t("Time"),
-//     dataKey: "time",
-//     render: time => getJustTimeFromServer(time),
-//     width: 100
-//   },
-//   Level: {
-//     label: i18n.t("Level"),
-//     dataKey: "level",
-//     width: 100
-//   },
-//   Module: {
-//     label: i18n.t("Module"),
-//     dataKey: "module",
-//     width: 100
-//   },
-//   Function: {
-//     label: "Function",
-//     dataKey: "funcName",
-//     width: 100
-//   },
-//   Callback: {
-//     label: i18n.t("Callback"),
-//     dataKey: "callback",
-//     width: 100
-//   },
-//   Node: {
-//     label: i18n.t("Node"),
-//     dataKey: "node",
-//     width: 100
-//   },
-//   Fleet: {
-//     label: i18n.t("Fleet"),
-//     dataKey: "fleet",
-//     width: 100
-//   },
-//   Robot: {
-//     label: i18n.t("Robot"),
-//     dataKey: "robot",
-//     width: 100
-//   },
-//   Message: {
-//     label: i18n.t("Message"),
-//     dataKey: "message",
-//     width: 100
-//   }
-// };
 
 // Makes sure to find unique "i" of chip array
 // Input: [{key: 0, label: "Chip1"}, {key: 2, label: "Chip3"}], keyName= "key"
@@ -109,35 +54,25 @@ export function getRequestLevels(levelsArray, levelsList = []) {
   }
 
   try {
-    levelsArray.forEach(level => {
-      if (res === "") {
-        res = `${level.toLowerCase()}`;
-      } else {
-        res = `${res},${level.toLowerCase()}`;
-      }
-    });
-    return `&level=${res}`;
+    const level = levelsArray.map(el => el.toLowerCase()).join();
+    return `&level=${level}`;
   } catch (error) {
     return "";
   }
 }
-export function getRequestService(selectedService, serviceList) {
+
+export function getRequestService(selectedService) {
   let res = "";
   if (
     (Array.isArray(selectedService) &&
-      selectedService.length === serviceList.length) ||
+      selectedService.length === SERVICE_LIST.length) ||
     selectedService.length === 0
   ) {
     return res;
   }
 
   try {
-    let sep = "";
-    let services = "";
-    selectedService.forEach(service => {
-      services += `${sep}${service.toLowerCase()}`;
-      sep = ",";
-    });
+    const services = selectedService.map(el => el.toLowerCase()).join();
     return `&services=${services}`;
   } catch (error) {
     console.warn("Error Requesting Service", error);
@@ -168,22 +103,14 @@ export function getRequestDate(selectedFromDate, selectedToDate) {
 // Converts the levels in the state for the string for the request
 //  Input: [{ key: 0, label: "UI" }, { key: 1, label: "TASKS" }]
 //  Output: "&tags=UI,TASKS"
-export function getRequestTags(tagsArray) {
-  let res = "";
-
-  if (_isEmpty(tagsArray)) {
-    return res;
+export function getRequestTags(tagsArray = []) {
+  // Return empty string if no tag is added
+  if (!tagsArray.length) {
+    return "";
   }
-
-  tagsArray.forEach(tag => {
-    if (res === "") {
-      res = `${tag.label}`;
-    } else {
-      res = `${res},${tag.label}`;
-    }
-  });
-
-  return `&tags=${res}`;
+  // Format tags to URL parameter
+  const tags = tagsArray.map(el => el.label).join();
+  return `&tags=${tags}`;
 }
 
 // Converts the levels in the state for the string for the request
@@ -360,9 +287,9 @@ export const detectContainerLoop = (treeList, parentId, flowId) => {
   // Stop when reaches the root of the tree
   while (currentFlow.parentId) {
     // get the parentId of the current container
-    const parentId = currentFlow.parentId;
+    const newParentId = currentFlow.parentId;
     // get the index of that parent in the array
-    flowIndex = treeList.findIndex(elem => elem.id === parentId);
+    flowIndex = treeList.findIndex(elem => elem.id === newParentId);
     currentFlow = treeList[flowIndex];
     if (currentFlow.flowId === flowId) {
       console.error("Found Flow Loop :0");

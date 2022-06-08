@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import { AutoSizer, Column, Table } from "react-virtualized";
 import { colorCoding } from "../utils/Utils";
+import { COLUMN_LIST } from "../utils/Constants";
 
 const useStyles = makeStyles(theme => {
   return {
@@ -152,8 +153,6 @@ const MuiVirtualizedTable = props => {
   );
 };
 
-// const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
-
 export default function LogsTable(props) {
   return (
     <MuiVirtualizedTable
@@ -162,7 +161,7 @@ export default function LogsTable(props) {
       rowCount={props.logsData.length}
       rowGetter={({ index }) => props.logsData[index]}
       data={props.logsData}
-      columns={props.columns.map(elem => props.columnList[elem])}
+      columns={props.columns.map(elem => COLUMN_LIST[elem])}
       onRowClick={props.onRowClick}
       noRowsRenderer={props.noRowsRenderer}
     />
@@ -171,7 +170,6 @@ export default function LogsTable(props) {
 
 LogsTable.propTypes = {
   columns: PropTypes.array,
-  columnList: PropTypes.object,
   logsData: PropTypes.array,
   height: PropTypes.number,
   onRowClick: PropTypes.func
@@ -179,7 +177,6 @@ LogsTable.propTypes = {
 
 LogsTable.defaultProps = {
   columns: [],
-  columnList: {},
   logsData: [],
   height: 10
 };
