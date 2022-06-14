@@ -51,5 +51,6 @@
   "Settings": "Settings",
   "Change Password": "Change Password",
   "PasswordRequired": "Password is required",
-  "UsernameRequired": "Username is required"
+  "UsernameRequired": "Username is required",
+  "Home": "Home"
 }

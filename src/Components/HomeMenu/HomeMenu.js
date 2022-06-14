@@ -7,6 +7,7 @@ import HomeMenuSkeleton from "./HomeMenuSkeleton";
 import HTMLPopper from "../Popper/HTMLPopper";
 import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
 import i18n from "../../i18n/i18n.js";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const HomeMenuPopper = () => {
   // State hooks
@@ -153,13 +154,15 @@ const HomeMenuPopper = () => {
    *                                                                                      */
   //========================================================================================
   return (
-    <HTMLPopper
-      clickableElement={getIcon()}
-      hideOnClickAway={true}
-      popperPlacement="bottom"
-    >
-      {renderHTML()}
-    </HTMLPopper>
+    <Tooltip title={i18n.t("Home")} placement="right">
+      <HTMLPopper
+        clickableElement={getIcon()}
+        hideOnClickAway={true}
+        popperPlacement="bottom"
+      >
+        {renderHTML()}
+      </HTMLPopper>
+    </Tooltip>
   );
 };
 
