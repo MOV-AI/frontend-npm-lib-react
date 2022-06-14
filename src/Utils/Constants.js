@@ -10,3 +10,5 @@ export const APP_TYPES = {
   EXTERNAL: "external",
   LAYOUT: "layout"
 };
+
+export const LAUNCHER_APP = "launcher";
