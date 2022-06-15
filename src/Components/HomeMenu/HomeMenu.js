@@ -155,13 +155,16 @@ const HomeMenuPopper = () => {
   //========================================================================================
   return (
     <Tooltip title={i18n.t("Home")} placement="right">
-      <HTMLPopper
-        clickableElement={getIcon()}
-        hideOnClickAway={true}
-        popperPlacement="bottom"
-      >
-        {renderHTML()}
-      </HTMLPopper>
+      {/* Tooltips - To accommodate disabled elements, add a simple wrapper element, such as a span. */}
+      <span>
+        <HTMLPopper
+          clickableElement={getIcon()}
+          hideOnClickAway={true}
+          popperPlacement="bottom"
+        >
+          {renderHTML()}
+        </HTMLPopper>
+      </span>
     </Tooltip>
   );
 };
