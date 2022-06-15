@@ -95,7 +95,7 @@ const HomeMenuPopper = () => {
           data-testid="section_no-applications"
         >
           <Typography variant="subtitle1">
-            {i18n.t("noApplications")}
+            {i18n.t("NoApplications")}
           </Typography>
           <Button
             data-testid="input_launcher"
