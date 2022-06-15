@@ -20,6 +20,7 @@ const AbstractModal = props => {
     disableActions,
     onSubmit,
     onCancel,
+    onKeyPress,
     open,
     title,
     hasSubmitButton,
@@ -55,6 +56,7 @@ const AbstractModal = props => {
    */
   const handleKeyPress = useCallback(
     event => {
+      if (onKeyPress) return onKeyPress(event);
       if (event.key === "Enter") {
         handleSubmit();
       }
