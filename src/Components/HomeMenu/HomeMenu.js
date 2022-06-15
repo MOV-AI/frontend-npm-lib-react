@@ -1,16 +1,19 @@
 import React, { useEffect, useMemo } from "react";
-import { Button, Divider, IconButton } from "@material-ui/core";
+import { Button, Divider, IconButton, Typography } from "@material-ui/core";
 import { User, Utils } from "@mov-ai/mov-fe-lib-core";
 import AppsIcon from "@material-ui/icons/Apps";
 import { HomeMenuPopperStyles } from "./styles";
 import HomeMenuSkeleton from "./HomeMenuSkeleton";
 import HTMLPopper from "../Popper/HTMLPopper";
-import { APP_TYPES } from "../../Utils/Constants";
+import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
+import i18n from "../../i18n/i18n.js";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const HomeMenuPopper = () => {
   // State hooks
   const classes = HomeMenuPopperStyles();
   const [currentApps, setCurrentApps] = React.useState();
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   // Other hooks
   const currentUser = useMemo(() => new User(), []);
@@ -24,9 +27,14 @@ const HomeMenuPopper = () => {
    * subscribe to Applications updates
    */
   useEffect(() => {
-    currentUser.getAllApps().then(res => {
-      res.success && setCurrentApps(res.result);
-    });
+    currentUser
+      .getAllApps()
+      .then(res => {
+        res.success && setCurrentApps(res.result);
+      })
+      .catch(err => {
+        setErrorMessage(err.statusText);
+      });
   }, [currentUser]);
 
   //========================================================================================
@@ -53,6 +61,9 @@ const HomeMenuPopper = () => {
     }
   };
 
+  const redirectToLocalhost = () =>
+    window.location.replace(window.location.origin); // go to localhost or localhost:3000
+
   //========================================================================================
   /*                                                                                      *
    *                                        RENDERS                                       *
@@ -61,6 +72,7 @@ const HomeMenuPopper = () => {
   const renderApplications = apps => {
     return apps.map(app => (
       <Button
+        data-testid="input_application"
         key={app.URL}
         size="large"
         color="primary"
@@ -76,6 +88,27 @@ const HomeMenuPopper = () => {
   };
 
   const renderHTML = () => {
+    if (errorMessage)
+      return (
+        <div
+          className={classes.noApplications}
+          data-testid="section_no-applications"
+        >
+          <Typography variant="subtitle1">
+            {i18n.t("NoApplications")}
+          </Typography>
+          <Button
+            data-testid="input_launcher"
+            size="large"
+            variant="outlined"
+            color="primary"
+            className={classes.launcherButton}
+            onClick={redirectToLocalhost}
+          >
+            {LAUNCHER_APP.toUpperCase()}
+          </Button>
+        </div>
+      );
     if (currentApps) {
       const arrayOfApplications = [];
       const arrayOfExternalApps = [];
@@ -84,7 +117,7 @@ const HomeMenuPopper = () => {
       currentApps.forEach(app => {
         const appType = app.Type;
 
-        if (appType === APP_TYPES.APPLICATION && app.Label !== "launcher")
+        if (appType === APP_TYPES.APPLICATION && app.Label !== LAUNCHER_APP)
           arrayOfApplications.push(app);
 
         if (appType === APP_TYPES.EXTERNAL) arrayOfExternalApps.push(app);
@@ -121,13 +154,18 @@ const HomeMenuPopper = () => {
    *                                                                                      */
   //========================================================================================
   return (
-    <HTMLPopper
-      clickableElement={getIcon()}
-      hideOnClickAway={true}
-      popperPlacement="bottom"
-    >
-      {renderHTML()}
-    </HTMLPopper>
+    <Tooltip title={i18n.t("Home")} placement="right">
+      {/* Tooltips - To accommodate disabled elements, add a simple wrapper element, such as a span. */}
+      <span>
+        <HTMLPopper
+          clickableElement={getIcon()}
+          hideOnClickAway={true}
+          popperPlacement="bottom"
+        >
+          {renderHTML()}
+        </HTMLPopper>
+      </span>
+    </Tooltip>
   );
 };
 

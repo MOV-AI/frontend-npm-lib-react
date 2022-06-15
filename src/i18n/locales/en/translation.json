@@ -31,6 +31,7 @@
   "Accept": "Accept",
   "Cancel": "Cancel",
   "not found": "not found",
+  "NoApplications": "Failed to get Applications",
   "Ok": "Ok",
   "Yes": "Yes",
   "No": "No",
@@ -50,5 +51,6 @@
   "Settings": "Settings",
   "Change Password": "Change Password",
   "PasswordRequired": "Password is required",
-  "UsernameRequired": "Username is required"
+  "UsernameRequired": "Username is required",
+  "Home": "Home"
 }
