@@ -31,6 +31,7 @@
   "Accept": "Aceitar",
   "Cancel": "Cancelar",
   "not found": "not found",
+  "NoApplications": "Falha ao carregar Aplicações",
   "Ok": "Ok",
   "Yes": "Sim",
   "No": "Não",
@@ -50,5 +51,6 @@
   "Settings": "Configurações",
   "Change Password": "Alterar senha",
   "PasswordRequired": "Senha é obrigatória",
-  "UsernameRequired": "Utilizador é obrigatório"
+  "UsernameRequired": "Utilizador é obrigatório",
+  "Home": "Início"
 }
