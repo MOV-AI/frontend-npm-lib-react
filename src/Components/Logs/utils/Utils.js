@@ -113,6 +113,16 @@ export function getRequestTags(tagsArray = []) {
   return `&tags=${tags}`;
 }
 
+export function getRequestRobots(robotsArray = []) {
+  // Return empty string if no tag is added
+  if (!robotsArray.length) {
+    return "";
+  }
+  // Format tags to URL parameter
+  const robots = robotsArray.join();
+  return `&robots=${robots}`;
+}
+
 // Converts the levels in the state for the string for the request
 //  Input: "r'started\.$"
 //  Output: "&message=r'started\.$"

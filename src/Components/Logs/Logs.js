@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { Typography } from "@material-ui/core";
+import { Rest } from "@mov-ai/mov-fe-lib-core";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
@@ -22,12 +23,13 @@ import {
   getRequestService,
   getRequestTags,
   getRequestMessage,
+  getRequestRobots,
   findsUniqueKey
 } from "./utils/Utils";
+import useUpdateEffect from "./hooks/useUpdateEffect";
 import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
 import i18n from "../../i18n/i18n";
-import { Rest } from "@mov-ai/mov-fe-lib-core";
 
 import { useStyles } from "./styles";
 import "./Logs.css";
@@ -45,10 +47,10 @@ const Logs = props => {
   // Style hook
   const classes = useStyles();
   // Refs
-  const getLogsTimeoutRef = useRef({});
+  const getLogsTimeoutRef = useRef();
   const selectedRobotsRef = useRef({});
-  const requestTimeout = useRef({});
-  const lastRequestTimeRef = useRef({});
+  const requestTimeout = useRef();
+  const lastRequestTimeRef = useRef(null);
   const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
   const logsDataRef = useRef([]);
@@ -70,7 +72,7 @@ const Logs = props => {
   const [searchMessage, setSearchMessage] = useState("");
   const [selectedFromDate, setSelectedFromDate] = useState(null);
   const [selectedToDate, setSelectedToDate] = useState(null);
-  const [logsData, setLogsData] = useState({});
+  const [logsData, setLogsData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   //========================================================================================
@@ -84,8 +86,8 @@ const Logs = props => {
    *  Consider last successfull request and date on filter
    * @returns {string} From Date in string or empty
    */
-  const getFromDate = id => {
-    return selectedFromDate || lastRequestTimeRef.current[id] || "";
+  const getFromDate = () => {
+    return selectedFromDate || lastRequestTimeRef.current || "";
   };
   /**
    * Get To Date filter
@@ -96,71 +98,79 @@ const Logs = props => {
   };
 
   /**
+   * Get selected robot names to compose search query
+   * @returns {array<string>}
+   */
+  const getSelectedRobots = () => {
+    return Object.values(selectedRobotsRef.current)
+      .filter(
+        robot =>
+          robot.isSelected && // Get selected robots only
+          robot.name && // Get only robots with name
+          robot.robotState !== ROBOT_STATES.OFFLINE // Get only robots online
+      )
+      .map(robot => robot.name);
+  };
+
+  /**
    * Prevent all subsequent requests from being dispatched
    */
   const stopLogger = () => {
-    Object.keys(getLogsTimeoutRef.current).forEach(robotId => {
-      clearTimeout(robotId);
-    });
+    clearTimeout(getLogsTimeoutRef.current);
   };
 
   /**
    * Get robots log data
    */
-  const getRobotLogData = robot => {
-    const { id, name } = robot;
-
+  const getRobotLogData = robots => {
     // If component is no longer mounted
     if (!isMounted.current) return;
-    // If robot doesn't have a name: retry
-    if (!name)
-      return setTimeout(
-        getRobotLogData,
-        RETRY_IN_MS,
-        selectedRobotsRef.current[id]
-      );
-    // Set loading state if log data is empty
+    // If list of selected robot is empty : clear logs data and stop loader
+    if (!robots.length) {
+      setLoading(false);
+      setLogsData([]);
+      return;
+    }
+    // Set loading state if log data is not empty
     if (logsDataRef.current.length) setLoading(true);
     // Get request parameters
     const _levels = getRequestLevels(levels, levelsList);
     const _services = getRequestService(selectedService);
     const _tags = getRequestTags(tags);
     const _message = getRequestMessage(searchMessage);
-    const _dates = getRequestDate(getFromDate(id), getToDate());
-    const path = `v1/logs/${name}?limit=${limit}${_levels}${_services}${_dates}${_tags}${_message}`;
+    const _dates = getRequestDate(getFromDate(), getToDate());
+    const _robots = getRequestRobots(robots);
+    const path = `v1/logs/?limit=${limit}${_levels}${_services}${_dates}${_tags}${_message}${_robots}`;
 
     const requestTime = new Date().getTime();
-    clearTimeout(getLogsTimeoutRef.current[id]);
+    clearTimeout(getLogsTimeoutRef.current);
     Rest.get({ path })
       .then(response => {
         setLogsData(prevState => {
-          const oldLogs = prevState[id] || [];
+          const oldLogs = prevState || [];
           const newLogs = response?.data || [];
-          return {
-            ...prevState,
-            [id]: [...oldLogs, ...newLogs]
-          };
+          return [...oldLogs, ...newLogs];
         });
         // Reset timeout for next request to default value
-        lastRequestTimeRef.current[id] = requestTime;
-        requestTimeout.current[id] = DEFAULT_TIMEOUT_IN_MS;
+        lastRequestTimeRef.current = requestTime;
+        requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
         // Doesn't enqueue next request if the 'selectedToDate' inserted manually by the user is before now
         return !(selectedToDate && selectedToDate < requestTime);
       })
       .catch(err => {
         // Add more time for the next request if it fails
         console.warn("Failed logs request", err);
-        requestTimeout.current[id] += RETRY_IN_MS;
+        requestTimeout.current += RETRY_IN_MS;
         // Enqueue next request
         return true;
       })
       .then(enqueueNextRequest => {
         setLoading(false);
-        clearTimeout(getLogsTimeoutRef.current[id]);
+        clearTimeout(getLogsTimeoutRef.current);
         if (!enqueueNextRequest) return;
-        getLogsTimeoutRef.current[id] = setTimeout(() => {
+        getLogsTimeoutRef.current = setTimeout(() => {
           getLogs();
-        }, requestTimeout.current[id]);
+        }, requestTimeout.current);
       });
   };
 
@@ -169,27 +179,22 @@ const Logs = props => {
    */
   const getLogs = async () => {
     if (!isMounted.current) return;
-    const robots = Object.values(selectedRobotsRef.current);
-    if (!robots.length) return setTimeout(getLogs, RETRY_IN_MS);
-    // If robot is offline doesn't bother making the request
-    // If robot is not selected, remove from the valid robot list
-    const validRobots = robots.filter(
-      robot => robot.isSelected && robot.robotState !== ROBOT_STATES.OFFLINE
-    );
+    // Get selected and online robots
+    const validRobots = getSelectedRobots();
+    if (!validRobots.length) return setLoading(false);
     // Remove previously enqueued requests
     stopLogger();
     // Stop loader if there's not request to do
-    if (!validRobots.length) setLoading(false);
-    await Promise.all(validRobots.map(robot => getRobotLogData(robot)));
+    getRobotLogData(validRobots);
   };
 
   /**
    * Refresh logs in table
    */
   const refreshLogs = () => {
-    lastRequestTimeRef.current = {};
+    lastRequestTimeRef.current = null;
     setLoading(true);
-    setLogsData({});
+    setLogsData([]);
     getLogs();
   };
 
@@ -202,7 +207,8 @@ const Logs = props => {
   // on component mount
   useEffect(() => {
     isMounted.current = true;
-    getLogs();
+    // No need to start to get logs here
+    //  The first call will be triggered by the useEffect hook
     // Stop logger for all robots on unmount
     return () => {
       stopLogger();
@@ -218,12 +224,10 @@ const Logs = props => {
       const newRobots = { ...prevState };
       robotsData.forEach(robot => {
         const id = robot.id;
-        const currentTimeout = requestTimeout.current[id];
         newRobots[id] = {
           ...robot,
           isSelected: prevState[id]?.isSelected ?? true
         };
-        requestTimeout.current[id] = currentTimeout ?? DEFAULT_TIMEOUT_IN_MS;
       });
 
       selectedRobotsRef.current = newRobots;
@@ -239,7 +243,7 @@ const Logs = props => {
   // Add timeout before refresh logs on text input change
   //  This will prevent unnecessary re-renders while the user is still typing
   //  Applies for text inputs (search and limit) and date time picker
-  useEffect(() => {
+  useUpdateEffect(() => {
     clearTimeout(refreshLogsTimeoutRef.current);
     refreshLogsTimeoutRef.current = setTimeout(() => {
       refreshLogs();
@@ -325,7 +329,7 @@ const Logs = props => {
       [DATE_KEY_OPTION.FROM]: date => setSelectedFromDate(date),
       [DATE_KEY_OPTION.TO]: date => setSelectedToDate(date)
     };
-    lastRequestTimeRef.current = {};
+    lastRequestTimeRef.current = null;
     setDate[keyToChange](newDate);
   }, []);
 
@@ -417,11 +421,8 @@ const Logs = props => {
    * @returns {array} All selected robots Logs
    */
   const formatLogsData = useCallback(() => {
-    // Flatten array
-    const robotLogs = Object.values(logsData);
-    const logs = [].concat(...robotLogs);
     // Remove duplicates
-    const data = _uniqWith(logs, _isEqual).sort((a, b) => b.time - a.time);
+    const data = _uniqWith(logsData, _isEqual).sort((a, b) => b.time - a.time);
     logsDataRef.current = data;
     // Return formated data
     return data;
