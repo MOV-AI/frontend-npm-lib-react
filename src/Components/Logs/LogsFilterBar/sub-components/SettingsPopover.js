@@ -13,7 +13,7 @@ import {
   Typography
 } from "@material-ui/core";
 import TuneIcon from "@material-ui/icons/Tune";
-import FiltersIcon from "../FiltersIcon/FiltersIcon";
+import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
 import { COLUMN_LIST } from "../../utils/Constants";
 import { useSettingsStyles } from "../../styles";
 import { MENU_PROPS } from "./_shared/Constants";

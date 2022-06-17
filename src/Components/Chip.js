@@ -1,8 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, alpha } from "@material-ui/core/styles";
 import MaterialChip from "@material-ui/core/Chip";
-import { fade } from "@material-ui/core/styles/colorManipulator";
 
 const useStyles = makeStyles(theme => ({
   chipDefault: {
@@ -10,7 +8,7 @@ const useStyles = makeStyles(theme => ({
     background: "transparent",
     border: "none",
     "&:hover": {
-      backgroundColor: fade(theme.palette.primary.main, 0.2)
+      backgroundColor: alpha(theme.palette.primary.main, 0.2)
     },
     "&:focus": {
       background: "transparent"
@@ -19,12 +17,12 @@ const useStyles = makeStyles(theme => ({
   chipActive: {
     color: theme.palette.primary.main,
     border: "none",
-    backgroundColor: fade(theme.palette.primary.main, 0.1),
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
     "&:hover": {
-      backgroundColor: fade(theme.palette.primary.main, 0.2)
+      backgroundColor: alpha(theme.palette.primary.main, 0.2)
     },
     "&:focus": {
-      backgroundColor: fade(theme.palette.primary.main, 0.1)
+      backgroundColor: alpha(theme.palette.primary.main, 0.1)
     }
   }
 }));

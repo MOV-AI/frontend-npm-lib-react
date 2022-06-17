@@ -167,7 +167,6 @@ LogsFilterBar.defaultProps = {
 
 //The function returns true when the compared props equal, preventing the component from re-rendering
 function arePropsEqual(prevProps, nextProps) {
-  console.log("arePropsEqual: ", prevProps, nextProps);
   return _isEqual(prevProps, nextProps);
 }
 
