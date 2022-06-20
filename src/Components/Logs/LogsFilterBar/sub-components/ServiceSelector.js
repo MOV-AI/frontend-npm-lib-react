@@ -7,7 +7,7 @@ import {
   FormControl,
   ListItemText
 } from "@material-ui/core";
-import { SERVICE_LIST } from "../../utils/Constants";
+import { SERVICE_LIST } from "@mov-ai/mov-fe-lib-core";
 import { MENU_PROPS } from "./_shared/Constants";
 import { useSelectBoxStyle } from "../../styles";
 

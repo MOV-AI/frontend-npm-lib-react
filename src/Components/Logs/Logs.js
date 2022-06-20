@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { Typography } from "@material-ui/core";
-import { Rest } from "@mov-ai/mov-fe-lib-core";
+import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
@@ -17,15 +17,7 @@ import {
   ROBOT_LOG_TYPE,
   SIMPLE_LEVELS_LIST
 } from "./utils/Constants";
-import {
-  getRequestDate,
-  getRequestLevels,
-  getRequestService,
-  getRequestTags,
-  getRequestMessage,
-  getRequestRobots,
-  findsUniqueKey
-} from "./utils/Utils";
+import { findsUniqueKey } from "./utils/Utils";
 import useUpdateEffect from "./hooks/useUpdateEffect";
 import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
@@ -134,17 +126,19 @@ const Logs = props => {
     // Set loading state if log data is not empty
     if (logsDataRef.current.length) setLoading(true);
     // Get request parameters
-    const _levels = getRequestLevels(levels, levelsList);
-    const _services = getRequestService(selectedService);
-    const _tags = getRequestTags(tags);
-    const _message = getRequestMessage(searchMessage);
-    const _dates = getRequestDate(getFromDate(), getToDate());
-    const _robots = getRequestRobots(robots);
-    const path = `v1/logs/?limit=${limit}${_levels}${_services}${_dates}${_tags}${_message}${_robots}`;
+    const queryParams = {
+      level: { selected: levels, list: levelsList },
+      service: { selected: selectedService },
+      tag: { selected: tags },
+      message: searchMessage,
+      date: { from: getFromDate(), to: getToDate() },
+      robot: { selected: robots },
+      limit: limit
+    };
 
     const requestTime = new Date().getTime();
     clearTimeout(getLogsTimeoutRef.current);
-    Rest.get({ path })
+    RobotManager.getLogs(queryParams)
       .then(response => {
         setLogsData(prevState => {
           const oldLogs = prevState || [];
@@ -207,7 +201,7 @@ const Logs = props => {
   // on component mount
   useEffect(() => {
     isMounted.current = true;
-    // No need to start to get logs here
+    // No need to start logger here
     //  The first call will be triggered by the useEffect hook
     // Stop logger for all robots on unmount
     return () => {

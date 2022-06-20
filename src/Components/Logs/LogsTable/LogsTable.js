@@ -4,8 +4,7 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import { AutoSizer, Column, Table } from "react-virtualized";
-import { colorCoding } from "../utils/Utils";
-import { COLUMN_LIST } from "../utils/Constants";
+import { COLUMN_LIST, COLOR_CODING } from "../utils/Constants";
 
 const useStyles = makeStyles(theme => {
   return {
@@ -44,7 +43,7 @@ const useStyles = makeStyles(theme => {
     noClick: {
       cursor: "initial"
     },
-    ...colorCoding
+    ...COLOR_CODING
   };
 });
 

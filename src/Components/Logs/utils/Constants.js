@@ -14,14 +14,6 @@ export const ADVANCED_LEVELS_LIST = [
   { value: "CRITICAL", label: "Critical" }
 ];
 
-export const SERVICE_LIST = [
-  { value: "BACKEND", label: "Backend" },
-  { value: "SPAWNER", label: "Spawner" },
-  { value: "REDIS", label: "Redis" },
-  { value: "ROS", label: "Ros" },
-  { value: "HAPROXY", label: "ha-proxy" }
-];
-
 export const ROBOT_STATES = {
   ERROR: "ALERT",
   ACTIVE: "ACTIVE",
@@ -65,11 +57,29 @@ export const COLUMN_LIST = {
 
 export const DEFAULT_SELECTED_SERVICES = ["BACKEND", "SPAWNER"];
 export const DEFAULT_SELECTED_LEVELS = ["INFO", "ERROR", "CRITICAL"];
-export const DEFAULT_SELECTED_COLUMNS = ["Time", "Robot", "Message"];
+export const DEFAULT_SELECTED_COLUMNS = ["Date", "Time", "Robot", "Message"];
 export const DEFAULT_LIMIT = 50;
 export const ROBOT_LOG_TYPE = ["module", "service"];
 
 export const DATE_KEY_OPTION = {
   FROM: "selectedFromDate",
   TO: "selectedToDate"
+};
+
+export const COLOR_CODING = {
+  INFO: {
+    backgroundColor: "rgba(33, 150, 243, 0.1)"
+  },
+  WARNING: {
+    backgroundColor: "rgba(255, 152, 0, 0.1)"
+  },
+  DEBUG: {
+    backgroundColor: "rgba(76, 175, 80, 0.1)"
+  },
+  ERROR: {
+    backgroundColor: "rgba(244, 67, 54, 0.1)"
+  },
+  CRITICAL: {
+    backgroundColor: "rgba(255, 19, 1, 0.1)"
+  }
 };
