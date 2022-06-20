@@ -1,30 +1,49 @@
+import React, { Fragment, useCallback } from "react";
 import { Button } from "@material-ui/core";
 import { useSnackbar } from "notistack";
-import React, { Fragment } from "react";
+
+const useSnackbarRef = { current: null };
+
+//========================================================================================
+/*                                                                                      *
+ *                                   Private Component                                  *
+ *                                                                                      */
+//========================================================================================
 
 const InnerSnackbarUtilsConfigurator = props => {
   props.setUseSnackbarRef(useSnackbar());
   return null;
 };
 
-let useSnackbarRef;
-const setUseSnackbarRef = useSnackbarRefProp => {
-  useSnackbarRef = useSnackbarRefProp;
-};
+//========================================================================================
+/*                                                                                      *
+ *                                  Exposed Components                                  *
+ *                                                                                      */
+//========================================================================================
 
 export const SnackbarUtilsConfigurator = () => {
+  const setUseSnackbarRef = useCallback(useSnackbarRefProp => {
+    useSnackbarRef.current = useSnackbarRefProp;
+  }, []);
+
   return (
     <InnerSnackbarUtilsConfigurator setUseSnackbarRef={setUseSnackbarRef} />
   );
 };
 
+//========================================================================================
+/*                                                                                      *
+ *                                   Exposed Methods                                    *
+ *                                                                                      */
+//========================================================================================
+
 const closeSnackbar = key => {
   return () => {
-    useSnackbarRef.closeSnackbar(key);
+    useSnackbarRef.current.closeSnackbar(key);
   };
 };
 
-export const snackbar = (props, theme) => {
+export const snackbar = (props, _theme) => {
   const {
     message,
     closable = true,
@@ -34,6 +53,7 @@ export const snackbar = (props, theme) => {
     severity = "default",
     ...otherProps
   } = props;
+
   const action = key => {
     if (closable) {
       return (
@@ -45,7 +65,8 @@ export const snackbar = (props, theme) => {
       );
     }
   };
-  useSnackbarRef.enqueueSnackbar(message, {
+
+  useSnackbarRef.current.enqueueSnackbar(message, {
     ...otherProps,
     action,
     variant: severity,

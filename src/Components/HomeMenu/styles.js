@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { Grid } from "react-virtualized";
 
 export const HomeMenuPopperStyles = makeStyles(theme => ({
   iconButton: { cursor: "pointer", height: "100%" },
@@ -7,7 +8,8 @@ export const HomeMenuPopperStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "center",
     flexWrap: "wrap",
-    width: "320px",
+    minWidth: "320px",
+    minHeight: "400px",
     padding: "0px",
     flexBasis: "29%"
   },
@@ -54,5 +56,13 @@ export const HomeMenuPopperStyles = makeStyles(theme => ({
   },
   skeletonCard: {
     height: "20px"
-  }
+  },
+  noApplications: {
+    width: "350px",
+    height: "100px",
+    display: "grid",
+    justifyItems: "center",
+    gridTemplateRows: "70% 30%"
+  },
+  launcherButton: { cursor: "pointer" }
 }));
