@@ -58,7 +58,10 @@ export const snackbar = (props, _theme) => {
     if (closable) {
       return (
         <Fragment>
-          <Button data-testid="output_icon" onClick={closeSnackbar(key)}>
+          <Button
+            data-testid="input_dismiss-alert"
+            onClick={closeSnackbar(key)}
+          >
             {closeButtonText}
           </Button>
         </Fragment>
@@ -69,6 +72,7 @@ export const snackbar = (props, _theme) => {
   useSnackbarRef.current.enqueueSnackbar(message, {
     ...otherProps,
     action,
+    ariaAttributes: { "data-testid": `output_${severity}-message` },
     variant: severity,
     anchorOrigin: {
       vertical,
