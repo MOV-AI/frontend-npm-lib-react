@@ -5,12 +5,12 @@ import "fontsource-open-sans";
 const CONSTANTS = {
   dark: {
     borderBottom: "1px solid #212121",
-    textColor: "white",
+    textColor: "#fff",
     background: {
       primary: "#424242",
       secondary: "#212121"
     },
-    iconColor: "white"
+    iconColor: "#fff"
   },
   light: {
     borderBottom: "1px solid #ccc",
@@ -91,7 +91,7 @@ const Themes = {
         },
         getContrastText: () => CONSTANTS.dark.iconColor
       },
-      icon: { color: "#c6c6c6", hoverColor: "white" },
+      icon: { color: "#c6c6c6", hoverColor: "#fff" },
       table: { stripColor: "#505050" },
       verticalBar: {
         iconColor: "#9e9e9e"
@@ -255,11 +255,11 @@ const Themes = {
             margin: "8px"
           },
           containedPrimary: {
-            color: "white",
+            color: "#fff",
             margin: "8px"
           },
           containedSecondary: {
-            color: "white",
+            color: "#fff",
             margin: "8px"
           }
         },
