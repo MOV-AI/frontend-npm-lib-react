@@ -90,6 +90,14 @@ const Logs = props => {
   };
 
   /**
+   * Clear robot logs
+   */
+  const clearLogs = () => {
+    lastRequestTimeRef.current = null;
+    setLogsData([]);
+  };
+
+  /**
    * Get selected robot names to compose search query
    * @returns {array<string>}
    */
@@ -171,11 +179,18 @@ const Logs = props => {
   /**
    * Get logs
    */
-  const getLogs = async () => {
+  const getLogs = async keepLoading => {
     if (!isMounted.current) return;
     // Get selected and online robots
     const validRobots = getSelectedRobots();
-    if (!validRobots.length) return setLoading(false);
+    // If there's no valid robots, clear logs and try again in 1s
+    if (!validRobots.length) {
+      clearLogs();
+      setTimeout(getLogs, 1000);
+      if (!keepLoading) setLoading(false);
+      // Stop method execution
+      return;
+    }
     // Remove previously enqueued requests
     stopLogger();
     // Stop loader if there's not request to do
@@ -186,9 +201,8 @@ const Logs = props => {
    * Refresh logs in table
    */
   const refreshLogs = () => {
-    lastRequestTimeRef.current = null;
+    clearLogs();
     setLoading(true);
-    setLogsData([]);
     getLogs();
   };
 
@@ -201,8 +215,8 @@ const Logs = props => {
   // on component mount
   useEffect(() => {
     isMounted.current = true;
-    // No need to start logger here
-    //  The first call will be triggered by the useEffect hook
+    // Start logger
+    getLogs(true);
     // Stop logger for all robots on unmount
     return () => {
       stopLogger();
@@ -230,7 +244,7 @@ const Logs = props => {
   }, [robotsData]);
 
   // On change filter
-  useEffect(() => {
+  useUpdateEffect(() => {
     refreshLogs();
   }, [levels, selectedService, advancedMode, columns, tags]);
 
