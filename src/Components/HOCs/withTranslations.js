@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import React from "react";
 import { initReactI18next } from "react-i18next";
-import { getTranslationsConfig } from "../../i18n";
+import { getTranslationsConfig } from "../../i18n/i18n";
 
 export default function withTranslations(
   Component,
