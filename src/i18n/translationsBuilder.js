@@ -20,9 +20,11 @@ const mergeTranslations = (baseTranslations, externalTranslation) => {
   );
 };
 
-export const translationsBuilder = (files = {}) => {
+export const translationsBuilder = (
+  files = {},
+  language = window?.SERVER_DATA?.Language || "en"
+) => {
   const resources = mergeTranslations(libReactTranslations, files);
-  const language = window?.SERVER_DATA?.Language || "en";
   return {
     resources,
     lng: language,

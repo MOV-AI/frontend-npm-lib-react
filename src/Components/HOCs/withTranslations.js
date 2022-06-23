@@ -5,10 +5,10 @@ import { translationsBuilder } from "../../i18n/translationsBuilder";
 
 export default function withTranslations(
   Component,
-  { files, provider: I18nextProvider }
+  { files, provider: I18nextProvider, language }
 ) {
   return function (props) {
-    const config = translationsBuilder(files);
+    const config = translationsBuilder(files, language);
     i18n.use(initReactI18next).init(config);
 
     return (
