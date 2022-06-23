@@ -5,10 +5,10 @@ import { getTranslationsConfig } from "../../i18n/i18n";
 
 export default function withTranslations(
   Component,
-  { files, provider: I18nextProvider }
+  { files, provider: I18nextProvider, merge }
 ) {
   return function (props) {
-    const config = getTranslationsConfig(files);
+    const config = getTranslationsConfig({ files, merge });
     i18n.use(initReactI18next).init(config);
 
     return (

@@ -8,12 +8,13 @@ export const Translations = {
   en: translationEN
 };
 
-export const getTranslationsConfig = files => {
+export const getTranslationsConfig = ({ files, merge = true }) => {
   const resources = Object.entries(files).reduce(
     (translationsDictionary, [lang, consumerTranslations]) => {
+      const baseTranslations = (merge ? Translations[lang] : {}) || {};
       translationsDictionary[lang] = {
         translation: {
-          ...(Translations[lang] || {}),
+          ...baseTranslations,
           ...consumerTranslations
         }
       };
