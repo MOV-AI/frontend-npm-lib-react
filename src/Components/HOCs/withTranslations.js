@@ -1,14 +1,14 @@
 import i18n from "i18next";
 import React from "react";
 import { initReactI18next } from "react-i18next";
-import { getTranslationsConfig } from "../../i18n/i18n";
+import { translationsBuilder } from "../../i18n/translationsBuilder";
 
 export default function withTranslations(
   Component,
-  { files, provider: I18nextProvider, merge }
+  { files, provider: I18nextProvider }
 ) {
   return function (props) {
-    const config = getTranslationsConfig({ files, merge });
+    const config = translationsBuilder(files);
     i18n.use(initReactI18next).init(config);
 
     return (

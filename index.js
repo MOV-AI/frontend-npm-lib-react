@@ -32,7 +32,7 @@ import withNotification from "./src/Components/HOCs/withNotification";
 import withTheme from "./src/Components/HOCs/withTheme";
 import withDefaults from "./src/Components/HOCs/withDefaults";
 // import Translations
-import { Translations } from "./src/i18n/i18n";
+import { Translations } from "./src/i18n/locales/";
 
 export {
   withOfflineValidation,
