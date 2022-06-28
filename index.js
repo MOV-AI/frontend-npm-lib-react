@@ -18,6 +18,7 @@ import Themes from "./src/styles/Themes";
 import Style from "./src/styles/Style";
 import Logs from "./src/Components/Logs/Logs";
 import LoginForm from "./src/Components/LoginForm/LoginForm";
+import NotAuthorized from "./src/Components/LoginForm/LoginPanel";
 import ProfileMenu from "./src/Components/ProfileMenu/ProfileMenu";
 import ResetPasswordModal from "./src/Components/ProfileMenu/ResetPassword";
 import FilterIcon from "./src/Components/Logs/LogsFilterBar/sub-components/_shared/FiltersIcon/FiltersIcon";
@@ -33,6 +34,7 @@ import withTheme from "./src/Components/HOCs/withTheme";
 import withDefaults from "./src/Components/HOCs/withDefaults";
 // import Translations
 import { Translations } from "./src/i18n/locales/";
+import { i18nHelper } from "./src/i18n/i18nHelper";
 
 export {
   withOfflineValidation,
@@ -67,5 +69,7 @@ export {
   HTMLPopper,
   HomeMenuPopper,
   HomeMenuSkeleton,
-  Translations
+  Translations,
+  i18nHelper,
+  NotAuthorized
 };
