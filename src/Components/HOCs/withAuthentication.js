@@ -173,10 +173,10 @@ export default function withAuthentication(Component, appName) {
     );
 
     /**
-     * handleLoginAfterNotAuthorized - after user is unauthorized redirect to login and clear token info
+     * handleLoginAfterNotAuthorized - after user is unauthorized, logout and redirect to login
      * @returns React Component
      */
-    const handleLoginAfterNotAuthorized = () => handleLogOut();
+    const handleLoginAfterNotAuthorized = useCallback(() => handleLogOut(), []);
 
     /**
      * renderNotAuthorized - Renders the not authorized panel
@@ -190,7 +190,8 @@ export default function withAuthentication(Component, appName) {
             <>
               <p>You do not have permission to access the application</p>
               <Button
-                data-testid="input_login"
+                variant="outlined"
+                data-testid="input_unauthorized_login"
                 onClick={handleLoginAfterNotAuthorized}
               >
                 Go to Login
