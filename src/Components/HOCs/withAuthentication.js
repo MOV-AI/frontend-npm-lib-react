@@ -190,6 +190,7 @@ export default function withAuthentication(Component, appName) {
             <>
               <p>You do not have permission to access the application</p>
               <Button
+                variant="outlined"
                 data-testid="input_login"
                 onClick={handleLoginAfterNotAuthorized}
               >
