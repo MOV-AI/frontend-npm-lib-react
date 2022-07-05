@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Modal } from "@material-ui/core";
+import { Button, Modal } from "@material-ui/core";
 import { Authentication, User } from "@mov-ai/mov-fe-lib-core";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
@@ -173,6 +173,12 @@ export default function withAuthentication(Component, appName) {
     );
 
     /**
+     * handleLoginAfterNotAuthorized - after user is unauthorized redirect to login and clear token info
+     * @returns React Component
+     */
+    const handleLoginAfterNotAuthorized = () => handleLogOut();
+
+    /**
      * renderNotAuthorized - Renders the not authorized panel
      * @returns React Component
      */
@@ -180,7 +186,17 @@ export default function withAuthentication(Component, appName) {
       return (
         <LoginPanel
           title={"Not Authorized"}
-          message={"You do not have permission to access the application"}
+          message={
+            <>
+              <p>You do not have permission to access the application</p>
+              <Button
+                data-testid="input_login"
+                onClick={handleLoginAfterNotAuthorized}
+              >
+                Go to Login
+              </Button>
+            </>
+          }
         />
       );
     };
