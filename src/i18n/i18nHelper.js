@@ -3,22 +3,17 @@ import { Translations as libReactTranslations } from "./locales";
 import { initReactI18next } from "react-i18next";
 
 const mergeTranslations = externalTranslation => {
-  const mergedTranslations = Object.entries(externalTranslation).reduce(
-    (previous, [lang, appTranslations]) => {
-      previous[lang] = {
-        ...libReactTranslations[lang],
-        ...appTranslations
+  return Object.entries(externalTranslation).reduce(
+    (result, [lang, appTranslations]) => {
+      result[lang] = {
+        translation: {
+          ...libReactTranslations[lang],
+          ...appTranslations
+        }
       };
-      return previous;
+      return result;
     },
     libReactTranslations
-  );
-  return Object.entries(mergedTranslations).reduce(
-    (acc, [lang, trans]) => ({
-      ...acc,
-      [lang]: { translation: trans }
-    }),
-    mergedTranslations
   );
 };
 
