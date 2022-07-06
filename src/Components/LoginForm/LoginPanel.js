@@ -10,7 +10,13 @@ import defaultLogo from "../../../resources/favicon.png";
 
 class NotAuthorized extends Component {
   render() {
-    const { classes, logo, title, message, progress } = this.props;
+    const {
+      classes,
+      logo = defaultLogo,
+      title = "",
+      message = "",
+      progress = false
+    } = this.props;
 
     return (
       <Grid
@@ -60,13 +66,6 @@ NotAuthorized.propTypes = {
   title: PropTypes.string,
   message: PropTypes.string,
   progress: PropTypes.bool
-};
-
-NotAuthorized.defaultProps = {
-  logo: defaultLogo,
-  title: "",
-  message: "",
-  progress: false
 };
 
 export default withStyles(styles, { withTheme: true })(NotAuthorized);
