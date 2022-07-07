@@ -44,7 +44,7 @@ class NotAuthorized extends Component {
               variant="h2"
               gutterBottom
             >
-              {i18n.t(title)}
+              {title}
             </Typography>
             <Typography
               data-testid="output_message"
