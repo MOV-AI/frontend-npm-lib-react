@@ -4,12 +4,11 @@ import { Authentication, User } from "@mov-ai/mov-fe-lib-core";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import jwtDecode from "jwt-decode";
-import { useTranslation } from "react-i18next";
+import i18n from "../../i18n/i18n.js";
 
 export default function withAuthentication(Component, appName) {
   return function (props) {
     const RECHECK_VALID_DELAY = 10000; // milliseconds
-    const { t } = useTranslation();
 
     const firstRender = useRef(true);
     const [state, setState] = useState({
@@ -187,16 +186,16 @@ export default function withAuthentication(Component, appName) {
     const renderNotAuthorized = () => {
       return (
         <LoginPanel
-          title={t("NotAuthorized")}
+          title={i18n.t("NotAuthorized")}
           message={
             <>
-              <p>{t("NotAuthorizedDescription")}</p>
+              <p>{i18n.t("NotAuthorizedDescription")}</p>
               <Button
                 variant="outlined"
                 data-testid="input_unauthorized_login"
                 onClick={handleLoginAfterNotAuthorized}
               >
-                {t("NotAuthorizedRedirectToLogin")}
+                {i18n.t("NotAuthorizedRedirectToLogin")}
               </Button>
             </>
           }
