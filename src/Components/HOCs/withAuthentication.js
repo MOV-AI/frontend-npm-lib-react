@@ -185,16 +185,16 @@ export default function withAuthentication(Component, appName) {
     const renderNotAuthorized = () => {
       return (
         <LoginPanel
-          title={"Not Authorized"}
+          title={"NotAuthorized"}
           message={
             <>
-              <p>You do not have permission to access the application</p>
+              <p>{"NotAuthorizedDescription"}</p>
               <Button
                 variant="outlined"
                 data-testid="input_login"
                 onClick={handleLoginAfterNotAuthorized}
               >
-                Go to Login
+                {"NotAuthorizedRedirectToLogin"}
               </Button>
             </>
           }

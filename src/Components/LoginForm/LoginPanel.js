@@ -7,6 +7,7 @@ import { LinearProgress } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { styles } from "./style";
 import defaultLogo from "../../../resources/favicon.png";
+import i18n from "../../i18n/i18n.js";
 
 class NotAuthorized extends Component {
   render() {
@@ -43,7 +44,7 @@ class NotAuthorized extends Component {
               variant="h2"
               gutterBottom
             >
-              {title}
+              {i18n.t(title)}
             </Typography>
             <Typography
               data-testid="output_message"
