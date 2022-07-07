@@ -7,7 +7,7 @@ import { LinearProgress } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { styles } from "./style";
 import defaultLogo from "../../../resources/favicon.png";
-import i18n from "../../i18n/i18n.js";
+import { withTranslation } from "react-i18next";
 
 class NotAuthorized extends Component {
   render() {
@@ -16,7 +16,8 @@ class NotAuthorized extends Component {
       logo = defaultLogo,
       title = "",
       message = "",
-      progress = false
+      progress = false,
+      t
     } = this.props;
 
     return (
@@ -44,7 +45,7 @@ class NotAuthorized extends Component {
               variant="h2"
               gutterBottom
             >
-              {title}
+              {t(title)}
             </Typography>
             <Typography
               data-testid="output_message"
@@ -69,4 +70,6 @@ NotAuthorized.propTypes = {
   progress: PropTypes.bool
 };
 
-export default withStyles(styles, { withTheme: true })(NotAuthorized);
+export default withTranslation()(
+  withStyles(styles, { withTheme: true })(NotAuthorized)
+);

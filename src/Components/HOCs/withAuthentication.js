@@ -4,7 +4,6 @@ import { Authentication, User } from "@mov-ai/mov-fe-lib-core";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import jwtDecode from "jwt-decode";
-import i18n from "i18next";
 
 export default function withAuthentication(Component, appName) {
   return function (props) {
@@ -186,16 +185,16 @@ export default function withAuthentication(Component, appName) {
     const renderNotAuthorized = () => {
       return (
         <LoginPanel
-          title={i18n.t("NotAuthorized")}
+          title="NotAuthorized"
           message={
             <>
-              <p>{i18n.t("NotAuthorizedDescription")}</p>
+              <p>{"NotAuthorizedDescription"}</p>
               <Button
                 variant="outlined"
                 data-testid="input_login"
                 onClick={handleLoginAfterNotAuthorized}
               >
-                {i18n.t("NotAuthorizedRedirectToLogin")}
+                {"NotAuthorizedRedirectToLogin"}
               </Button>
             </>
           }
