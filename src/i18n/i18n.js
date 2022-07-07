@@ -18,7 +18,8 @@ const language =
   window.SERVER_DATA === undefined || window.SERVER_DATA.Language === undefined
     ? "en"
     : window.SERVER_DATA.Language;
-
+console.log("language: ", language);
+console.log("resources: ", resources);
 i18n
   .use(initReactI18next)
   // init i18next
