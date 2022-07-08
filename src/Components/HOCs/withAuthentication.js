@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Modal } from "@material-ui/core";
+import { Button, Modal } from "@material-ui/core";
 import { Authentication, User } from "@mov-ai/mov-fe-lib-core";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import jwtDecode from "jwt-decode";
+import i18n from "../../i18n/i18n.js";
 
 export default function withAuthentication(Component, appName) {
   return function (props) {
@@ -173,14 +174,31 @@ export default function withAuthentication(Component, appName) {
     );
 
     /**
+     * handleLoginAfterNotAuthorized - after user is unauthorized, logout and redirect to login
+     * @returns React Component
+     */
+    const handleLoginAfterNotAuthorized = useCallback(() => handleLogOut(), []);
+
+    /**
      * renderNotAuthorized - Renders the not authorized panel
      * @returns React Component
      */
     const renderNotAuthorized = () => {
       return (
         <LoginPanel
-          title={"Not Authorized"}
-          message={"You do not have permission to access the application"}
+          title={i18n.t("NotAuthorized")}
+          message={
+            <>
+              <p>{i18n.t("NotAuthorizedDescription")}</p>
+              <Button
+                variant="outlined"
+                data-testid="input_unauthorized_login"
+                onClick={handleLoginAfterNotAuthorized}
+              >
+                {i18n.t("NotAuthorizedRedirectToLogin")}
+              </Button>
+            </>
+          }
         />
       );
     };
