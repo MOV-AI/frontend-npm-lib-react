@@ -2,7 +2,8 @@ const Authentication = {
   checkLogin: jest.fn().mockResolvedValue(false),
   refreshTokens: jest.fn().mockResolvedValue(true),
   getToken: jest.fn().mockReturnValue("token"),
-  getProviders: jest.fn().mockResolvedValue({ domains: ["internal", "ldap"] })
+  getProviders: jest.fn().mockResolvedValue({ domains: ["internal", "ldap"] }),
+  DEFAULT_PROVIDER: "internal"
 };
 
 const User = function () {
@@ -16,4 +17,8 @@ const User = function () {
   };
 };
 
-export { Authentication, User };
+// Constansts
+
+const SERVICE_LIST = ["backend", "spawner"];
+
+export { Authentication, User, SERVICE_LIST };
