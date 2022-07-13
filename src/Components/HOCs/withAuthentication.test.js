@@ -5,35 +5,6 @@ import withAuthentication from "./withAuthentication";
 
 const MockComponent = () => <div></div>;
 
-jest.mock("jwt-decode", () => {
-  return function () {
-    return { exp: new Date() };
-  };
-});
-
-jest.mock("@mov-ai/mov-fe-lib-core", () => {
-  return {
-    Authentication: {
-      checkLogin: jest.fn().mockResolvedValue(false),
-      refreshTokens: jest.fn().mockResolvedValue(true),
-      getToken: jest.fn().mockReturnValue("token"),
-      getProviders: jest
-        .fn()
-        .mockResolvedValue({ domains: ["internal", "ldap"] })
-    },
-    User: function () {
-      return {
-        getCurrentUserWithPermissions: jest.fn().mockResolvedValue({
-          Resources: {
-            Applications: []
-          },
-          Superuser: true
-        })
-      };
-    }
-  };
-});
-
 describe("Render", () => {
   it("renders the component (smoke test)", async () => {
     const HOC = withAuthentication(MockComponent, "testApp");

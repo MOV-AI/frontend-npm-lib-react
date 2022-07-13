@@ -16,6 +16,9 @@ import LoginFormAdvanced from "./LoginFormAdvanced";
 import { withTranslation } from "react-i18next";
 
 const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
+const EMPTY_FUNCTION = () => {
+  /** Empty on purpose */
+};
 
 class LoginForm extends Component {
   state = {
@@ -247,8 +250,8 @@ LoginForm.defaultProps = {
   domains: [],
   logo: defaultLogo,
   permissionErrors: "",
-  onLoginSubmit: () => {},
-  onChanges: () => {}
+  onLoginSubmit: EMPTY_FUNCTION,
+  onChanges: EMPTY_FUNCTION
 };
 
 export default withTranslation()(
