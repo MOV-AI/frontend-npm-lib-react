@@ -72,50 +72,65 @@ const LogsFilterBar = props => {
   return (
     <AppBar position="static" color="inherit">
       <Toolbar data-testid="section_logs-filter-bar" variant="dense">
-        {/* Robot Selector */}
-        <RobotSelector
-          selectedRobots={selectedRobots}
-          handleRobotChange={handleRobotChange}
-        />
-        {/* Search Input */}
-        <SearchInput
-          messageRegex={messageRegex}
-          handleMessageRegex={handleMessageRegex}
-        />
-        {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
-        <LevelSelector
-          levels={levels}
-          handleLevels={handleLevels}
-          levelsList={levelsList}
-        />
-        {/* Toggle: BACKEND, SPAWNER */}
-        <ServiceSelector
-          selectedService={selectedService}
-          handleSelectedService={handleSelectedService}
-        />
-        {/* Tags */}
-        <TagsPopover
-          tags={tags}
-          advancedMode={advancedMode}
-          handleAddTag={handleAddTag}
-          handleDeleteTag={handleDeleteTag}
-        />
-        {/* Date time filter */}
-        <TimeFilters
-          selectedFromDate={selectedFromDate}
-          selectedToDate={selectedToDate}
-          handleDateChange={handleDateChange}
-        />
-        <div className={classes.spacer}></div>
-        {/* Settings */}
-        <SettingsPopover
-          advancedMode={advancedMode}
-          handleAdvancedMode={handleAdvancedMode}
-          limit={limit}
-          handleLimit={handleLimit}
-          columns={columns}
-          handleColumns={handleColumns}
-        />
+        <div className={classes.flexContainer}>
+          {/* Robot Selector */}
+          <RobotSelector
+            selectedRobots={selectedRobots}
+            handleRobotChange={handleRobotChange}
+          />
+        </div>
+        <div className={`${classes.doubleFlexContainer} ${classes.displayFlex} ${classes.center}`}>
+          {/* Search Input */}
+          <SearchInput
+            messageRegex={messageRegex}
+            handleMessageRegex={handleMessageRegex}
+          />
+        </div>
+        <div className={classes.doubleFlexContainer}>
+          {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
+          <LevelSelector
+            levels={levels}
+            handleLevels={handleLevels}
+            levelsList={levelsList}
+          />
+        </div>
+        <div className={classes.doubleFlexContainer}>
+          {/* Toggle: BACKEND, SPAWNER */}
+          <ServiceSelector
+            selectedService={selectedService}
+            handleSelectedService={handleSelectedService}
+          />
+        </div>
+        <div
+        className={`${classes.doubleFlexContainer} ${classes.displayFlex} ${classes.spaceBetween}`}
+        >
+          <div className={`${classes.doubleFlexContainer} ${classes.displayFlex}`}>
+            {/* Tags */}
+            <TagsPopover
+              tags={tags}
+              advancedMode={advancedMode}
+              handleAddTag={handleAddTag}
+              handleDeleteTag={handleDeleteTag}
+            />
+            {/* Date time filter */}
+            <TimeFilters
+              selectedFromDate={selectedFromDate}
+              selectedToDate={selectedToDate}
+              handleDateChange={handleDateChange}
+            />
+          </div>
+          <div className={`${classes.flexContainer} ${classes.displayFlex} ${classes.flexEnd}`}>
+            {/* Settings */}
+            <SettingsPopover
+              advancedMode={advancedMode}
+              handleAdvancedMode={handleAdvancedMode}
+              limit={limit}
+              handleLimit={handleLimit}
+              columns={columns}
+              handleColumns={handleColumns}
+            />
+          </div>
+        </div>
       </Toolbar>
     </AppBar>
   );

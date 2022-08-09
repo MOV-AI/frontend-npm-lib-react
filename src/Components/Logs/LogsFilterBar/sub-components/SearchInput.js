@@ -4,6 +4,7 @@ import { InputAdornment, TextField, IconButton } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import ResetSearch from "@material-ui/icons/Close";
 import { useSearchInputStyles } from "../../styles";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const SearchInput = props => {
   // Translation hook
@@ -12,6 +13,7 @@ const SearchInput = props => {
   const { messageRegex, handleMessageRegex } = props;
   // Style hook
   const classes = useSearchInputStyles();
+  const bigScreen = useMediaQuery('(min-width:1020px)');
 
   //========================================================================================
   /*                                                                                      *
@@ -69,7 +71,7 @@ const SearchInput = props => {
 
   return (
     <TextField
-      className={classes.searchText}
+      className={bigScreen ? classes.searchText : classes.smallSearchText}
       placeholder={t("Search")}
       value={messageRegex}
       onChange={onChangeText}

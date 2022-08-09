@@ -9,12 +9,14 @@ import {
 } from "@material-ui/core";
 import { MENU_PROPS } from "./_shared/Constants";
 import { useRobotSelectorStyles } from "../../styles";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const RobotSelector = props => {
   // Props
   const { selectedRobots, handleRobotChange } = props;
   // Style hook
   const classes = useRobotSelectorStyles();
+  const bigScreen = useMediaQuery('(min-width:1020px)');
   // Constants
   const INPUT_ICON = (
     <i className={`fas fa-robot ${classes.iconAdornment}`}></i>
@@ -64,7 +66,7 @@ const RobotSelector = props => {
   return (
     <div
       data-testid="section_robot-selector"
-      className={classes.toggleContainer}
+      className={bigScreen ? classes.toggleContainer : classes.smallToggleContainer}
     >
       <FormControl className={classes.formControl}>
         <Select
