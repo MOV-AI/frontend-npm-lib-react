@@ -51,6 +51,7 @@ export const snackbar = (props, _theme) => {
     vertical = "bottom",
     closeButtonText = "Dismiss",
     severity = "default",
+    content,
     ...otherProps
   } = props;
 
@@ -69,7 +70,7 @@ export const snackbar = (props, _theme) => {
     }
   };
 
-  useSnackbarRef.current.enqueueSnackbar(message, {
+  const snackbarData = {
     ...otherProps,
     action,
     ariaAttributes: { "data-testid": `output_${severity}-message` },
@@ -78,5 +79,11 @@ export const snackbar = (props, _theme) => {
       vertical,
       horizontal
     }
-  });
+  };
+
+  if (content) {
+    snackbarData.content = content(closeSnackbar);
+  };
+
+  useSnackbarRef.current.enqueueSnackbar(message, snackbarData);
 };
