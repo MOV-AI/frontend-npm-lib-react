@@ -16,7 +16,7 @@ const LevelSelector = props => {
   const { levels, handleLevels, levelsList } = props;
   // Style hook
   const classes = useSelectBoxStyle();
-  const bigScreen = useMediaQuery('(min-width:1020px)');
+  const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
 
 
   //========================================================================================

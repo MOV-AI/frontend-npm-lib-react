@@ -5,6 +5,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import ResetSearch from "@material-ui/icons/Close";
 import { useSearchInputStyles } from "../../styles";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
 const SearchInput = props => {
   // Translation hook
@@ -13,7 +14,7 @@ const SearchInput = props => {
   const { messageRegex, handleMessageRegex } = props;
   // Style hook
   const classes = useSearchInputStyles();
-  const bigScreen = useMediaQuery('(min-width:1020px)');
+  const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
 
   //========================================================================================
   /*                                                                                      *

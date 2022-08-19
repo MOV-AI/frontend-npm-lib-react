@@ -10,13 +10,14 @@ import {
 import { MENU_PROPS } from "./_shared/Constants";
 import { useRobotSelectorStyles } from "../../styles";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
 const RobotSelector = props => {
   // Props
   const { selectedRobots, handleRobotChange } = props;
   // Style hook
   const classes = useRobotSelectorStyles();
-  const bigScreen = useMediaQuery('(min-width:1020px)');
+  const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
   // Constants
   const INPUT_ICON = (
     <i className={`fas fa-robot ${classes.iconAdornment}`}></i>
