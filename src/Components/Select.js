@@ -11,17 +11,33 @@ const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120
+  },
+  backdrop: {
+    "& div[aria-hidden=true]": {
+      backgroundColor: "black !important",
+      opacity: 0.5,
+      visibility: "visible"
+    }
   }
 }));
 
 const Select = props => {
+  const {
+    variant,
+    style,
+    label,
+    options,
+    noneOption,
+    noneOptionConfig,
+    ...otherProps
+  } = props;
   const classes = useStyles();
 
-  let noneOption = <div></div>;
-  if (props.noneOption) {
-    noneOption = (
-      <MenuItem value={props.noneOptionConfig.value}>
-        <em>{props.noneOptionConfig.text}</em>
+  let noneOptionEL = <div></div>;
+  if (noneOption) {
+    noneOptionEL = (
+      <MenuItem value={noneOptionConfig.value}>
+        <em>{noneOptionConfig.text}</em>
       </MenuItem>
     );
   }
@@ -29,26 +45,22 @@ const Select = props => {
   return (
     <FormControl
       data-testid="section_select-wrapper"
-      variant={props.variant}
+      variant={variant}
       className={classes.formControl}
-      style={props.style}
-      hiddenLabel={props.label === undefined ? true : false}
+      style={style}
+      hiddenLabel={label === undefined ? true : false}
     >
       <InputLabel data-testid="input_label" id="movai-react-select">
-        {props.label}
+        {label}
       </InputLabel>
       <MaterialSelect
+        MenuProps={{ PopoverClasses: { root: classes.backdrop } }}
         data-testid="section_select"
         labelId="movai-react-select"
-        id={props.id}
-        value={props.value}
-        onChange={props.onChange}
-        inputProps={props.inputProps}
-        multiple={props.multiple}
-        renderValue={props.renderValue}
+        {...otherProps}
       >
-        {noneOption}
-        {props.options.map((element, index) => {
+        {noneOptionEL}
+        {options.map((element, index) => {
           return (
             <MenuItem
               data-testid="output_menu-item"
@@ -86,8 +98,8 @@ Select.propTypes = {
   inputProps: PropTypes.object
 };
 Select.defaultProps = {
-  value: "option2",
-  options: ["option1", "option2", "option3"],
+  value: "",
+  options: [],
   variant: "filled",
   noneOption: true,
   noneOptionConfig: {
