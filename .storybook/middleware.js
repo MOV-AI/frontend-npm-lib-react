@@ -1,10 +1,26 @@
-const proxy = require("http-proxy-middleware");
-const packageJson = require("../package.json");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
-module.exports = function expressMiddleware(router) {
-  const proxyConfig = packageJson.proxy || {};
-
-  for (let domain in proxyConfig) {
-    router.use(domain, proxy.createProxyMiddleware(proxyConfig[domain]));
-  }
+module.exports = function (app) {
+  app.use(
+    createProxyMiddleware(
+      [
+        "/token-auth/**",
+        "/api/**",
+        "/domains/**",
+        "/token-verify/**",
+        "/token-refresh/**",
+        "/ws/**",
+        "/logout/**",
+        "/static/maps/**",
+        "/static/meshes/**",
+        "/static/point_clouds/**"
+      ],
+      {
+        target: "https://localhost",
+        ws: true,
+        logLevel: "debug",
+        secure: false
+      }
+    )
+  );
 };
