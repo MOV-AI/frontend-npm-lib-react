@@ -1,66 +1,57 @@
 import React from "react";
-
-import Logs from "../src/Components/Logs/Logs";
+import withMock from "storybook-addon-mock";
+import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import { ThemeProvider } from "@material-ui/styles";
-import { createTheme } from "@material-ui/core/styles";
 
-const Themes = {
-  dark: createTheme({
-    label: "dark",
-    palette: {
-      type: "dark", // Switching the dark mode on, is a single property value change.
-      primary: {
-        main: "#36b5e6"
-      },
-      secondary: {
-        main: "#CF6679"
-      },
-      green: {
-        main: "#03DAC5"
-      }
-    }
-  }),
-  light: createTheme({
-    label: "light",
-    palette: {
-      primary: {
-        main: "#007197"
-      },
-      secondary: {
-        main: "#BE2424"
-      },
-      green: {
-        main: "#03DAC5"
-      }
-    }
-  })
+import { authParams } from "./_mockLogin";
+import Themes from "../src/styles/Themes";
+import Logs from "../src/Components/Logs/Logs";
+import withAuthentication from "../src/Components/HOCs/withAuthentication";
+
+export default {
+  title: "Logs Component",
+  decorators: [withMock]
 };
 
-export const logStory = () => {
+const LogsTable = () => {
+  const robotManager = React.useMemo(() => new RobotManager(), []);
+  const [robots, setRobots] = React.useState({});
+
+  React.useEffect(() => {
+    robotManager.getAll(data => setRobots(data));
+  }, []);
+
+  const formatRobotData = () => {
+    const res = [];
+    Object.keys(robots).forEach(elem => {
+      const id = elem;
+      res.push({
+        id,
+        name: robots?.[id].RobotName,
+        ip: robots?.[id].IP
+      });
+    });
+    return res;
+  };
+
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: "90vh" }}>
       <ThemeProvider theme={Themes["light"]}>
-        <Logs
-          robotsData={[
-            {
-              name: "test",
-              id: "test",
-              timestamp: 1604334778.6494586,
-              robotState: "okay",
-              battery: 78,
-              ip: undefined
-            }
-          ]}
-        ></Logs>
+        <Logs robotsData={formatRobotData()} advancedMode></Logs>
       </ThemeProvider>
     </div>
   );
 };
 
-logStory.story = {
-  name: "Logs"
+const Template = () => {
+  const AuthLogs = withAuthentication(LogsTable);
+  return <AuthLogs />;
 };
 
-export default {
-  title: "Logs Component"
+export const logStory = Template.bind({});
+
+logStory.parameters = authParams;
+
+logStory.story = {
+  name: "Logs"
 };
