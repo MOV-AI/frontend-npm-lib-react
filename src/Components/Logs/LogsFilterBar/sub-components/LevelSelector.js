@@ -10,6 +10,7 @@ import {
 import { useSelectBoxStyle } from "../../styles";
 import { MENU_PROPS } from "./_shared/Constants";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
 const LevelSelector = props => {
   // Props
