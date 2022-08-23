@@ -12,7 +12,7 @@
 
 4. Test updates
 
-   - You can use `npm run storybook` for that.
+   - You can use `npm run storybook` for that
 
 5. Commit/Push changes
 
@@ -23,7 +23,7 @@
 
 ## Invalid hook
 
-When running the lib-react locally from IDE, you might have an issue with invalid hooks with the following message: "Error: Invalid hook call. Hooks can only be called inside of the body of a function component".
+When running the lib-react locally from IDE, you might have an issue with invalid hooks with the following message: "Error: Invalid hook call. Hooks can only be called inside of the body of a function component"
 
 To fix it, stop the development server of IDE, stop the buildDev of lib-react and run the following command in lib-react repository root:
 

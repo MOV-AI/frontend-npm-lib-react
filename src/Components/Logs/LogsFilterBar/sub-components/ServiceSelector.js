@@ -10,12 +10,15 @@ import {
 import { SERVICE_LIST } from "@mov-ai/mov-fe-lib-core";
 import { MENU_PROPS } from "./_shared/Constants";
 import { useSelectBoxStyle } from "../../styles";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
 const ServiceSelector = props => {
   // Props
   const { selectedService, handleSelectedService } = props;
   // Style hook
   const classes = useSelectBoxStyle();
+  const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
 
   //========================================================================================
   /*                                                                                      *
@@ -62,13 +65,13 @@ const ServiceSelector = props => {
   //========================================================================================
 
   return (
-    <div data-testid="section_services" className={classes.toggleContainer}>
+    <div data-testid="section_services" className={bigScreen ? classes.toggleContainer : classes.smallToggleContainer}>
       <FormControl className={classes.formControl}>
         <Select
           inputProps={{ "data-testid": "input_select" }}
           labelId="demo-mutiple-checkbox-label"
           id="demo-mutiple-checkbox"
-          className={classes.selectBox}
+          className={bigScreen ? classes.selectBox : classes.smallSelectBox }
           multiple
           value={selectedService}
           onChange={handleSelectedService}
