@@ -12,7 +12,7 @@
 
 4. Test updates
 
-   - You can use `npm run storybook` for that.
+   - You can use `npm run storybook` for that
 
 5. Commit/Push changes
 
