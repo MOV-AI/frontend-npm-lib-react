@@ -27,7 +27,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Chip = props => {
+const Chip = (props: {
+  label: string;
+  active: boolean;
+  handleFilterClick: Function;
+  filterIndex: number;
+}) => {
   const classes = useStyles();
   return (
     <MaterialChip
