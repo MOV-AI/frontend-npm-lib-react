@@ -12,10 +12,18 @@ module.exports = {
   target: "web",
   devtool: "source-map",
   externals: [nodeExternals()],
+  resolve: {
+    extensions: [".tsx", ".ts", ".js", ".jsx"]
+  },
   module: {
     rules: [
       {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(js|mjs|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: "babel-loader",
