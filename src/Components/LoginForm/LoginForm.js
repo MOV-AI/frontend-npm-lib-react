@@ -239,6 +239,7 @@ class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
+  authErrorMessage: PropTypes.string,
   domains: PropTypes.array,
   logo: PropTypes.any, // expects a svg element
   permissionErrors: PropTypes.string,

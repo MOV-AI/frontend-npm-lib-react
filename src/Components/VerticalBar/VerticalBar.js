@@ -30,7 +30,7 @@ const VerticalBar = props => {
       <div data-testid="section_navigation" className={classes.navigationArea}>
         {props.navigationList.map((element, index) => {
           return (
-            <div key={index}>
+            <div key={`navigation-item-${index}`}>
               <div className={classes.navigationItem}>{element}</div>
               {props.useDividers && <Divider className={classes.divider} />}
             </div>

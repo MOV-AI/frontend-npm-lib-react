@@ -64,7 +64,7 @@ class NotAuthorized extends Component {
 NotAuthorized.propTypes = {
   logo: PropTypes.any, // expects a svg element
   title: PropTypes.string,
-  message: PropTypes.string,
+  message: PropTypes.string | PropTypes.element,
   progress: PropTypes.bool
 };
 

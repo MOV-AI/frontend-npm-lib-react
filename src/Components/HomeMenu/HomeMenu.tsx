@@ -1,4 +1,9 @@
-import React, { useEffect, useMemo } from "react";
+import React, {
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useMemo
+} from "react";
 import { Button, Divider, IconButton, Typography } from "@material-ui/core";
 import { User, Utils } from "@mov-ai/mov-fe-lib-core";
 import AppsIcon from "@material-ui/icons/Apps";
@@ -9,10 +14,18 @@ import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
 import i18n from "../../i18n/i18n.js";
 import Tooltip from "@material-ui/core/Tooltip";
 
+interface App {
+  Enabled: boolean;
+  Icon: string;
+  Label: string;
+  Type: string;
+  URL: string;
+}
+
 const HomeMenuPopper = () => {
   // State hooks
   const classes = HomeMenuPopperStyles();
-  const [currentApps, setCurrentApps] = React.useState();
+  const [currentApps, setCurrentApps] = React.useState<App[]>();
   const [errorMessage, setErrorMessage] = React.useState("");
 
   // Other hooks
@@ -30,7 +43,8 @@ const HomeMenuPopper = () => {
     currentUser
       .getAllApps()
       .then(res => {
-        res.success && setCurrentApps(res.result);
+        console.log("getAllApps: ", res);
+        res.success && setCurrentApps(res.result as any);
       })
       .catch(err => {
         setErrorMessage(err.statusText);
@@ -55,7 +69,7 @@ const HomeMenuPopper = () => {
    * @param {Event} event : click event
    * @param {object} element : App object
    */
-  const onAppClick = (event, app) => {
+  const onAppClick = (event: MouseEvent, app: App) => {
     if (app.Label) {
       Utils.loadResources(event, app);
     }
@@ -69,7 +83,7 @@ const HomeMenuPopper = () => {
    *                                        RENDERS                                       *
    *                                                                                      */
   //========================================================================================
-  const renderApplications = apps => {
+  const renderApplications = (apps: App[]) => {
     return apps.map(app => (
       <Button
         data-testid="input_application"
@@ -79,7 +93,7 @@ const HomeMenuPopper = () => {
         className={classes.menuButton}
         onClick={event => onAppClick(event, app)}
       >
-        <div className={classes.appTextArea}>
+        <div>
           <div className={`${classes.appIcon} ${app.Icon}`} />
           <div className={classes.appMiniature}>{app.Label}</div>
         </div>
@@ -110,9 +124,9 @@ const HomeMenuPopper = () => {
         </div>
       );
     if (currentApps) {
-      const arrayOfApplications = [];
-      const arrayOfExternalApps = [];
-      const arrayOfLayouts = [];
+      const arrayOfApplications: App[] = [];
+      const arrayOfExternalApps: App[] = [];
+      const arrayOfLayouts: App[] = [];
 
       currentApps.forEach(app => {
         const appType = app.Type;
@@ -153,8 +167,9 @@ const HomeMenuPopper = () => {
    *                                        Render                                        *
    *                                                                                      */
   //========================================================================================
+
   return (
-    <Tooltip title={i18n.t("Home")} placement="right">
+    <Tooltip title={i18n.t("Home") || "Home"} placement="right">
       {/* Tooltips - To accommodate disabled elements, add a simple wrapper element, such as a span. */}
       <span>
         <HTMLPopper

@@ -1,16 +1,23 @@
-import React, { useRef } from "react";
+import React, { LegacyRef, useRef } from "react";
 import { infoButtonStyles } from "./styles";
 import PropTypes from "prop-types";
-import { Fade, Paper, Popper } from "@material-ui/core";
+import { Fade, Paper, Popper, PopperPlacementType } from "@material-ui/core";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
-const HTMLPopper = props => {
+interface HTMLPopperProps {
+  clickableElement: JSX.Element;
+  children: JSX.Element;
+  hideOnClickAway: boolean;
+  popperPlacement: PopperPlacementType;
+}
+
+const HTMLPopper = (props: HTMLPopperProps) => {
   const classes = infoButtonStyles();
   const { clickableElement, children, hideOnClickAway, popperPlacement } =
     props;
 
   const [openPopper, setOpenPopper] = React.useState(false);
-  const anchorPopperRef = useRef();
+  const anchorPopperRef = useRef<any>();
 
   //========================================================================================
   /*                                                                                      *
@@ -56,7 +63,7 @@ const HTMLPopper = props => {
       <span
         data-testid="input_clickable"
         onClick={handlePopperOpen}
-        ref={anchorPopperRef}
+        ref={anchorPopperRef as any}
       >
         {clickableElement}
       </span>
