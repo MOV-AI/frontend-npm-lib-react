@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { ChangeEvent, Component, KeyboardEvent } from "react";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -20,7 +20,24 @@ const EMPTY_FUNCTION = () => {
   /** Empty on purpose */
 };
 
-class LoginForm extends Component {
+interface LoginFormProps {
+  classes: {
+    [cssClass: string]: any;
+  };
+  logo?: string;
+  domains: string[];
+  authErrorMessage: string;
+  onChanges?: () => void;
+  onLoginSubmit: (submitProps: {
+    username: string;
+    password: string;
+    remember: boolean;
+    selectedProvider: string;
+  }) => void;
+  t: (translationKey: string) => string;
+}
+
+class LoginForm extends Component<LoginFormProps> {
   state = {
     username: "",
     password: "",
@@ -36,7 +53,7 @@ class LoginForm extends Component {
    *                                                                                      */
   //========================================================================================
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: LoginFormProps) {
     if (
       !this.hasMultipleDomains() ||
       prevProps.domains.length === this.props.domains.length
@@ -73,7 +90,7 @@ class LoginForm extends Component {
    * Check if caps lock is on
    * @param {Event} event : On key up event
    */
-  checkCapsLock = event => {
+  checkCapsLock = (event: KeyboardEvent) => {
     if (event.key === "CapsLock" && this.state.capsLockOn)
       this.setState({ capsLockOn: false });
     else {
@@ -82,11 +99,12 @@ class LoginForm extends Component {
     }
   };
 
-  handleProviderChange = e => {
+  handleProviderChange = (e: ChangeEvent) => {
+    const target = e.target as HTMLInputElement;
     this.setState({
-      selectedProvider: e.target.value
+      selectedProvider: target.value
     });
-    localStorage.setItem(SELECTED_DOMAIN_KEY, e.target.value);
+    localStorage.setItem(SELECTED_DOMAIN_KEY, target.value);
   };
 
   //========================================================================================
@@ -99,10 +117,12 @@ class LoginForm extends Component {
    * On change username
    * @param {Event} event : On change event
    */
-  onChangeUsername = event => {
+  onChangeUsername: React.ChangeEventHandler<
+    HTMLTextAreaElement | HTMLInputElement
+  > = event => {
     const username = event.target.value || "";
     const errorMessage = !username ? this.props.t("UsernameRequired") : "";
-    this.state.username && this.props.onChanges();
+    this.state.username && this.props.onChanges?.();
     this.setState({ username: event.target.value, formErrors: errorMessage });
   };
 
@@ -110,10 +130,12 @@ class LoginForm extends Component {
    * On change password
    * @param {Event} event : On change event
    */
-  onChangePassword = event => {
+  onChangePassword: React.ChangeEventHandler<
+    HTMLTextAreaElement | HTMLInputElement
+  > = event => {
     const password = event.target.value || "";
     const errorMessage = !password ? this.props.t("PasswordRequired") : "";
-    this.state.password && this.props.onChanges();
+    this.state.password && this.props.onChanges?.();
     this.setState({
       password,
       formErrors: errorMessage
@@ -124,7 +146,9 @@ class LoginForm extends Component {
    * On key up password input
    * @param {Event} event : On keyUp event
    */
-  onKeyUpPassword = event => {
+  onKeyUpPassword: React.KeyboardEventHandler<
+    HTMLTextAreaElement | HTMLInputElement
+  > = event => {
     this.checkCapsLock(event);
     if (event.key === "Enter") {
       this.sendCreds();
@@ -142,7 +166,12 @@ class LoginForm extends Component {
   //========================================================================================
 
   render() {
-    const { classes, logo, domains, authErrorMessage } = this.props;
+    const {
+      classes,
+      logo = defaultLogo,
+      domains,
+      authErrorMessage
+    } = this.props;
     const errorMessage = this.state.formErrors || authErrorMessage;
     return (
       <Grid
@@ -237,23 +266,6 @@ class LoginForm extends Component {
     );
   }
 }
-
-LoginForm.propTypes = {
-  authErrorMessage: PropTypes.string,
-  domains: PropTypes.array,
-  logo: PropTypes.any, // expects a svg element
-  permissionErrors: PropTypes.string,
-  onLoginSubmit: PropTypes.func,
-  onChanges: PropTypes.func
-};
-
-LoginForm.defaultProps = {
-  domains: [],
-  logo: defaultLogo,
-  permissionErrors: "",
-  onLoginSubmit: EMPTY_FUNCTION,
-  onChanges: EMPTY_FUNCTION
-};
 
 export default withTranslation()(
   withStyles(styles, { withTheme: true })(LoginForm)

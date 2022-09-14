@@ -181,7 +181,6 @@ export default function withAuthentication<P extends object>(
         domains={authenticationProviders}
         authErrorMessage={errorMessage}
         onLoginSubmit={handleLoginSubmit}
-        onChanges={setErrorMessage}
       />
     );
 

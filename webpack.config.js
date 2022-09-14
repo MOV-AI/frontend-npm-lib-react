@@ -58,9 +58,10 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpg|png)$/,
-        use: {
-          loader: "url-loader"
+        test: /\.(png|jpe?g|gif|jp2|webp)$/,
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]"
         }
       }
     ]
