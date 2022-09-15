@@ -11,7 +11,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import { withStyles } from "@material-ui/core/styles";
 import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
-import PropTypes from "prop-types";
 import LoginFormAdvanced from "./LoginFormAdvanced";
 import { withTranslation } from "react-i18next";
 

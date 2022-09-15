@@ -4,8 +4,8 @@ const nodeExternals = require("webpack-node-externals");
 module.exports = {
   entry: "./index.ts",
   output: {
-    path: path.resolve("./"),
-    filename: "dist/index.js",
+    path: path.resolve(__dirname, "dist"),
+    filename: "index.js",
     library: "MovaiReact",
     libraryTarget: "umd"
   },
@@ -47,22 +47,8 @@ module.exports = {
         use: ["style-loader", "css-loader"]
       },
       {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: "svg-url-loader",
-            options: {
-              limit: 10000
-            }
-          }
-        ]
-      },
-      {
-        test: /\.(png|jpe?g|gif|jp2|webp)$/,
-        loader: "file-loader",
-        options: {
-          name: "[name].[ext]"
-        }
+        test: /\.(png|jpe?g|gif|jp2|webp|svg)$/,
+        type: "asset/inline"
       }
     ]
   }
