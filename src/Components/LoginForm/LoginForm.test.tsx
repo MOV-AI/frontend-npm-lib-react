@@ -3,6 +3,7 @@ import { render, fireEvent, within } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import LoginForm from "./LoginForm";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
+import { EMPTY_FUNCTION } from "../../Utils/Constants";
 
 const SOME_DOMAIN_NAME = "OTHER_DOMAIN";
 const SINGLE_DOMAINS = [Authentication.DEFAULT_PROVIDER];
@@ -14,7 +15,7 @@ describe("Render", () => {
       <LoginForm
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
-        onLoginSubmit={() => {}}
+        onLoginSubmit={EMPTY_FUNCTION}
       />
     );
     expect(container).toBeInTheDocument();
@@ -27,7 +28,7 @@ describe("Initial value", () => {
       <LoginForm
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
-        onLoginSubmit={() => {}}
+        onLoginSubmit={EMPTY_FUNCTION}
       ></LoginForm>
     );
     const input = getByTestId("input_username") as HTMLInputElement;
@@ -39,7 +40,7 @@ describe("Initial value", () => {
       <LoginForm
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
-        onLoginSubmit={() => {}}
+        onLoginSubmit={EMPTY_FUNCTION}
       />
     );
     const input = getByTestId("input_password") as HTMLInputElement;
@@ -53,7 +54,7 @@ describe("Domain Selector", () => {
       <LoginForm
         domains={SINGLE_DOMAINS}
         authErrorMessage={""}
-        onLoginSubmit={() => {}}
+        onLoginSubmit={EMPTY_FUNCTION}
       />
     );
     const domainSelector = queryByText("Domain");
@@ -65,7 +66,7 @@ describe("Domain Selector", () => {
       <LoginForm
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
-        onLoginSubmit={() => {}}
+        onLoginSubmit={EMPTY_FUNCTION}
       />
     );
     const domainSelector = queryByText("Domain");
@@ -77,7 +78,7 @@ describe("Domain Selector", () => {
       <LoginForm
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
-        onLoginSubmit={() => {}}
+        onLoginSubmit={EMPTY_FUNCTION}
       ></LoginForm>
     );
 
@@ -131,7 +132,7 @@ describe("Selected Domain", () => {
     const { getByTestId } = render(
       <LoginForm
         authErrorMessage={""}
-        onLoginSubmit={() => {}}
+        onLoginSubmit={EMPTY_FUNCTION}
         domains={["other", Authentication.DEFAULT_PROVIDER]}
       ></LoginForm>
     );
@@ -147,7 +148,7 @@ describe("Handle changes", () => {
       <LoginForm
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
-        onLoginSubmit={() => {}}
+        onLoginSubmit={EMPTY_FUNCTION}
       ></LoginForm>
     );
     const domainSelector = getByTestId("input_domain") as HTMLInputElement;

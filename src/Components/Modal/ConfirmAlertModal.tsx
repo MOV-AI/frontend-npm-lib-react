@@ -1,5 +1,6 @@
 import { PropTypes } from "@material-ui/core";
 import React, { MouseEventHandler } from "react";
+import { EMPTY_FUNCTION } from "../../Utils/Constants";
 import AbstractModal from "./AbstractModal";
 
 interface ModalProps {
@@ -17,8 +18,8 @@ interface ModalProps {
 }
 
 const ConfirmAlertModal = ({
-  onSubmit = () => {},
-  onCancel = () => {},
+  onSubmit = EMPTY_FUNCTION,
+  onCancel = EMPTY_FUNCTION,
   open = false,
   title = "Insert Text here",
   message = "Are you sure?",

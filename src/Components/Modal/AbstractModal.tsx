@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import { modalStyles } from "./styles";
 import i18n from "../../i18n/i18n.js";
+import { EMPTY_FUNCTION } from "../../Utils/Constants";
 
 interface ModalProps {
   onSubmit: Function;
@@ -36,9 +37,9 @@ interface ModalProps {
 const AbstractModal = (props: ModalProps) => {
   const {
     disableActions = false,
-    onSubmit = () => {},
-    onCancel = () => {},
-    onKeyPress = () => {},
+    onSubmit = EMPTY_FUNCTION,
+    onCancel = EMPTY_FUNCTION,
+    onKeyPress = EMPTY_FUNCTION,
     open = false,
     title = i18n.t("New"),
     hasSubmitButton = true,
