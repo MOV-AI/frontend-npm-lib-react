@@ -98,7 +98,9 @@ class LoginForm extends Component<LoginFormProps> {
     }
   };
 
-  handleProviderChange = (e: ChangeEvent) => {
+  handleProviderChange = (
+    e: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
     const target = e.target as HTMLInputElement;
     this.setState({
       selectedProvider: target.value
