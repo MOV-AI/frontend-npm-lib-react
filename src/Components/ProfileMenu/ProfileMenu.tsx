@@ -3,22 +3,36 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
-  useRef
+  useRef,
+  MouseEventHandler
 } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import SettingsIcon from "@material-ui/icons/Settings";
-import PropTypes from "prop-types";
 import Toggle from "../Toggle";
 import { profileMenuStyles } from "./styles";
 import Divider from "@material-ui/core/Divider";
 import { User } from "@mov-ai/mov-fe-lib-core";
 import { Typography, Tooltip } from "@material-ui/core";
 import i18n from "../../i18n/i18n.js";
-import ResetPasswordModal from "./ResetPassword";
+import ResetPasswordModal, { VARIANT_OPTIONS } from "./ResetPassword";
 
-const ProfileMenu = props => {
+abstract class ProfileMenuProps {
+  welcomeLabel: string;
+  darkThemeLabel: string;
+  logoutLabel: string;
+  version: string;
+  extraItems: { func: MouseEventHandler; label: string }[];
+  isDarkTheme: boolean;
+  handleLogout: Function;
+  handleToggleTheme: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => void;
+}
+
+const ProfileMenu = (props: ProfileMenuProps) => {
   // State hooks
   const [anchorEl, setAnchorEl] = useState(null);
   const [username, setUsername] = useState("");
@@ -26,17 +40,17 @@ const ProfileMenu = props => {
   const user = useMemo(() => new User(), []);
   const classes = profileMenuStyles();
   // Refs
-  const resetModalRef = useRef();
+  const resetModalRef = useRef<{ open: Function }>();
   // Props
   const {
-    welcomeLabel,
-    extraItems,
-    handleToggleTheme,
-    darkThemeLabel,
-    isDarkTheme,
-    handleLogout,
-    logoutLabel,
-    version
+    welcomeLabel = "Hello",
+    darkThemeLabel = "Dark Theme",
+    logoutLabel = "Logout",
+    version = "",
+    extraItems = [],
+    isDarkTheme = true,
+    handleLogout = () => console.log("logout"),
+    handleToggleTheme
   } = props;
 
   //========================================================================================
@@ -64,7 +78,7 @@ const ProfileMenu = props => {
    * Open Password Reset modal
    */
   const handlePasswordReset = useCallback(() => {
-    resetModalRef.current.open();
+    resetModalRef.current?.open();
     handleClose();
   }, [handleClose]);
 
@@ -95,7 +109,7 @@ const ProfileMenu = props => {
 
   return (
     <div data-testid="section_profile-menu">
-      <Tooltip title={i18n.t("Settings")}>
+      <Tooltip title={i18n.t("Settings") || ""}>
         <IconButton
           data-testid="input_button"
           aria-haspopup="true"
@@ -149,7 +163,7 @@ const ProfileMenu = props => {
             </div>
           )}
           <MenuItem
-            className={(classes.menuItemSpacing, classes.cursorPointer)}
+            className={classes.menuItemSpacing}
             onClick={handleLogoutClick}
           >
             {logoutLabel}
@@ -164,32 +178,9 @@ const ProfileMenu = props => {
         </Typography>
       </Menu>
       {/* Password Modal */}
-      <ResetPasswordModal
-        ref={resetModalRef}
-        variant="change"
-      ></ResetPasswordModal>
+      <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>
     </div>
   );
-};
-ProfileMenu.propTypes = {
-  welcomeLabel: PropTypes.string,
-  darkThemeLabel: PropTypes.string,
-  logoutLabel: PropTypes.string,
-  version: PropTypes.string,
-  extraItems: PropTypes.array,
-  isDarkTheme: PropTypes.bool,
-  handleLogout: PropTypes.func,
-  handleToggleTheme: PropTypes.func
-};
-
-ProfileMenu.defaultProps = {
-  welcomeLabel: "Hello",
-  darkThemeLabel: "Dark Theme",
-  logoutLabel: "Logout",
-  version: "",
-  extraItems: [],
-  isDarkTheme: true,
-  handleLogout: () => console.log("logout")
 };
 
 export default ProfileMenu;

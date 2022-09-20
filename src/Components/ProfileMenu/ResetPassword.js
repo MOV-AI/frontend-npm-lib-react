@@ -24,7 +24,7 @@ import AbstractModal from "../Modal/AbstractModal";
  *                                                                                      */
 //========================================================================================
 
-const VARIANT_OPTIONS = {
+export const VARIANT_OPTIONS = {
   CHANGE: "change",
   RESET: "reset"
 };
