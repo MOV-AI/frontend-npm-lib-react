@@ -3,6 +3,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 import { green, grey } from "@material-ui/core/colors";
+import { ToggleProps } from "./types";
 
 const useStyles = makeStyles(_theme => ({
   label: {
@@ -26,21 +27,6 @@ const useStyles = makeStyles(_theme => ({
   colorBar: {},
   colorChecked: {}
 }));
-
-interface ToggleProps {
-  toggle: boolean;
-  onToggle: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => void;
-  label?: string;
-  color?: "primary" | "secondary" | "default";
-  disabled?: boolean;
-  hidden?: boolean;
-  labelPlacement?: "end" | "start" | "top" | "bottom";
-  size?: "small" | "medium";
-  style?: object;
-}
 
 const Toggle = (props: ToggleProps) => {
   const classes = useStyles();

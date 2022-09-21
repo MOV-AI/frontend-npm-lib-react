@@ -13,28 +13,12 @@ import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import LoginFormAdvanced from "./LoginFormAdvanced";
 import { withTranslation } from "react-i18next";
+import { LoginFormProps } from "./types";
 
 const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
 const EMPTY_FUNCTION = () => {
   /** Empty on purpose */
 };
-
-interface LoginFormProps {
-  classes: {
-    [cssClass: string]: any;
-  };
-  logo?: string;
-  domains: string[];
-  authErrorMessage: string;
-  onChanges?: () => void;
-  onLoginSubmit: (submitProps: {
-    username: string;
-    password: string;
-    remember: boolean;
-    selectedProvider: string;
-  }) => void;
-  t: (translationKey: string) => string;
-}
 
 class LoginForm extends Component<LoginFormProps> {
   state = {

@@ -13,14 +13,7 @@ import HTMLPopper from "../Popper/HTMLPopper";
 import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
 import i18n from "../../i18n/i18n.js";
 import Tooltip from "@material-ui/core/Tooltip";
-
-interface App {
-  Enabled: boolean;
-  Icon: string;
-  Label: string;
-  Type: string;
-  URL: string;
-}
+import { App } from "./types";
 
 const HomeMenuPopper = () => {
   // State hooks

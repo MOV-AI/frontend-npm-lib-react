@@ -1,21 +1,7 @@
-import { PropTypes } from "@material-ui/core";
-import React, { MouseEventHandler } from "react";
+import React from "react";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";
 import AbstractModal from "./AbstractModal";
-
-interface ModalProps {
-  onSubmit: Function;
-  onCancel: MouseEventHandler;
-  onKeyPress: Function;
-  open: boolean;
-  title: string;
-  submitText: string;
-  submitColor: PropTypes.Color;
-  cancelText: string;
-  cancelColor: PropTypes.Color;
-  children: React.ReactNode;
-  message: string;
-}
+import { ConfirmModalProps } from "./types";
 
 const ConfirmAlertModal = ({
   onSubmit = EMPTY_FUNCTION,
@@ -28,7 +14,7 @@ const ConfirmAlertModal = ({
   cancelText = "Cancel",
   cancelColor = "primary",
   children = <div></div>
-}: ModalProps) => {
+}: ConfirmModalProps) => {
   return (
     <AbstractModal
       onSubmit={onSubmit}

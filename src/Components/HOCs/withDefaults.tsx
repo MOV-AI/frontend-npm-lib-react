@@ -1,18 +1,13 @@
 import { ThemeProvider } from "@material-ui/styles";
 import React from "react";
+import { WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
 import withNotification from "./withNotification";
 import withOfflineValidation from "./withOfflineValidation";
 import withTheme from "./withTheme";
 import withTranslations from "./withTranslations";
 
-export default function withDefaults(appOptions: {
-  name: string;
-  component: React.ComponentType;
-  offlineValidation: boolean;
-  theme: { provider: typeof ThemeProvider; props?: any };
-  translations: object;
-}) {
+export default function withDefaults(appOptions: WithDefaultsProps) {
   const {
     name: appName,
     component: appComponent,

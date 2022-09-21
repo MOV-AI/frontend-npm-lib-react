@@ -13,18 +13,11 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import { advancedSectionStyles } from "./style";
 import { makeStyles } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
+import { LoginFormAdvancedProps } from "./types";
 
 const advancedLoginStyles = makeStyles(advancedSectionStyles);
 
-const LoginFormAdvanced = (props: {
-  classes?: { [className: string]: string };
-  domains: string[];
-  selectedProvider: string;
-  onProviderChange: (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>,
-    child: React.ReactNode
-  ) => void;
-}) => {
+const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
   const { t } = useTranslation();
   const classes = advancedLoginStyles();
   const [open, setOpen] = useState(true);

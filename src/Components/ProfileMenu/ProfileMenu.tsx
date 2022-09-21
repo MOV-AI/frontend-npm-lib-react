@@ -16,21 +16,8 @@ import Divider from "@material-ui/core/Divider";
 import { User } from "@mov-ai/mov-fe-lib-core";
 import { Typography, Tooltip } from "@material-ui/core";
 import i18n from "../../i18n/i18n.js";
-import ResetPasswordModal, { VARIANT_OPTIONS } from "./ResetPassword";
-
-abstract class ProfileMenuProps {
-  welcomeLabel: string;
-  darkThemeLabel: string;
-  logoutLabel: string;
-  version: string;
-  extraItems: { func: MouseEventHandler; label: string }[];
-  isDarkTheme: boolean;
-  handleLogout: Function;
-  handleToggleTheme: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => void;
-}
+import ResetPasswordModal from "./ResetPassword";
+import { ProfileMenuProps } from "./types";
 
 const ProfileMenu = (props: ProfileMenuProps) => {
   // State hooks

@@ -1,6 +1,5 @@
-import React, { MouseEventHandler, useCallback } from "react";
+import React, { useCallback } from "react";
 import CloseIcon from "@material-ui/icons/Close";
-import { PropTypes } from "@material-ui/core";
 import _debounce from "lodash/debounce";
 import {
   Card,
@@ -14,27 +13,9 @@ import {
 import { modalStyles } from "./styles";
 import i18n from "../../i18n/i18n.js";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";
+import { AbstractModalProps } from "./types";
 
-interface ModalProps {
-  onSubmit: Function;
-  onCancel: MouseEventHandler;
-  onKeyPress?: Function;
-  open: boolean;
-  title: string;
-  submitText: string;
-  submitColor: PropTypes.Color;
-  cancelText: string;
-  cancelColor: PropTypes.Color;
-  width?: string;
-  height?: string;
-  style?: object;
-  disableActions?: boolean;
-  hasSubmitButton?: boolean;
-  hasCancelButton?: boolean;
-  children: React.ReactNode;
-}
-
-const AbstractModal = (props: ModalProps) => {
+const AbstractModal = (props: AbstractModalProps) => {
   const {
     disableActions = false,
     onSubmit = EMPTY_FUNCTION,
