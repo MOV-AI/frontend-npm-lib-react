@@ -1,8 +1,9 @@
-import React, { Fragment, useCallback } from "react";
+import React, { AriaAttributes, Fragment, useCallback } from "react";
 import { Button } from "@material-ui/core";
-import { useSnackbar } from "notistack";
+import { ProviderContext, useSnackbar, SnackbarKey } from "notistack";
+import { InnerSnackbarUtilsConfiguratorProps, SnackbarProps } from "./types";
 
-const useSnackbarRef = { current: null };
+const useSnackbarRef: { current: null | ProviderContext } = { current: null };
 
 //========================================================================================
 /*                                                                                      *
@@ -10,7 +11,9 @@ const useSnackbarRef = { current: null };
  *                                                                                      */
 //========================================================================================
 
-const InnerSnackbarUtilsConfigurator = props => {
+const InnerSnackbarUtilsConfigurator = (
+  props: InnerSnackbarUtilsConfiguratorProps
+) => {
   props.setUseSnackbarRef(useSnackbar());
   return null;
 };
@@ -37,13 +40,10 @@ export const SnackbarUtilsConfigurator = () => {
  *                                                                                      */
 //========================================================================================
 
-const closeSnackbar = key => {
-  return () => {
-    useSnackbarRef.current.closeSnackbar(key);
-  };
-};
+const closeSnackbar = (key: SnackbarKey) => () =>
+  useSnackbarRef.current?.closeSnackbar(key);
 
-export const snackbar = (props, _theme) => {
+export const snackbar = (props: SnackbarProps, _theme: any) => {
   const {
     message,
     closable = true,
@@ -54,7 +54,7 @@ export const snackbar = (props, _theme) => {
     ...otherProps
   } = props;
 
-  const action = key => {
+  const action = (key: SnackbarKey) => {
     if (closable) {
       return (
         <Fragment>
@@ -69,10 +69,12 @@ export const snackbar = (props, _theme) => {
     }
   };
 
-  useSnackbarRef.current.enqueueSnackbar(message, {
+  useSnackbarRef.current?.enqueueSnackbar(message, {
     ...otherProps,
     action,
-    ariaAttributes: { "data-testid": `output_${severity}-message` },
+    ariaAttributes: {
+      "data-testid": `output_${severity}-message`
+    } as AriaAttributes,
     variant: severity,
     anchorOrigin: {
       vertical,

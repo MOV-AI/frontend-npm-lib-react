@@ -4,6 +4,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import PropTypes from "prop-types";
 import MaterialCollapse from "@material-ui/core/Collapse";
 import { Divider, ListItem, List } from "@material-ui/core";
+import { EMPTY_FUNCTION } from "../Utils/Constants";
 
 const Collapse = props => {
   const [open, setOpen] = React.useState(props.open);
@@ -60,7 +61,7 @@ Collapse.propTypes = {
 
 Collapse.defaultProps = {
   item: <div></div>,
-  onClick: () => {},
+  onClick: EMPTY_FUNCTION,
   open: false,
   divided: false,
   style: {},
