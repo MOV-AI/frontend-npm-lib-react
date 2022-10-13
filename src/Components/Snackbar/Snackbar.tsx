@@ -3,14 +3,29 @@ import { Button } from "@material-ui/core";
 import { useSnackbar } from "notistack";
 
 const useSnackbarRef = { current: {closeSnackbar: (x: any) => {}, enqueueSnackbar: (x: string, y: any) => {}} };
+export interface SnackbarProps {
+  message: string,
+  closable: boolean,
+  horizontal: string,
+  vertical: string,
+  closeButtonText: string,
+  severity: string,
+  content: any
+};
+
+
+
 
 //========================================================================================
 /*                                                                                      *
- *                                   Private Component                                  *
- *                                                                                      */
+*                                   Private Component                                  *
+*                                                                                      */
 //========================================================================================
+export interface InnerSnackbarUtilsConfiguratorProps {
+  setUseSnackbarRef: Function
+}
 
-const InnerSnackbarUtilsConfigurator = props => {
+const InnerSnackbarUtilsConfigurator = (props: InnerSnackbarUtilsConfiguratorProps)  => {
   props.setUseSnackbarRef(useSnackbar());
   return null;
 };
@@ -37,13 +52,13 @@ export const SnackbarUtilsConfigurator = () => {
  *                                                                                      */
 //========================================================================================
 
-const closeSnackbar = key => {
+const closeSnackbar = (key: any) => {
   return () => {
     useSnackbarRef.current?.closeSnackbar(key);
   };
 };
 
-export const snackbar = (props, _theme) => {
+export const snackbar = (props: SnackbarProps, _theme: any) => {
   const {
     message,
     closable = true,
@@ -55,7 +70,7 @@ export const snackbar = (props, _theme) => {
     ...otherProps
   } = props;
 
-  const action = key => {
+  const action = (key: any) => {
     if (closable) {
       return (
         <Fragment>
@@ -78,7 +93,8 @@ export const snackbar = (props, _theme) => {
     anchorOrigin: {
       vertical,
       horizontal
-    }
+    },
+    content
   };
 
   if (content) {
