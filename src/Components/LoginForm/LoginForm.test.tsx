@@ -3,6 +3,7 @@ import { render, fireEvent, within } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import LoginForm from "./LoginForm";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
+import { EMPTY_FUNCTION } from "../../Utils/Constants";
 
 const SOME_DOMAIN_NAME = "OTHER_DOMAIN";
 const SINGLE_DOMAINS = [Authentication.DEFAULT_PROVIDER];
@@ -10,21 +11,39 @@ const MULTIPLE_DOMAINS = [Authentication.DEFAULT_PROVIDER, SOME_DOMAIN_NAME];
 
 describe("Render", () => {
   it("renders the component (smoke test)", () => {
-    const { container } = render(<LoginForm></LoginForm>);
+    const { container } = render(
+      <LoginForm
+        domains={MULTIPLE_DOMAINS}
+        authErrorMessage={""}
+        onLoginSubmit={EMPTY_FUNCTION}
+      />
+    );
     expect(container).toBeInTheDocument();
   });
 });
 
 describe("Initial value", () => {
   it("Initial value of username should be empty", () => {
-    const { getByTestId } = render(<LoginForm></LoginForm>);
-    const input = getByTestId("input_username");
+    const { getByTestId } = render(
+      <LoginForm
+        domains={MULTIPLE_DOMAINS}
+        authErrorMessage={""}
+        onLoginSubmit={EMPTY_FUNCTION}
+      ></LoginForm>
+    );
+    const input = getByTestId("input_username") as HTMLInputElement;
     expect(input.value).toBe("");
   });
 
   it("Initial value of password should be empty", () => {
-    const { getByTestId } = render(<LoginForm></LoginForm>);
-    const input = getByTestId("input_password");
+    const { getByTestId } = render(
+      <LoginForm
+        domains={MULTIPLE_DOMAINS}
+        authErrorMessage={""}
+        onLoginSubmit={EMPTY_FUNCTION}
+      />
+    );
+    const input = getByTestId("input_password") as HTMLInputElement;
     expect(input.value).toBe("");
   });
 });
@@ -32,7 +51,11 @@ describe("Initial value", () => {
 describe("Domain Selector", () => {
   it("Should not be visible if only default domain exists", () => {
     const { queryByText } = render(
-      <LoginForm domains={SINGLE_DOMAINS}></LoginForm>
+      <LoginForm
+        domains={SINGLE_DOMAINS}
+        authErrorMessage={""}
+        onLoginSubmit={EMPTY_FUNCTION}
+      />
     );
     const domainSelector = queryByText("Domain");
     expect(domainSelector).toBeNull();
@@ -40,7 +63,11 @@ describe("Domain Selector", () => {
 
   it("Should be visible if default and other domain exists", () => {
     const { queryByText } = render(
-      <LoginForm domains={MULTIPLE_DOMAINS}></LoginForm>
+      <LoginForm
+        domains={MULTIPLE_DOMAINS}
+        authErrorMessage={""}
+        onLoginSubmit={EMPTY_FUNCTION}
+      />
     );
     const domainSelector = queryByText("Domain");
     expect(domainSelector).toBeInTheDocument();
@@ -48,7 +75,11 @@ describe("Domain Selector", () => {
 
   it("Shoud display the domains", async () => {
     const { getByRole } = render(
-      <LoginForm domains={MULTIPLE_DOMAINS}></LoginForm>
+      <LoginForm
+        domains={MULTIPLE_DOMAINS}
+        authErrorMessage={""}
+        onLoginSubmit={EMPTY_FUNCTION}
+      ></LoginForm>
     );
 
     const domainSelector = getByRole("button", {
@@ -69,6 +100,7 @@ describe("Selected Domain", () => {
     const { queryByText, getByTestId } = render(
       <LoginForm
         domains={SINGLE_DOMAINS}
+        authErrorMessage={""}
         onLoginSubmit={handleSubmit}
       ></LoginForm>
     );
@@ -99,10 +131,12 @@ describe("Selected Domain", () => {
   it("When selector is visible, initial value of selected domain should be the default", () => {
     const { getByTestId } = render(
       <LoginForm
+        authErrorMessage={""}
+        onLoginSubmit={EMPTY_FUNCTION}
         domains={["other", Authentication.DEFAULT_PROVIDER]}
       ></LoginForm>
     );
-    const domainSelector = getByTestId("input_domain");
+    const domainSelector = getByTestId("input_domain") as HTMLInputElement;
     expect(domainSelector).toBeInTheDocument();
     expect(domainSelector.value).toBe(Authentication.DEFAULT_PROVIDER);
   });
@@ -111,9 +145,13 @@ describe("Selected Domain", () => {
 describe("Handle changes", () => {
   it("Selecting a value makes it the current domain value", () => {
     const { getByTestId } = render(
-      <LoginForm domains={MULTIPLE_DOMAINS}></LoginForm>
+      <LoginForm
+        domains={MULTIPLE_DOMAINS}
+        authErrorMessage={""}
+        onLoginSubmit={EMPTY_FUNCTION}
+      ></LoginForm>
     );
-    const domainSelector = getByTestId("input_domain");
+    const domainSelector = getByTestId("input_domain") as HTMLInputElement;
     expect(domainSelector).toBeInTheDocument();
 
     fireEvent.select(domainSelector, {
@@ -128,7 +166,11 @@ describe("Submit", () => {
   it("Should not be called if username is empty", () => {
     const handleSubmit = jest.fn();
     const { getByTestId } = render(
-      <LoginForm onLoginSubmit={handleSubmit}></LoginForm>
+      <LoginForm
+        onLoginSubmit={handleSubmit}
+        domains={MULTIPLE_DOMAINS}
+        authErrorMessage={""}
+      />
     );
 
     const usernameInput = getByTestId("input_username");
@@ -145,7 +187,11 @@ describe("Submit", () => {
   it("Should not be called if password is empty", () => {
     const handleSubmit = jest.fn();
     const { getByTestId } = render(
-      <LoginForm onLoginSubmit={handleSubmit}></LoginForm>
+      <LoginForm
+        onLoginSubmit={handleSubmit}
+        domains={MULTIPLE_DOMAINS}
+        authErrorMessage={""}
+      ></LoginForm>
     );
 
     const passwordInput = getByTestId("input_password");
@@ -164,7 +210,11 @@ describe("Submit", () => {
     const password = "password";
     const username = "username";
     const { getByTestId } = render(
-      <LoginForm onLoginSubmit={handleSubmit}></LoginForm>
+      <LoginForm
+        onLoginSubmit={handleSubmit}
+        domains={MULTIPLE_DOMAINS}
+        authErrorMessage={""}
+      ></LoginForm>
     );
 
     const usernameInput = getByTestId("input_username");

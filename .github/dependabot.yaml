@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    allow:
+      # Allow updates for MOV.AI libraries
+      - dependency-name: "@mov-ai/*"
+registries:
+  npm-github:
+    type: npm-registry
+    url: https://npm.pkg.github.com/mov-ai
+    token: ${{secrets.GITHUB_TOKEN}}

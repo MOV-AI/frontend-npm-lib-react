@@ -1,6 +1,6 @@
 import { createTheme } from "@material-ui/core/styles";
-import "fontsource-roboto";
-import "fontsource-open-sans";
+import "@fontsource/open-sans";
+import "@fontsource/roboto";
 
 const CONSTANTS = {
   dark: {

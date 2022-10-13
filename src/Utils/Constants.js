@@ -14,3 +14,5 @@ export const APP_TYPES = {
 export const LAUNCHER_APP = "launcher";
 
 export const MEDIA_QUERY_BREAKPOINT = "(min-width:1030px)";
+
+export const EMPTY_FUNCTION = () => {};

@@ -2,7 +2,7 @@ import React, { Fragment, useCallback } from "react";
 import { Button } from "@material-ui/core";
 import { useSnackbar } from "notistack";
 
-const useSnackbarRef = { current: null };
+const useSnackbarRef = { current: {closeSnackbar: (x: any) => {}, enqueueSnackbar: (x: string, y: any) => {}} };
 
 //========================================================================================
 /*                                                                                      *
@@ -39,7 +39,7 @@ export const SnackbarUtilsConfigurator = () => {
 
 const closeSnackbar = key => {
   return () => {
-    useSnackbarRef.current.closeSnackbar(key);
+    useSnackbarRef.current?.closeSnackbar(key);
   };
 };
 
@@ -85,5 +85,5 @@ export const snackbar = (props, _theme) => {
     snackbarData.content = content(closeSnackbar);
   };
 
-  useSnackbarRef.current.enqueueSnackbar(message, snackbarData);
+  useSnackbarRef.current?.enqueueSnackbar(message, snackbarData);
 };
