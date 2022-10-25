@@ -17,6 +17,7 @@ import AbstractModal from "./AbstractModal";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import i18n from "../../i18n/i18n.js";
+import { EMPTY_FUNCTION } from "../../Utils/Constants";
 
 //========================================================================================
 /*                                                                                      *
@@ -92,7 +93,7 @@ const SelectScopeModal = props => {
     // get all information in the scopes (not filtered by message)
     getAllData(selectedWorkspace);
     //Unmount
-    return () => {};
+    return EMPTY_FUNCTION;
   }, [props.scopeList]);
 
   // Filter Results based on props.filter
@@ -223,7 +224,7 @@ const SelectScopeModal = props => {
         setSelectedScopeItem(`${node.url}`);
       }
     };
-    _get(mapObj, node.deepness, () => {})();
+    _get(mapObj, node.deepness, EMPTY_FUNCTION)();
   };
 
   const confirmNodeSelection = node => {
@@ -343,8 +344,8 @@ SelectScopeModal.defaultProps = {
   title: i18n.t("Insert Text here"),
   message: i18n.t("Are you sure?"),
   allowArchive: true,
-  onSubmit: () => {},
-  onCancel: () => {},
+  onSubmit: EMPTY_FUNCTION,
+  onCancel: EMPTY_FUNCTION,
   open: false,
   scopeList: ["Callback"],
   selected: ""

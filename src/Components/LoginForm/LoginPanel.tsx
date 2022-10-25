@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -8,7 +7,13 @@ import { withStyles } from "@material-ui/core/styles";
 import { styles } from "./style";
 import defaultLogo from "../../../resources/favicon.png";
 
-class NotAuthorized extends Component {
+class NotAuthorized extends Component<{
+  classes: { [className: string]: string };
+  logo?: string;
+  title?: string;
+  message: string | JSX.Element;
+  progress?: boolean;
+}> {
   render() {
     const {
       classes,
@@ -60,12 +65,5 @@ class NotAuthorized extends Component {
     );
   }
 }
-
-NotAuthorized.propTypes = {
-  logo: PropTypes.any, // expects a svg element
-  title: PropTypes.string,
-  message: PropTypes.string,
-  progress: PropTypes.bool
-};
 
 export default withStyles(styles, { withTheme: true })(NotAuthorized);

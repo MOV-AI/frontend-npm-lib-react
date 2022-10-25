@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import PropTypes from "prop-types";
 import CloseIcon from "@material-ui/icons/Close";
 import _debounce from "lodash/debounce";
 import {
@@ -13,22 +12,26 @@ import {
 } from "@material-ui/core";
 import { modalStyles } from "./styles";
 import i18n from "../../i18n/i18n.js";
+import { EMPTY_FUNCTION } from "../../Utils/Constants";
+import { AbstractModalProps } from "./types";
 
-const AbstractModal = props => {
-  // Props
+const AbstractModal = (props: AbstractModalProps) => {
   const {
-    disableActions,
-    onSubmit,
-    onCancel,
-    onKeyPress,
-    open,
-    title,
-    hasSubmitButton,
-    hasCancelButton,
-    submitText,
-    cancelText,
-    submitColor,
-    cancelColor
+    disableActions = false,
+    onSubmit = EMPTY_FUNCTION,
+    onCancel = EMPTY_FUNCTION,
+    onKeyPress = EMPTY_FUNCTION,
+    open = false,
+    title = i18n.t("New"),
+    hasSubmitButton = true,
+    hasCancelButton = true,
+    submitText = i18n.t("Confirm"),
+    cancelText = i18n.t("Cancel"),
+    submitColor = "primary",
+    cancelColor = "secondary",
+    width = "25%",
+    height = "25%",
+    style = {}
   } = props;
   // Styles hook
   const classes = modalStyles();
@@ -81,9 +84,9 @@ const AbstractModal = props => {
       <Card
         className={classes.card}
         style={{
-          ...props.style,
-          minWidth: props.width,
-          minHeight: props.height
+          ...style,
+          minWidth: width,
+          minHeight: height
         }}
       >
         <CardContent className={classes.cardContent}>
@@ -129,40 +132,6 @@ const AbstractModal = props => {
       </Card>
     </Modal>
   );
-};
-
-AbstractModal.propTypes = {
-  onSubmit: PropTypes.func,
-  onCancel: PropTypes.func,
-  open: PropTypes.bool,
-  title: PropTypes.string,
-  submitText: PropTypes.string,
-  submitColor: PropTypes.string,
-  cancelText: PropTypes.string,
-  cancelColor: PropTypes.string,
-  width: PropTypes.string,
-  height: PropTypes.string,
-  style: PropTypes.object,
-  disableActions: PropTypes.bool,
-  hasSubmitButton: PropTypes.bool,
-  hasCancelButton: PropTypes.bool
-};
-
-AbstractModal.defaultProps = {
-  onSubmit: () => {},
-  onCancel: () => {},
-  open: false,
-  title: i18n.t("New"),
-  submitText: i18n.t("Confirm"),
-  submitColor: "primary",
-  cancelText: i18n.t("Cancel"),
-  cancelColor: "secondary",
-  width: "25%",
-  height: "25%",
-  style: {},
-  disableActions: false,
-  hasSubmitButton: true,
-  hasCancelButton: true
 };
 
 export default AbstractModal;

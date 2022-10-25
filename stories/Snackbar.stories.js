@@ -1,141 +1,109 @@
 import React from "react";
 import Button from "../src/Components/Button";
 import { snackbar } from "../src/Components/Snackbar/Snackbar";
-import { createTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
-import { Paper, Typography } from "@material-ui/core";
-import MatButton from "@material-ui/core/Button";
-import Table from "../src/Components/Table";
-import AutoRenew from "@material-ui/icons/Autorenew";
+import withNotification from "../src/Components/HOCs/withNotification";
+import {
+  Card,
+  CardActions,
+  Collapse,
+  IconButton,
+  Paper,
+  Typography
+} from "@material-ui/core";
+import { ExpandMore, Close } from "@material-ui/icons";
 
-const Themes = {
-  dark: createTheme({
-    label: "dark",
-    palette: {
-      type: "dark", // Switching the dark mode on, is a single property value change.
-      primary: {
-        main: "#36b5e6"
-      },
-      secondary: {
-        main: "#CF6679"
-      },
-      green: {
-        main: "#03DAC5"
-      }
-    }
-  }),
-  light: createTheme({
-    label: "light",
-    palette: {
-      primary: {
-        main: "#007197"
-      },
-      secondary: {
-        main: "#BE2424"
-      },
-      green: {
-        main: "#03DAC5"
-      }
-    }
-  })
-};
-
-export default {
-  title: "Snackbar"
-};
-
-export const simpleSnackbar = () => {
+const SnackButton = ({ severity }) => {
   return (
     <Button
-      onClick={() =>
-        snackbar({
-          message: "Are you sure to do this.",
-          severity: "success"
-        })
-      }
+      style={{ margin: "5px" }}
+      onClick={() => snackbar({ message: `Example ${severity}`, severity })}
     >
-      Open Snackbar
+      Open {severity}
     </Button>
   );
 };
 
-simpleSnackbar.story = {
-  name: "Simple Snackbar"
-};
+const TestContent = React.forwardRef(({ key, closeSnackbar }, ref) => {
+  const [expanded, setExpanded] = React.useState(true);
+  const data = ["Item 1", "Item 2", "Item 3"];
 
-export const customSnackbar = () => {
+  const handleExpandClick = () => {
+    setExpanded(oldExpanded => !oldExpanded);
+  };
+
+  return (
+    <Card ref={ref}>
+      <CardActions>
+        <Typography variant="body2">Message Header</Typography>
+        <div>
+          <IconButton
+            aria-label="Show more"
+            size="small"
+            onClick={handleExpandClick}
+          >
+            <ExpandMore />
+          </IconButton>
+          <IconButton size="small" onClick={closeSnackbar(key)}>
+            <Close fontSize="small" />
+          </IconButton>
+        </div>
+      </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        {data.length &&
+          data.map(item => {
+            return <Paper>{item}</Paper>;
+          })}
+      </Collapse>
+    </Card>
+  );
+});
+
+const ExpandableSnackbar = () => {
   return (
     <Button
+      style={{ margin: "5px" }}
       onClick={() =>
         snackbar({
-          message:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-          severity: "error",
-          closable: false
+          persist: true,
+          vertical: "top",
+          horizontal: "right",
+          content: closeSnackbar => key =>
+            <TestContent key={key} closeSnackbar={closeSnackbar} />
         })
       }
     >
-      Open Snackbar
+      Open Expandable Sanckbar
     </Button>
   );
 };
 
-simpleSnackbar.story = {
-  name: "Simple Snackbar"
-};
-
-export const themeSnackbar = () => {
+const AllSnacks = () => {
   return (
     <div>
-      <ThemeProvider theme={Themes["dark"]}>
-        <Button
-          onClick={() =>
-            snackbar({
-              message:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-              severity: "error"
-            })
-          }
-        >
-          Open Snackbar
-        </Button>
-        <Paper>
-          <Typography variant="h5">Test of theme with Snackbar</Typography>
-          <Table
-            columns={[
-              { title: "Adı", field: "name" },
-              { title: "Soyadı", field: "surname" },
-              { title: "Doğum Yılı", field: "birthYear", type: "numeric" },
-              {
-                title: "Doğum Yeri",
-                field: "birthCity",
-                lookup: { 34: "İstanbul", 63: "Şanlıurfa" }
-              }
-            ]}
-            data={[
-              {
-                name: "Vicente",
-                surname: "Queiroz",
-                birthYear: 1987,
-                birthCity: 63
-              }
-            ]}
-            actions={[
-              {
-                icon: () => <AutoRenew color="primary"></AutoRenew>,
-                onClick: () => console.log("recover")
-              }
-            ]}
-          ></Table>
-          <MatButton variant="contained" color="primary">
-            Primary
-          </MatButton>
-        </Paper>
-      </ThemeProvider>
+      <div>
+        <SnackButton severity="success" />
+        <SnackButton severity="warning" />
+        <SnackButton severity="info" />
+        <SnackButton severity="error" />
+      </div>
+      <div>
+        <ExpandableSnackbar />
+      </div>
     </div>
   );
 };
 
-themeSnackbar.story = {
-  name: "Test Snackbar with Material Theme"
+const Template = () => {
+  const Snacks = withNotification(AllSnacks);
+  return <Snacks />;
+};
+
+export const snackStory = Template.bind({});
+
+snackStory.story = {
+  name: "App Snackbar"
+};
+
+export default {
+  title: "Snackbar"
 };
