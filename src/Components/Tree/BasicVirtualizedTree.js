@@ -11,6 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import _get from "lodash/get";
 import { ListItemsTreeWithSearch } from "./TreeSearch";
+import { EMPTY_FUNCTION } from "../../Utils/Constants";
 
 //========================================================================================
 /*                                                                                      *
@@ -224,9 +225,9 @@ BasicVirtualizedTree.propTypes = {
 
 BasicVirtualizedTree.defaultProps = {
   data: [],
-  onClickNode: () => {},
-  onDoubleClickNode: () => {},
-  handleChange: () => {},
+  onClickNode: EMPTY_FUNCTION,
+  onDoubleClickNode: EMPTY_FUNCTION,
+  handleChange: EMPTY_FUNCTION,
   height: 700
 };
 

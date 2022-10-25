@@ -1,24 +1,33 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Button, Modal } from "@material-ui/core";
-import { Authentication, User } from "@mov-ai/mov-fe-lib-core";
+import { Authentication, PermissionType, User } from "@mov-ai/mov-fe-lib-core";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import jwtDecode from "jwt-decode";
 import i18n from "../../i18n/i18n.js";
 
-export default function withAuthentication(Component, appName) {
-  return function (props) {
+export default function withAuthentication<P extends object>(
+  WrappedComponent: React.ComponentType<P>,
+  appName: PermissionType | string
+) {
+  return function (props: any) {
     const RECHECK_VALID_DELAY = 10000; // milliseconds
 
     const firstRender = useRef(true);
-    const [state, setState] = useState({
+    const [state, setState] = useState<{
+      loggedIn: boolean;
+      hasPermissions: boolean;
+      currentUser?: object;
+    }>({
       loggedIn: false,
       hasPermissions: false,
       currentUser: {}
     });
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState("");
-    const [authenticationProviders, setAuthenticationProviders] = useState([]);
+    const [authenticationProviders, setAuthenticationProviders] = useState<
+      string[]
+    >([]);
 
     const authenticate = useCallback(() => {
       const user = new User();
@@ -34,7 +43,7 @@ export default function withAuthentication(Component, appName) {
             Superuser: isSuperUser
           } = _user;
           const hasPermissions =
-            isSuperUser || apps.includes(appName) || !appName;
+            isSuperUser || apps.includes(appName as PermissionType) || !appName;
 
           if (loggedIn) {
             firstRender.current = false;
@@ -53,7 +62,7 @@ export default function withAuthentication(Component, appName) {
             hasPermissions: false
           });
         })
-        .finally(_ => setLoading(false));
+        .finally(() => setLoading(false));
     }, []);
 
     /**
@@ -83,10 +92,10 @@ export default function withAuthentication(Component, appName) {
     useEffect(() => {
       try {
         const now = Math.floor(Date.now() * 0.001);
-        const token = Authentication.getToken();
+        const token = Authentication.getToken() as string;
 
         // decode the token and get exp value
-        const exp = jwtDecode(token).exp || now;
+        const exp = (jwtDecode(token) as { exp: number }).exp || now;
 
         // check if token expiration time is still valid
         const expDelta = exp - now;
@@ -114,9 +123,12 @@ export default function withAuthentication(Component, appName) {
         return () => {
           clearTimeout(timeOut);
         };
-      } catch (error) {
+      } catch (error: unknown) {
         // token expired or no token
-        console.log("Error while trying to decode the token:", error.message);
+        console.log(
+          "Error while trying to decode the token:",
+          (error as Error).message
+        );
       }
     }, [state]);
 
@@ -124,7 +136,7 @@ export default function withAuthentication(Component, appName) {
      * handleLogOut - log out the user
      * @param {string} redirect : Redirect URL location
      */
-    const handleLogOut = redirect => {
+    const handleLogOut = (redirect?: string) => {
       Authentication.logout(redirect);
     };
 
@@ -144,8 +156,8 @@ export default function withAuthentication(Component, appName) {
           );
           if (apiResponse.error) throw new Error(apiResponse.error);
           authenticate();
-        } catch (e) {
-          setErrorMessage(e.message);
+        } catch (e: unknown) {
+          setErrorMessage((e as Error).message);
           setLoading(false);
         }
       },
@@ -169,7 +181,6 @@ export default function withAuthentication(Component, appName) {
         domains={authenticationProviders}
         authErrorMessage={errorMessage}
         onLoginSubmit={handleLoginSubmit}
-        onChanges={setErrorMessage}
       />
     );
 
@@ -211,7 +222,7 @@ export default function withAuthentication(Component, appName) {
     if (!state.hasPermissions) return renderNotAuthorized();
     return (
       <React.Fragment>
-        <Component
+        <WrappedComponent
           currentUser={state.currentUser}
           handleLogOut={handleLogOut}
           loggedIn={state.loggedIn}

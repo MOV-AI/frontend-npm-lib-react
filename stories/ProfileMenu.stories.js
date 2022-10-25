@@ -2,6 +2,7 @@ import React from "react";
 import ProfileMenu from "../src/Components/ProfileMenu/ProfileMenu";
 import Themes from "../src/styles/Themes";
 import { ThemeProvider } from "@material-ui/styles";
+import { EMPTY_FUNCTION } from "../src/Utils/Constants";
 
 export default {
   title: "Profile Menu",
@@ -122,7 +123,7 @@ export default {
 export const profileMenu = args => {
   return (
     <ThemeProvider theme={Themes["dark"]}>
-      <ProfileMenu {...args} handleToggleTheme={() => {}} />
+      <ProfileMenu {...args} handleToggleTheme={EMPTY_FUNCTION} />
     </ThemeProvider>
   );
 };

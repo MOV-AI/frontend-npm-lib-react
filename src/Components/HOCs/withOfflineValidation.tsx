@@ -9,11 +9,12 @@ const useStyles = makeStyles(theme => ({
   alert: { position: "absolute", bottom: 0, width: "100%", zIndex: 9999 }
 }));
 
-export default function withOfflineValidation(Component) {
-  return function (props) {
+export default function withOfflineValidation(Component: React.ComponentType) {
+  return function (props: any) {
     const [isConnected, setConnected] = React.useState(true);
     const [showSuccessAlert, setSuccessAlert] = React.useState(false);
-    const [validator, setValidator] = React.useState(null);
+    const [validator, setValidator] =
+      React.useState<{ retryConnection: () => Promise<void> }>();
     const [loading, setLoading] = React.useState(false);
     const classes = useStyles();
 
@@ -37,7 +38,7 @@ export default function withOfflineValidation(Component) {
 
     const retryConnection = () => {
       setLoading(true);
-      validator.retryConnection().then(() => setLoading(false));
+      validator?.retryConnection().then(() => setLoading(false));
     };
 
     /**
