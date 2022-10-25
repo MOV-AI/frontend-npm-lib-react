@@ -4,7 +4,7 @@
     "dockerfile": "Dockerfile",
     "context": "..",
     "args": {
-      "VARIANT": "16"
+      "VARIANT": "16-bullseye"
     }
   },
   "extensions": [
