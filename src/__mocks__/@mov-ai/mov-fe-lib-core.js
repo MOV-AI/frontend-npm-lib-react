@@ -20,5 +20,6 @@ const User = function () {
 // Constansts
 
 const SERVICE_LIST = ["backend", "spawner"];
+const CONSTANTS = { SERVICE_LIST };
 
-export { Authentication, User, SERVICE_LIST };
+export { Authentication, User, CONSTANTS };
