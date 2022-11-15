@@ -28,3 +28,4 @@ When running the lib-react locally from IDE, you might have an issue with invali
 To fix it, stop the development server of IDE, stop the buildDev of lib-react and run the following command in lib-react repository root:
 
 `sudo npm link ../frontend-npm-ide/node_modules/react`
+
