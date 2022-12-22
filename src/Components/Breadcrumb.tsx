@@ -4,6 +4,8 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
+import { MouseEventHandler } from "react";
+import { BreadcrumbProps } from "./types";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Breadcrumb = props => {
+const Breadcrumb = (props: BreadcrumbProps) => {
   const classes = useStyles();
   return (
     <div data-testid="section_breadcrumb" className={classes.root}>

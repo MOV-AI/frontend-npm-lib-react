@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Button } from "@material-ui/core";
+import { MenuAppProps } from "./types";
 
 import { menuAppStyles } from "./styles";
 
-const MenuApp = () => {
+const MenuApp = (props: MenuAppProps) => {
   const { app } = props;
 
   // Hooks

@@ -8,13 +8,14 @@ import i18n from "../../i18n/i18n.js";
 import HTMLPopper from "../Popper/HTMLPopper";
 import HomeMenuSkeleton from "./HomeMenuSkeleton";
 import MenuApp from "./MenuApp";
+import { App } from "./types";
 
 import { homeMenuPopperStyles } from "./styles";
 
 const HomeMenuPopper = () => {
   // State hooks
   const classes = homeMenuPopperStyles();
-  const [currentApps, setCurrentApps] = useState();
+  const [currentApps, setCurrentApps] = useState<App[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
 
   // Other hooks
@@ -32,7 +33,7 @@ const HomeMenuPopper = () => {
     currentUser
       .getAllApps()
       .then(res => {
-        res.success && setCurrentApps(res.result);
+        res.success && setCurrentApps(res.result as any);
       })
       .catch(err => {
         setErrorMessage(err.statusText);
@@ -88,11 +89,11 @@ const HomeMenuPopper = () => {
     }
 
     if (currentApps) {
-      const arrayOfApplications = [];
-      const arrayOfExternalApps = [];
-      const arrayOfLayouts = [];
+      const arrayOfApplications: App[] = [];
+      const arrayOfExternalApps: App[] = [];
+      const arrayOfLayouts: App[] = [];
 
-      currentApps.forEach(app => {
+      currentApps.forEach((app: App) => {
         const appType = app.Type;
 
         if (appType === APP_TYPES.APPLICATION && app.Label !== LAUNCHER_APP)
@@ -109,13 +110,17 @@ const HomeMenuPopper = () => {
           {arrayOfLayouts.length > 1 && (
             <>
               <Divider orientation="horizontal" flexItem />
-              {renderApplications(arrayOfLayouts)}
+              {arrayOfLayouts.map(app => (
+                <MenuApp key={app.URL} app={app} />
+              ))}
             </>
           )}
           {arrayOfExternalApps.length > 1 && (
             <>
               <Divider orientation="horizontal" flexItem />
-              {renderApplications(arrayOfExternalApps)}
+              {arrayOfExternalApps.map(app => (
+                <MenuApp key={app.URL} app={app} />
+              ))}
             </>
           )}
         </div>
@@ -130,8 +135,10 @@ const HomeMenuPopper = () => {
    *                                        Render                                        *
    *                                                                                      */
   //========================================================================================
+
   return (
-    <Tooltip title={i18n.t("Home")} placement="right">
+    <Tooltip title={i18n.t("Home") || "Home"} placement="right">
+      {/* Tooltips - To accommodate disabled elements, add a simple wrapper element, such as a span. */}
       <span>
         <HTMLPopper
           clickableElement={getIcon()}

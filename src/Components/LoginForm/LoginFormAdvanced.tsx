@@ -10,20 +10,20 @@ import InputLabel from "@material-ui/core/InputLabel";
 import List from "@material-ui/core/List";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import PropTypes from "prop-types";
 import { advancedSectionStyles } from "./style";
 import { makeStyles } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
+import { LoginFormAdvancedProps } from "./types";
 
 const advancedLoginStyles = makeStyles(advancedSectionStyles);
 
-const LoginFormAdvanced = props => {
+const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
   const { t } = useTranslation();
   const classes = advancedLoginStyles();
   const [open, setOpen] = useState(true);
 
   return (
-    <div classes={classes.container}>
+    <div className={classes.container}>
       <Button
         disableRipple
         className={classes.expandCollapseButton}
@@ -69,12 +69,6 @@ const LoginFormAdvanced = props => {
       </Collapse>
     </div>
   );
-};
-
-LoginFormAdvanced.propTypes = {
-  selectedProvider: PropTypes.string,
-  domains: PropTypes.array,
-  onProviderChange: PropTypes.func
 };
 
 export default LoginFormAdvanced;

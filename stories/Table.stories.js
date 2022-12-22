@@ -1,6 +1,7 @@
 import React from "react";
 import Table from "../src/Components/Table";
 import AddBox from "@material-ui/icons/AddBox";
+import { EMPTY_FUNCTION } from "../src/Utils/Constants";
 
 export default {
   title: "Table"
@@ -71,7 +72,7 @@ export const custom2 = () => {
             icon: () => <AddBox></AddBox>,
             tooltip: "Tooltip!",
             isFreeAction: true,
-            onClick: () => {}
+            onClick: EMPTY_FUNCTION
           }
         ]}
         options={{

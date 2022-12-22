@@ -30,7 +30,11 @@ export const useStyles = makeStyles(_theme => ({
 const logFilterCommonStyles = theme => {
   return {
     toggleContainer: {
-      margin: theme.spacing(2)
+      margin: theme.spacing(2),
+    },
+    smallToggleContainer: {
+      display: "flex",
+      justifyContent: "center"
     },
     formControl: {
       margin: theme.spacing(1),
@@ -50,12 +54,21 @@ export const useSearchInputStyles = makeStyles(theme => ({
   searchText: {
     minWidth: "150px",
     paddingLeft: theme.spacing(3)
+  },
+  smallSearchText: {
+    marginLeft: "18px !important",
+    paddingLeft: theme.spacing(3)
   }
 }));
 
 export const useSelectBoxStyle = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
-  selectBox: { minWidth: "290px" }
+  selectBox: { 
+      minWidth: "290px" 
+    },
+  smallSelectBox: {
+    width: "130px",
+  }
 }));
 
 export const useTagsStyles = makeStyles(theme => ({
@@ -101,5 +114,14 @@ export const useSettingsStyles = makeStyles(theme => ({
 
 export const useLogFilterStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
-  spacer: { flexGrow: 1 }
+  flexContainer: {
+    flex: 1,
+  },
+  doubleFlexContainer: {
+    flex: 2,
+  },
+  displayFlex: { display: "flex" },
+  spaceBetween: {justifyContent: "space-between" },
+  flexEnd: {justifyContent: "flex-end" },
+  center: {justifyContent: "center" },
 }));
