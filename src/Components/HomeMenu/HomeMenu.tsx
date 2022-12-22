@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button, Divider, IconButton, Typography } from "@material-ui/core";
 import { User } from "@mov-ai/mov-fe-lib-core";
 import AppsIcon from "@material-ui/icons/Apps";
@@ -18,9 +18,6 @@ const HomeMenuPopper = () => {
   const [currentApps, setCurrentApps] = useState<App[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Other hooks
-  const currentUser = useMemo(() => new User(), []);
-
   //========================================================================================
   /*                                                                                      *
    *                                      SUBSCRIBERS                                     *
@@ -30,7 +27,7 @@ const HomeMenuPopper = () => {
    * subscribe to Applications updates
    */
   useEffect(() => {
-    currentUser
+    (new User())
       .getAllApps()
       .then(res => {
         res.success && setCurrentApps(res.result as any);
@@ -38,7 +35,7 @@ const HomeMenuPopper = () => {
       .catch(err => {
         setErrorMessage(err.statusText);
       });
-  }, [currentUser]);
+  }, []);
 
   //========================================================================================
   /*                                                                                      *
@@ -107,7 +104,7 @@ const HomeMenuPopper = () => {
           {arrayOfApplications.map(app => (
             <MenuApp key={app.URL} app={app} />
           ))}
-          {arrayOfLayouts.length > 1 && (
+          {arrayOfLayouts.length > 0 && (
             <>
               <Divider orientation="horizontal" flexItem />
               {arrayOfLayouts.map(app => (
