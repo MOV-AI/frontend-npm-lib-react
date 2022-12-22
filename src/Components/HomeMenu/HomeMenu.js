@@ -1,19 +1,21 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { Button, Divider, IconButton, Typography } from "@material-ui/core";
-import { User, Utils } from "@mov-ai/mov-fe-lib-core";
+import { User } from "@mov-ai/mov-fe-lib-core";
 import AppsIcon from "@material-ui/icons/Apps";
-import { HomeMenuPopperStyles } from "./styles";
-import HomeMenuSkeleton from "./HomeMenuSkeleton";
-import HTMLPopper from "../Popper/HTMLPopper";
+import Tooltip from "@material-ui/core/Tooltip";
 import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
 import i18n from "../../i18n/i18n.js";
-import Tooltip from "@material-ui/core/Tooltip";
+import HTMLPopper from "../Popper/HTMLPopper";
+import HomeMenuSkeleton from "./HomeMenuSkeleton";
+import MenuApp from "./MenuApp";
+
+import { homeMenuPopperStyles } from "./styles";
 
 const HomeMenuPopper = () => {
   // State hooks
-  const classes = HomeMenuPopperStyles();
-  const [currentApps, setCurrentApps] = React.useState();
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const classes = homeMenuPopperStyles();
+  const [currentApps, setCurrentApps] = useState();
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Other hooks
   const currentUser = useMemo(() => new User(), []);
@@ -42,6 +44,7 @@ const HomeMenuPopper = () => {
    *                                    Private Methods                                   *
    *                                                                                      */
   //========================================================================================
+
   const getIcon = () => {
     return (
       <IconButton color="primary" component="span">
@@ -50,45 +53,18 @@ const HomeMenuPopper = () => {
     );
   };
 
-  /**
-   * Handle app click
-   * @param {Event} event : click event
-   * @param {object} element : App object
-   */
-  const onAppClick = (event, app) => {
-    if (app.Label) {
-      Utils.loadResources(event, app);
-    }
-  };
-
-  const redirectToLocalhost = () =>
+  const redirectToLocalhost = useCallback(() => {
     window.location.replace(window.location.origin); // go to localhost or localhost:3000
+  }, []);
 
   //========================================================================================
   /*                                                                                      *
    *                                        RENDERS                                       *
    *                                                                                      */
   //========================================================================================
-  const renderApplications = apps => {
-    return apps.map(app => (
-      <Button
-        data-testid="input_application"
-        key={app.URL}
-        size="large"
-        color="primary"
-        className={classes.menuButton}
-        onClick={event => onAppClick(event, app)}
-      >
-        <div className={classes.appTextArea}>
-          <div className={`${classes.appIcon} ${app.Icon}`} />
-          <div className={classes.appMiniature}>{app.Label}</div>
-        </div>
-      </Button>
-    ));
-  };
 
   const renderHTML = () => {
-    if (errorMessage)
+    if (errorMessage) {
       return (
         <div
           className={classes.noApplications}
@@ -109,6 +85,8 @@ const HomeMenuPopper = () => {
           </Button>
         </div>
       );
+    }
+
     if (currentApps) {
       const arrayOfApplications = [];
       const arrayOfExternalApps = [];
@@ -119,33 +97,32 @@ const HomeMenuPopper = () => {
 
         if (appType === APP_TYPES.APPLICATION && app.Label !== LAUNCHER_APP)
           arrayOfApplications.push(app);
-
         if (appType === APP_TYPES.EXTERNAL) arrayOfExternalApps.push(app);
-
         if (appType === APP_TYPES.LAYOUT) arrayOfLayouts.push(app);
       });
+
       return (
-        <>
-          <div className={classes.menuWrapper}>
-            {renderApplications(arrayOfApplications)}
-            {arrayOfLayouts.length > 1 && (
-              <>
-                <Divider orientation="horizontal" flexItem />
-                {renderApplications(arrayOfLayouts)}
-              </>
-            )}
-            {arrayOfExternalApps.length > 1 && (
-              <>
-                <Divider orientation="horizontal" flexItem />
-                {renderApplications(arrayOfExternalApps)}
-              </>
-            )}
-          </div>
-        </>
+        <div className={classes.menuWrapper}>
+          {arrayOfApplications.map(app => (
+            <MenuApp key={app.URL} app={app} />
+          ))}
+          {arrayOfLayouts.length > 1 && (
+            <>
+              <Divider orientation="horizontal" flexItem />
+              {renderApplications(arrayOfLayouts)}
+            </>
+          )}
+          {arrayOfExternalApps.length > 1 && (
+            <>
+              <Divider orientation="horizontal" flexItem />
+              {renderApplications(arrayOfExternalApps)}
+            </>
+          )}
+        </div>
       );
-    } else {
-      return <HomeMenuSkeleton />;
     }
+
+    return <HomeMenuSkeleton />;
   };
 
   //========================================================================================
@@ -155,7 +132,6 @@ const HomeMenuPopper = () => {
   //========================================================================================
   return (
     <Tooltip title={i18n.t("Home")} placement="right">
-      {/* Tooltips - To accommodate disabled elements, add a simple wrapper element, such as a span. */}
       <span>
         <HTMLPopper
           clickableElement={getIcon()}
