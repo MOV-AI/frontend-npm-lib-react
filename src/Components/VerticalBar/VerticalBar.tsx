@@ -9,16 +9,12 @@ const VerticalBar = (props: VerticalBarProps) => {
     creatorElement = null,
     navigationList = [<div></div>],
     lowerElement = <div></div>,
+    backgroundColor = "#424242",
     useDividers = false,
+    unsetAccountAreaPadding = false
   } = props;
   // Style hook
   const classes = verticalBarStyles(props);
-
-  const accountEl = lowerElement ? (
-    <div data-testid="section_account" className={classes.accountArea}>
-      {lowerElement}
-    </div>
-  ) : null;
 
   //========================================================================================
   /*                                                                                      *
@@ -51,7 +47,9 @@ const VerticalBar = (props: VerticalBarProps) => {
         })}
       </div>
       <div data-testid="section_grow" className={classes.growArea}></div>
-      { accountEl }
+      <div data-testid="section_account" className={classes.accountArea}>
+        {lowerElement}
+      </div>
     </div>
   );
 };
