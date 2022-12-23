@@ -112,7 +112,7 @@ const HomeMenuPopper = () => {
               ))}
             </>
           )}
-          {arrayOfExternalApps.length > 1 && (
+          {arrayOfExternalApps.length > 0 && (
             <>
               <Divider orientation="horizontal" flexItem />
               {arrayOfExternalApps.map(app => (
