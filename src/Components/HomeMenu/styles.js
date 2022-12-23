@@ -1,5 +1,11 @@
 import { makeStyles } from "@material-ui/core/styles";
 
+const menuButtonStyles = {
+  margin: "5px",
+  padding: "0px",
+  flexBasis: "27%"
+};
+
 export const homeMenuPopperStyles = makeStyles(theme => ({
   iconButton: { cursor: "pointer", height: "100%" },
   popperIndex: { zIndex: 1400 },
@@ -41,7 +47,10 @@ export const homeMenuPopperStyles = makeStyles(theme => ({
     justifyItems: "center",
     gridTemplateRows: "70% 30%"
   },
-  launcherButton: { cursor: "pointer" }
+  launcherButton: { cursor: "pointer" },
+  menuButton: {
+    ...menuButtonStyles
+  }
 }));
 
 export const menuAppStyles = makeStyles(theme => ({
@@ -63,8 +72,6 @@ export const menuAppStyles = makeStyles(theme => ({
     marginTop: "20px"
   },
   menuButton: {
-    margin: "5px",
-    padding: "0px",
-    flexBasis: "27%"
+    ...menuButtonStyles
   }
 }));
