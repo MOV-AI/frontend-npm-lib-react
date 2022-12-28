@@ -5,3 +5,7 @@ export interface App {
   Type: string;
   URL: string;
 }
+
+export interface MenuAppProps {
+  app: App;
+}

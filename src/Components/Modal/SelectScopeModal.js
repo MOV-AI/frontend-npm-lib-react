@@ -1,116 +1,172 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import _set from "lodash/set";
 import _get from "lodash/get";
 import _cloneDeep from "lodash/cloneDeep";
-import {
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography
-} from "@material-ui/core";
-import { Workspace } from "@mov-ai/mov-fe-lib-core";
-import BasicVirtualizedTree from "../Tree/BasicVirtualizedTree";
-import AbstractModal from "./AbstractModal";
+import { Grid, Typography } from "@material-ui/core";
+import { Workspace, CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import i18n from "../../i18n/i18n.js";
-import { EMPTY_FUNCTION } from "../../Utils/Constants";
+import BasicVirtualizedTree from "../Tree/BasicVirtualizedTree";
+import AbstractModal from "./AbstractModal";
 
-//========================================================================================
-/*                                                                                      *
- *                                    TEMPORARY CODE                                    *
- *                                                                                      */
-//========================================================================================
+const initialData = [
+  {
+    id: 0,
+    name: i18n.t("Annotations"),
+    scope: "Annotation",
+    children: []
+  },
+  {
+    id: 1,
+    name: i18n.t("Callback"),
+    scope: "Callback",
+    children: []
+  },
+  {
+    id: 2,
+    name: i18n.t("Configuration"),
+    scope: "Configuration",
+    children: []
+  },
+  {
+    id: 3,
+    name: i18n.t("Flow"),
+    scope: "Flow",
+    children: []
+  },
+  {
+    id: 4,
+    name: i18n.t("Nodes"),
+    scope: "Node",
+    children: []
+  },
+  {
+    id: 5,
+    name: i18n.t("Layouts"),
+    scope: "Layout",
+    children: []
+  },
+  {
+    id: 6,
+    name: i18n.t("Scenes"),
+    scope: "GraphicScene",
+    children: []
+  }
+];
 
 const SelectScopeModal = props => {
-  const initialData = [
-    {
-      id: 0,
-      name: i18n.t("Annotations"),
-      scope: "Annotation",
-      children: []
-    },
-    {
-      id: 1,
-      name: i18n.t("Callback"),
-      scope: "Callback",
-      children: []
-    },
-    {
-      id: 2,
-      name: i18n.t("Configuration"),
-      scope: "Configuration",
-      children: []
-    },
-    {
-      id: 3,
-      name: i18n.t("Flow"),
-      scope: "Flow",
-      children: []
-    },
-    {
-      id: 4,
-      name: i18n.t("Nodes"),
-      scope: "Node",
-      children: []
-    },
-    {
-      id: 5,
-      name: i18n.t("Layouts"),
-      scope: "Layout",
-      children: []
-    },
-    {
-      id: 6,
-      name: i18n.t("Scenes"),
-      scope: "GraphicScene",
-      children: []
-    }
-  ];
-
-  const [data, setData] = React.useState(initialData);
-  const [selectedWorkspace, setSelectedWorkspace] = React.useState("global");
-  const [selectedScopeItem, setSelectedScopeItem] = React.useState(
-    props.selected
-  );
-  const [workSpaceList, setWorkSpaceList] = React.useState({});
+  const [data, setData] = useState(initialData);
+  const [selectedScopeItem, setSelectedScopeItem] = useState(props.selected);
   const [isLoading, setIsLoading] = React.useState(true);
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                    Private Methods                                   *
+   *                                                                                      */
+  //========================================================================================
 
   const scopeFilteredData = initialData.filter(elem =>
     props.scopeList.includes(elem.scope)
   );
 
-  /* eslint-disable react-hooks/exhaustive-deps */
-  React.useEffect(() => {
-    //get list of workspace
-    Workspace.getAll()
-      .then(response => setWorkSpaceList(response))
-      .catch(error => console.log(error));
-
-    // get all information in the scopes (not filtered by message)
-    getAllData(selectedWorkspace);
-    //Unmount
-    return EMPTY_FUNCTION;
-  }, [props.scopeList]);
-
-  // Filter Results based on props.filter
-  React.useEffect(() => {
-    if (isLoading || selectedWorkspace !== "global" || !props.filter) return;
-    // Set filtered data
-    setData(filterData(data));
-  }, [props.filter, isLoading]);
-  /* eslint-enable react-hooks/exhaustive-deps */
-
-  const changeWorkspace = evt => {
-    // Update the selector
-    setSelectedWorkspace(evt.target.value);
-    // When you switch workspaces reset Data
-    getAllData(evt.target.value);
-    setIsLoading(true);
+  /**
+   * Filter data based filter props
+   * @param {Object} _data : Raw data
+   * @returns {Object} Filtered data
+   */
+  const filterData = _data => {
+    const filteredData = _cloneDeep(_data);
+    if (!props.filter) return filteredData;
+    // Filter data
+    _data.forEach((scope, index) => {
+      filteredData[index].children = scope.children.filter(props.filter);
+    });
+    return filteredData;
   };
+
+  const requestScopeVersions = useCallback(
+    node => {
+      const dataToSet = _cloneDeep(data);
+
+      const mapObj = {
+        0: () => {
+          const indexToSet = dataToSet.findIndex(elem => elem.id === node.id);
+
+          // Toggle the expansion of the panel
+          const isExpanded = _get(
+            dataToSet,
+            [indexToSet, "state", "expanded"],
+            false
+          );
+          _set(dataToSet, [indexToSet, "state"], {
+            expanded: !isExpanded
+          });
+
+          setData(dataToSet);
+        },
+        1: () => {
+          // second level, ask for versions (versions of scope items)
+
+          // find index of selected node in first level
+          const indexToSet = dataToSet.findIndex(
+            elem => elem.id === node.parents[0]
+          );
+
+          Workspace.getDocs({
+            workspace: CONSTANTS.GLOBAL_WORKSPACE,
+            scope: dataToSet[indexToSet].scope,
+            id: node.name
+          })
+            .then(response => {
+              // Tailor data Data comes with "ref" key but we want "name"
+              const versionList = response.versions.map((elem, index) => {
+                return {
+                  url: elem.url,
+                  name: elem.tag,
+                  id: index
+                };
+              });
+
+              // find index of selected node in the second level
+              const index2ndLevel = dataToSet[indexToSet].children.findIndex(
+                elem => elem.id === node.id
+              );
+
+              // Toggle the expansion of the panel
+              const isExpanded = _get(
+                dataToSet,
+                [indexToSet, "children", index2ndLevel, "state", "expanded"],
+                false
+              );
+              _set(
+                dataToSet,
+                [indexToSet, "children", index2ndLevel, "state"],
+                {
+                  expanded: !isExpanded
+                }
+              );
+
+              // Set version list into the Tree
+              _set(
+                dataToSet,
+                [indexToSet, "children", index2ndLevel, "children"],
+                versionList
+              );
+              setData(dataToSet);
+            })
+            .catch(error => console.error(error));
+        },
+        2: () => {
+          // Display the selected option
+          setSelectedScopeItem(`${node.url}`);
+        }
+      };
+      _get(mapObj, node.deepness, () => {})();
+    },
+    [data]
+  );
 
   const getAllData = workspace => {
     const dataToSet = _cloneDeep(scopeFilteredData);
@@ -138,98 +194,9 @@ const SelectScopeModal = props => {
     });
   };
 
-  /**
-   * Filter data based filter props
-   * @param {Object} _data : Raw data
-   * @returns {Object} Filtered data
-   */
-  const filterData = _data => {
-    const filteredData = _cloneDeep(_data);
-    if (!props.filter) return filteredData;
-    // Filter data
-    _data.forEach((scope, index) => {
-      filteredData[index].children = scope.children.filter(props.filter);
-    });
-    return filteredData;
-  };
-
-  const requestScopeVersions = node => {
-    const dataToSet = _cloneDeep(data);
-    const mapObj = {
-      0: () => {
-        const indexToSet = dataToSet.findIndex(elem => elem.id === node.id);
-
-        // Toggle the expansion of the panel
-        const isExpanded = _get(
-          dataToSet,
-          [indexToSet, "state", "expanded"],
-          false
-        );
-        _set(dataToSet, [indexToSet, "state"], {
-          expanded: !isExpanded
-        });
-
-        setData(dataToSet);
-      },
-      1: () => {
-        // second level, ask for versions (versions of scope items)
-
-        // find index of selected node in first level
-        const indexToSet = dataToSet.findIndex(
-          elem => elem.id === node.parents[0]
-        );
-
-        Workspace.getDocs({
-          workspace: selectedWorkspace,
-          scope: dataToSet[indexToSet].scope,
-          id: node.name
-        })
-          .then(response => {
-            // Tailor data Data comes with "ref" key but we want "name"
-            const versionList = response.versions.map((elem, index) => {
-              return {
-                url: elem.url,
-                name: elem.tag,
-                id: index
-              };
-            });
-
-            // find index of selected node in the second level
-            const index2ndLevel = dataToSet[indexToSet].children.findIndex(
-              elem => elem.id === node.id
-            );
-
-            // Toggle the expansion of the panel
-            const isExpanded = _get(
-              dataToSet,
-              [indexToSet, "children", index2ndLevel, "state", "expanded"],
-              false
-            );
-            _set(dataToSet, [indexToSet, "children", index2ndLevel, "state"], {
-              expanded: !isExpanded
-            });
-
-            // Set version list into the Tree
-            _set(
-              dataToSet,
-              [indexToSet, "children", index2ndLevel, "children"],
-              versionList
-            );
-            setData(dataToSet);
-          })
-          .catch(error => console.error(error));
-      },
-      2: () => {
-        // Display the selected option
-        setSelectedScopeItem(`${node.url}`);
-      }
-    };
-    _get(mapObj, node.deepness, EMPTY_FUNCTION)();
-  };
-
   const confirmNodeSelection = node => {
     // Display the selected option and confirm selection
-    if (selectedWorkspace !== "global" && node.deepness <= 1) return;
+    if (node.deepness <= 1) return;
     setSelectedScopeItem(node.url);
     props.onSubmit(node.url);
   };
@@ -242,9 +209,53 @@ const SelectScopeModal = props => {
     return `${i18n.t("Select")} ${pronoun} ${i18n.t(scope)}`;
   };
 
+  //========================================================================================
+  /*                                                                                      *
+   *                                       Handlers                                       *
+   *                                                                                      */
+  //========================================================================================
+
+  const handleSubmit = useCallback(
+    () => props.onSubmit(selectedScopeItem),
+    [selectedScopeItem]
+  );
+  const handleNodeClick = useCallback(
+    node => requestScopeVersions(node),
+    [data]
+  );
+  const handleChange = useCallback(nodes => setData(nodes), []);
+  const handleNodeDoubleClick = useCallback(
+    nodeData => confirmNodeSelection(nodeData),
+    []
+  );
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                    React Lifecycle                                   *
+   *                                                                                      */
+  //========================================================================================
+
+  React.useEffect(() => {
+    // get all information in the scopes (not filtered by message)
+    getAllData(CONSTANTS.GLOBAL_WORKSPACE);
+  }, []);
+
+  // Filter Results based on props.filter
+  useEffect(() => {
+    if (isLoading || !props.filter) return;
+    // Set filtered data
+    setData(filterData(data));
+  }, [props.filter]);
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Render                                        *
+   *                                                                                      */
+  //========================================================================================
+
   return (
     <AbstractModal
-      onSubmit={() => props.onSubmit(selectedScopeItem)}
+      onSubmit={handleSubmit}
       onCancel={props.onCancel}
       open={props.open}
       title={getModalTitle(props.scopeList[0])}
@@ -259,25 +270,7 @@ const SelectScopeModal = props => {
             paddingBottom: "6px",
             paddingTop: "10px"
           }}
-        >
-          <FormControl style={{ width: "50%" }}>
-            <InputLabel data-testid="input_workspace">
-              {i18n.t("Workspace")}
-            </InputLabel>
-            <Select
-              inputProps={{ "data-testid": "input-select" }}
-              value={selectedWorkspace}
-              onChange={changeWorkspace}
-              disabled={!props.allowArchive}
-            >
-              {Object.keys(workSpaceList).map((key, index) => (
-                <MenuItem key={index} value={key}>
-                  {workSpaceList[key].label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
+        ></Grid>
         <Typography
           data-testid="section_basic-virtualized-tree"
           component="div"
@@ -303,10 +296,10 @@ const SelectScopeModal = props => {
             </Backdrop>
           ) : (
             <BasicVirtualizedTree
-              onClickNode={node => requestScopeVersions(node)}
-              onDoubleClickNode={data => confirmNodeSelection(data)}
+              onClickNode={handleNodeClick}
+              onDoubleClickNode={handleNodeDoubleClick}
               data={data}
-              handleChange={nodes => setData(nodes)}
+              handleChange={handleChange}
               showIcons={false}
               height="400px"
             ></BasicVirtualizedTree>
@@ -344,8 +337,6 @@ SelectScopeModal.defaultProps = {
   title: i18n.t("Insert Text here"),
   message: i18n.t("Are you sure?"),
   allowArchive: true,
-  onSubmit: EMPTY_FUNCTION,
-  onCancel: EMPTY_FUNCTION,
   open: false,
   scopeList: ["Callback"],
   selected: ""

@@ -1,7 +1,12 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid } from "react-virtualized";
 
-export const HomeMenuPopperStyles = makeStyles(theme => ({
+const menuButtonStyles = {
+  margin: "5px",
+  padding: "0px",
+  flexBasis: "27%"
+};
+
+export const homeMenuPopperStyles = makeStyles(theme => ({
   iconButton: { cursor: "pointer", height: "100%" },
   popperIndex: { zIndex: 1400 },
   menuWrapper: {
@@ -12,28 +17,6 @@ export const HomeMenuPopperStyles = makeStyles(theme => ({
     minHeight: "400px",
     padding: "0px",
     flexBasis: "29%"
-  },
-  appMiniature: {
-    color: theme.palette.getContrastText("#fff"),
-    width: "60px",
-    height: "32px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "10px",
-    fontWeight: "bold",
-    marginBottom: "10px"
-  },
-  appIcon: {
-    color: theme.palette.getContrastText("#fff"),
-    fontSize: "48px",
-    marginBottom: "10px",
-    marginTop: "20px"
-  },
-  menuButton: {
-    margin: "5px",
-    padding: "0px",
-    flexBasis: "27%"
   },
   menuTooltip: {
     zIndex: 999999
@@ -64,5 +47,31 @@ export const HomeMenuPopperStyles = makeStyles(theme => ({
     justifyItems: "center",
     gridTemplateRows: "70% 30%"
   },
-  launcherButton: { cursor: "pointer" }
+  launcherButton: { cursor: "pointer" },
+  menuButton: {
+    ...menuButtonStyles
+  }
+}));
+
+export const menuAppStyles = makeStyles(theme => ({
+  appMiniature: {
+    color: theme.palette.getContrastText("#fff"),
+    width: "60px",
+    height: "32px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "10px",
+    fontWeight: "bold",
+    marginBottom: "10px"
+  },
+  appIcon: {
+    color: theme.palette.getContrastText("#fff"),
+    fontSize: "48px",
+    marginBottom: "10px",
+    marginTop: "20px"
+  },
+  menuButton: {
+    ...menuButtonStyles
+  }
 }));
