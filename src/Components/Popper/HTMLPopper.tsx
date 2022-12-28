@@ -1,9 +1,11 @@
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { infoButtonStyles } from "./styles";
 import PropTypes from "prop-types";
 import { Fade, Paper, Popper } from "@material-ui/core";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { HTMLPopperProps } from "./types";
+
+const FADE_OUT_TIMEOUT = 350;
 
 const HTMLPopper = (props: HTMLPopperProps) => {
   const classes = infoButtonStyles();
@@ -26,13 +28,11 @@ const HTMLPopper = (props: HTMLPopperProps) => {
   const renderPaper = () => {
     return (
       <Paper>
-        <React.Fragment>
-          <div className={classes.transitionIn}>
-            <div data-testid="section_wrapper" className={classes.childWrapper}>
-              {children}
-            </div>
+        <div className={classes.transitionIn}>
+          <div data-testid="section_wrapper" className={classes.childWrapper}>
+            {children}
           </div>
-        </React.Fragment>
+        </div>
       </Paper>
     );
   };
@@ -43,13 +43,13 @@ const HTMLPopper = (props: HTMLPopperProps) => {
    *                                                                                      */
   //========================================================================================
 
-  const handlePopperClose = () => {
+  const handlePopperClose = useCallback(() => {
     setOpenPopper(false);
-  };
+  }, []);
 
-  const handlePopperOpen = () => {
+  const handlePopperOpen = useCallback(() => {
     setOpenPopper(true);
-  };
+  }, []);
 
   //========================================================================================
   /*                                                                                      *
@@ -75,7 +75,7 @@ const HTMLPopper = (props: HTMLPopperProps) => {
         transition
       >
         {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={350}>
+          <Fade {...TransitionProps} timeout={FADE_OUT_TIMEOUT}>
             <>
               {hideOnClickAway ? (
                 <ClickAwayListener onClickAway={handlePopperClose}>

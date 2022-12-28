@@ -1,28 +1,22 @@
-import React, {
-  MouseEvent,
-  MouseEventHandler,
-  useEffect,
-  useMemo
-} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button, Divider, IconButton, Typography } from "@material-ui/core";
-import { User, Utils } from "@mov-ai/mov-fe-lib-core";
+import { User } from "@mov-ai/mov-fe-lib-core";
 import AppsIcon from "@material-ui/icons/Apps";
-import { HomeMenuPopperStyles } from "./styles";
-import HomeMenuSkeleton from "./HomeMenuSkeleton";
-import HTMLPopper from "../Popper/HTMLPopper";
+import Tooltip from "@material-ui/core/Tooltip";
 import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
 import i18n from "../../i18n/i18n.js";
-import Tooltip from "@material-ui/core/Tooltip";
+import HTMLPopper from "../Popper/HTMLPopper";
+import HomeMenuSkeleton from "./HomeMenuSkeleton";
+import MenuApp from "./MenuApp";
 import { App } from "./types";
+
+import { homeMenuPopperStyles } from "./styles";
 
 const HomeMenuPopper = () => {
   // State hooks
-  const classes = HomeMenuPopperStyles();
-  const [currentApps, setCurrentApps] = React.useState<App[]>();
-  const [errorMessage, setErrorMessage] = React.useState("");
-
-  // Other hooks
-  const currentUser = useMemo(() => new User(), []);
+  const classes = homeMenuPopperStyles();
+  const [currentApps, setCurrentApps] = useState<App[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   //========================================================================================
   /*                                                                                      *
@@ -33,22 +27,22 @@ const HomeMenuPopper = () => {
    * subscribe to Applications updates
    */
   useEffect(() => {
-    currentUser
+    (new User())
       .getAllApps()
       .then(res => {
-        console.log("getAllApps: ", res);
         res.success && setCurrentApps(res.result as any);
       })
       .catch(err => {
         setErrorMessage(err.statusText);
       });
-  }, [currentUser]);
+  }, []);
 
   //========================================================================================
   /*                                                                                      *
    *                                    Private Methods                                   *
    *                                                                                      */
   //========================================================================================
+
   const getIcon = () => {
     return (
       <IconButton color="primary" component="span">
@@ -57,45 +51,18 @@ const HomeMenuPopper = () => {
     );
   };
 
-  /**
-   * Handle app click
-   * @param {Event} event : click event
-   * @param {object} element : App object
-   */
-  const onAppClick = (event: MouseEvent, app: App) => {
-    if (app.Label) {
-      Utils.loadResources(event, app);
-    }
-  };
-
-  const redirectToLocalhost = () =>
+  const redirectToLocalhost = useCallback(() => {
     window.location.replace(window.location.origin); // go to localhost or localhost:3000
+  }, []);
 
   //========================================================================================
   /*                                                                                      *
    *                                        RENDERS                                       *
    *                                                                                      */
   //========================================================================================
-  const renderApplications = (apps: App[]) => {
-    return apps.map(app => (
-      <Button
-        data-testid="input_application"
-        key={app.URL}
-        size="large"
-        color="primary"
-        className={classes.menuButton}
-        onClick={event => onAppClick(event, app)}
-      >
-        <div>
-          <div className={`${classes.appIcon} ${app.Icon}`} />
-          <div className={classes.appMiniature}>{app.Label}</div>
-        </div>
-      </Button>
-    ));
-  };
 
   const renderHTML = () => {
-    if (errorMessage)
+    if (errorMessage) {
       return (
         <div
           className={classes.noApplications}
@@ -116,43 +83,48 @@ const HomeMenuPopper = () => {
           </Button>
         </div>
       );
+    }
+
     if (currentApps) {
       const arrayOfApplications: App[] = [];
       const arrayOfExternalApps: App[] = [];
       const arrayOfLayouts: App[] = [];
 
-      currentApps.forEach(app => {
+      currentApps.forEach((app: App) => {
         const appType = app.Type;
 
         if (appType === APP_TYPES.APPLICATION && app.Label !== LAUNCHER_APP)
           arrayOfApplications.push(app);
-
         if (appType === APP_TYPES.EXTERNAL) arrayOfExternalApps.push(app);
-
         if (appType === APP_TYPES.LAYOUT) arrayOfLayouts.push(app);
       });
+
       return (
-        <>
-          <div className={classes.menuWrapper}>
-            {renderApplications(arrayOfApplications)}
-            {arrayOfLayouts.length > 1 && (
-              <>
-                <Divider orientation="horizontal" flexItem />
-                {renderApplications(arrayOfLayouts)}
-              </>
-            )}
-            {arrayOfExternalApps.length > 1 && (
-              <>
-                <Divider orientation="horizontal" flexItem />
-                {renderApplications(arrayOfExternalApps)}
-              </>
-            )}
-          </div>
-        </>
+        <div className={classes.menuWrapper}>
+          {arrayOfApplications.map(app => (
+            <MenuApp key={app.URL} app={app} />
+          ))}
+          {arrayOfLayouts.length > 0 && (
+            <>
+              <Divider orientation="horizontal" flexItem />
+              {arrayOfLayouts.map(app => (
+                <MenuApp key={app.URL} app={app} />
+              ))}
+            </>
+          )}
+          {arrayOfExternalApps.length > 0 && (
+            <>
+              <Divider orientation="horizontal" flexItem />
+              {arrayOfExternalApps.map(app => (
+                <MenuApp key={app.URL} app={app} />
+              ))}
+            </>
+          )}
+        </div>
       );
-    } else {
-      return <HomeMenuSkeleton />;
     }
+
+    return <HomeMenuSkeleton />;
   };
 
   //========================================================================================
