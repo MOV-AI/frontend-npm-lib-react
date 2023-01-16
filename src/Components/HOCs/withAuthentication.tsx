@@ -91,7 +91,7 @@ export default function withAuthentication<P extends object>(
      */
     useEffect(() => {
       try {
-        const now = Math.floor(Date.now() * 0.001);
+        const now = Math.floor(Date.now() * 1e-3);
         const token = Authentication.getToken() as string;
 
         // decode the token and get exp value
@@ -101,8 +101,8 @@ export default function withAuthentication<P extends object>(
         const expDelta = exp - now;
 
         const timeToRun = Math.max(
-          expDelta * 1000 - RECHECK_VALID_DELAY,
-          10000
+          expDelta * 1e3 - RECHECK_VALID_DELAY,
+          RECHECK_VALID_DELAY
         );
 
         const timeOut = setTimeout(
@@ -217,7 +217,7 @@ export default function withAuthentication<P extends object>(
     /**
      * renders the Login form if the user is not logged in
      */
-    if (loading) return renderLoading();
+    if (loading && firstRender.current) return renderLoading();
     if (!state.loggedIn && firstRender.current) return renderLoginForm();
     if (!state.hasPermissions) return renderNotAuthorized();
     return (
@@ -228,7 +228,11 @@ export default function withAuthentication<P extends object>(
           loggedIn={state.loggedIn}
           {...props}
         />
-        <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
+        {loading ? (
+          renderLoading()
+        ) : (
+          <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
+        )}
       </React.Fragment>
     );
   };
