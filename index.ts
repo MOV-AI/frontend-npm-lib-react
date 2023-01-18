@@ -21,6 +21,7 @@ import LoginForm from "./src/Components/LoginForm/LoginForm";
 import NotAuthorized from "./src/Components/LoginForm/LoginPanel";
 import ProfileMenu from "./src/Components/ProfileMenu/ProfileMenu";
 import ResetPasswordModal from "./src/Components/ProfileMenu/ResetPassword";
+import TimeFilters from "./src/Components/Logs/LogsFilterBar/sub-components/TimeFilters";
 import FilterIcon from "./src/Components/Logs/LogsFilterBar/sub-components/_shared/FiltersIcon/FiltersIcon";
 import SelectScopeModal from "./src/Components/Modal/SelectScopeModal";
 import HTMLPopper from "./src/Components/Popper/HTMLPopper";
@@ -62,6 +63,7 @@ export {
   snackbar,
   Style,
   Logs,
+  TimeFilters,
   FilterIcon,
   LoginForm,
   ProfileMenu,
