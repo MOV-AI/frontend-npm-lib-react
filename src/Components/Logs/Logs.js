@@ -33,6 +33,7 @@ const DEFAULT_TIMEOUT_IN_MS = 3000;
 const RETRY_IN_MS = 2000;
 const UI_TAG = { key: 0, label: "ui" };
 
+const NO_ROBOTS_RETRY_TIMEOUT = 1000;
 const Logs = props => {
   // Props
   const { advancedMode: initialAdvancedMode, robotsData } = props;
@@ -41,7 +42,7 @@ const Logs = props => {
   // Refs
   const getLogsTimeoutRef = useRef();
   const selectedRobotsRef = useRef({});
-  const requestTimeout = useRef();
+  const requestTimeout = useRef(DEFAULT_TIMEOUT_IN_MS);
   const lastRequestTimeRef = useRef(null);
   const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
@@ -162,6 +163,7 @@ const Logs = props => {
       .catch(err => {
         // Add more time for the next request if it fails
         console.warn("Failed logs request", err);
+        console.warn("Retry in ", requestTimeout.current);
         requestTimeout.current += RETRY_IN_MS;
         // Enqueue next request
         return true;
@@ -183,10 +185,10 @@ const Logs = props => {
     if (!isMounted.current) return;
     // Get selected and online robots
     const validRobots = getSelectedRobots();
-    // If there's no valid robots, clear logs and try again in 1s
     if (!validRobots.length) {
+      console.warn("No robots available", validRobots)
       clearLogs();
-      setTimeout(getLogs, 1000);
+      setTimeout(getLogs, NO_ROBOTS_RETRY_TIMEOUT);
       if (!keepLoading) setLoading(false);
       // Stop method execution
       return;
