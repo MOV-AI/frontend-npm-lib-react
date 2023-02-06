@@ -1,6 +1,7 @@
 import React, { memo, useCallback } from "react";
 import PropTypes from "prop-types";
-import { AppBar, Toolbar } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton } from "@material-ui/core";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import _isEqual from "lodash/isEqual";
 // Sub-Components
 import RobotSelector from "./sub-components/RobotSelector";
@@ -35,6 +36,7 @@ const LogsFilterBar = props => {
     tags,
     handleAddTag,
     handleDeleteTag,
+    handleExport,
     selectedFromDate,
     selectedToDate,
     handleDateChange,
@@ -118,6 +120,10 @@ const LogsFilterBar = props => {
               selectedToDate={selectedToDate}
               handleDateChange={handleDateChange}
             />
+            {/* Export Logs */}
+            <IconButton onClick={handleExport}>
+              <GetAppIcon />
+            </IconButton>
           </div>
           <div className={`${classes.flexContainer} ${classes.displayFlex} ${classes.flexEnd}`}>
             {/* Settings */}
@@ -147,6 +153,7 @@ LogsFilterBar.propTypes = {
   columns: PropTypes.array,
   handleColumns: PropTypes.func,
   handleDeleteTag: PropTypes.func,
+  handleExport: PropTypes.func,
   messageRegex: PropTypes.string,
   handleMessageRegex: PropTypes.func,
   selectedFromDate: PropTypes.string,
@@ -170,6 +177,7 @@ LogsFilterBar.defaultProps = {
   columns: [],
   handleColumns: EMPTY_FUNCTION,
   handleDeleteTag: EMPTY_FUNCTION,
+  handleExport: EMPTY_FUNCTION,
   messageRegex: "",
   handleMessageRegex: EMPTY_FUNCTION,
   handleDateChange: EMPTY_FUNCTION,
