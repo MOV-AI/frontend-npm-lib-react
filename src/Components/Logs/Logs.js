@@ -404,10 +404,12 @@ const Logs = props => {
   const handleExport = useCallback(() => {
     const sep = "\t";
     const contents = logsData.map(log => {
-      const [ date, time ] = getDateTime(log.time);
+      const [date, time] = getDateTime(log.time);
       return date + sep + time + sep + log.robot_name + sep + log.message;
     }).join("\n");
-    blobDownload(contents, "logs-" + logsData[0].time + ".csv", "text/csv;charset=utf-8");
+    // from https://www.epochconverter.com/programming/
+    const dateString = new Date(logsData[0].time * 1e3).toISOString();
+    blobDownload(contents, `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
   }, [logsData]);
 
   //========================================================================================
