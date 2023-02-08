@@ -17,7 +17,7 @@ import {
   ROBOT_LOG_TYPE,
   SIMPLE_LEVELS_LIST
 } from "./utils/Constants";
-import { findsUniqueKey } from "./utils/Utils";
+import { findsUniqueKey, getDateTime } from "./utils/Utils";
 import useUpdateEffect from "./hooks/useUpdateEffect";
 import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
@@ -25,6 +25,19 @@ import i18n from "../../i18n/i18n";
 
 import { useStyles } from "./styles";
 import "./Logs.css";
+
+function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
+  const blob = new Blob([file], { type: charset });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
 
 /**
  * CONSTANTS
@@ -385,6 +398,20 @@ const Logs = props => {
     });
   }, []);
 
+  /**
+   * On export logs
+   */
+  const handleExport = useCallback(() => {
+    const sep = "\t";
+    const contents = logsData.map(log => {
+      const [date, time] = getDateTime(log.time);
+      return date + sep + time + sep + log.robot_name + sep + log.message;
+    }).join("\n");
+    // from https://www.epochconverter.com/programming/
+    const dateString = new Date(logsData[0].time * 1e3).toISOString();
+    blobDownload(contents, `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
+  }, [logsData]);
+
   //========================================================================================
   /*                                                                                      *
    *                                Handlers for Logs Table                               *
@@ -459,6 +486,7 @@ const Logs = props => {
           handleAdvancedMode={onToggleAdvancedMode}
           handleAddTag={addTag}
           handleDeleteTag={deleteTag}
+          handleExport={handleExport}
           levels={levels}
           levelsList={levelsList}
           selectedService={selectedService}

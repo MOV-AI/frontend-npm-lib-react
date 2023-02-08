@@ -35,3 +35,10 @@ export const getJustTimeFromServer = serverTime => {
   const time = new Date(serverTime * 1000);
   return `${time.toLocaleTimeString("pt")}`;
 };
+
+// both of the above
+export function getDateTime(timestamp) {
+  const date = getJustDateFromServer(timestamp);
+  const time = getJustTimeFromServer(timestamp);
+  return [ date, time ];
+}
