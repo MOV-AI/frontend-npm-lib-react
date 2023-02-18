@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import MaterialTabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
+import ErrorBoundary from "./ErrorBoundary";
 
 function TabPanel(props) {
   const { children, selectedTab, index, ...other } = props;
@@ -72,7 +73,9 @@ export default function Tabs(props) {
         textColor="primary"
       >
         {props.tabList.map((tab, index) => (
-          <Tab key={index} label={tab.label} {...a11yProps(index)} />
+          <ErrorBoundary>
+            <Tab key={index} label={tab.label} {...a11yProps(index)} />
+          </ErrorBoundary>
         ))}
       </MaterialTabs>
       {props.tabList.map((tab, index) => (
