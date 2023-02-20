@@ -27,12 +27,14 @@ import SelectScopeModal from "./src/Components/Modal/SelectScopeModal";
 import HTMLPopper from "./src/Components/Popper/HTMLPopper";
 import HomeMenuPopper from "./src/Components/HomeMenu/HomeMenu";
 import HomeMenuSkeleton from "./src/Components/HomeMenu/HomeMenuSkeleton";
+import ErrorBoundary from "./src/Components/ErrorBoundary";
 // import HOCs
 import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
 import withAuthentication from "./src/Components/HOCs/withAuthentication";
 import withNotification from "./src/Components/HOCs/withNotification";
 import withTheme from "./src/Components/HOCs/withTheme";
 import withDefaults from "./src/Components/HOCs/withDefaults";
+import withError from "./src/Components/HOCs/withError";
 // import Translations
 import { Translations } from "./src/i18n/locales";
 import { i18nHelper } from "./src/i18n/i18nHelper";
@@ -43,6 +45,7 @@ export {
   withNotification,
   withTheme,
   withDefaults,
+  withError,
   Button,
   AbstractModal,
   ConfirmAlertModal,
@@ -71,6 +74,7 @@ export {
   HTMLPopper,
   HomeMenuPopper,
   HomeMenuSkeleton,
+  ErrorBoundary,
   Translations,
   i18nHelper,
   NotAuthorized
