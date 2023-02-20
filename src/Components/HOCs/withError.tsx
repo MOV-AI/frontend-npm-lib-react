@@ -14,9 +14,9 @@ interface WithErrorProps {
 }
 
 export default
-function withError(Component: React.ComponentType<WithErrorProps>): React.FC<WithErrorProps> {
+function withError(Component: React.ComponentType<WithErrorProps>, defaultDependencies?: WithErrorDependencies): React.FC<WithErrorProps> {
   function WithError(props: any): JSX.Element {
-    const { key, children, dependencies, ...rest } = props;
+    const { key, children, dependencies = defaultDependencies, ...rest } = props;
 
     return (<ErrorBoundary key={key} dependencies={dependencies}>
       <Component { ...rest }>
