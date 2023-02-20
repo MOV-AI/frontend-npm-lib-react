@@ -13,6 +13,10 @@ interface WithErrorProps {
   [key: string]: any,
 }
 
+/*
+ * dependencies through props are preferable than through the decorator's
+ * second argument. Perhaps defaultDependencies will be removed, as it is unused.
+ */
 export default
 function withError(Component: React.ComponentType<WithErrorProps>, defaultDependencies?: WithErrorDependencies): React.FC<WithErrorProps> {
   function WithError(props: any): JSX.Element {
