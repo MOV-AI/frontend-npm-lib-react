@@ -15,7 +15,8 @@ interface WithErrorProps {
 
 /*
  * dependencies through props are preferable than through the decorator's
- * second argument. Perhaps defaultDependencies will be removed, as it is unused.
+ * second argument. This is needed more often. But sometimes it is also
+ * useful passing them down through the second argument.
  */
 export default
 function withError(Component: React.ComponentType<WithErrorProps>, defaultDependencies?: WithErrorDependencies): React.FC<WithErrorProps> {
