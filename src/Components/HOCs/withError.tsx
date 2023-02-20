@@ -2,21 +2,23 @@ import React from "react";
 import ErrorBoundary from "../ErrorBoundary";
 import { Magic } from "@tty-pt/styles/lib/types";
 
-interface WithErrorProps {
-  children?: any,
-  [key: string]: any,
-}
-
 interface WithErrorDependencies {
   MagicContext?: React.Context<Magic>,
 }
 
-export default
-function withError(Component: React.ComponentType<WithErrorProps>, dependencies?: WithErrorDependencies): React.FC<WithErrorProps> {
-  function WithError(props: any): JSX.Element {
-    const { children, ...rest } = props;
+interface WithErrorProps {
+  children?: any,
+  dependencies?: WithErrorDependencies,
+  key?: string,
+  [key: string]: any,
+}
 
-    return (<ErrorBoundary dependencies={dependencies}>
+export default
+function withError(Component: React.ComponentType<WithErrorProps>): React.FC<WithErrorProps> {
+  function WithError(props: any): JSX.Element {
+    const { key, children, dependencies, ...rest } = props;
+
+    return (<ErrorBoundary key={key} dependencies={dependencies}>
       <Component { ...rest }>
         { children }
       </Component>
