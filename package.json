@@ -76,7 +76,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "peerDependencies": {
-    "@tty-pt/styles": "^0.0.3-1",
+    "@tty-pt/styles": "^0.0.3-2",
     "react": ">=16.14.0",
     "react-dom": ">=16.14.0"
   },
