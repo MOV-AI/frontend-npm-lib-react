@@ -3,7 +3,10 @@ import ErrorBoundary from "../ErrorBoundary";
 import { Magic } from "@tty-pt/styles/lib/types";
 
 interface WithErrorDependencies {
-  MagicContext?: React.Context<Magic>,
+  "tty-pt/styles"?: {
+    MagicContext: React.Context<Magic>,
+  },
+  [key: string]: any,
 }
 
 interface WithErrorProps {
