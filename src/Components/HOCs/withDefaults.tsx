@@ -14,22 +14,33 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     offlineValidation = true,
     dependencies,
     themeProps,
-    getStyle = makeMagicBook,
+    getStyle = makeMagicBook
   } = appOptions;
-  let componentWithDefaults = (dependencies["@material-ui/styles"].withStyles)(getStyle)(
-    withMagicClasses(withError(appComponent, dependencies), dependencies["@tty-pt/styles"]?.MagicContext ?? null)
+  let componentWithDefaults = dependencies["@material-ui/styles"].withStyles(
+    getStyle
+  )(
+    withMagicClasses(
+      withError(appComponent, dependencies),
+      dependencies["@tty-pt/styles"]?.MagicContext ?? null
+    )
   );
-  if (offlineValidation)
+  if (offlineValidation) {
     componentWithDefaults = withOfflineValidation(componentWithDefaults);
-  if (dependencies.i18n)
-    componentWithDefaults = withTranslations(
-      componentWithDefaults,
-      { i18n: dependencies.i18n, provider: dependencies["react-i18next"].I18nextProvider },
-    );
+  }
+  if (dependencies.i18n) {
+    componentWithDefaults = withTranslations(componentWithDefaults, {
+      i18n: dependencies.i18n,
+      provider: dependencies["react-i18next"].I18nextProvider
+    });
+  }
   const componentWithNotifications = withNotification(componentWithDefaults);
   const componentWithAuthentication = withAuthentication(
     componentWithNotifications,
     appName
   );
-  return withTheme(componentWithAuthentication, dependencies["@material-ui/styles"].ThemeProvider, themeProps);
+  return withTheme(
+    componentWithAuthentication,
+    dependencies["@material-ui/styles"].ThemeProvider,
+    themeProps
+  );
 }
