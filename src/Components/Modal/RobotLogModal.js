@@ -36,7 +36,7 @@ class RobotLogModal extends Component {
     data.time = `${time.toLocaleTimeString("pt")}`;
     data.action = alert.action;
     data.message = alert.message;
-    data.robot = alert.robot;
+    data.robot = alert.robot_name;
     data.service = alert.service;
     data.module = alert.module;
     if (alertButton) {
