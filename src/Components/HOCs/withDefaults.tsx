@@ -21,7 +21,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   )(
     withMagicClasses(
       withError(appComponent, dependencies),
-      dependencies["@tty-pt/styles"]?.MagicContext ?? null
+      dependencies["@tty-pt/styles"]?.MagicContext
     )
   );
   if (offlineValidation) {
