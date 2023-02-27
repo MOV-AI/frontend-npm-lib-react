@@ -55,7 +55,7 @@
     "@storybook/react": "^6.4.19",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.0",
-    "@tty-pt/styles": "^0.0.3-11",
+    "@tty-pt/styles": "^0.0.3-15",
     "@types/jest": "27.5.1",
     "babel-jest": "^28.1.0",
     "babel-loader": "^8.2.2",
@@ -76,7 +76,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "peerDependencies": {
-    "@tty-pt/styles": "^0.0.3-11",
+    "@tty-pt/styles": "^0.0.3-15",
     "react": ">=16.14.0",
     "react-dom": ">=16.14.0"
   },

@@ -1,6 +1,7 @@
 import React from "react";
 import { ThemeProvider, withStyles } from "@material-ui/styles";
 import { Magic, MagicBook } from "@tty-pt/styles/lib/types";
+import { withMagicClasses } from "@tty-pt/styles";
 import i18n from "i18next";
 import { I18nextProvider } from "react-i18next";
 
@@ -11,7 +12,8 @@ export interface WithDefaultsProps {
   themeProps: any;
   dependencies: {
     "@tty-pt/styles"?: {
-      MagicContext: React.Context<Magic>,
+      MagicContext?: React.Context<Magic>,
+      withMagicClasses?: typeof withMagicClasses,
     },
     "@material-ui/styles": {
       ThemeProvider: typeof ThemeProvider,

@@ -4,7 +4,7 @@ import { Magic } from "@tty-pt/styles/lib/types";
 
 interface WithErrorDependencies {
   "tty-pt/styles"?: {
-    MagicContext: React.Context<Magic>,
+    MagicContext?: React.Context<Magic>,
   },
   [key: string]: any,
 }
