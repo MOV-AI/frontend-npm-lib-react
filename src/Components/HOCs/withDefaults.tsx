@@ -19,9 +19,9 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   let componentWithDefaults = dependencies["@material-ui/styles"].withStyles(
     getStyle
   )(
-    withMagicClasses(
+    (dependencies["@tty-pt/styles"]?.withMagicClasses ?? withMagicClasses)(
       withError(appComponent, dependencies),
-      dependencies["@tty-pt/styles"]?.MagicContext ?? null
+      dependencies["@tty-pt/styles"]?.MagicContext
     )
   );
   if (offlineValidation) {
