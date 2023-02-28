@@ -43,7 +43,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps,ErrorBoundaryState> {
     if (!this.state.errorInfo)
       return children;
 
-    return (<div className={c("vertical pad textPrimary")}>
+    return (<div className={c("vertical pad colorPrimary")}>
       <div className={c("h5")}>Something went wrong</div>
       <pre className={c("margin0")}>
         { this.state.stackLine }
