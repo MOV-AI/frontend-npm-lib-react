@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import _set from "lodash/set";
 import _get from "lodash/get";
@@ -56,8 +56,34 @@ const initialData = [
   }
 ];
 
+function scopeFilter(scopeList, data) {
+  return data.filter(elem => scopeList.includes(elem.scope));
+}
+
+export
+async function getAllData(workspace, data = initialData) {
+  const elements = await Promise.all(data.map(element =>
+    Workspace.getDocs({ workspace, scope: element.scope }).then(response => response.scopes
+      .sort((a, b) => a.ref.localeCompare(b.ref))
+      .map((elem, i) => {
+        return {
+          id: i,
+          url: elem.url,
+          name: elem.ref,
+          children: [{ name: "" }]
+        };
+      })
+    )
+  ));
+
+  return elements.map((element, index) => ({
+    ...data[index],
+    children: element,
+  }));
+}
+
 const SelectScopeModal = props => {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState(props.data ?? initialData);
   const [selectedScopeItem, setSelectedScopeItem] = useState(props.selected);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -67,9 +93,12 @@ const SelectScopeModal = props => {
    *                                                                                      */
   //========================================================================================
 
-  const scopeFilteredData = initialData.filter(elem =>
-    props.scopeList.includes(elem.scope)
+  const scopeFilteredData = useMemo(
+    () => scopeFilter(props.scopeList, data),
+    [data, props.scopeList]
   );
+
+  useEffect(() => setData(filterData(props.data ?? initialData)), [props.data]);
 
   /**
    * Filter data based filter props
@@ -77,7 +106,7 @@ const SelectScopeModal = props => {
    * @returns {Object} Filtered data
    */
   const filterData = _data => {
-    const filteredData = _cloneDeep(_data);
+    const filteredData = _cloneDeep(scopeFilter(props.scopeList, _data));
     if (!props.filter) return filteredData;
     // Filter data
     _data.forEach((scope, index) => {
@@ -88,7 +117,7 @@ const SelectScopeModal = props => {
 
   const requestScopeVersions = useCallback(
     node => {
-      const dataToSet = _cloneDeep(data);
+      const dataToSet = _cloneDeep(scopeFilteredData);
 
       const mapObj = {
         0: () => {
@@ -165,32 +194,13 @@ const SelectScopeModal = props => {
       };
       _get(mapObj, node.deepness, () => {})();
     },
-    [data]
+    [scopeFilteredData]
   );
 
-  const getAllData = workspace => {
-    const dataToSet = _cloneDeep(scopeFilteredData);
-
-    dataToSet.forEach((element, index) => {
-      // Get all scope items
-      Workspace.getDocs({ workspace: workspace, scope: element.scope })
-        .then(response => {
-          let sortedScopeItems = response.scopes
-            .sort((a, b) => a.ref.localeCompare(b.ref))
-            .map((elem, i) => {
-              return {
-                id: i,
-                url: elem.url,
-                name: elem.ref,
-                children: [{ name: "" }]
-              };
-            });
-
-          dataToSet[index].children = sortedScopeItems;
-          setData(filterData(dataToSet));
-          setIsLoading(false);
-        })
-        .catch(error => console.error(error));
+  const _getAllData = workspace => {
+    getAllData(workspace, scopeFilteredData).then(combined => {
+      setData(filterData(combined));
+      setIsLoading(false);
     });
   };
 
@@ -221,7 +231,7 @@ const SelectScopeModal = props => {
   );
   const handleNodeClick = useCallback(
     node => requestScopeVersions(node),
-    [data]
+    [requestScopeVersions]
   );
   const handleChange = useCallback(nodes => setData(nodes), []);
   const handleNodeDoubleClick = useCallback(
@@ -237,15 +247,15 @@ const SelectScopeModal = props => {
 
   React.useEffect(() => {
     // get all information in the scopes (not filtered by message)
-    getAllData(CONSTANTS.GLOBAL_WORKSPACE);
+    _getAllData(CONSTANTS.GLOBAL_WORKSPACE);
   }, []);
 
   // Filter Results based on props.filter
   useEffect(() => {
     if (isLoading || !props.filter) return;
     // Set filtered data
-    setData(filterData(data));
-  }, [props.filter]);
+    setData(filterData(scopeFilteredData));
+  }, [props.filter, setData, scopeFilteredData]);
 
   //========================================================================================
   /*                                                                                      *
@@ -330,7 +340,8 @@ SelectScopeModal.propTypes = {
   scopeList: PropTypes.array,
   message: PropTypes.string,
   selected: PropTypes.string,
-  filter: PropTypes.func
+  filter: PropTypes.func,
+  data: PropTypes.array,
 };
 
 SelectScopeModal.defaultProps = {
