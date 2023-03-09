@@ -1,3 +1,5 @@
+import { withStyles, ThemeProvider } from "@material-ui/styles";
+import { I18nextProvider } from "react-i18next";
 import { withMagicClasses, makeMagicBook } from "@tty-pt/styles";
 import { WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
@@ -11,13 +13,16 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   const {
     name: appName,
     component: appComponent,
-    offlineValidation = true,
+    offlineValidation = true, // this will set to true even if it is false. is this intended?
     dependencies,
     themeProps,
-    getStyle = makeMagicBook
+    getStyle,
   } = appOptions;
-  let componentWithDefaults = dependencies["@material-ui/styles"].withStyles(
-    getStyle
+
+  const realGetStyle = (getStyle ?? dependencies["@tty-pt/styles"]?.makeMagicBook ?? makeMagicBook);
+
+  let componentWithDefaults = (dependencies["@material-ui/styles"]?.withStyles ?? withStyles)(
+    realGetStyle
   )(
     (dependencies["@tty-pt/styles"]?.withMagicClasses ?? withMagicClasses)(
       withError(appComponent, dependencies),
@@ -30,7 +35,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   if (dependencies.i18n) {
     componentWithDefaults = withTranslations(componentWithDefaults, {
       i18n: dependencies.i18n,
-      provider: dependencies["react-i18next"].I18nextProvider
+      provider: dependencies["react-i18next"]?.I18nextProvider ?? I18nextProvider
     });
   }
   const componentWithNotifications = withNotification(componentWithDefaults);
@@ -40,7 +45,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   );
   return withTheme(
     componentWithAuthentication,
-    dependencies["@material-ui/styles"].ThemeProvider,
+    dependencies["@material-ui/styles"]?.ThemeProvider ?? ThemeProvider,
     themeProps
   );
 }
