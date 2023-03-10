@@ -7,7 +7,7 @@ import { useTagsStyles } from "../../styles";
 
 const TagsPopover = props => {
   // Props
-  const { advancedMode, tags, handleAddTag, handleDeleteTag } = props;
+  const { tags, handleAddTag, handleDeleteTag } = props;
   // State hook
   const [tagText, setTagText] = useState("");
   // Style hook
@@ -84,7 +84,6 @@ const TagsPopover = props => {
     <FiltersIcon
       icon={<LabelIcon data-testid="output_icon"></LabelIcon>}
       title="Tags"
-      disabled={!advancedMode}
       isActive={tags?.length > 0}
     >
       <div data-testid="section_tags" className={classes.tagsContainer}>
