@@ -15,7 +15,6 @@ import {
   DEFAULT_SELECTED_LEVELS,
   DEFAULT_SELECTED_SERVICES,
   ROBOT_LOG_TYPE,
-  SIMPLE_LEVELS_LIST
 } from "./utils/Constants";
 import { findsUniqueKey, getDateTime } from "./utils/Utils";
 import useUpdateEffect from "./hooks/useUpdateEffect";
@@ -44,12 +43,11 @@ function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
  */
 const DEFAULT_TIMEOUT_IN_MS = 3000;
 const RETRY_IN_MS = 2000;
-const UI_TAG = { key: 0, label: "ui" };
 
 const NO_ROBOTS_RETRY_TIMEOUT = 1000;
 const Logs = props => {
   // Props
-  const { advancedMode: initialAdvancedMode, robotsData } = props;
+  const { robotsData } = props;
   // Style hook
   const classes = useStyles();
   // Refs
@@ -63,18 +61,15 @@ const Logs = props => {
   const logModalRef = useRef();
   const isMounted = useRef();
   // State hooks
-  const [advancedMode, setAdvancedMode] = useState(initialAdvancedMode);
   const [selectedRobots, setSelectedRobots] = useState({});
   const [levels, setLevels] = useState(DEFAULT_SELECTED_LEVELS);
-  const [levelsList, setLevelsList] = useState(
-    initialAdvancedMode ? ADVANCED_LEVELS_LIST : SIMPLE_LEVELS_LIST
-  );
+  const [levelsList, setLevelsList] = useState(ADVANCED_LEVELS_LIST);
   const [selectedService, setSelectedService] = useState(
     DEFAULT_SELECTED_SERVICES
   );
   const [limit, setLimit] = useState(DEFAULT_LIMIT);
   const [columns, setColumns] = useState(DEFAULT_SELECTED_COLUMNS);
-  const [tags, setTags] = useState(initialAdvancedMode ? [] : [UI_TAG]);
+  const [tags, setTags] = useState([]);
   const [searchMessage, setSearchMessage] = useState("");
   const [selectedFromDate, setSelectedFromDate] = useState(null);
   const [selectedToDate, setSelectedToDate] = useState(null);
@@ -261,7 +256,7 @@ const Logs = props => {
   // On change filter
   useUpdateEffect(() => {
     refreshLogs();
-  }, [levels, selectedService, advancedMode, columns, tags]);
+  }, [levels, selectedService, columns, tags]);
 
   // Add timeout before refresh logs on text input change
   //  This will prevent unnecessary re-renders while the user is still typing
@@ -354,19 +349,6 @@ const Logs = props => {
     };
     lastRequestTimeRef.current = null;
     setDate[keyToChange](newDate);
-  }, []);
-
-  /**
-   * Set simple/advanced mode
-   */
-  const onToggleAdvancedMode = useCallback(() => {
-    setAdvancedMode(prevState => {
-      const newMode = !prevState;
-      setTags(newMode ? [] : [UI_TAG]);
-      setLevels(DEFAULT_SELECTED_LEVELS);
-      setLevelsList(newMode ? ADVANCED_LEVELS_LIST : SIMPLE_LEVELS_LIST);
-      return newMode;
-    });
   }, []);
 
   /**
@@ -483,7 +465,6 @@ const Logs = props => {
           handleColumns={onChangeColumns}
           handleMessageRegex={onChangeMessage}
           handleDateChange={onChangeDate}
-          handleAdvancedMode={onToggleAdvancedMode}
           handleAddTag={addTag}
           handleDeleteTag={deleteTag}
           handleExport={handleExport}
@@ -497,7 +478,6 @@ const Logs = props => {
           messageRegex={searchMessage}
           selectedFromDate={selectedFromDate}
           selectedToDate={selectedToDate}
-          advancedMode={advancedMode}
         ></LogsFilterBar>
         <div
           data-testid="section_table-container"

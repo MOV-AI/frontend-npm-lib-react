@@ -23,7 +23,6 @@ const LogsFilterBar = props => {
   const classes = useLogFilterStyles();
   // Props
   const {
-    advancedMode,
     updateRobotSelection,
     selectedRobots,
     messageRegex,
@@ -40,7 +39,6 @@ const LogsFilterBar = props => {
     selectedFromDate,
     selectedToDate,
     handleDateChange,
-    handleAdvancedMode,
     limit,
     handleLimit,
     columns,
@@ -110,7 +108,6 @@ const LogsFilterBar = props => {
             {/* Tags */}
             <TagsPopover
               tags={tags}
-              advancedMode={advancedMode}
               handleAddTag={handleAddTag}
               handleDeleteTag={handleDeleteTag}
             />
@@ -128,8 +125,6 @@ const LogsFilterBar = props => {
           <div className={`${classes.flexContainer} ${classes.displayFlex} ${classes.flexEnd}`}>
             {/* Settings */}
             <SettingsPopover
-              advancedMode={advancedMode}
-              handleAdvancedMode={handleAdvancedMode}
               limit={limit}
               handleLimit={handleLimit}
               columns={columns}
@@ -161,8 +156,6 @@ LogsFilterBar.propTypes = {
   handleDateChange: PropTypes.func,
   selectedRobots: PropTypes.array,
   updateRobotSelection: PropTypes.func,
-  advancedMode: PropTypes.bool,
-  handleAdvancedMode: PropTypes.func,
   t: PropTypes.func
 };
 
@@ -183,8 +176,6 @@ LogsFilterBar.defaultProps = {
   handleDateChange: EMPTY_FUNCTION,
   selectedRobots: [],
   updateRobotSelection: EMPTY_FUNCTION,
-  advancedMode: false,
-  handleAdvancedMode: EMPTY_FUNCTION,
   t: string => string
 };
 
