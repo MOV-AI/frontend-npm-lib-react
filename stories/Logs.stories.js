@@ -37,7 +37,7 @@ const LogsTable = () => {
   return (
     <div style={{ height: "90vh" }}>
       <ThemeProvider theme={Themes["light"]}>
-        <Logs robotsData={formatRobotData()} advancedMode></Logs>
+        <Logs robotsData={formatRobotData()}></Logs>
       </ThemeProvider>
     </div>
   );
