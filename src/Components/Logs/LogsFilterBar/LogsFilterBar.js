@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from "react";
 import PropTypes from "prop-types";
-import { AppBar, Toolbar, IconButton } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton, Tooltip } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import _isEqual from "lodash/isEqual";
 // Sub-Components
@@ -11,8 +11,10 @@ import ServiceSelector from "./sub-components/ServiceSelector";
 import TagsPopover from "./sub-components/TagsPopover";
 import TimeFilters from "./sub-components/TimeFilters";
 import SettingsPopover from "./sub-components/SettingsPopover";
+import { useTranslation } from "react-i18next";
 // Styles
 import { useLogFilterStyles } from "../styles";
+
 
 const EMPTY_FUNCTION = () => {
   /** Empty on purpose */
@@ -21,6 +23,8 @@ const EMPTY_FUNCTION = () => {
 const LogsFilterBar = props => {
   // Style Hook
   const classes = useLogFilterStyles();
+  // Translation hook
+  const { t } = useTranslation();
   // Props
   const {
     updateRobotSelection,
@@ -42,7 +46,7 @@ const LogsFilterBar = props => {
     limit,
     handleLimit,
     columns,
-    handleColumns
+    handleColumns,
   } = props;
 
   //========================================================================================
@@ -102,7 +106,7 @@ const LogsFilterBar = props => {
           />
         </div>
         <div
-        className={`${classes.doubleFlexContainer} ${classes.displayFlex} ${classes.spaceBetween}`}
+          className={`${classes.doubleFlexContainer} ${classes.displayFlex} ${classes.spaceBetween}`}
         >
           <div className={`${classes.doubleFlexContainer} ${classes.displayFlex}`}>
             {/* Tags */}
@@ -118,9 +122,13 @@ const LogsFilterBar = props => {
               handleDateChange={handleDateChange}
             />
             {/* Export Logs */}
-            <IconButton onClick={handleExport}>
-              <GetAppIcon />
-            </IconButton>
+            <Tooltip title={t("Download logs")}>
+              <IconButton
+                onClick={handleExport}
+              >
+                <GetAppIcon />
+              </IconButton>
+            </Tooltip>
           </div>
           <div className={`${classes.flexContainer} ${classes.displayFlex} ${classes.flexEnd}`}>
             {/* Settings */}

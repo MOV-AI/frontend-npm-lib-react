@@ -51,7 +51,7 @@ const TestContent = React.forwardRef(({ key, closeSnackbar }, ref) => {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         {data.length &&
           data.map(item => {
-            return <Paper>{item}</Paper>;
+            return <Paper key={item}>{item}</Paper>;
           })}
       </Collapse>
     </Card>
