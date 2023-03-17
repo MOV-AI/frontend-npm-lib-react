@@ -63,7 +63,7 @@ const Logs = props => {
   // State hooks
   const [selectedRobots, setSelectedRobots] = useState({});
   const [levels, setLevels] = useState(DEFAULT_SELECTED_LEVELS);
-  const [levelsList, setLevelsList] = useState(ADVANCED_LEVELS_LIST);
+  const [levelsList] = useState(ADVANCED_LEVELS_LIST);
   const [selectedService, setSelectedService] = useState(
     DEFAULT_SELECTED_SERVICES
   );
@@ -87,16 +87,16 @@ const Logs = props => {
    *  Consider last successfull request and date on filter
    * @returns {string} From Date in string or empty
    */
-  const getFromDate = () => {
+  const getFromDate = useCallback(() => {
     return selectedFromDate || lastRequestTimeRef.current || "";
-  };
+  }, [selectedFromDate]);
   /**
    * Get To Date filter
    * @returns {string} To Date in string or empty
    */
-  const getToDate = () => {
+  const getToDate = useCallback(() => {
     return selectedToDate || "";
-  };
+  }, [selectedToDate]);
 
   /**
    * Clear robot logs
@@ -131,7 +131,7 @@ const Logs = props => {
   /**
    * Get robots log data
    */
-  const getRobotLogData = robots => {
+  const getRobotLogData = useCallback(robots => {
     // If component is no longer mounted
     if (!isMounted.current) return;
     // If list of selected robot is empty : clear logs data and stop loader
@@ -184,12 +184,12 @@ const Logs = props => {
           getLogs();
         }, requestTimeout.current);
       });
-  };
+  }, [getFromDate, getLogs, getToDate, levels, levelsList, limit, searchMessage, selectedService, selectedToDate, tags]);
 
   /**
    * Get logs
    */
-  const getLogs = async keepLoading => {
+  const getLogs = useCallback(async keepLoading => {
     if (!isMounted.current) return;
     // Get selected and online robots
     const validRobots = getSelectedRobots();
@@ -205,16 +205,16 @@ const Logs = props => {
     stopLogger();
     // Stop loader if there's not request to do
     getRobotLogData(validRobots);
-  };
+  }, [getRobotLogData]);
 
   /**
    * Refresh logs in table
    */
-  const refreshLogs = () => {
+  const refreshLogs = useCallback(() => {
     clearLogs();
     setLoading(true);
     getLogs();
-  };
+  }, [getLogs]);
 
   //========================================================================================
   /*                                                                                      *
@@ -233,6 +233,7 @@ const Logs = props => {
       selectedRobotsRef.current = {};
       isMounted.current = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // On change robots data
@@ -380,19 +381,37 @@ const Logs = props => {
     });
   }, []);
 
+  const getLogsToExport = useCallback(() => {
+    const queryParams = {
+      level: { selected: levels, list: levelsList },
+      service: { selected: selectedService },
+      tag: { selected: tags },
+      message: searchMessage,
+      date: { from: getFromDate(), to: getToDate() },
+      robot: { selected: getSelectedRobots() },
+    };
+    return RobotManager.getLogs(queryParams)
+      .then(response => {
+        console.log(">> getLogs", response.data)
+        return response?.data || [];
+      })
+  }, [getFromDate, getToDate, levels, levelsList, searchMessage, selectedService, tags])
+
   /**
    * On export logs
    */
   const handleExport = useCallback(() => {
     const sep = "\t";
-    const contents = logsData.map(log => {
-      const [date, time] = getDateTime(log.time);
-      return date + sep + time + sep + log.robot_name + sep + log.message;
-    }).join("\n");
-    // from https://www.epochconverter.com/programming/
-    const dateString = new Date(logsData[0].time * 1e3).toISOString();
-    blobDownload(contents, `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
-  }, [logsData]);
+    getLogsToExport().then(logs => {
+      const contents = logs.map(log => {
+        const [date, time] = getDateTime(log.time);
+        return [date, time, log.robot, log.message].join(sep);
+      });
+      // from https://www.epochconverter.com/programming/
+      const dateString = !logs.length ? new Date().toISOString() : new Date(logs[0].time * 1e3).toISOString();
+      blobDownload([columns.join(sep), ...contents].join("\n"), `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
+    })
+  }, [columns, getLogsToExport]);
 
   //========================================================================================
   /*                                                                                      *
@@ -420,7 +439,7 @@ const Logs = props => {
         )}
       </Typography>
     );
-  }, [loading]);
+  }, [classes.noRows, loading]);
 
   //========================================================================================
   /*                                                                                      *
@@ -445,14 +464,14 @@ const Logs = props => {
     logsDataRef.current = data;
     // Return formated data
     return data;
-  }, [logsData, limit]);
+  }, [logsData]);
 
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
    *                                                                                      */
   //========================================================================================
-
+  const formatedLogsData = formatLogsData();
   return (
     <div className={classes.externalDiv}>
       <div data-testid="section_logs" className={classes.wrapper}>
@@ -478,6 +497,7 @@ const Logs = props => {
           messageRegex={searchMessage}
           selectedFromDate={selectedFromDate}
           selectedToDate={selectedToDate}
+          logsData={formatedLogsData}
         ></LogsFilterBar>
         <div
           data-testid="section_table-container"
@@ -487,7 +507,7 @@ const Logs = props => {
           <LogsTable
             columns={columns}
             columnList={COLUMN_LIST}
-            logsData={formatLogsData()}
+            logsData={formatedLogsData}
             levelsList={levelsList}
             onRowClick={openLogDetails}
             noRowsRenderer={handleNoRows}
