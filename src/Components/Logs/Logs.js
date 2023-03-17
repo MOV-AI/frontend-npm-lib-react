@@ -392,7 +392,6 @@ const Logs = props => {
     };
     return RobotManager.getLogs(queryParams)
       .then(response => {
-        console.log(">> getLogs", response.data)
         return response?.data || [];
       })
   }, [getFromDate, getToDate, levels, levelsList, searchMessage, selectedService, tags])
