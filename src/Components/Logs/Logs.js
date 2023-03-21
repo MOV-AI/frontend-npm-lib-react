@@ -147,7 +147,7 @@ const Logs = props => {
       level: { selected: levels, list: levelsList },
       service: { selected: selectedService },
       tag: { selected: tags },
-      message: searchMessage,
+      searchMessage: searchMessage,
       date: { from: getFromDate(), to: getToDate() },
       robot: { selected: robots },
       limit: limit
@@ -386,7 +386,7 @@ const Logs = props => {
       level: { selected: levels, list: levelsList },
       service: { selected: selectedService },
       tag: { selected: tags },
-      message: searchMessage,
+      searchMessage: searchMessage,
       date: { from: getFromDate(), to: getToDate() },
       robot: { selected: getSelectedRobots() },
     };
