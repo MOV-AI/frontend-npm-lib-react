@@ -12,4 +12,5 @@ export interface ProfileMenuProps {
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean
   ) => void;
+  handleAlertNotifications: React.MouseEventHandler<HTMLLIElement>;
 }

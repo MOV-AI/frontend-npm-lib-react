@@ -37,7 +37,8 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     extraItems = [],
     isDarkTheme = true,
     handleLogout = () => console.log("logout"),
-    handleToggleTheme
+    handleToggleTheme,
+    handleAlertNotifications,
   } = props;
 
   //========================================================================================
@@ -138,6 +139,15 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               onClick={handlePasswordReset}
             >
               {i18n.t("Change Password")}
+            </MenuItem>
+          )}
+          {handleAlertNotifications && (
+            <MenuItem
+              data-testid="input_alert-notifications"
+              className={classes.menuItemSpacing}
+              onClick={handleAlertNotifications}
+            >
+              {i18n.t("Go to Alert Notifications")}
             </MenuItem>
           )}
           {handleToggleTheme && (
