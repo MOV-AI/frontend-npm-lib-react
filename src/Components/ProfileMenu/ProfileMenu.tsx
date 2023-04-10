@@ -19,14 +19,19 @@ import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
 
 function getCustomMenuElements(menuItemConf: any, classes: any) {
-  return Object.entries(menuItemConf ?? {}).map(([key, menuItem]: [string, any]) => (<MenuItem
-    key={key}
-    data-test-id={"input_" + key}
-    className={classes.menuItemSpacing}
-    onClick={menuItem.handler}
-  >
-    { i18n.t(menuItem.title) }
-  </MenuItem>));
+  return Object.entries(menuItemConf ?? {}).map(([key, menuItem]: [string, any]) => {
+    if (React.isValidElement(menuItem))
+      return menuItem;
+
+    return (<MenuItem
+      key={key}
+      data-test-id={"input_" + key}
+      className={classes.menuItemSpacing}
+      onClick={menuItem.handler}
+    >
+      { i18n.t(menuItem.title) }
+    </MenuItem>);
+  });
 }
 
 const ProfileMenu = (props: ProfileMenuProps) => {
