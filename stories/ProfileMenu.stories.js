@@ -99,24 +99,31 @@ export default {
       type: "function",
       table: {
         type: { summary: "function" },
-        defaultValue: { summary: arg => res }
+        defaultValue: { summary: () => true }
       }
     },
     extraItems: {
       description:
         "An array of items that can ben added to the menu, each item must have one LABEL and one FUNCTION ",
-      default: { label: "label", func: foo => bar },
+      default: { label: "label", func: () => alert("test") },
       type: "object",
-      table: {
-        type: { summary: "[object]" },
-        defaultValue: {
-          summary: {
-            label: "label",
-            func: foo => bar
-          }
+      defaultValue: [{
+        label: "label",
+        func: () => alert("test")
+      }]
+    },
+    menuItemConf: {
+      description:
+        "Another api for custom menu items. It is a map in which values can be React Elements or objects of a certain syntax.",
+      default: null,
+      type: "object",
+      defaultValue: {
+        summary: {
+          title: "A string to present inside the menu item",
+          handler: () => alert("test")
         }
-      }
-    }
+      },
+    },
   }
 };
 
