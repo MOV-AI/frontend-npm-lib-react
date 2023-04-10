@@ -18,5 +18,4 @@ export interface ProfileMenuProps {
       title: string,
     },
   },
-  handleAlertNotifications: React.MouseEventHandler<HTMLLIElement>;
 }
