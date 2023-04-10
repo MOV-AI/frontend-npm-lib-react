@@ -13,7 +13,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   const {
     name: appName,
     component: appComponent,
-    offlineValidation = true, // this will set to true even if it is false. is this intended?
+    offlineValidation = true,
     dependencies,
     themeProps, // this should be named ApplicationTheme
     getStyle,
