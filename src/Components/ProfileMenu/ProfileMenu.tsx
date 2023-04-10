@@ -4,7 +4,6 @@ import React, {
   useCallback,
   useMemo,
   useRef,
-  MouseEventHandler
 } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
@@ -18,6 +17,17 @@ import { Typography, Tooltip } from "@material-ui/core";
 import i18n from "../../i18n/i18n.js";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
+
+function getCustomMenuElements(menuItemConf: any, classes: any) {
+  return Object.entries(menuItemConf ?? {}).map(([key, menuItem]: [string, any]) => (<MenuItem
+    key={key}
+    data-test-id={"input_" + key}
+    className={classes.menuItemSpacing}
+    onClick={menuItem.handler}
+  >
+    { i18n.t(menuItem.title) }
+  </MenuItem>));
+}
 
 const ProfileMenu = (props: ProfileMenuProps) => {
   // State hooks
@@ -38,7 +48,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     isDarkTheme = true,
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
-    handleAlertNotifications,
+    menuItemConf,
   } = props;
 
   //========================================================================================
@@ -88,6 +98,8 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     // Set authenticated user name
     setUsername(user.getUsername());
   }, [user]);
+
+  const customEl = useMemo(() => getCustomMenuElements(menuItemConf, classes), [menuItemConf, classes]);
 
   //========================================================================================
   /*                                                                                      *
@@ -141,15 +153,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               {i18n.t("Change Password")}
             </MenuItem>
           )}
-          {handleAlertNotifications && (
-            <MenuItem
-              data-testid="input_alert-notifications"
-              className={classes.menuItemSpacing}
-              onClick={handleAlertNotifications}
-            >
-              {i18n.t("Go to Alert Notifications")}
-            </MenuItem>
-          )}
+          { customEl }
           {handleToggleTheme && (
             <div className={classes.menuItemSpacing}>
               {darkThemeLabel}
