@@ -16,6 +16,6 @@ export interface ProfileMenuProps {
     [key: string]: {
       handler: Function,
       title: string,
-    },
+    } | React.ElementType,
   },
 }
