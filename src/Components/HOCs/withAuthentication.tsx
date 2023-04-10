@@ -231,7 +231,7 @@ export default function withAuthentication<P extends object>(
         {loading ? (
           renderLoading()
         ) : (
-          <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
+          <Modal open={!state.loggedIn}><span>{renderLoginForm()}</span></Modal>
         )}
       </React.Fragment>
     );

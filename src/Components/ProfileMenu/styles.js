@@ -2,6 +2,10 @@ import { makeStyles } from "@material-ui/core/styles";
 
 export const profileMenuStyles = makeStyles(theme => {
   return {
+    root: { // c("vertical0")
+      display: "flex",
+      flexDirection: "column",
+    },
     menuItemSpacing: {
       fontSize: "18px",
       minHeight: "18px",
