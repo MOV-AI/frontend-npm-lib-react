@@ -117,6 +117,21 @@ export default {
         }
       }
     },
+    menuItemConf: {
+      description:
+        "Another api for custom menu items. It is a map in which values can be React Elements or objects of a certain syntax.",
+      default: null,
+      type: "object",
+      table: {
+        type: { summary: "[object]" },
+        defaultValue: {
+          summary: {
+            title: "A string to present inside the menu item",
+            handler: foo => bar
+          }
+        }
+      }
+    },
   }
 };
 
