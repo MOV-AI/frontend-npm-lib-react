@@ -134,6 +134,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           data-testid="section_welcome"
           component="div"
           variant="body1"
+          className={classes.root}
         >
           <div className={classes.menuItemSpacing}>
             {welcomeLabel}, {username}
