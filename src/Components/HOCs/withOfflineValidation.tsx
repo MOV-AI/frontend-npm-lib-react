@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/styles";
 import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
-  alert: { position: "absolute", bottom: 0, width: "100%", zIndex: 9999 }
+  alert: { position: "fixed", bottom: 0, width: "calc(100% - 32px)", zIndex: 9999 }
 }));
 
 export default function withOfflineValidation(Component: React.ComponentType) {

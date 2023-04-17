@@ -25,6 +25,7 @@ import i18n from "../../i18n/i18n";
 import { useStyles } from "./styles";
 import "./Logs.css";
 
+// TODO this should be exported. Fleetboard uses it
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   const blob = new Blob([file], { type: charset });
   const url = URL.createObjectURL(blob);
