@@ -116,8 +116,7 @@ const Logs = props => {
       .filter(
         robot =>
           robot.isSelected && // Get selected robots only
-          robot.name && // Get only robots with name
-          robot.robotState !== ROBOT_STATES.OFFLINE // Get only robots online
+          robot.name // Get only robots with name
       )
       .map(robot => robot.name);
   };
@@ -135,12 +134,7 @@ const Logs = props => {
   const getRobotLogData = useCallback(robots => {
     // If component is no longer mounted
     if (!isMounted.current) return;
-    // If list of selected robot is empty : clear logs data and stop loader
-    if (!robots.length) {
-      setLoading(false);
-      setLogsData([]);
-      return;
-    }
+    console.assert(robots.length);
     // Set loading state if log data is not empty
     if (logsDataRef.current.length) setLoading(true);
     // Get request parameters
