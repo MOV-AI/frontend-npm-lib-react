@@ -1,4 +1,3 @@
-import React from "react";
 import { I18nextProvider } from "react-i18next";
 import { Dependencies, WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
@@ -7,6 +6,8 @@ import withOfflineValidation from "./withOfflineValidation";
 import withTheme from "./withTheme";
 import withTranslations from "./withTranslations";
 import withError from "./withError";
+import withDate from "./withDate";
+// import { defaultGetStyle } from "../../styles/Themes";
 
 export default function withDefaults(appOptions: WithDefaultsProps) {
   const {
@@ -15,7 +16,6 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     offlineValidation = true,
     dependencies = {} as Dependencies,
     getStyle,
-    ApplicationTheme,
     allowGuest,
   } = appOptions;
 
@@ -26,22 +26,21 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
 
   if (!(window as any).mock)
     componentWithDefaults = withTranslations(componentWithDefaults, {
-      i18n: dependencies.i18n ?? { t: a => a },
-      provider: dependencies["react-i18next"]?.I18nextProvider ?? I18nextProvider
+      i18n: dependencies?.i18n ?? { t: a => a },
+      provider: dependencies?.["react-i18next"]?.I18nextProvider ?? I18nextProvider
     });
 
   const componentWithNotifications = withNotification(componentWithDefaults);
 
   const componentWithAuthentication = withAuthentication(
-    componentWithNotifications,
+    componentWithNotifications as any,
     appName,
     allowGuest,
   );
 
   return withTheme(
-    componentWithAuthentication as (props: any) => JSX.Element,
-    ApplicationTheme,
+    withDate(componentWithAuthentication),
+    dependencies["@mui/material"]?.createTheme,
     getStyle,
-    dependencies["@material-ui/core/styles"]?.createTheme,
   );
 }

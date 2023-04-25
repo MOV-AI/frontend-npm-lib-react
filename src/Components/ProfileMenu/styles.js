@@ -1,6 +1,6 @@
-import { makeStyles } from "@material-ui/styles";
+import { bindMagic } from "@tty-pt/styles";
 
-export const profileMenuStyles = makeStyles(theme => {
+export const profileMenuStyles = bindMagic(theme => {
   return {
     root: { // c("vertical0")
       display: "flex",
@@ -9,7 +9,7 @@ export const profileMenuStyles = makeStyles(theme => {
     menuItemSpacing: {
       fontSize: "18px",
       minHeight: "18px",
-      padding: theme.spacing(1.25, 2) + " !important",
+      padding: "10px 16px !important",
       ...theme.cursorDefault
     },
     profileMenuFooter: {
@@ -19,7 +19,7 @@ export const profileMenuStyles = makeStyles(theme => {
   };
 });
 
-export const resetPasswordStyles = makeStyles(_theme => ({
+export const resetPasswordStyles = bindMagic(_theme => ({
   root: {
     display: "flex",
     flexDirection: "column"

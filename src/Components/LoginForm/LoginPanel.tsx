@@ -1,69 +1,45 @@
-import React, { Component } from "react";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import { LinearProgress } from "@material-ui/core";
-import { withStyles } from "@material-ui/styles";
-import { styles } from "./style";
-import defaultLogo from "../../../resources/favicon.png";
+import React from "react";
+import Paper from "@mui/material/Paper";
+import LinearProgress from "@mui/material/LinearProgress";
+import { withStyles } from "@mui/styles";
+{/* import { styles } from "./style"; */}
+import LogoSvg from "../../resources/Logo";
 
-class NotAuthorized extends Component<{
-  classes: { [className: string]: string };
+interface NotAuthorizedProps {
+  message: React.ReactNode;
+  progress?: boolean;
   logo?: string;
   title?: string;
-  message: string | JSX.Element;
-  progress?: boolean;
-}> {
-  render() {
-    const {
-      classes,
-      logo = defaultLogo,
-      title = "",
-      message = "",
-      progress = false
-    } = this.props;
-
-    return (
-      <Grid
-        data-testid="section_login-panel"
-        className={classes.container}
-        container
-        direction="column"
-        alignItems="center"
-        justifyContent="space-evenly"
-      >
-        <Paper elevation={10} className={classes.root}>
-          <Grid item>
-            <img
-              data-testid="output_logo"
-              src={logo}
-              alt="logo"
-              className={`center ${classes.logoImage}`}
-            />
-          </Grid>
-          <Grid>
-            <Typography
-              data-testid="output_title"
-              align="center"
-              variant="h2"
-              gutterBottom
-            >
-              {title}
-            </Typography>
-            <Typography
-              data-testid="output_message"
-              align="center"
-              variant="subtitle1"
-              gutterBottom
-            >
-              {message}
-              {progress && <LinearProgress color="secondary" />}
-            </Typography>
-          </Grid>
-        </Paper>
-      </Grid>
-    );
-  }
 }
 
-export default withStyles(styles, { withTheme: true })(NotAuthorized);
+function NotAuthorized(props: NotAuthorizedProps): React.ReactElement {
+  const {
+    title = "",
+    message = "",
+    progress = false
+  } = props;
+
+  return (<div className="pad-big min-size-vertical-view-big-neg vertical-0 align-items text-align justify-content-space-around">
+    <LogoSvg />
+    <Paper elevation={10}
+      data-testid="section_login-panel"
+      className="not-authorized vertical-big border-radius-small size-horizontal-three-fourths"
+    >
+      { title ? (<div data-testid="output_title" className="text-align h-2">
+        {title}
+      </div>) : null }
+      <div data-testid="output_message" className="size-horizontal subtitle-1">
+        {message}
+      </div>
+      { progress && <LinearProgress color="secondary" /> }
+    </Paper>
+  </div>);
+}
+
+export default withStyles(theme => ({
+  notAuthorized: {
+    background: theme.palette.background.grad,
+    padding: "86px",
+    width: "calc(438px - 2 * 86px)",
+  },
+}))(NotAuthorized);

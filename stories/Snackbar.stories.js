@@ -2,15 +2,14 @@ import React from "react";
 import Button from "../src/Components/Button";
 import { snackbar } from "../src/Components/Snackbar/Snackbar";
 import withNotification from "../src/Components/HOCs/withNotification";
-import {
-  Card,
-  CardActions,
-  Collapse,
-  IconButton,
-  Paper,
-  Typography
-} from "@material-ui/core";
-import { ExpandMore, Close } from "@material-ui/icons";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Close from "@mui/icons-material/Close";
 
 const SnackButton = ({ severity }) => {
   return (

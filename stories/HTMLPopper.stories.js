@@ -1,5 +1,6 @@
 import React from "react";
-import { IconButton, Icon } from "@material-ui/core";
+import IconButton from "@mui/material/IconButton";
+import Icon from "@mui/material/Icon";
 import HTMLPopper from "../src/Components/Popper/HTMLPopper";
 
 export default {

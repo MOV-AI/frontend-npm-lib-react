@@ -1,17 +1,17 @@
 import React, { Fragment, useCallback } from "react";
-import { Button } from "@material-ui/core";
-import { OptionsObject, ProviderContext, SnackbarKey, useSnackbar, VariantType } from "notistack";
-export interface SnackbarProps extends OptionsObject {
+import Button from "@mui/material/Button";
+{/* import { OptionsObject, ProviderContext, SnackbarKey, useSnackbar, VariantType } from "notistack"; */}
+export interface SnackbarProps {
   message: string;
   closable: boolean;
   horizontal: "left" | "center" | "right";
   vertical: "bottom" | "top";
   closeButtonText: string;
-  severity: VariantType;
+  severity: any;
   content: any;
 }
 interface SnackbarInterface {
-  current: ProviderContext | null;
+  current: any;
 }
 
 const useSnackbarRef: SnackbarInterface = { current: null };
@@ -28,7 +28,7 @@ export interface InnerSnackbarUtilsConfiguratorProps {
 const InnerSnackbarUtilsConfigurator = (
   props: InnerSnackbarUtilsConfiguratorProps
 ) => {
-  props.setUseSnackbarRef(useSnackbar());
+  {/* props.setUseSnackbarRef(useSnackbar()); */}
   return null;
 };
 
@@ -39,7 +39,7 @@ const InnerSnackbarUtilsConfigurator = (
 //========================================================================================
 
 export const SnackbarUtilsConfigurator = () => {
-  const setUseSnackbarRef = useCallback(useSnackbarRefProp => {
+  const setUseSnackbarRef = useCallback((useSnackbarRefProp: any) => {
     useSnackbarRef.current = useSnackbarRefProp;
   }, []);
 
@@ -54,13 +54,13 @@ export const SnackbarUtilsConfigurator = () => {
  *                                                                                      */
 //========================================================================================
 
-const closeSnackbar = (key: SnackbarKey) => {
+const closeSnackbar = (key: string) => {
   return () => {
     useSnackbarRef.current?.closeSnackbar(key);
   };
 };
 
-export const snackbar = (props: SnackbarProps, _theme: any) => {
+export const snackbar = (props: SnackbarProps) => {
   const {
     message,
     closable = true,
@@ -72,7 +72,7 @@ export const snackbar = (props: SnackbarProps, _theme: any) => {
     ...otherProps
   } = props;
 
-  const action = (key: SnackbarKey) => {
+  const action = (key: string) => {
     if (closable) {
       return (
         <Fragment>
@@ -103,7 +103,7 @@ export const snackbar = (props: SnackbarProps, _theme: any) => {
     snackbarData.content = content(closeSnackbar);
   }
 
-  if (!!useSnackbarRef.current) {
+  if (useSnackbarRef.current) {
     useSnackbarRef.current?.enqueueSnackbar(message, snackbarData);
   }
   return useSnackbarRef.current;

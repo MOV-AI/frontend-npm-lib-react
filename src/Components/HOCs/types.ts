@@ -1,5 +1,6 @@
 import React from "react";
-import { ThemeOptions, StyleRules, createTheme } from "@material-ui/core/styles";
+import { createTheme } from "@mui/material/styles";
+import { makeThemeMagicBook } from "@tty-pt/styles";
 import i18n from "i18next";
 import { I18nextProvider } from "react-i18next";
 
@@ -7,15 +8,10 @@ export interface Dependencies {
   "react-i18next"?: {
     I18nextProvider?: typeof I18nextProvider;
   },
-  "@material-ui/core/styles"?: {
+  "@mui/material"?: {
     createTheme?: typeof createTheme;
   },
   i18n: typeof i18n;
-}
-
-export interface ApplicationThemeType {
-  dark: ThemeOptions;
-  light: ThemeOptions;
 }
 
 export interface WithDefaultsProps {
@@ -23,7 +19,6 @@ export interface WithDefaultsProps {
   component: React.ComponentType;
   offlineValidation: boolean;
   dependencies?: Dependencies;
-  ApplicationTheme: ApplicationThemeType;
-  getStyle: (theme: ThemeOptions) => StyleRules;
+  getStyle: typeof makeThemeMagicBook;
   allowGuest: boolean;
 }

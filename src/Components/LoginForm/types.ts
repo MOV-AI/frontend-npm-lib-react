@@ -1,8 +1,7 @@
+import { ChangeEvent } from "react";
+
 export interface LoginFormProps {
   appName?: string;
-  classes: {
-    [cssClass: string]: any;
-  };
   logo?: string;
   domains: string[];
   authErrorMessage: string;
@@ -13,15 +12,10 @@ export interface LoginFormProps {
     remember: boolean;
     selectedProvider: string;
   }) => void;
-  t: (translationKey: string) => string;
 }
 
 export interface LoginFormAdvancedProps {
-  classes?: { [className: string]: string };
   domains: string[];
   selectedProvider: string;
-  onProviderChange: (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>,
-    child: React.ReactNode
-  ) => void;
+  onProviderChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }

@@ -5,7 +5,9 @@ import LoginForm from "../src/Components/LoginForm/LoginForm";
 export const loginForm = () => {
   return (
     <div style={{ height: "100vh" }}>
-      <LoginForm />
+      <div className="dark">
+        <LoginForm></LoginForm>
+      </div>
     </div>
   );
 };

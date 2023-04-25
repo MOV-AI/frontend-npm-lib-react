@@ -1,5 +1,4 @@
-import { PropTypes } from "@material-ui/core";
-import { MouseEventHandler } from "react";
+import React, { MouseEventHandler } from "react";
 
 export interface AbstractModalProps {
   onSubmit: Function;
@@ -8,9 +7,9 @@ export interface AbstractModalProps {
   open: boolean;
   title: string;
   submitText: string;
-  submitColor: PropTypes.Color;
+  submitColor: any;
   cancelText: string;
-  cancelColor: PropTypes.Color;
+  cancelColor: any;
   width?: string;
   height?: string;
   style?: object;
@@ -27,9 +26,9 @@ export interface ConfirmModalProps {
   open: boolean;
   title: string;
   submitText: string;
-  submitColor: PropTypes.Color;
+  submitColor: any;
   cancelText: string;
-  cancelColor: PropTypes.Color;
+  cancelColor: any;
   children: React.ReactNode;
   message: string;
 }

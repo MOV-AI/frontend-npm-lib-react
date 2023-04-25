@@ -1,8 +1,8 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { render } from "./../../../testUtils";
 import withTheme from "./../../HOCs/withTheme";
 import LogsFilterBar from "./LogsFilterBar";
-import "@testing-library/jest-dom";
 
 const Themed = withTheme(LogsFilterBar);
 

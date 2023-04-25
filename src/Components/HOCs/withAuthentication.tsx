@@ -1,8 +1,8 @@
+import { Sub } from "@tty-pt/sub";
 import React, { useState, useCallback } from "react";
-import { Button, Modal } from "@material-ui/core";
-import { Authentication, PermissionType, User } from "@mov-ai/mov-fe-lib-core";
-import { Emit, makeSub } from "../../Utils/Sub";
-import useSub from "../../hooks/useSub";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import { Authentication, User } from "@mov-ai/mov-fe-lib-core";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import i18n from "../../i18n/i18n.js";
@@ -22,7 +22,7 @@ interface LoginSub {
 }
 
 export
-const loggedOutInfo = {
+const loggedOutInfo: LoginSub = {
   loggedIn: false,
   currentUser: null,
   loading: false,
@@ -30,61 +30,64 @@ const loggedOutInfo = {
 };
 
 export
-const authSub = makeSub<LoginSub>(loggedOutInfo);
+const authSub = new Sub(loggedOutInfo);
 
 export
-const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
+const _auth = authSub.makeEmit((loggedIn: boolean, currentUser: any, providers: string[], refreshTokensRes: boolean) => {
+  console.assert(currentUser);
+
+  return loggedIn ? {
+    loggedIn: true,
+    providers,
+    currentUser,
+    loading: false,
+  } : {
+    loggedIn: refreshTokensRes,
+    providers,
+    currentUser,
+    loading: false,
+  };
+});
+
+export
+async function auth() {
   authSub.update({ ...loggedOutInfo, loading: true });
 
   try {
-    const [loggedIn, currentUser] = await Promise.all([
+    const [loggedIn, currentUser, providers] = await Promise.all([
       Authentication.checkLogin(),
       (new User()).getCurrentUserWithPermissions(),
-    ]);
-
-    console.assert(currentUser);
-
-    if (loggedIn)
-      return {
-        loggedIn: true,
-        providers: await Authentication.getProviders(),
-        currentUser,
-        loading: false,
-      };
-
-    const [providers, res] = await Promise.all([
       Authentication.getProviders(),
-      Authentication.refreshTokens(),
     ]);
 
-    return {
-      loggedIn: res,
-      providers,
-      currentUser,
-      loading: false,
-    };
+    let refreshTokenRes;
+    if (!loggedIn)
+      refreshTokenRes = await Authentication.refreshTokens();
+
+    return _auth(loggedIn, currentUser, providers, refreshTokenRes);
   } catch (e: any) {
     console.error("Auth Error: " + e.error?.message ?? e.message ?? e);
     return { ...loggedOutInfo, loading: false };
   }
-});
+}
+
 
 if (!(window as any).mock)
-  authEmit();
+  auth();
 
 export default function withAuthentication(
-  WrappedComponent: React.ComponentType,
-  appName: PermissionType | string,
+  WrappedComponent: React.FC,
+  appName: string,
   allowGuest?: boolean,
-) {
+): React.FC {
   return function (props: any) {
     const [errorMessage, setErrorMessage] = useState("");
-    const authSubRes = useSub<LoginSub>(authSub) as LoginSub;
+    const authSubRes = authSub.use();
     if (!authSubRes)
       throw new Error("No auth info");
     const { currentUser, loggedIn, loading, providers } = authSubRes;
     const hasPermissions = (currentUser?.Resources?.Applications)
-      ? (currentUser.Superuser || currentUser.Resources.Applications.includes(appName as PermissionType) || !appName)
+      ? (currentUser.Superuser || currentUser.Resources.Applications.includes(appName as string) || !appName)
       : (currentUser?.Superuser || allowGuest);
 
     /**
@@ -109,7 +112,7 @@ export default function withAuthentication(
             selectedProvider
           );
           if (apiResponse.error) throw new Error(apiResponse.error);
-          authEmit();
+          auth();
         } catch (e: unknown) {
           setErrorMessage((e as Error).message);
         }

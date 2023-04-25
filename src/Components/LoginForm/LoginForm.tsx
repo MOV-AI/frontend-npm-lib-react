@@ -1,19 +1,24 @@
 import React, { Component, KeyboardEvent } from "react";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import defaultLogo from "../../../resources/favicon.png";
-import Paper from "@material-ui/core/Paper";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import { withStyles } from "@material-ui/styles";
-import { styles } from "./style";
+import FormHelperText from "@mui/material/FormHelperText";
+{/* import { withStyles } from "@mui/styles"; */}
+import { withStyles } from "@tty-pt/styles";
+{/* import { styles } from "./style"; */}
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
+import { SelectChangeEvent } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Visibility from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOff from "@mui/icons-material/VisibilityOffOutlined";
+{/* import defaultLogo from "../../resources/favicon.png"; */}
+import LogoSvg from "../../resources/Logo";
+import { authSub, loggedOutInfo } from "../HOCs/withAuthentication";
 import LoginFormAdvanced from "./LoginFormAdvanced";
-import { withTranslation } from "react-i18next";
 import { LoginFormProps } from "./types";
+import i18n from "../../i18n/i18n.js";
 
 const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
 
@@ -24,7 +29,8 @@ class LoginForm extends Component<LoginFormProps> {
     formErrors: "",
     remember: false,
     capsLockOn: false,
-    selectedProvider: Authentication.DEFAULT_PROVIDER
+    showPassword: false,
+    selectedProvider: Authentication.DEFAULT_PROVIDER,
   };
 
   //========================================================================================
@@ -80,7 +86,7 @@ class LoginForm extends Component<LoginFormProps> {
   };
 
   handleProviderChange = (
-    e: React.ChangeEvent<{ name?: string; value: unknown }>
+    e: SelectChangeEvent<HTMLInputElement>
   ) => {
     const target = e.target as HTMLInputElement;
     this.setState({
@@ -103,7 +109,7 @@ class LoginForm extends Component<LoginFormProps> {
     HTMLTextAreaElement | HTMLInputElement
   > = event => {
     const username = event.target.value || "";
-    const errorMessage = !username ? this.props.t("UsernameRequired") : "";
+    const errorMessage = !username ? i18n.t("UsernameRequired") : "";
     this.state.username && this.props.onChanges?.();
     this.setState({ username: event.target.value, formErrors: errorMessage });
   };
@@ -116,7 +122,7 @@ class LoginForm extends Component<LoginFormProps> {
     HTMLTextAreaElement | HTMLInputElement
   > = event => {
     const password = event.target.value || "";
-    const errorMessage = !password ? this.props.t("PasswordRequired") : "";
+    const errorMessage = !password ? i18n.t("Password is required") : "";
     this.state.password && this.props.onChanges?.();
     this.setState({
       password,
@@ -129,13 +135,17 @@ class LoginForm extends Component<LoginFormProps> {
    * @param {Event} event : On keyUp event
    */
   onKeyUpPassword: React.KeyboardEventHandler<
-    HTMLTextAreaElement | HTMLInputElement
+    HTMLDivElement
   > = event => {
     this.checkCapsLock(event);
     if (event.key === "Enter") {
       this.sendCreds();
     }
   };
+
+  toggleShowPassword() {
+    this.setState({ ...this.state, showPassword: !this.state.showPassword });
+  }
 
   hasMultipleDomains = () =>
     this.props.domains?.length > 1 &&
@@ -149,106 +159,128 @@ class LoginForm extends Component<LoginFormProps> {
 
   render() {
     const {
-      classes,
-      logo = defaultLogo,
       domains,
       authErrorMessage
     } = this.props;
     const errorMessage = this.state.formErrors || authErrorMessage;
     return (
-      <Grid
+      <div
+        className="pad-big min-size-vertical-view-big-neg vertical-0 align-items justify-content-space-around text-align subtitle-1"
         data-testid="section_login-form"
-        className={classes.container}
-        container
-        direction="column"
-        alignItems="center"
-        justifyContent="space-evenly"
       >
-        <Paper elevation={10} className={classes.root}>
-          <Grid item>
-            <img
-              data-testid="output_logo"
-              src={logo}
-              alt="logo"
-              className={`center ${classes.logoImage}`}
+        <LogoSvg />
+        <Paper elevation={10} className="login-form vertical-big border-radius-small size-horizontal-three-fourths max-size-horizontal-550 relative">
+          <div className="text-align-left">Sign in to mov.ai account</div>
+
+          <TextField
+            inputProps={{ "data-testid": "input_username" }}
+            id="component-username-error"
+            value={this.state.username}
+            label="Username"
+            variant="outlined"
+            aria-describedby="component-username-error-text"
+            onChange={this.onChangeUsername}
+          />
+
+          <TextField
+            inputProps={{ "data-testid": "input_password" }}
+            required
+            variant="outlined"
+            id="component-password-error"
+            type={this.state.showPassword ? "text" : "password"}
+            label="Password"
+            value={this.state.password}
+            aria-describedby="component-password-error-text"
+            onChange={this.onChangePassword}
+            onKeyUp={this.onKeyUpPassword}
+            InputProps={{
+              endAdornment: (<InputAdornment position="end"> {(this.state.showPassword
+                ? <VisibilityOff className = "cursor" onClick={() => this.toggleShowPassword()} />
+                : <Visibility className="cursor" onClick={() => this.toggleShowPassword()} />
+                )} </InputAdornment>),
+            }}
+          />
+
+          <div className="font-size-17 margin-top-medium-neg text-align-left color-primary">Forgot password</div>
+
+          {errorMessage && (
+            <FormHelperText className="color-error-light" id="component-error-text">
+              {errorMessage}
+            </FormHelperText>
+          )}
+
+          {this.state.capsLockOn && (
+            <FormHelperText id="component-warning-text">
+              Warning: Caps lock is ON!
+            </FormHelperText>
+          )}
+
+          { this.hasMultipleDomains() && (
+            <LoginFormAdvanced
+              selectedProvider={this.state.selectedProvider}
+              domains={domains}
+              onProviderChange={this.handleProviderChange}
             />
-          </Grid>
-          <Grid>
-            <Typography align="center" variant="subtitle1" gutterBottom>
-              <FormControl
-                data-testid="section_form-control"
-                className={classes.formControl}
-                error={!!errorMessage}
-              >
-                <InputLabel htmlFor="component-username-error">
-                  Username
-                </InputLabel>
-                <Input
-                  inputProps={{ "data-testid": "input_username" }}
-                  id="component-username-error"
-                  value={this.state.username}
-                  aria-describedby="component-username-error-text"
-                  onChange={this.onChangeUsername}
-                />
-              </FormControl>
-            </Typography>
-          </Grid>
-          <Grid>
-            <Typography align="center" variant="subtitle1" gutterBottom>
-              <FormControl
-                className={classes.formControl}
-                error={!!errorMessage}
-              >
-                <InputLabel htmlFor="component-password-error">
-                  Password
-                </InputLabel>
-                <Input
-                  inputProps={{ "data-testid": "input_password" }}
-                  required
-                  id="component-password-error"
-                  type="password"
-                  value={this.state.password}
-                  aria-describedby="component-password-error-text"
-                  onChange={this.onChangePassword}
-                  onKeyUp={this.onKeyUpPassword}
-                />
-                {errorMessage && (
-                  <FormHelperText id="component-error-text">
-                    {errorMessage}
-                  </FormHelperText>
-                )}
-                {this.state.capsLockOn && (
-                  <FormHelperText id="component-warning-text">
-                    Warning: Caps lock is ON!
-                  </FormHelperText>
-                )}
-              </FormControl>
-            </Typography>
-          </Grid>
-          <Grid>
-            <Typography align="center" variant="subtitle1" gutterBottom>
-              {this.hasMultipleDomains() && (
-                <LoginFormAdvanced
-                  selectedProvider={this.state.selectedProvider}
-                  domains={domains}
-                  onProviderChange={this.handleProviderChange}
-                />
-              )}
-            </Typography>
-          </Grid>
-          <Grid>
-            <Typography align="center" gutterBottom>
-              <Button data-testid="input_login" onClick={this.sendCreds}>
-                Login
-              </Button>
-            </Typography>
-          </Grid>
+          ) }
+
+          <Button color="primary" className="size-horizontal" data-testid="input_login" onClick={this.sendCreds}>
+            Login
+          </Button>
+
+          <IconButton
+            className="absolute position-right-0 position-top-0"
+            onClick={() => authSub.update({ ...loggedOutInfo, loading: false, loggedIn: true, apps: [this.props.appName] })}
+            title="Exit"
+          >
+            <CloseIcon />
+          </IconButton>
         </Paper>
-      </Grid>
+        <div />
+      </div>
     );
   }
 }
 
-export default withTranslation()(
-  withStyles(styles, { withTheme: true })(LoginForm)
-);
+export default withStyles(theme => ({
+  loginForm: {
+    background: theme.palette.background.default,
+    padding: "86px",
+    width: "calc(438px - 2 * 86px)",
+    root: {
+      // padding: theme.spacing(4, 4), // TODO replace with "pad"
+      borderRadius: 40
+    },
+    logoImage: {
+      display: "block",
+      marginLeft: "auto",
+      marginRight: "auto",
+      width: "50%"
+    },
+    formControl: {
+      width: "40%"
+    }
+  },
+  "!login-form .MuiOutlinedInput-root input": {
+    padding: "10px",
+    fontSize: "14px",
+  },
+  "!login-form .MuiOutlinedInput-root input:-webkit-autofill": {
+    transition: "background-color 600000s 0s, color 600000s 0s",
+  },
+  "!login-form .MuiOutlinedInput-root input:-webkit-autofill:focus": {
+    transition: "background-color 600000s 0s, color 600000s 0s",
+  },
+  "!login-form .MuiSelect-select": {
+    padding: "10px",
+    textAlign: "left",
+  },
+  "!login-form .MuiTextField-root .MuiFormLabel-root": {
+    top: "-6px",
+    left: "-4px",
+  },
+  "!login-form .MuiButtonBase-root .MuiFormLabel-root": { fontSize: "0.875rem" },
+  "!login-form .MuiTextField-root .MuiInputLabel-shrink": {
+    top: "0px",
+    left: "2px",
+  },
+}))(LoginForm as any) as React.ComponentType<LoginFormProps>;

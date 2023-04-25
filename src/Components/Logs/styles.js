@@ -1,30 +1,33 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeMagic } from "@tty-pt/styles";
+import { makeStyles } from "@mui/styles";
 
-export const useStyles = makeStyles(_theme => ({
-  tableContainer: {
-    flexGrow: 1,
-    minHeight: 0,
-    overflow: "hidden"
-  },
-  externalDiv: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column"
-  },
-  noRows: {
-    display: "flex",
-    fontSize: "20px",
-    justifyContent: "center",
-    padding: "32px"
-  },
-  wrapper: {
-    flexGrow: "1",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column"
+makeMagic({
+  logs: {
+    tableContainer: {
+      flexGrow: 1,
+      minHeight: 0,
+      overflow: "hidden"
+    },
+    external: {
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      flexDirection: "column"
+    },
+    noRows: {
+      display: "flex",
+      fontSize: "20px",
+      justifyContent: "center",
+      padding: "32px"
+    },
+    wrapper: {
+      flexGrow: "1",
+      height: "100%",
+      display: "flex",
+      flexDirection: "column"
+    }
   }
-}));
+});
 
 // Common styles
 const logFilterCommonStyles = theme => {
@@ -45,9 +48,7 @@ const logFilterCommonStyles = theme => {
   };
 };
 
-export const useRobotSelectorStyles = makeStyles(theme => ({
-  ...logFilterCommonStyles(theme)
-}));
+export const useRobotSelectorStyles = makeStyles(logFilterCommonStyles)
 
 export const useSearchInputStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
