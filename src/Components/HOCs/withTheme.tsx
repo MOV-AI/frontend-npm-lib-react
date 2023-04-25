@@ -1,8 +1,9 @@
+import { WithThemeProps } from "@tty-pt/styles/lib/types";
 import { ThemeProvider } from "@material-ui/styles";
 import React, { useState } from "react";
 
 export default function withTheme(
-  Component: (props: any) => JSX.Element,
+  Component: React.ComponentType<WithThemeProps>,
   ThemeProviderInstance: typeof ThemeProvider,
   ApplicationTheme: {
     getTheme: () => string;

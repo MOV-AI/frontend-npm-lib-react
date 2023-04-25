@@ -22,11 +22,11 @@ interface WithErrorProps {
  * useful passing them down through the second argument.
  */
 export default
-function withError(Component: React.ComponentType<WithErrorProps>, defaultDependencies?: WithErrorDependencies): React.FC<WithErrorProps> {
+function withError(Component: React.ComponentType<WithErrorProps>): React.FC<WithErrorProps> {
   function WithError(props: any): JSX.Element {
-    const { key, children, dependencies = defaultDependencies, ...rest } = props;
+    const { key, children, ...rest } = props;
 
-    return (<ErrorBoundary key={key} dependencies={dependencies}>
+    return (<ErrorBoundary key={key}>
       <Component { ...rest }>
         { children }
       </Component>
