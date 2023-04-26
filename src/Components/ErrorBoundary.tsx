@@ -1,6 +1,4 @@
 import React, { Component, ReactNode } from "react";
-import { withCast } from "@tty-pt/styles";
-import { Cast } from "@tty-pt/styles/lib/types";
 import StackTrace, { StackFrame } from "stacktrace-js";
 
 function getStackLine(error : any, stackFrame : StackFrame) {
@@ -9,7 +7,6 @@ function getStackLine(error : any, stackFrame : StackFrame) {
 }
 
 interface ErrorBoundaryProps {
-  c: Cast,
   children: ReactNode,
 }
 
@@ -19,6 +16,7 @@ interface ErrorBoundaryState {
   stackLine : string
 }
 
+export default
 class ErrorBoundary extends Component<ErrorBoundaryProps,ErrorBoundaryState> {
   constructor(props : any) {
     super(props);
@@ -38,19 +36,17 @@ class ErrorBoundary extends Component<ErrorBoundaryProps,ErrorBoundaryState> {
   }
 
   render() {
-    const { children, c } = this.props;
+    const { children } = this.props;
 
     if (!this.state.errorInfo)
       return children;
 
-    return (<div className={c("vertical pad colorPrimary")}>
-      <div className={c("h5")}>Something went wrong</div>
-      <pre className={c("margin0")}>
+    return (<div className="vertical pad color-primary">
+      <div className="h-5">Something went wrong</div>
+      <pre className="margin-0">
         { this.state.stackLine }
         { this.state.errorInfo.componentStack }
       </pre>
     </div>);
   }
 }
-
-export default withCast(ErrorBoundary);

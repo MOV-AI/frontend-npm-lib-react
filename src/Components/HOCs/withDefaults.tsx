@@ -1,6 +1,6 @@
-import { withStyles, ThemeProvider } from "@material-ui/styles";
+import { ThemeProvider } from "@material-ui/styles";
 import { I18nextProvider } from "react-i18next";
-import { withMagicClasses, makeMagicBook } from "@tty-pt/styles";
+import { withMagic, makeThemeMagicBook } from "@tty-pt/styles";
 import { WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
 import withNotification from "./withNotification";
@@ -17,35 +17,40 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     dependencies,
     themeProps, // this should be named ApplicationTheme
     getStyle,
+    magicContext,
   } = appOptions;
 
-  const realGetStyle = (getStyle ?? dependencies["@tty-pt/styles"]?.makeMagicBook ?? makeMagicBook);
+  let componentWithDefaults = withError(appComponent);
 
-  let componentWithDefaults = (dependencies["@material-ui/styles"]?.withStyles ?? withStyles)(
-    realGetStyle
-  )(
-    (dependencies["@tty-pt/styles"]?.withMagicClasses ?? withMagicClasses)(
-      withError(appComponent, dependencies),
-      dependencies["@tty-pt/styles"]?.MagicContext
-    )
-  );
-  if (offlineValidation) {
+  if (offlineValidation)
     componentWithDefaults = withOfflineValidation(componentWithDefaults);
-  }
-  if (dependencies.i18n) {
-    componentWithDefaults = withTranslations(componentWithDefaults, {
-      i18n: dependencies.i18n,
-      provider: dependencies["react-i18next"]?.I18nextProvider ?? I18nextProvider
-    });
-  }
+
+  componentWithDefaults = withTranslations(componentWithDefaults, {
+    i18n: dependencies?.i18n ?? { t: a => a },
+    provider: dependencies?.["react-i18next"]?.I18nextProvider ?? I18nextProvider
+  });
+
   const componentWithNotifications = withNotification(componentWithDefaults);
   const componentWithAuthentication = withAuthentication(
     componentWithNotifications,
     appName
   );
-  return withTheme(
+
+  const componentWithMagic = (dependencies?.["@tty-pt/styles"]?.withMagic ?? withMagic)(
     componentWithAuthentication,
-    dependencies["@material-ui/styles"]?.ThemeProvider ?? ThemeProvider,
+    {
+      ...(dependencies ?? {}),
+      "@tty-pt/styles": {
+        ...(dependencies?.["@tty-pt/styles"] ?? {}),
+        makeThemeMagicBook: getStyle ?? dependencies?.["@tty-pt/styles"]?.makeThemeMagicBook ?? makeThemeMagicBook,
+      },
+    },
+    magicContext
+  );
+
+  return withTheme(
+    componentWithMagic,
+    dependencies?.["@material-ui/styles"]?.ThemeProvider ?? ThemeProvider,
     themeProps
   );
 }
