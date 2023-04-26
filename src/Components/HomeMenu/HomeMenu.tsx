@@ -45,8 +45,8 @@ const HomeMenuPopper = () => {
 
   const getIcon = () => {
     return (
-      <IconButton color="primary" component="span">
-        <AppsIcon />
+      <IconButton className="color-primary" color="primary" component="span">
+        <AppsIcon className="color-primary" />
       </IconButton>
     );
   };

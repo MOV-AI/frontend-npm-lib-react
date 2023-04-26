@@ -55,7 +55,7 @@
     "@storybook/react": "^6.4.19",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.0",
-    "@tty-pt/styles": "^0.1.1",
+    "@tty-pt/styles": "^0.1.2",
     "@types/jest": "27.5.1",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
@@ -80,8 +80,10 @@
     "webpack-cli": "^4.8.0",
     "webpack-node-externals": "^3.0.0"
   },
+  "optionalDependencies": {
+    "@tty-pt/styles": "^0.1.2"
+  },
   "peerDependencies": {
-    "@tty-pt/styles": "0.1.1",
     "react": ">=16.14.0",
     "react-dom": ">=16.14.0"
   },
