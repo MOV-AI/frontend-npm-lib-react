@@ -1,30 +1,32 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { makeMagic } from "@tty-pt/styles";
 
-export const useStyles = makeStyles(_theme => ({
-  tableContainer: {
-    flexGrow: 1,
-    minHeight: 0,
-    overflow: "hidden"
-  },
-  externalDiv: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column"
-  },
-  noRows: {
-    display: "flex",
-    fontSize: "20px",
-    justifyContent: "center",
-    padding: "32px"
-  },
-  wrapper: {
-    flexGrow: "1",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column"
+makeMagic({
+  logs: {
+    "& .table-container": {
+      flexGrow: 1,
+      minHeight: 0,
+      overflow: "hidden"
+    },
+    "& .external": {
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      flexDirection: "column"
+    },
+    "& .no-rows": {
+      display: "flex",
+      fontSize: "20px",
+      justifyContent: "center",
+      padding: "32px"
+    },
+    "& .wrapper": {
+      flexGrow: "1",
+      height: "100%",
+      display: "flex",
+      flexDirection: "column"
+    }
   }
-}));
+});
 
 // Common styles
 const logFilterCommonStyles = theme => {

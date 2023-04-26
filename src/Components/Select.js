@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeMagic } from "@tty-pt/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -7,11 +7,8 @@ import MaterialSelect from "@material-ui/core/Select";
 import PropTypes from "prop-types";
 import { Checkbox, ListItemText } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120
-  },
+makeMagic({
+  formControl: { minWidth: 120 },
   backdrop: {
     "& div[aria-hidden=true]": {
       backgroundColor: "black !important",
@@ -19,7 +16,7 @@ const useStyles = makeStyles(theme => ({
       visibility: "visible"
     }
   }
-}));
+});
 
 const Select = props => {
   const {
@@ -31,7 +28,6 @@ const Select = props => {
     noneOptionConfig,
     ...otherProps
   } = props;
-  const classes = useStyles();
 
   let noneOptionEL = <div></div>;
   if (noneOption) {
@@ -46,7 +42,7 @@ const Select = props => {
     <FormControl
       data-testid="section_select-wrapper"
       variant={variant}
-      className={classes.formControl}
+      className="form-control"
       style={style}
       hiddenLabel={label === undefined ? true : false}
     >
@@ -54,7 +50,7 @@ const Select = props => {
         {label}
       </InputLabel>
       <MaterialSelect
-        MenuProps={{ PopoverClasses: { root: classes.backdrop } }}
+        MenuProps={{ PopoverClasses: { root: "backdrop" } }}
         data-testid="section_select"
         labelId="movai-react-select"
         {...otherProps}

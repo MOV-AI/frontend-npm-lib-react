@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeMagic, useMagic } from "@tty-pt/styles";
 import TableCell from "@material-ui/core/TableCell";
 import { AutoSizer, Column, Table } from "react-virtualized";
 import { COLUMN_LIST, COLOR_CODING } from "../utils/Constants";
 
-const useStyles = makeStyles(theme => {
-  return {
+makeMagic({
+  logsTable: {
     flexContainer: {
       display: "flex",
       alignItems: "center",
@@ -43,8 +43,7 @@ const useStyles = makeStyles(theme => {
     noClick: {
       cursor: "initial"
     },
-    ...COLOR_CODING
-  };
+  },
 });
 
 const MuiVirtualizedTable = props => {
@@ -56,7 +55,19 @@ const MuiVirtualizedTable = props => {
     onRowClick,
     ...tableProps
   } = props;
-  const classes = useStyles();
+
+  const magic = useMagic(theme => ({
+    logsTable: {
+      table: {
+        // temporary right-to-left patch, waiting for
+        // // https://github.com/bvaughn/react-virtualized/issues/454
+        "& .ReactVirtualized__Table__headerRow": {
+          flip: false,
+          paddingRight: theme.direction === "rtl" ? "0 !important" : undefined
+        }
+      },
+    }
+  }));
 
   const isNumericColumn = columnIndex =>
     columnIndex !== null && columns[columnIndex]?.numeric;
@@ -65,11 +76,11 @@ const MuiVirtualizedTable = props => {
     const { data } = props;
     const rowData = data[index];
     return clsx(
-      classes.tableRow,
-      classes.flexContainer,
-      index !== -1 && classes[rowData.level],
+      "table-row",
+      "flex-container",
+      index !== -1 && magic[rowData.level],
       {
-        [classes.tableRowHover]: index !== -1 && onRowClick != null
+        "table-row-hover": index !== -1 && onRowClick != null
       }
     );
   };
@@ -81,7 +92,7 @@ const MuiVirtualizedTable = props => {
         <TableCell
           data-testid="section_table-cell"
           component="div"
-          className={`${classes.tableCell} ${classes.flexContainer}`}
+          className="table-cell flex-container"
           variant="body"
           style={{ height: rowHeight }}
           align={isNumericColumn(columnIndex) || false ? "right" : "left"}
@@ -96,11 +107,7 @@ const MuiVirtualizedTable = props => {
       <TableCell
         data-testid="section_header-cell"
         component="div"
-        className={clsx(
-          classes.tableCell,
-          classes.flexContainer,
-          classes.noClick
-        )}
+        className="table-cell flex-container no-click"
         variant="head"
         style={{ height: headerHeight }}
         align={isNumericColumn(columnIndex) ? "right" : "left"}
