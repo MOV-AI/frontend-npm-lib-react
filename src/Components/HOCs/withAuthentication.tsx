@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Button, Modal } from "@material-ui/core";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
 import { Authentication, PermissionType, User } from "@mov-ai/mov-fe-lib-core";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";

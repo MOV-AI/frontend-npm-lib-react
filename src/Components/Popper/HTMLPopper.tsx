@@ -1,7 +1,9 @@
 import React, { useCallback, useRef } from "react";
 import { infoButtonStyles } from "./styles";
 import PropTypes from "prop-types";
-import { Fade, Paper, Popper } from "@material-ui/core";
+import Fade from "@mui/material/Fade";
+import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { HTMLPopperProps } from "./types";
 

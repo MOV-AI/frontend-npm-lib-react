@@ -1,17 +1,15 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Input,
-  Select,
-  Checkbox,
-  MenuItem,
-  FormControl,
-  ListItemText,
-  TextField,
-  Typography
-} from "@material-ui/core";
-import TuneIcon from "@material-ui/icons/Tune";
-import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
+import Input from "@mui/material/Input";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import TuneIcon from "@mui/icons-material/Tune";
+import FiltersIcon from "@mui/icons-material/Filters";
 import { COLUMN_LIST } from "../../utils/Constants";
 import { useSettingsStyles } from "../../styles";
 import { MENU_PROPS } from "./_shared/Constants";

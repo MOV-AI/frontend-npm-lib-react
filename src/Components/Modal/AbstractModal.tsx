@@ -1,15 +1,13 @@
 import React, { useCallback } from "react";
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "@mui/icons-material/Close";
 import _debounce from "lodash/debounce";
-import {
-  Card,
-  Typography,
-  CardContent,
-  Divider,
-  Button,
-  CardActions,
-  Modal
-} from "@material-ui/core";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
+import CardContent from "@mui/material/CardContent";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
+import CardActions from "@mui/material/CardActions";
+import Modal from "@mui/material/Modal";
 import { modalStyles } from "./styles";
 import i18n from "../../i18n/i18n.js";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";

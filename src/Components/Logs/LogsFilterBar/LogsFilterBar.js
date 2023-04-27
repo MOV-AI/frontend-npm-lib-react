@@ -1,6 +1,9 @@
 import React, { memo, useCallback } from "react";
 import PropTypes from "prop-types";
-import { AppBar, Toolbar, IconButton, Tooltip } from "@material-ui/core";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import _isEqual from "lodash/isEqual";
 // Sub-Components

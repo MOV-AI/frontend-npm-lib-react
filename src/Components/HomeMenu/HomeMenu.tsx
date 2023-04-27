@@ -1,8 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Divider, IconButton, Typography } from "@material-ui/core";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
 import { User } from "@mov-ai/mov-fe-lib-core";
-import AppsIcon from "@material-ui/icons/Apps";
-import Tooltip from "@material-ui/core/Tooltip";
+import AppsIcon from "@mui/icons-material/Apps
 import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
 import i18n from "../../i18n/i18n.js";
 import HTMLPopper from "../Popper/HTMLPopper";

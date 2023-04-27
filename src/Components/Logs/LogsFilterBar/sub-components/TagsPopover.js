@@ -1,8 +1,11 @@
 import React, { useState, useCallback } from "react";
-import { Chip, InputAdornment, IconButton, TextField } from "@material-ui/core";
-import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
-import LabelIcon from "@material-ui/icons/Label";
-import AddIcon from "@material-ui/icons/Add";
+import Chip from "@mui/material/Chip";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import FiltersIcon from "@mui/icons-material/Filters";
+import LabelIcon from "@mui/icons-material/Label";
+import AddIcon from "@mui/icons-material/Add";
 import { useTagsStyles } from "../../styles";
 
 const TagsPopover = props => {

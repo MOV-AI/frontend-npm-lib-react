@@ -1,15 +1,13 @@
 import React, { Component } from "react";
-import {
-  List,
-  InputBase,
-  IconButton,
-  Typography,
-  Divider,
-  ListItem
-} from "@material-ui/core";
+import List from "@mui/material/List";
+import InputBase from "@mui/material/InputBase";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
 import PropTypes from "prop-types";
-import SearchIcon from "@material-ui/icons/Search";
-import ClearIcon from "@material-ui/icons/Clear";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
 import i18n from "../../i18n/i18n.js";
 
 class TreeSearch extends Component {

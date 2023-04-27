@@ -1,7 +1,9 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
-import { IconButton, Tooltip, Typography } from "@material-ui/core";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import StyledMenu from "./StyledMenu";
 import { filterIconStyles } from "./styles";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import MaterialChip from "@material-ui/core/Chip";
+import MaterialChip from "@mui/material/Chip";
 
 const Chip = props => {
   return (

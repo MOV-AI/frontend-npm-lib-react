@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import List from "@material-ui/core/List";
-import Avatar from "@material-ui/core/Avatar";
-import Divider from "@material-ui/core/Divider";
-import Typography from "@material-ui/core/Typography";
-import { ListItem, ListItemAvatar, ListItemText } from "@material-ui/core";
+import List from "@mui/material/List";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemText from "@mui/material/ListItemText";
 import { withStyles } from "@material-ui/core/styles";
-import ScheduleIcon from "@material-ui/icons/Schedule";
-import WarningIcon from "@material-ui/icons/Warning";
-import ViewModuleIcon from "@material-ui/icons/ViewModule";
-import ChatIcon from "@material-ui/icons/Chat";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import WarningIcon from "@mui/icons-material/Warning";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
+import ChatIcon from "@mui/icons-material/Chat";
 import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import AbstractModal from "./AbstractModal";
 

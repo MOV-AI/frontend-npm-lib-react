@@ -2,7 +2,7 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
+import IconButton from "@mui/material/IconButton";
 import { capitalize } from "@material-ui/core/utils";
 import { svgIcons } from "./svg-icons/svgIcons";
 

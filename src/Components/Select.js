@@ -1,11 +1,12 @@
 import React from "react";
 import { makeMagic } from "@tty-pt/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import MaterialSelect from "@material-ui/core/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import MaterialSelect from "@mui/material/MaterialSelect";
+import Checkbox from "@mui/material/Checkbox";
+import ListItemText from "@mui/material/ListItemText";
 import PropTypes from "prop-types";
-import { Checkbox, ListItemText } from "@material-ui/core";
 
 makeMagic({
   formControl: { minWidth: 120 },

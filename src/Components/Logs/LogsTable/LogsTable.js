@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { makeMagic, useMagic } from "@tty-pt/styles";
-import TableCell from "@material-ui/core/TableCell";
+import TableCell from "@mui/material/TableCell";
 import { AutoSizer, Column, Table } from "react-virtualized";
 import { COLUMN_LIST, COLOR_CODING } from "../utils/Constants";
 

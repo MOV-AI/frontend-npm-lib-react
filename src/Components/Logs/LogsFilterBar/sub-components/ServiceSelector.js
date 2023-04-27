@@ -1,12 +1,10 @@
 import React, { useCallback } from "react";
-import {
-  Input,
-  Select,
-  Checkbox,
-  MenuItem,
-  FormControl,
-  ListItemText
-} from "@material-ui/core";
+import Input from "@mui/material/Input";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
 import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import { MENU_PROPS } from "./_shared/Constants";
 import { useSelectBoxStyle } from "../../styles";
