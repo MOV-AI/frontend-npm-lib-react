@@ -25,7 +25,6 @@ const SettingsPopover = props => {
   // Translation hook
   const { t } = useTranslation();
   // Style hooks
-  // const classes = useSettingsStyles();
 
   //========================================================================================
   /*                                                                                      *

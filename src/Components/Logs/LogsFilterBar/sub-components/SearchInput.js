@@ -15,7 +15,6 @@ const SearchInput = props => {
   // Props
   const { messageRegex, handleMessageRegex } = props;
   // Style hook
-  // const classes = useSearchInputStyles();
   const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
 
   //========================================================================================

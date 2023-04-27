@@ -29,7 +29,7 @@ class NotAuthorized extends Component<{
         alignItems="center"
         justifyContent="space-evenly"
       >
-        <Paper elevation={10} className="root"
+        <Paper elevation={10} className="root">
           <Grid item>
             <img
               data-testid="output_logo"

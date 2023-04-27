@@ -71,7 +71,7 @@ class SearchInput extends Component {
         className="search"
         style={style}
       >
-        <div className="search-icon"
+        <div className="search-icon">
           <SearchIcon />
         </div>
         <InputBase

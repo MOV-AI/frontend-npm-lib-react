@@ -18,7 +18,6 @@ const ServiceSelector = props => {
   // Props
   const { selectedService, handleSelectedService } = props;
   // Style hook
-  // const classes = useSelectBoxStyle();
   const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
 
   //========================================================================================

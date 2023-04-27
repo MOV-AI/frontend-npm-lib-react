@@ -14,7 +14,6 @@ const LevelSelector = props => {
   // Props
   const { levels, handleLevels, levelsList } = props;
   // Style hook
-  // const classes = useSelectBoxStyle();
   const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
 
 
@@ -67,26 +66,23 @@ const LevelSelector = props => {
    *                                                                                      */
   //========================================================================================
 
-  return (
-    <div data-testid="section_levels" className={bigScreen ? "toggle-container" : "small-toggle-container">
-      <FormControl className="form-control">
-        <Select
-          inputProps={{ "data-testid": "input_select" }}
-          labelId="demo-mutiple-checkbox-label"
-          id="demo-mutiple-checkbox"
-          className={bigScreen ? "select-box" : "small-select-box" }
-          multiple
-          value={levels}
-          onChange={handleLevels}
-          input={<Input />}
-          renderValue={renderValue}
-          MenuProps={MENU_PROPS}
-        >
-          {levelsList.map(renderLevelItem)}
-        </Select>
-      </FormControl>
-    </div>
-  );
+  return (<div data-testid="section_levels" className={bigScreen ? "toggle-container" : "small-toggle-container"}>
+    <FormControl className="form-control">
+      <Select
+        labelId="demo-mutiple-checkbox-label"
+        id="demo-mutiple-checkbox"
+        className={bigScreen ? "select-box" : "small-select-box" }
+        multiple
+        value={levels}
+        onChange={handleLevels}
+        input={<Input />}
+        renderValue={renderValue}
+        MenuProps={MENU_PROPS}
+      >
+        {levelsList.map(renderLevelItem)}
+      </Select>
+    </FormControl>
+  </div>);
 };
 
 export default LevelSelector;

@@ -24,8 +24,6 @@ const EMPTY_FUNCTION = () => {
 };
 
 const LogsFilterBar = props => {
-  // Style Hook
-  // const classes = useLogFilterStyles();
   // Translation hook
   const { t } = useTranslation();
   // Props

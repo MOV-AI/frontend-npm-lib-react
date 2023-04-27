@@ -1,4 +1,5 @@
 import React from "react";
+import { makeMagic } from "@tty-pt/styles";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 {/* import { green, grey } from "@material-ui/core/colors"; */}

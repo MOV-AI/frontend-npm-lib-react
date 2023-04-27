@@ -14,7 +14,6 @@ const RobotSelector = props => {
   // Props
   const { selectedRobots, handleRobotChange } = props;
   // Style hook
-  // const classes = useRobotSelectorStyles();
   const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
   // Constants
   const INPUT_ICON = (

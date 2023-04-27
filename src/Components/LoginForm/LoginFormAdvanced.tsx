@@ -11,7 +11,6 @@ import InputLabel from "@mui/material/InputLabel";
 import List from "@mui/material/List";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { advancedSectionStyles } from "./style";
 import { useTranslation } from "react-i18next";
 import { LoginFormAdvancedProps } from "./types";
 

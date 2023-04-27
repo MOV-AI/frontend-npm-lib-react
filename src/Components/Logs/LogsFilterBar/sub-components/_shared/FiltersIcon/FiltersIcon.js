@@ -5,7 +5,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import StyledMenu from "./StyledMenu";
-import { filterIconStyles } from "./styles";
+// import { filterIconStyles } from "./styles";
 
 const FiltersIcon = props => {
   // Props
@@ -13,7 +13,6 @@ const FiltersIcon = props => {
   // State hooks
   const [anchorEl, setAnchorEl] = useState();
   // Style hook
-  const classes = filterIconStyles();
 
   //========================================================================================
   /*                                                                                      *
@@ -86,7 +85,7 @@ const FiltersIcon = props => {
               <i className="fas fa-times"></i>
             </Typography>
           </Typography>
-          <Typography component="div" className="children-container"
+          <Typography component="div" className="children-container">
             {children}
           </Typography>
         </Typography>

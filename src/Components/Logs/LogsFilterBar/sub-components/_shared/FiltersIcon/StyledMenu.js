@@ -29,5 +29,3 @@ function StyledMenu(props) {
     {...props}
   />);
 }
-
-export default StyledMenu;

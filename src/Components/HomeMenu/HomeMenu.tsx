@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import { User } from "@mov-ai/mov-fe-lib-core";
-import AppsIcon from "@mui/icons-material/Apps
+import AppsIcon from "@mui/icons-material/Apps";
 import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
 import i18n from "../../i18n/i18n.js";
 import HTMLPopper from "../Popper/HTMLPopper";
@@ -17,7 +17,6 @@ import { App } from "./types";
 
 const HomeMenuPopper = () => {
   // State hooks
-  // const classes = homeMenuPopperStyles();
   const [currentApps, setCurrentApps] = useState<App[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
 
