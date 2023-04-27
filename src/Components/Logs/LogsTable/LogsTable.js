@@ -131,7 +131,7 @@ const MuiVirtualizedTable = props => {
             direction: "inherit"
           }}
           headerHeight={headerHeight}
-          className={classes.table}
+          className="table"
           {...tableProps}
           rowClassName={getRowClassName}
         >
@@ -146,7 +146,7 @@ const MuiVirtualizedTable = props => {
                   });
                 }}
                 flexGrow={dataKey === "message" ? 1 : undefined}
-                className={classes.flexContainer}
+                className="flex-container"
                 cellRenderer={cellRenderer(render)}
                 dataKey={dataKey}
                 {...other}

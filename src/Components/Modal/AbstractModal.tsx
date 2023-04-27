@@ -8,7 +8,7 @@ import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import CardActions from "@mui/material/CardActions";
 import Modal from "@mui/material/Modal";
-import { modalStyles } from "./styles";
+{/* import { modalStyles } from "./styles"; */}
 import i18n from "../../i18n/i18n.js";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";
 import { AbstractModalProps } from "./types";
@@ -32,7 +32,6 @@ const AbstractModal = (props: AbstractModalProps) => {
     style = {}
   } = props;
   // Styles hook
-  const classes = modalStyles();
 
   //========================================================================================
   /*                                                                                      *
@@ -77,30 +76,30 @@ const AbstractModal = (props: AbstractModalProps) => {
       onKeyPress={handleKeyPress}
       open={open}
       onClose={onCancel}
-      className={classes.root}
+      className="root"
     >
       <Card
-        className={classes.card}
+        className="card"
         style={{
           ...style,
           minWidth: width,
           minHeight: height
         }}
       >
-        <CardContent className={classes.cardContent}>
+        <CardContent className="card-content">
           <Typography data-testid="output_title" variant="h5">
             {title}
           </Typography>
           <Typography
             data-testid="input_close"
             component="div"
-            className={classes.closeButton}
+            className="close-button"
             onClick={onCancel}
           >
             <CloseIcon></CloseIcon>
           </Typography>
-          <Divider className={classes.divider} />
-          <Typography component="div" className={classes.childrenContainer}>
+          <Divider className="divider" />
+          <Typography component="div" className="children-container">
             {props.children}
           </Typography>
         </CardContent>

@@ -13,7 +13,7 @@ import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 import { User } from "@mov-ai/mov-fe-lib-core";
 import { useTranslation } from "react-i18next";
-import { resetPasswordStyles } from "./styles";
+// import { resetPasswordStyles } from "./styles";
 import { ALERT_SEVERITY } from "../../Utils/Constants";
 import { snackbar } from "../Snackbar/Snackbar";
 import AbstractModal from "../Modal/AbstractModal";
@@ -74,7 +74,6 @@ const ResetPasswordModal = forwardRef((props, ref) => {
   const [loading, setLoading] = useState(false);
   // Other hooks
   const user = useMemo(() => new User(), []);
-  const classes = resetPasswordStyles();
   const { t } = useTranslation();
   // Refs
   const touchRef = useRef(DEFAULT_TOUCH_STATE);
@@ -275,9 +274,9 @@ const ResetPasswordModal = forwardRef((props, ref) => {
       cancelText={t("Cancel")}
       submitText={getSubmitText()}
     >
-      <div data-testid="section_reset-password" className={classes.root}>
+      <div data-testid="section_reset-password" className="root">
         <React.Fragment>
-          <form autoComplete="off" className={classes.formGroup}>
+          <form autoComplete="off" className="form-group">
             {variant === VARIANT_OPTIONS.CHANGE && (
               <TextField
                 inputProps={{ "data-testid": "input_current-password" }}
@@ -285,7 +284,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
                 autocomplete="off"
                 label={t("Current Password")}
                 autoFocus={true}
-                className={classes.input}
+                className="input"
                 id={FORM_FIELDS.CURRENT_PASSWORD}
                 onChange={handleChange}
                 variant="outlined"
@@ -296,7 +295,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
               type="password"
               autocomplete="off"
               label={t("New Password")}
-              className={classes.input}
+              className="input"
               id={FORM_FIELDS.NEW_PASSWORD}
               onChange={handleChange}
               variant="outlined"
@@ -308,7 +307,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
               type="password"
               autocomplete="off"
               label={t("Confirm Password")}
-              className={classes.input}
+              className="input"
               id={FORM_FIELDS.CONFIRM_PASSWORD}
               onChange={handleChange}
               variant="outlined"

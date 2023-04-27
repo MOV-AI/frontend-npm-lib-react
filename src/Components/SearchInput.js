@@ -1,47 +1,48 @@
 import React, { Component } from "react";
-import { withStyles, alpha } from "@material-ui/core/styles";
+// import { alpha } from "@material-ui/core/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/material/SearchIcon";
 import PropTypes from "prop-types";
 
-const styles = theme => ({
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25)
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto"
-    }
-  },
-  searchIcon: {
-    width: theme.spacing(7),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  inputRoot: {
-    color: "inherit"
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 7),
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: 200
-    }
-  }
-});
+// const styles = theme => ({
+//   search: {
+//     position: "relative",
+//     borderRadius: theme.shape.borderRadius,
+//     backgroundColor: alpha(theme.palette.common.white, 0.15),
+//     "&:hover": {
+//       backgroundColor: alpha(theme.palette.common.white, 0.25)
+//     },
+//     marginRight: theme.spacing(2),
+//     marginLeft: 0,
+//     width: "100%",
+//     [theme.breakpoints.up("sm")]: {
+//       marginLeft: theme.spacing(3),
+//       width: "auto"
+//     }
+//   },
+//   searchIcon: {
+//     width: theme.spacing(7),
+//     height: "100%",
+//     position: "absolute",
+//     pointerEvents: "none",
+//     display: "flex",
+//     alignItems: "center",
+//     justifyContent: "center"
+//   },
+//   inputRoot: {
+//     color: "inherit"
+//   },
+//   inputInput: {
+//     padding: theme.spacing(1, 1, 1, 7),
+//     transition: theme.transitions.create("width"),
+//     width: "100%",
+//     [theme.breakpoints.up("md")]: {
+//       width: 200
+//     }
+//   }
+// });
 
+export default
 class SearchInput extends Component {
   searchInput = undefined;
   timer = undefined;
@@ -63,22 +64,22 @@ class SearchInput extends Component {
   };
 
   render() {
-    const { classes, style, placeholder } = this.props;
+    const { style, placeholder } = this.props;
     return (
       <div
         data-testid="section_search"
-        className={classes.search}
+        className="search"
         style={style}
       >
-        <div className={classes.searchIcon}>
+        <div className="search-icon"
           <SearchIcon />
         </div>
         <InputBase
           ref={this.setSearchInput}
           placeholder={placeholder}
           classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput
+            root: "input-root",
+            input: "input-input",
           }}
           inputProps={{ "aria-label": "search", "data-testid": "input_base" }}
           onChange={this.handleChange}
@@ -105,5 +106,3 @@ SearchInput.defaultProps = {
   enableTimeout: true,
   style: {}
 };
-
-export default withStyles(styles, { withTheme: true })(SearchInput);

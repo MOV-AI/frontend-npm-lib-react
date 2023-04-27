@@ -1,9 +1,8 @@
 import React from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { homeMenuPopperStyles } from "./styles";
+// import { homeMenuPopperStyles } from "./styles";
 
 const HomeMenuSkeleton = () => {
-  const classes = homeMenuPopperStyles();
   const sklArr = ["btn1", "btn2", "btn3", "btn4", "btn5", "btn6"];
 
   //========================================================================================
@@ -12,15 +11,15 @@ const HomeMenuSkeleton = () => {
    *                                                                                      */
   //========================================================================================
   return (
-    <div className={classes.menuWrapper}>
+    <div className="menu-wrapper">
       {sklArr.map(el => {
         return (
-          <div key={el} className={classes.skeletonCard}>
+          <div key={el} className="skeleton-card">
             <Skeleton
               width={108}
               height={140}
               animation="wave"
-              className={classes.menuButton}
+              className="menu-button"
             />
           </div>
         );

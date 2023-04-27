@@ -13,11 +13,11 @@ import HomeMenuSkeleton from "./HomeMenuSkeleton";
 import MenuApp from "./MenuApp";
 import { App } from "./types";
 
-import { homeMenuPopperStyles } from "./styles";
+// import { homeMenuPopperStyles } from "./styles";
 
 const HomeMenuPopper = () => {
   // State hooks
-  const classes = homeMenuPopperStyles();
+  // const classes = homeMenuPopperStyles();
   const [currentApps, setCurrentApps] = useState<App[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -68,7 +68,7 @@ const HomeMenuPopper = () => {
     if (errorMessage) {
       return (
         <div
-          className={classes.noApplications}
+          className="no-applications"
           data-testid="section_no-applications"
         >
           <Typography variant="subtitle1">
@@ -79,7 +79,7 @@ const HomeMenuPopper = () => {
             size="large"
             variant="outlined"
             color="primary"
-            className={classes.launcherButton}
+            className="launcher-button"
             onClick={redirectToLocalhost}
           >
             {LAUNCHER_APP.toUpperCase()}
@@ -103,7 +103,7 @@ const HomeMenuPopper = () => {
       });
 
       return (
-        <div className={classes.menuWrapper}>
+        <div className="menu-wrapper">
           {arrayOfApplications.map(app => (
             <MenuApp key={app.URL} app={app} />
           ))}

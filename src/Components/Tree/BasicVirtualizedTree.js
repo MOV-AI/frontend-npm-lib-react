@@ -135,7 +135,6 @@ class BasicVirtualizedTree extends Component {
   };
 
   render() {
-    const { classes } = this.props;
     const iconStyle = <i className="fas fa-home" />;
     const nodes = this.props.data;
     return (
@@ -169,10 +168,10 @@ class BasicVirtualizedTree extends Component {
                     onDoubleClick={() => this.props.onDoubleClickNode(node)}
                     p={2}
                     className={
-                      !_get(node, `children`, false) ? classes.preContainer : ""
+                      !_get(node, `children`, false) ? "pre-container" : ""
                     }
                   >
-                    <Box p={1} className={classes.inlineFlex}>
+                    <Box p={1} className="inline-flex">
                       <Grid alignContent={"space-between"} container>
                         {_get(node, `children`, false) &&
                           node.state?.expanded && (
@@ -196,11 +195,11 @@ class BasicVirtualizedTree extends Component {
                         <div
                           className={
                             !_get(node, `children`, false)
-                              ? classes.spaceBetween
+                              ? "space-between"
                               : ""
                           }
                         >
-                          <div className={classes.ellipsis}>{node.name}</div>
+                          <div className="ellipsis">{node.name}</div>
                         </div>
                       </Grid>
                     </Box>

@@ -22,7 +22,7 @@ import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
 import i18n from "../../i18n/i18n";
 
-import { useStyles } from "./styles";
+import "./styles";
 import "./Logs.css";
 
 // TODO this should be exported. Fleetboard uses it
@@ -49,8 +49,6 @@ const NO_ROBOTS_RETRY_TIMEOUT = 1000;
 const Logs = props => {
   // Props
   const { robotsData } = props;
-  // Style hook
-  const classes = useStyles();
   // Refs
   const getLogsTimeoutRef = useRef();
   const selectedRobotsRef = useRef({});
@@ -429,11 +427,11 @@ const Logs = props => {
         {loading ? (
           <LogsSkeleton></LogsSkeleton>
         ) : (
-          <div className={classes.noRows}>{i18n.t("No matches found")}</div>
+          <div className="no-rows">{i18n.t("No matches found")}</div>
         )}
       </Typography>
     );
-  }, [classes.noRows, loading]);
+  }, [loading]);
 
   //========================================================================================
   /*                                                                                      *
@@ -467,8 +465,8 @@ const Logs = props => {
   //========================================================================================
   const formatedLogsData = formatLogsData();
   return (
-    <div className={classes.externalDiv}>
-      <div data-testid="section_logs" className={classes.wrapper}>
+    <div className="external-div">
+      <div data-testid="section_logs" className="wrapper">
         <LogsFilterBar
           selectedRobots={formatSelectedRobots()}
           updateRobotSelection={onChangeRobotSelection}
@@ -496,7 +494,7 @@ const Logs = props => {
         <div
           data-testid="section_table-container"
           ref={handleContainerRef}
-          className={classes.tableContainer}
+          className="table-container"
         >
           <LogsTable
             columns={columns}

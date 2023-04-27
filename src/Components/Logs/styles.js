@@ -2,24 +2,24 @@ import { makeMagic } from "@tty-pt/styles";
 
 makeMagic({
   logs: {
-    "& .table-container": {
+    tableContainer: {
       flexGrow: 1,
       minHeight: 0,
       overflow: "hidden"
     },
-    "& .external": {
+    external: {
       width: "100%",
       height: "100%",
       display: "flex",
       flexDirection: "column"
     },
-    "& .no-rows": {
+    noRows: {
       display: "flex",
       fontSize: "20px",
       justifyContent: "center",
       padding: "32px"
     },
-    "& .wrapper": {
+    wrapper: {
       flexGrow: "1",
       height: "100%",
       display: "flex",
@@ -47,9 +47,7 @@ const logFilterCommonStyles = theme => {
   };
 };
 
-export const useRobotSelectorStyles = makeStyles(theme => ({
-  ...logFilterCommonStyles(theme)
-}));
+export const useRobotSelectorStyles = makeStyles(logsFilterCommonStyles)
 
 export const useSearchInputStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),

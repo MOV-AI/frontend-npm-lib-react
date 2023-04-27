@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
+import { makeMagic } from "@tty-pt/styles";
 import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import Alert from "@material-ui/lab/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
-import { makeStyles } from "@material-ui/styles";
 
-const useStyles = makeStyles(() => ({
+makeMagic({
   alert: { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 9999 }
-}));
+});
 
 export default function withOfflineValidation(Component: React.ComponentType) {
   return function (props: any) {
@@ -16,7 +16,6 @@ export default function withOfflineValidation(Component: React.ComponentType) {
     const [validator, setValidator] =
       React.useState<{ retryConnection: () => Promise<void> }>();
     const [loading, setLoading] = React.useState(false);
-    const classes = useStyles();
 
     /**
      * Start offline validation
@@ -50,7 +49,7 @@ export default function withOfflineValidation(Component: React.ComponentType) {
           <Component {...props} />
           {!isConnected && (
             <Alert
-              className={classes.alert}
+              className="alert"
               variant="filled"
               severity="error"
               action={
@@ -72,7 +71,7 @@ export default function withOfflineValidation(Component: React.ComponentType) {
           )}
           {isConnected && showSuccessAlert && (
             <Alert
-              className={classes.alert}
+              className="alert"
               variant="filled"
               severity="success"
             >

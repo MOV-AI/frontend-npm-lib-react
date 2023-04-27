@@ -13,13 +13,13 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Toggle from "../Toggle";
-import { profileMenuStyles } from "./styles";
+// import { profileMenuStyles } from "./styles";
 import { User } from "@mov-ai/mov-fe-lib-core";
 import i18n from "../../i18n/i18n.js";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
 
-function getCustomMenuElements(menuItemConf: any, classes: any) {
+function getCustomMenuElements(menuItemConf: any) {
   return Object.entries(menuItemConf ?? {}).map(([key, menuItem]: [string, any]) => {
     if (React.isValidElement(menuItem))
       return menuItem;
@@ -27,7 +27,7 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
     return (<MenuItem
       key={key}
       data-test-id={"input_" + key}
-      className={classes.menuItemSpacing}
+      className="menu-item-spacing"
       onClick={menuItem.handler}
     >
       { i18n.t(menuItem.title) }
@@ -41,7 +41,6 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   const [username, setUsername] = useState("");
   // Other hooks
   const user = useMemo(() => new User(), []);
-  const classes = profileMenuStyles();
   // Refs
   const resetModalRef = useRef<{ open: Function }>();
   // Props
@@ -105,7 +104,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     setUsername(user.getUsername());
   }, [user]);
 
-  const customEl = useMemo(() => getCustomMenuElements(menuItemConf, classes), [menuItemConf, classes]);
+  const customEl = useMemo(() => getCustomMenuElements(menuItemConf), [menuItemConf]);
 
   //========================================================================================
   /*                                                                                      *
@@ -135,15 +134,15 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           data-testid="section_welcome"
           component="div"
           variant="body1"
-          className={classes.root}
+          className="root"
         >
-          <div className={classes.menuItemSpacing}>
+          <div className="menu-item-spacing">
             {welcomeLabel}, {username}
           </div>
           <Divider variant="middle" />
           {extraItems?.map((item, index) => (
             <MenuItem
-              className={classes.menuItemSpacing}
+              className="menu-item-spacing"
               onClick={item.func}
               key={`extraItem-${item.label}-${index}`}
             >
@@ -154,7 +153,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           {user.isInternalUser() && (
             <MenuItem
               data-testid="input_reset-password"
-              className={classes.menuItemSpacing}
+              className="menu-item-spacing"
               onClick={handlePasswordReset}
             >
               {i18n.t("Change Password")}
@@ -162,7 +161,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           )}
           { customEl }
           {handleToggleTheme && (
-            <div className={classes.menuItemSpacing}>
+            <div className="menu-item-spacing">
               {darkThemeLabel}
               <Toggle
                 onToggle={handleToggleTheme}
@@ -171,7 +170,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
             </div>
           )}
           <MenuItem
-            className={classes.menuItemSpacing}
+            className="menu-item-spacing"
             onClick={handleLogoutClick}
           >
             {logoutLabel}
@@ -179,7 +178,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           <Divider variant="middle" />
           <div
             data-testid="section_footer"
-            className={`${classes.menuItemSpacing} ${classes.profileMenuFooter}`}
+            className="menu-item-spacing profile-menu-footer"
           >
             {version}
           </div>

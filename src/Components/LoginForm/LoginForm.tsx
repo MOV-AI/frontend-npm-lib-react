@@ -1,4 +1,5 @@
 import React, { ChangeEvent, Component, KeyboardEvent } from "react";
+import { makeMagic } from "@tty-pt/styles";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -6,14 +7,31 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
+import Paper from "@mui/material/Paper";
 import defaultLogo from "../../../resources/favicon.png";
-import Paper from "@material-ui/core/Paper";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import LoginFormAdvanced from "./LoginFormAdvanced";
 import { withTranslation } from "react-i18next";
 import { LoginFormProps } from "./types";
+
+makeMagic({
+  loginForm: {
+    paddingTop: "5%",
+    root: {
+      // padding: theme.spacing(4, 4), // TODO replace with "pad"
+      borderRadius: 40
+    },
+    logoImage: {
+      display: "block",
+      marginLeft: "auto",
+      marginRight: "auto",
+      width: "50%"
+    },
+    formControl: {
+      width: "40%"
+    }
+  },
+});
 
 const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
 const EMPTY_FUNCTION = () => {
@@ -152,7 +170,6 @@ class LoginForm extends Component<LoginFormProps> {
 
   render() {
     const {
-      classes,
       logo = defaultLogo,
       domains,
       authErrorMessage
@@ -161,26 +178,26 @@ class LoginForm extends Component<LoginFormProps> {
     return (
       <Grid
         data-testid="section_login-form"
-        className={classes.container}
+        className="login-form"
         container
         direction="column"
         alignItems="center"
         justifyContent="space-evenly"
       >
-        <Paper elevation={10} className={classes.root}>
+        <Paper elevation={10} className="pad root">
           <Grid item>
             <img
               data-testid="output_logo"
               src={logo}
               alt="logo"
-              className={`center ${classes.logoImage}`}
+              className="center logo-image"
             />
           </Grid>
           <Grid>
             <Typography align="center" variant="subtitle1" gutterBottom>
               <FormControl
                 data-testid="section_form-control"
-                className={classes.formControl}
+                className="form-control"
                 error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-username-error">
@@ -199,7 +216,7 @@ class LoginForm extends Component<LoginFormProps> {
           <Grid>
             <Typography align="center" variant="subtitle1" gutterBottom>
               <FormControl
-                className={classes.formControl}
+                className="form-control"
                 error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-password-error">
@@ -252,6 +269,4 @@ class LoginForm extends Component<LoginFormProps> {
   }
 }
 
-export default withTranslation()(
-  withStyles(styles, { withTheme: true })(LoginForm)
-);
+export default withTranslation()(LoginForm);

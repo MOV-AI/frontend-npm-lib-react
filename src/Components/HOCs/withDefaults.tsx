@@ -1,6 +1,5 @@
-import { ThemeProvider } from "@material-ui/styles";
 import { I18nextProvider } from "react-i18next";
-import { withMagic, makeThemeMagicBook } from "@tty-pt/styles";
+import { withMagic, getMagicTheme, makeThemeMagicBook } from "@tty-pt/styles";
 import { WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
 import withNotification from "./withNotification";
@@ -16,8 +15,8 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     offlineValidation = true,
     dependencies,
     themeProps, // this should be named ApplicationTheme
+    getTheme,
     getStyle,
-    magicContext,
   } = appOptions;
 
   let componentWithDefaults = withError(appComponent);
@@ -36,21 +35,14 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     appName
   );
 
-  const componentWithMagic = (dependencies?.["@tty-pt/styles"]?.withMagic ?? withMagic)(
+  const componentWithMagic = withMagic(
     componentWithAuthentication,
-    {
-      ...(dependencies ?? {}),
-      "@tty-pt/styles": {
-        ...(dependencies?.["@tty-pt/styles"] ?? {}),
-        makeThemeMagicBook: getStyle ?? dependencies?.["@tty-pt/styles"]?.makeThemeMagicBook ?? makeThemeMagicBook,
-      },
-    },
-    magicContext
+    getTheme ?? getMagicTheme,
+    getStyle ?? makeThemeMagicBook,
   );
 
   return withTheme(
     componentWithMagic,
-    dependencies?.["@material-ui/styles"]?.ThemeProvider ?? ThemeProvider,
     themeProps
   );
 }

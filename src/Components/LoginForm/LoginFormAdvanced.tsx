@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { makeMagic } from "@tty-pt/styles";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -11,34 +12,58 @@ import List from "@mui/material/List";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { advancedSectionStyles } from "./style";
-import { makeStyles } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { LoginFormAdvancedProps } from "./types";
 
-const advancedLoginStyles = makeStyles(advancedSectionStyles);
+makeMagic({
+  loginFormAdvanced: {
+    flexGrow: 1,
+    formControl: {
+      width: "40%"
+    },
+    expandCollapseButton: {
+      width: "40%",
+      justifyContent: "space-between",
+      paddingLeft: "1px",
+      paddingRight: "0px",
+      marginTop: "12px",
+      "&:focus-visible": {
+        backgroundColor: "rgba(0, 0, 0, 0.04)"
+      }
+    },
+    label: {
+      fontSize: "11px"
+    },
+    providerSelectorInput: {
+      display: "flex"
+    },
+    grid: {
+      justifyContent: "center"
+    }
+  }
+});
 
 const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
   const { t } = useTranslation();
-  const classes = advancedLoginStyles();
   const [open, setOpen] = useState(true);
 
   return (
-    <div className={classes.container}>
+    <div className="login-form-advanced">
       <Button
         disableRipple
-        className={classes.expandCollapseButton}
+        className="expand-collapse-button"
         endIcon={open ? <ExpandLess /> : <ExpandMore />}
         onClick={() => setOpen(!open)}
         disabled={!props.domains?.length}
       >
-        <InputLabel className={classes.label}>{t("Advanced")}</InputLabel>
+        <InputLabel className="label">{t("Advanced")}</InputLabel>
       </Button>
       <Collapse in={open}>
         <List dense={true} component="div">
           <Typography component="div">
-            <Grid container className={classes.grid}>
+            <Grid container className="grid">
               <FormControl
-                className={classes.formControl}
+                className="form-control"
                 error={
                   props.selectedProvider == null ||
                   props.selectedProvider == undefined
@@ -52,7 +77,7 @@ const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
                   aria-describedby="component-authentication-error-text"
                   value={props.selectedProvider}
                   inputProps={{ "data-testid": "input_domain" }}
-                  classes={{ root: classes.providerSelectorInput }}
+                  classes={{ root: "provider-selector-input" }}
                   onChange={props.onProviderChange}
                   disabled={false}
                 >

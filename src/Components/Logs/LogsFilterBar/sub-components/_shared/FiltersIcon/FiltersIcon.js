@@ -51,7 +51,7 @@ const FiltersIcon = props => {
           size="small"
           onClick={handleOpen}
           disabled={disabled}
-          className={isActive ? classes.iconActive : classes.icon}
+          className={isActive ? "icon-active" : "icon"}
         >
           {icon}
         </IconButton>
@@ -61,14 +61,14 @@ const FiltersIcon = props => {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
-        className={classes.height}
+        className="height"
       >
         <Typography
           component="div"
           data-testid="section_filters-icon"
-          className={classes.filterIconRoot}
+          className="filter-icon-root"
         >
-          <Typography component="div" className={classes.titleRow}>
+          <Typography component="div" className="title-row">
             <Typography
               component="div"
               data-testid="output_title"
@@ -76,17 +76,17 @@ const FiltersIcon = props => {
             >
               {title}
             </Typography>
-            <Typography component="div" className={classes.spacer}></Typography>
+            <Typography component="div" className="spacer"></Typography>
             <Typography
               data-testid="input_close"
               component="div"
               onClick={handleClose}
-              className={classes.icon}
+              className="icon"
             >
               <i className="fas fa-times"></i>
             </Typography>
           </Typography>
-          <Typography component="div" className={classes.childrenContainer}>
+          <Typography component="div" className="children-container"
             {children}
           </Typography>
         </Typography>

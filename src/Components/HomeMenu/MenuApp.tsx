@@ -3,13 +3,10 @@ import { Utils } from "@mov-ai/mov-fe-lib-core";
 import Button from "@mui/material/Button";
 import { MenuAppProps } from "./types";
 
-import { menuAppStyles } from "./styles";
+// import { menuAppStyles } from "./styles";
 
 const MenuApp = (props: MenuAppProps) => {
   const { app } = props;
-
-  // Hooks
-  const classes = menuAppStyles();
 
   //========================================================================================
   /*                                                                                      *
@@ -40,12 +37,12 @@ const MenuApp = (props: MenuAppProps) => {
       data-testid="input_application"
       size="large"
       color="primary"
-      className={classes.menuButton}
+      className="menu-button"
       onClick={handleAppClick}
     >
       <div>
-        <div className={`${classes.appIcon} ${app.Icon}`} />
-        <div className={classes.appMiniature}>{app.Label}</div>
+        <div className={`app-icon ${app.Icon}`} />
+        <div className="app-miniature">{app.Label}</div>
       </div>
     </Button>
   );

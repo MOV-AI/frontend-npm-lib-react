@@ -1,38 +1,33 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeMagic } from "@tty-pt/styles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import PropTypes from "prop-types";
-import { MouseEventHandler } from "react";
 import { BreadcrumbProps } from "./types";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    "& > * + *": {
-      marginTop: theme.spacing(2)
+makeMagic({
+  breadcrumb: {
+    link: {
+      fontSize: "24px",
+      fontWeight: 800,
+      fontFamily: "Open Sans",
+      "&:hover": {
+        cursor: "pointer",
+        textDecoration: "underline"
+      }
+    },
+    lastLabel: {
+      fontSize: "24px",
+      fontWeight: 800,
+      fontFamily: "Open Sans"
     }
   },
-  link: {
-    fontSize: "24px",
-    fontWeight: 800,
-    fontFamily: "Open Sans",
-    "&:hover": {
-      cursor: "pointer",
-      textDecoration: "underline"
-    }
-  },
-  lastLabel: {
-    fontSize: "24px",
-    fontWeight: 800,
-    fontFamily: "Open Sans"
-  }
-}));
+});
 
 const Breadcrumb = (props: BreadcrumbProps) => {
-  const classes = useStyles();
   return (
-    <div data-testid="section_breadcrumb" className={classes.root}>
+    <div data-testid="section_breadcrumb" className="breadcrumb">
       <Breadcrumbs
         separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb"
@@ -46,7 +41,7 @@ const Breadcrumb = (props: BreadcrumbProps) => {
                 key={index}
                 color="primary"
                 variant="inherit"
-                className={classes.link}
+                className="link"
                 onClick={element.function}
               >
                 {element.label}
@@ -55,9 +50,9 @@ const Breadcrumb = (props: BreadcrumbProps) => {
           }
         })}
         <Typography
-          data-testid="output_path-list"
+          data-testid="output_path-list vertical-small"
           color="textPrimary"
-          className={classes.lastLabel}
+          className="last-label"
         >
           {props.pathList[props.pathList.length - 1].label}
         </Typography>

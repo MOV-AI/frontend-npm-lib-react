@@ -3,12 +3,10 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import LinearProgress from "@mui/material/LinearProgress";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "./style";
 import defaultLogo from "../../../resources/favicon.png";
 
+export default
 class NotAuthorized extends Component<{
-  classes: { [className: string]: string };
   logo?: string;
   title?: string;
   message: string | JSX.Element;
@@ -16,7 +14,6 @@ class NotAuthorized extends Component<{
 }> {
   render() {
     const {
-      classes,
       logo = defaultLogo,
       title = "",
       message = "",
@@ -26,19 +23,19 @@ class NotAuthorized extends Component<{
     return (
       <Grid
         data-testid="section_login-panel"
-        className={classes.container}
+        className="container"
         container
         direction="column"
         alignItems="center"
         justifyContent="space-evenly"
       >
-        <Paper elevation={10} className={classes.root}>
+        <Paper elevation={10} className="root"
           <Grid item>
             <img
               data-testid="output_logo"
               src={logo}
               alt="logo"
-              className={`center ${classes.logoImage}`}
+              className="center logo-image"
             />
           </Grid>
           <Grid>
@@ -65,5 +62,3 @@ class NotAuthorized extends Component<{
     );
   }
 }
-
-export default withStyles(styles, { withTheme: true })(NotAuthorized);

@@ -1,7 +1,4 @@
 export interface LoginFormProps {
-  classes: {
-    [cssClass: string]: any;
-  };
   logo?: string;
   domains: string[];
   authErrorMessage: string;
@@ -16,7 +13,6 @@ export interface LoginFormProps {
 }
 
 export interface LoginFormAdvancedProps {
-  classes?: { [className: string]: string };
   domains: string[];
   selectedProvider: string;
   onProviderChange: (

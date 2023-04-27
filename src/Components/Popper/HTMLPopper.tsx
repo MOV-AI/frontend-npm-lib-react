@@ -1,16 +1,15 @@
 import React, { useCallback, useRef } from "react";
-import { infoButtonStyles } from "./styles";
+{/* import { infoButtonStyles } from "./styles"; */}
 import PropTypes from "prop-types";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { HTMLPopperProps } from "./types";
 
 const FADE_OUT_TIMEOUT = 350;
 
 const HTMLPopper = (props: HTMLPopperProps) => {
-  const classes = infoButtonStyles();
   const {
     clickableElement,
     children,
@@ -30,8 +29,8 @@ const HTMLPopper = (props: HTMLPopperProps) => {
   const renderPaper = () => {
     return (
       <Paper>
-        <div className={classes.transitionIn}>
-          <div data-testid="section_wrapper" className={classes.childWrapper}>
+        <div className="transition-in">
+          <div data-testid="section_wrapper" className="child-wrapper">
             {children}
           </div>
         </div>
@@ -70,7 +69,7 @@ const HTMLPopper = (props: HTMLPopperProps) => {
 
       <Popper
         data-testid="section_popper"
-        className={classes.popper}
+        className="popper"
         open={openPopper}
         anchorEl={anchorPopperRef.current}
         placement={popperPlacement}

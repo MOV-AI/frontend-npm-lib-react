@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import TuneIcon from "@mui/icons-material/Tune";
 import FiltersIcon from "@mui/icons-material/Filters";
 import { COLUMN_LIST } from "../../utils/Constants";
-import { useSettingsStyles } from "../../styles";
+// import { useSettingsStyles } from "../../styles";
 import { MENU_PROPS } from "./_shared/Constants";
 
 const SettingsPopover = props => {
@@ -25,7 +25,7 @@ const SettingsPopover = props => {
   // Translation hook
   const { t } = useTranslation();
   // Style hooks
-  const classes = useSettingsStyles();
+  // const classes = useSettingsStyles();
 
   //========================================================================================
   /*                                                                                      *
@@ -59,15 +59,15 @@ const SettingsPopover = props => {
 
   return (
     <FiltersIcon icon={<TuneIcon></TuneIcon>} title={t("Configuration")}>
-      <div className={classes.filtersButton}>
+      <div className="filters-button">
         {/* Limit Input */}
-        <Typography component="div" className={classes.inputHeader}>
+        <Typography component="div" className="input-header">
           {`${t("Limit p/Robot")}:`}
         </Typography>
         <TextField
           value={limit}
           onChange={handleLimit}
-          className={classes.limitText}
+          className="limit-text"
           id="outlined-number"
           placeholder={t("limit")}
           type="number"
@@ -76,12 +76,12 @@ const SettingsPopover = props => {
           size="small"
         />
       </div>
-      <div className={classes.columnsFilter}>
+      <div className="columns-filter">
         {/* Columns Selection */}
-        <Typography component="div" className={classes.inputHeader}>
+        <Typography component="div" className="input-header">
           {`${t("Columns")}:`}
         </Typography>
-        <FormControl className={classes.formControl}>
+        <FormControl className="form-control">
           <Select
             labelId="demo-mutiple-checkbox-label"
             id="demo-mutiple-checkbox"

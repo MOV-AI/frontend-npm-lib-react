@@ -16,7 +16,7 @@ import TimeFilters from "./sub-components/TimeFilters";
 import SettingsPopover from "./sub-components/SettingsPopover";
 import { useTranslation } from "react-i18next";
 // Styles
-import { useLogFilterStyles } from "../styles";
+// import { useLogFilterStyles } from "../styles";
 
 
 const EMPTY_FUNCTION = () => {
@@ -25,7 +25,7 @@ const EMPTY_FUNCTION = () => {
 
 const LogsFilterBar = props => {
   // Style Hook
-  const classes = useLogFilterStyles();
+  // const classes = useLogFilterStyles();
   // Translation hook
   const { t } = useTranslation();
   // Props
@@ -79,21 +79,21 @@ const LogsFilterBar = props => {
   return (
     <AppBar position="static" color="inherit">
       <Toolbar data-testid="section_logs-filter-bar" variant="dense">
-        <div className={classes.flexContainer}>
+        <div className="flex-container">
           {/* Robot Selector */}
           <RobotSelector
             selectedRobots={selectedRobots}
             handleRobotChange={handleRobotChange}
           />
         </div>
-        <div className={`${classes.doubleFlexContainer} ${classes.displayFlex} ${classes.center}`}>
+        <div className="double-flex-container display-flex center">
           {/* Search Input */}
           <SearchInput
             messageRegex={messageRegex}
             handleMessageRegex={handleMessageRegex}
           />
         </div>
-        <div className={classes.doubleFlexContainer}>
+        <div className="double-flex-container">
           {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
           <LevelSelector
             levels={levels}
@@ -101,7 +101,7 @@ const LogsFilterBar = props => {
             levelsList={levelsList}
           />
         </div>
-        <div className={classes.doubleFlexContainer}>
+        <div className="double-flex-container">
           {/* Toggle: BACKEND, SPAWNER */}
           <ServiceSelector
             selectedService={selectedService}
@@ -109,9 +109,9 @@ const LogsFilterBar = props => {
           />
         </div>
         <div
-          className={`${classes.doubleFlexContainer} ${classes.displayFlex} ${classes.spaceBetween}`}
+          className="double-flex-container display-flex space-between"
         >
-          <div className={`${classes.doubleFlexContainer} ${classes.displayFlex}`}>
+          <div className="double-flex-container display-flex">
             {/* Tags */}
             <TagsPopover
               tags={tags}
@@ -133,7 +133,7 @@ const LogsFilterBar = props => {
               </IconButton>
             </Tooltip>
           </div>
-          <div className={`${classes.flexContainer} ${classes.displayFlex} ${classes.flexEnd}`}>
+          <div className="flex-container display-flex flex-end">
             {/* Settings */}
             <SettingsPopover
               limit={limit}

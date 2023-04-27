@@ -76,7 +76,6 @@ const Alert = props => {
   const {
     action,
     children,
-    classes,
     className,
     closeText = "Close",
     color,
@@ -94,21 +93,21 @@ const Alert = props => {
     <div
       data-testid="section_alert"
       className={clsx(
-        classes.root,
-        classes[`${variant}${capitalize(color || severity)}`],
+        "root",
+        // classes[`${variant}${capitalize(color || severity)}`],
         className
       )}
       {...other}
     >
       {icon !== false ? (
-        <div data-testid="output_icon" className={classes.icon}>
+        <div data-testid="output_icon" className="icon">
           {icon || iconMapping[severity] || defaultIconMapping[severity]}
         </div>
       ) : null}
-      <div className={classes.message}>{children}</div>
-      {action != null ? <div className={classes.action}>{action}</div> : null}
+      <div className="message">{children}</div>
+      {action != null ? <div className="action">{action}</div> : null}
       {action == null && onClose ? (
-        <div className={classes.action}>
+        <div className="action">
           <IconButton
             inputProps={{ "data-testid": "input_button" }}
             size="small"
@@ -138,11 +137,6 @@ Alert.propTypes = {
    * The content of the component.
    */
   children: PropTypes.node,
-  /**
-   * Override or extend the styles applied to the component.
-   * See [CSS API](#css) below for more details.
-   */
-  classes: PropTypes.object,
   /**
    * @ignore
    */

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { makeMagic } from "@tty-pt/styles";
 import List from "@mui/material/List";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
@@ -7,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
-import { withStyles } from "@material-ui/core/styles";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import WarningIcon from "@mui/icons-material/Warning";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
@@ -15,7 +15,7 @@ import ChatIcon from "@mui/icons-material/Chat";
 import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import AbstractModal from "./AbstractModal";
 
-const styles = theme => ({
+makeMagic({
   breakWord: {
     wordBreak: "break-all"
   }
@@ -70,7 +70,7 @@ class RobotLogModal extends Component {
 
   renderAlertInfo = () => {
     const { data } = this.state;
-    const { props, classes } = this.props;
+    const { props } = this.props;
     return (
       <Typography data-testid="section_robot-log-modal" component="div">
         <List style={{ width: "100%" }}>
@@ -102,7 +102,7 @@ class RobotLogModal extends Component {
                 </ListItemAvatar>
                 <ListItemText
                   primary={data.service}
-                  className={classes.breakWord}
+                  className="break-word"
                 />
               </ListItem>
               <Divider variant="inset" component="li" />
@@ -118,7 +118,7 @@ class RobotLogModal extends Component {
                 </ListItemAvatar>
                 <ListItemText
                   primary={data.module}
-                  className={classes.breakWord}
+                  className="break-word"
                 />
               </ListItem>
               <Divider variant="inset" component="li" />
@@ -132,7 +132,7 @@ class RobotLogModal extends Component {
             </ListItemAvatar>
             <ListItemText
               primary={data.message}
-              className={classes.breakWord}
+              className="break-word"
             />
           </ListItem>
         </List>
@@ -143,7 +143,7 @@ class RobotLogModal extends Component {
               <ListItem>
                 <ListItemText
                   primary={data.action}
-                  className={classes.breakWord}
+                  className="break-word"
                 />
               </ListItem>
             </List>
