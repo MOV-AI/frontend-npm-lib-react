@@ -55,13 +55,13 @@ const AbstractModal = (props: AbstractModalProps) => {
    * @param {Event} event : KeyPress event
    */
   const handleKeyPress = useCallback(
-    event => {
+    (event: any) => {
       if (onKeyPress) return onKeyPress(event);
       if (event.key === "Enter") {
         handleSubmit();
       }
     },
-    [handleSubmit]
+    [handleSubmit, onKeyPress]
   );
 
   //========================================================================================

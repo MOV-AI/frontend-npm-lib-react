@@ -1,9 +1,9 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { withStyles } from "@material-ui/core/styles";
+// import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@mui/material/IconButton";
-import { capitalize } from "@material-ui/core/utils";
+// import { capitalize } from "@material-ui/core/utils";
 import { svgIcons } from "./svg-icons/svgIcons";
 
 export const styles = () => {
@@ -78,14 +78,11 @@ const Alert = props => {
     children,
     className,
     closeText = "Close",
-    color,
+    // color,
     icon,
     iconMapping = defaultIconMapping,
     onClose,
-    role = "alert",
     severity = "success",
-    variant = "standard",
-    theme,
     ...other
   } = props;
 
@@ -189,4 +186,4 @@ Alert.propTypes = {
   variant: PropTypes.oneOf(["filled", "outlined", "standard"])
 };
 
-export default withStyles(styles, { name: "MuiAlert" })(Alert);
+export default Alert;

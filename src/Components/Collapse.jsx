@@ -2,7 +2,7 @@ import React from "react";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import PropTypes from "prop-types";
-import MaterialCollapse from "@mui/material/MaterialCollapse";
+import MaterialCollapse from "@mui/material/Collapse";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import List from "@mui/material/List";
@@ -15,7 +15,7 @@ const Collapse = props => {
     if (props.open !== open) {
       setOpen(props.open);
     }
-  }, [props.open]);
+  }, [props.open, open]);
 
   const handleClickFactory = clickLambda => () => {
     setOpen(!open);

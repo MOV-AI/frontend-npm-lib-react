@@ -3,7 +3,7 @@ import Chip from "@mui/material/Chip";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import FiltersIcon from "@mui/icons-material/Filters";
+import FiltersIcon from "@mui/icons-material/Tune";
 import LabelIcon from "@mui/icons-material/Label";
 import AddIcon from "@mui/icons-material/Add";
 // import { useTagsStyles } from "../../styles";
@@ -24,7 +24,7 @@ const TagsPopover = props => {
   const addTag = useCallback(() => {
     handleAddTag(tagText);
     setTagText("");
-  }, [tagText]);
+  }, [tagText, handleAddTag]);
 
   const handleKeyUp = event => {
     // User pressed Enter

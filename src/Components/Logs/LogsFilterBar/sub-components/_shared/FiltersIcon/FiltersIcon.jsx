@@ -32,7 +32,7 @@ const FiltersIcon = props => {
    * Handle popup close
    * @param {Event} _event : Close Event
    */
-  const handleClose = useCallback(_event => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
   }, []);
 

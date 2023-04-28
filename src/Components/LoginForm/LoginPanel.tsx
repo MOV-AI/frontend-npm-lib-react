@@ -1,15 +1,14 @@
 import React, { Component } from "react";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import LinearProgress from "@mui/material/LinearProgress";
-import defaultLogo from "../../../resources/favicon.png";
+import defaultLogo from "../../resources/favicon.png";
 
 export default
 class NotAuthorized extends Component<{
   logo?: string;
   title?: string;
-  message: string | JSX.Element;
+  message: string | React.ElementType;
   progress?: boolean;
 }> {
   render() {
@@ -20,45 +19,37 @@ class NotAuthorized extends Component<{
       progress = false
     } = this.props;
 
-    return (
-      <Grid
+    return (<div className="vertical-0 align-items justify-content-space-around size-vertical-full">
+      <Paper elevation={10}
         data-testid="section_login-panel"
-        className="container"
-        container
-        direction="column"
-        alignItems="center"
-        justifyContent="space-evenly"
+        className="container pad-big vertical-0 border-radius-big align-items size-horizontal-quarter"
       >
-        <Paper elevation={10} className="root">
-          <Grid item>
-            <img
-              data-testid="output_logo"
-              src={logo}
-              alt="logo"
-              className="center logo-image"
-            />
-          </Grid>
-          <Grid>
-            <Typography
-              data-testid="output_title"
-              align="center"
-              variant="h2"
-              gutterBottom
-            >
-              {title}
-            </Typography>
-            <Typography
-              data-testid="output_message"
-              align="center"
-              variant="subtitle1"
-              gutterBottom
-            >
-              {message}
-              {progress && <LinearProgress color="secondary" />}
-            </Typography>
-          </Grid>
-        </Paper>
-      </Grid>
-    );
+        <div className="size-horizontal-half">
+          <img
+            data-testid="output_logo"
+            src={logo}
+            alt="logo"
+            className="center logo-image size-horizontal-full"
+          />
+        </div>
+        <Typography
+          data-testid="output_title"
+          align="center"
+          variant="h2"
+          gutterBottom
+        >
+          {title}
+        </Typography>
+        <Typography
+          data-testid="output_message"
+          align="center"
+          variant="subtitle1"
+          gutterBottom
+        >
+          {message}
+          {progress && <LinearProgress color="secondary" />}
+        </Typography>
+      </Paper>
+    </div>);
   }
 }

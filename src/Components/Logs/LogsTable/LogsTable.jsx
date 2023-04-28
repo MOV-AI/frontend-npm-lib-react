@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { makeMagic, useMagic } from "@tty-pt/styles";
+import { makeMagic, bindMagic } from "@tty-pt/styles";
 import TableCell from "@mui/material/TableCell";
 import { AutoSizer, Column, Table } from "react-virtualized";
-import { COLUMN_LIST, COLOR_CODING } from "../utils/Constants";
+import { COLUMN_LIST } from "../utils/Constants";
 
 makeMagic({
   logsTable: {
@@ -18,7 +18,6 @@ makeMagic({
       // // https://github.com/bvaughn/react-virtualized/issues/454
       "& .ReactVirtualized__Table__headerRow": {
         flip: false,
-        paddingRight: theme.direction === "rtl" ? "0 !important" : undefined
       }
     },
     tableRow: {
@@ -46,6 +45,18 @@ makeMagic({
   },
 });
 
+const useStyles = bindMagic(theme => ({
+  logsTable: {
+    table: {
+      // temporary right-to-left patch, waiting for
+      // https://github.com/bvaughn/react-virtualized/issues/454
+      "& .ReactVirtualized__Table__headerRow": {
+        paddingRight: theme.direction === "rtl" ? "0 !important" : undefined
+      }
+    },
+  }
+}));
+
 const MuiVirtualizedTable = props => {
   const {
     columns,
@@ -56,18 +67,7 @@ const MuiVirtualizedTable = props => {
     ...tableProps
   } = props;
 
-  const magic = useMagic(theme => ({
-    logsTable: {
-      table: {
-        // temporary right-to-left patch, waiting for
-        // // https://github.com/bvaughn/react-virtualized/issues/454
-        "& .ReactVirtualized__Table__headerRow": {
-          flip: false,
-          paddingRight: theme.direction === "rtl" ? "0 !important" : undefined
-        }
-      },
-    }
-  }));
+  const magic = useStyles();
 
   const isNumericColumn = columnIndex =>
     columnIndex !== null && columns[columnIndex]?.numeric;

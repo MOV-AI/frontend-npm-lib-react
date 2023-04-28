@@ -4,10 +4,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import ResetSearch from "@mui/icons-material/ResetSearch";
+import ResetSearch from "@mui/icons-material/RestartAlt";
 // import { useSearchInputStyles } from "../../styles";
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
+// import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
 const SearchInput = props => {
   // Translation hook
@@ -15,7 +15,8 @@ const SearchInput = props => {
   // Props
   const { messageRegex, handleMessageRegex } = props;
   // Style hook
-  const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
+  // const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
+  const bigScreen = true;
 
   //========================================================================================
   /*                                                                                      *
@@ -29,7 +30,7 @@ const SearchInput = props => {
    */
   const onChangeText = useCallback(event => {
     handleMessageRegex(event.target.value);
-  }, []);
+  }, [handleMessageRegex]);
 
   //========================================================================================
   /*                                                                                      *

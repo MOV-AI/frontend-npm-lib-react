@@ -21,6 +21,7 @@ makeMagic({
   }
 });
 
+export default
 class RobotLogModal extends Component {
   state = {
     data: {},
@@ -57,7 +58,7 @@ class RobotLogModal extends Component {
     // Trigger callback to clear log
     if (callback) {
       return () => {
-        MasterDB.cloudFunction(callback, "", data, res => {
+        MasterDB.cloudFunction(callback, "", data, () => {
           this.setState({ open: false });
         });
       };
@@ -183,5 +184,3 @@ RobotLogModal.defaultProps = {
   title: "Log Details",
   props: []
 };
-
-export default withStyles(styles, { withTheme: true })(RobotLogModal);

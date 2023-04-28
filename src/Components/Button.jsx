@@ -1,5 +1,5 @@
 import React from "react";
-import MaterialButton from "@material-ui/core/Button";
+import MaterialButton from "@mui/material/Button";
 import PropTypes from "prop-types";
 
 const Button = props => {

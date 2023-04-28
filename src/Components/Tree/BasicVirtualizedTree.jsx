@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Tree from "react-virtualized-tree";
+// import Tree from "react-virtualized-tree";
 import "material-icons/css/material-icons.css";
 import "react-virtualized/styles.css";
-import "react-virtualized-tree/lib/main.css";
+// import "react-virtualized-tree/lib/main.css";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { withStyles } from "@material-ui/core/styles";
 import _get from "lodash/get";
 import { ListItemsTreeWithSearch } from "./TreeSearch";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";
@@ -19,46 +18,46 @@ import { EMPTY_FUNCTION } from "../../Utils/Constants";
  *                                                                                      */
 //========================================================================================
 
-const styles = theme => ({
-  horizFlex: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  spaceBetween: {
-    display: "flex",
-    width: "100%",
-    justifyContent: "space-between"
-  },
-  preContainer: {
-    justifyContent: "space-between",
-    "& button": {
-      display: "none"
-    },
-    "&:hover": {
-      backgroundColor: "rgba(54,181,230, 0.15)",
-      "& button": {
-        display: "inline-flex"
-      }
-    }
-  },
-  ellipsis: {
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    flex: 2
-  },
-  iconSpace: {
-    flex: 1,
-    textAlign: "right",
-    minWidth: "45px",
-    "& button": {
-      position: "relative",
-      bottom: "7px",
-      padding: "7px"
-    }
-  }
-});
+// const styles = theme => ({
+//   horizFlex: {
+//     display: "flex",
+//     flexDirection: "row",
+//     alignItems: "center"
+//   },
+//   spaceBetween: {
+//     display: "flex",
+//     width: "100%",
+//     justifyContent: "space-between"
+//   },
+//   preContainer: {
+//     justifyContent: "space-between",
+//     "& button": {
+//       display: "none"
+//     },
+//     "&:hover": {
+//       backgroundColor: "rgba(54,181,230, 0.15)",
+//       "& button": {
+//         display: "inline-flex"
+//       }
+//     }
+//   },
+//   ellipsis: {
+//     whiteSpace: "nowrap",
+//     overflow: "hidden",
+//     textOverflow: "ellipsis",
+//     flex: 2
+//   },
+//   iconSpace: {
+//     flex: 1,
+//     textAlign: "right",
+//     minWidth: "45px",
+//     "& button": {
+//       position: "relative",
+//       bottom: "7px",
+//       padding: "7px"
+//     }
+//   }
+// });
 
 // const {Deletable, Expandable, Favorite} = Renderers;
 
@@ -73,6 +72,7 @@ for (let index = 0; index < 100; index++) {
 
 const EXPANDED = "EXPANDED";
 
+export default
 class BasicVirtualizedTree extends Component {
   state = {
     selectedGroup: EXPANDED,
@@ -125,7 +125,7 @@ class BasicVirtualizedTree extends Component {
 
   // open: true -> expand
   //       false -> collapse
-  handleExpansion = (evt, nodes, node, open) => {
+  handleExpansion = () => {
     // const treeData = _cloneDeep(nodes);
     // _set(treeData, [node.id, "state"], {
     //   expanded: open
@@ -151,11 +151,10 @@ class BasicVirtualizedTree extends Component {
           }}
         >
           <div style={{ height: this.props.height }}>
-            <Tree
-              nodes={this.searchFilter(nodes, this.state.searchValue)}
+            <div
               onChange={this.props.handleChange}
             >
-              {({ style, node, ...rest }) => {
+              {({ style, node }) => {
                 // Adjust tree indentation
                 style.paddingLeft = style.marginLeft / 1.5;
                 style.marginLeft = 0;
@@ -166,7 +165,6 @@ class BasicVirtualizedTree extends Component {
                     style={style}
                     onClick={() => this.props.onClickNode(node)}
                     onDoubleClick={() => this.props.onDoubleClickNode(node)}
-                    p={2}
                     className={
                       !_get(node, `children`, false) ? "pre-container" : ""
                     }
@@ -206,7 +204,7 @@ class BasicVirtualizedTree extends Component {
                   </div>
                 );
               }}
-            </Tree>
+            </div>
           </div>
         </ListItemsTreeWithSearch>
       </div>
@@ -229,5 +227,3 @@ BasicVirtualizedTree.defaultProps = {
   handleChange: EMPTY_FUNCTION,
   height: 700
 };
-
-export default withStyles(styles, { withTheme: true })(BasicVirtualizedTree);

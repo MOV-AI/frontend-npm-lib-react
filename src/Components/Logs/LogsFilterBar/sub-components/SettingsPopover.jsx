@@ -9,7 +9,6 @@ import ListItemText from "@mui/material/ListItemText";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import TuneIcon from "@mui/icons-material/Tune";
-import FiltersIcon from "@mui/icons-material/Filters";
 import { COLUMN_LIST } from "../../utils/Constants";
 // import { useSettingsStyles } from "../../styles";
 import { MENU_PROPS } from "./_shared/Constants";
@@ -57,7 +56,7 @@ const SettingsPopover = props => {
   //========================================================================================
 
   return (
-    <FiltersIcon icon={<TuneIcon></TuneIcon>} title={t("Configuration")}>
+    <TuneIcon title={t("Configuration")}>
       <div className="filters-button">
         {/* Limit Input */}
         <Typography component="div" className="input-header">
@@ -95,7 +94,7 @@ const SettingsPopover = props => {
           </Select>
         </FormControl>
       </div>
-    </FiltersIcon>
+    </TuneIcon>
   );
 };
 

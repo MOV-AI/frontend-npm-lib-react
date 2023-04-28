@@ -3,7 +3,7 @@ import { makeMagic } from "@tty-pt/styles";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import MaterialSelect from "@mui/material/MaterialSelect";
+import MaterialSelect from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import PropTypes from "prop-types";

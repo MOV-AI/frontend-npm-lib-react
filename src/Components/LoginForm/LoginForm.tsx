@@ -1,5 +1,6 @@
-import React, { ChangeEvent, Component, KeyboardEvent } from "react";
+import React, { Component, KeyboardEvent } from "react";
 import { makeMagic } from "@tty-pt/styles";
+import { SelectChangeEvent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -8,7 +9,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import Paper from "@mui/material/Paper";
-import defaultLogo from "../../../resources/favicon.png";
+import defaultLogo from "../../resources/favicon.png";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import LoginFormAdvanced from "./LoginFormAdvanced";
 import { withTranslation } from "react-i18next";
@@ -34,9 +35,6 @@ makeMagic({
 });
 
 const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
-const EMPTY_FUNCTION = () => {
-  /** Empty on purpose */
-};
 
 class LoginForm extends Component<LoginFormProps> {
   state = {
@@ -101,7 +99,7 @@ class LoginForm extends Component<LoginFormProps> {
   };
 
   handleProviderChange = (
-    e: React.ChangeEvent<{ name?: string; value: unknown }>
+    e: SelectChangeEvent<string>
   ) => {
     const target = e.target as HTMLInputElement;
     this.setState({

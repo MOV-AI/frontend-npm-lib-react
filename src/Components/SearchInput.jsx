@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // import { alpha } from "@material-ui/core/styles";
 import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/material/SearchIcon";
+import SearchIcon from "@mui/icons-material/Search";
 import PropTypes from "prop-types";
 
 // const styles = theme => ({

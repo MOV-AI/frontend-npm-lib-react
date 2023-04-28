@@ -7,8 +7,15 @@ import LoginPanel from "../LoginForm/LoginPanel";
 import jwtDecode from "jwt-decode";
 import i18n from "../../i18n/i18n.js";
 
-export default function withAuthentication<P extends object>(
-  WrappedComponent: React.ComponentType<P>,
+interface LoginData {
+  username: string;
+  password: string;
+  remember: any;
+  selectedProvider: any; 
+}
+
+export default function withAuthentication(
+  WrappedComponent: React.ComponentType,
   appName: PermissionType | string
 ) {
   return function (props: any) {
@@ -71,15 +78,15 @@ export default function withAuthentication<P extends object>(
      */
     useEffect(() => {
       authenticate();
-    }, []);
+    }, [authenticate]);
 
     /**
      * Updates the Access Token and the Refresh Token
      */
     useEffect(() => {
       Authentication.getProviders()
-        .then(response => setAuthenticationProviders(response.domains))
-        .catch(e =>
+        .then((response: any) => setAuthenticationProviders(response.domains))
+        .catch((e: any) =>
           console.log(
             "Error while fetching authentication providers: ",
             e.error
@@ -109,13 +116,13 @@ export default function withAuthentication<P extends object>(
         const timeOut = setTimeout(
           () =>
             Authentication.refreshTokens()
-              .then(res => {
+              .then((res: boolean) => {
                 setState(prevState => ({
                   ...prevState,
                   loggedIn: res
                 }));
               })
-              .catch(error =>
+              .catch((error: any) =>
                 console.log("Error while trying to refresh the tokens", error)
               ),
           timeToRun
@@ -146,7 +153,7 @@ export default function withAuthentication<P extends object>(
      * @param {{ username, password, remember, selectedProvider }}
      */
     const handleLoginSubmit = useCallback(
-      async ({ username, password, remember, selectedProvider }) => {
+      async ({ username, password, remember, selectedProvider }: LoginData) => {
         try {
           setLoading(true);
           const apiResponse = await Authentication.login(
@@ -162,7 +169,7 @@ export default function withAuthentication<P extends object>(
           setLoading(false);
         }
       },
-      []
+      [authenticate]
     );
 
     /**
@@ -201,13 +208,13 @@ export default function withAuthentication<P extends object>(
           title={i18n.t("NotAuthorized")}
           message={
             <>
-              <p>{i18n.t("NotAuthorizedDescription")}</p>
+              <p>{i18n.t("NotAuthorizedDescription") as string}</p>
               <Button
                 variant="outlined"
                 data-testid="input_unauthorized_login"
                 onClick={handleLoginAfterNotAuthorized}
               >
-                {i18n.t("NotAuthorizedRedirectToLogin")}
+                {i18n.t("NotAuthorizedRedirectToLogin") as string}
               </Button>
             </>
           }

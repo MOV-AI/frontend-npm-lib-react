@@ -1,12 +1,9 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+// import KeyboardDateTimePicker from "@mui/x-date-pickers/KeyboardDateTimePicker";
+// import MuiPickersUtilsProvider from "@mui/x-date-pickers/MuiPickersUtilsProvider";
 import TodayIcon from "@mui/icons-material/Today";
-import FiltersIcon from "@mui/icons-material/Filters";
+import FiltersIcon from "@mui/icons-material/Tune";
 import { DATE_KEY_OPTION } from "../../utils/Constants";
 
 const DATE_TIME_FORMAT = "yyyy/MM/dd HH:mm";
@@ -52,28 +49,24 @@ const TimeFilters = props => {
       isActive={!selectedFromDate || !selectedToDate}
     >
       {/* From -> To Date */}
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardDateTimePicker
+      <div>
+        <div
           key="time-picker"
           size="small"
-          variant="inline"
-          ampm={false}
           label={t("From date")}
           value={selectedFromDate}
           onChange={handleFromDateChange}
           format={DATE_TIME_FORMAT}
         />
-        <KeyboardDateTimePicker
+        <div
           key="time-picker2"
           size="small"
-          variant="inline"
-          ampm={false}
           label={t("To date")}
           value={selectedToDate}
           onChange={handleToDateChange}
           format={DATE_TIME_FORMAT}
         />
-      </MuiPickersUtilsProvider>
+      </div>
     </FiltersIcon>
   );
 };

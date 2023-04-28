@@ -1,31 +1,27 @@
 import { WithThemeProps } from "@tty-pt/styles/lib/types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+const defaultTheme = window.localStorage.getItem("movai.theme") ?? "light"; // dark or light
 
 export default function withTheme(
-  Component: React.ComponentType<WithThemeProps>,
-  ApplicationTheme: {
-    getTheme: () => string;
-    setTheme: (theme: string) => void;
-    [themeName: string]: any;
-  }
+  Component: React.ComponentClass<WithThemeProps>,
 ) {
   return function (props: any) {
-    const [theme, setTheme] = useState<string>(ApplicationTheme.getTheme());
+    const [theme, setTheme] = useState<string>(defaultTheme);
+
+    useEffect(() => {
+      document.body.className = "size-vertical-full " + theme;
+    }, [theme]);
 
     /**
      * Handle theme toggle
      */
     const handleToggleTheme = () => {
       const newTheme = theme === "dark" ? "light" : "dark";
-      ApplicationTheme.setTheme(newTheme);
+      document.body.className = "size-vertical-full " + newTheme;
+      window.localStorage.setItem("movai.theme", newTheme); // dark or light
       setTheme(newTheme);
     };
-
-    React.useEffect(() => {
-      const currentTheme = ApplicationTheme.getTheme() as string;
-      document.body.style.background =
-        ApplicationTheme[currentTheme].backgroundColor;
-    }, [theme]);
 
     return (
       <Component

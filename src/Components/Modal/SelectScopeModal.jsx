@@ -99,14 +99,14 @@ const SelectScopeModal = props => {
     [data, props.scopeList]
   );
 
-  useEffect(() => setData(filterData(props.data ?? initialData)), [props.data]);
+  useEffect(() => setData(filterData(props.data ?? initialData)), [props.data, filterData]);
 
   /**
    * Filter data based filter props
    * @param {Object} _data : Raw data
    * @returns {Object} Filtered data
    */
-  const filterData = _data => {
+  const filterData = useCallback(_data => {
     const filteredData = _cloneDeep(scopeFilter(props.scopeList, _data));
     if (!props.filter) return filteredData;
     // Filter data
@@ -114,7 +114,7 @@ const SelectScopeModal = props => {
       filteredData[index].children = scope.children.filter(props.filter);
     });
     return filteredData;
-  };
+  }, [props.filter, props.scopeList]);
 
   const requestScopeVersions = useCallback(
     node => {
@@ -198,19 +198,19 @@ const SelectScopeModal = props => {
     [scopeFilteredData]
   );
 
-  const _getAllData = workspace => {
+  const _getAllData = useCallback(workspace => {
     getAllData(workspace, scopeFilteredData).then(combined => {
       setData(filterData(combined));
       setIsLoading(false);
     });
-  };
+  }, [scopeFilteredData, filterData]);
 
-  const confirmNodeSelection = node => {
+  const confirmNodeSelection = useCallback(node => {
     // Display the selected option and confirm selection
     if (node.deepness <= 1) return;
     setSelectedScopeItem(node.url);
     props.onSubmit(node.url);
-  };
+  }, [props]);
 
   const getModalTitle = scope => {
     const vowels = ["a", "e", "i", "o", "u"];
@@ -228,7 +228,7 @@ const SelectScopeModal = props => {
 
   const handleSubmit = useCallback(
     () => props.onSubmit(selectedScopeItem),
-    [selectedScopeItem]
+    [selectedScopeItem, props]
   );
   const handleNodeClick = useCallback(
     node => requestScopeVersions(node),
@@ -237,7 +237,7 @@ const SelectScopeModal = props => {
   const handleChange = useCallback(nodes => setData(nodes), []);
   const handleNodeDoubleClick = useCallback(
     nodeData => confirmNodeSelection(nodeData),
-    []
+    [confirmNodeSelection]
   );
 
   //========================================================================================
@@ -249,14 +249,14 @@ const SelectScopeModal = props => {
   React.useEffect(() => {
     // get all information in the scopes (not filtered by message)
     _getAllData(CONSTANTS.GLOBAL_WORKSPACE);
-  }, []);
+  }, [_getAllData]);
 
   // Filter Results based on props.filter
   useEffect(() => {
     if (isLoading || !props.filter) return;
     // Set filtered data
     setData(filterData(scopeFilteredData));
-  }, [props.filter, setData, scopeFilteredData]);
+  }, [props.filter, setData, scopeFilteredData, filterData, isLoading]);
 
   //========================================================================================
   /*                                                                                      *

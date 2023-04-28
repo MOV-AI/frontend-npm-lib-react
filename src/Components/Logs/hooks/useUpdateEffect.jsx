@@ -8,7 +8,7 @@ const useUpdateEffect = (fn, inputs) => {
       return fn();
     }
     didMountRef.current = true;
-  }, inputs);
+  }, [inputs, fn]);
 };
 
 export default useUpdateEffect;

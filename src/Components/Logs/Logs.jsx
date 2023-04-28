@@ -6,7 +6,6 @@ import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
 import LogsSkeleton from "./LogsSkeleton";
 import {
-  ROBOT_STATES,
   DATE_KEY_OPTION,
   ADVANCED_LEVELS_LIST,
   COLUMN_LIST,

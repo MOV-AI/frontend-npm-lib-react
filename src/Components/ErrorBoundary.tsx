@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from "react";
 import StackTrace, { StackFrame } from "stacktrace-js";
 
-function getStackLine(error : any, stackFrame : StackFrame) {
+function getStackLine(error: Error, stackFrame : StackFrame) {
   const { functionName, fileName, lineNumber } = stackFrame;
   return "Error: " + error.message + "\n    in " + functionName + " (at " + fileName + ":" + lineNumber + ")";
 }

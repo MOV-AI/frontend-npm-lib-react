@@ -76,7 +76,6 @@ const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
                   aria-describedby="component-authentication-error-text"
                   value={props.selectedProvider}
                   inputProps={{ "data-testid": "input_domain" }}
-                  classes={{ root: "provider-selector-input" }}
                   onChange={props.onProviderChange}
                   disabled={false}
                 >

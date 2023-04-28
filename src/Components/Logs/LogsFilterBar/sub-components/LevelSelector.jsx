@@ -7,14 +7,15 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 // import { useSelectBoxStyle } from "../../styles";
 import { MENU_PROPS } from "./_shared/Constants";
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
+// import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
 const LevelSelector = props => {
   // Props
   const { levels, handleLevels, levelsList } = props;
   // Style hook
-  const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
+  // const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
+  const bigScreen = true;
 
 
   //========================================================================================

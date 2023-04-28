@@ -1,6 +1,5 @@
 import React, { useCallback, useRef } from "react";
 {/* import { infoButtonStyles } from "./styles"; */}
-import PropTypes from "prop-types";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";

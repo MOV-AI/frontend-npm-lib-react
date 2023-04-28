@@ -30,7 +30,7 @@ function getCustomMenuElements(menuItemConf: any) {
       className="menu-item-spacing"
       onClick={menuItem.handler}
     >
-      { i18n.t(menuItem.title) }
+      { i18n.t(menuItem.title) as string }
     </MenuItem>);
   });
 }
@@ -66,7 +66,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    * Handle click to open ProfileMenu
    * @param {Event} event : Click event
    */
-  const handleClick = useCallback(event => {
+  const handleClick = useCallback((event: any) => {
     setAnchorEl(event.currentTarget);
   }, []);
 
@@ -90,7 +90,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    */
   const handleLogoutClick = useCallback(() => {
     handleLogout();
-  }, []);
+  }, [handleLogout]);
 
   //========================================================================================
   /*                                                                                      *
@@ -114,7 +114,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
 
   return (
     <div data-testid="section_profile-menu">
-      <Tooltip title={i18n.t("Settings") || ""}>
+      <Tooltip title={i18n.t("Settings") as string || ""}>
         <IconButton
           data-testid="input_button"
           aria-haspopup="true"
@@ -136,10 +136,9 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           variant="body1"
           className="root"
         >
-          <div className="menu-item-spacing">
+          <MenuItem className="menu-item-spacing">
             {welcomeLabel}, {username}
-          </div>
-          <Divider variant="middle" />
+          </MenuItem>
           {extraItems?.map((item, index) => (
             <MenuItem
               className="menu-item-spacing"
@@ -156,18 +155,19 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               className="menu-item-spacing"
               onClick={handlePasswordReset}
             >
-              {i18n.t("Change Password")}
+              {i18n.t("Change Password") as string}
             </MenuItem>
           )}
           { customEl }
           {handleToggleTheme && (
-            <div className="menu-item-spacing">
+            <MenuItem className="menu-item-spacing">
               {darkThemeLabel}
               <Toggle
+                label=""
                 onToggle={handleToggleTheme}
                 toggle={isDarkTheme}
               ></Toggle>
-            </div>
+            </MenuItem>
           )}
           <MenuItem
             className="menu-item-spacing"

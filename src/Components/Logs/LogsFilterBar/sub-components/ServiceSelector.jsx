@@ -8,8 +8,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import { MENU_PROPS } from "./_shared/Constants";
 // import { useSelectBoxStyle } from "../../styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
+// import useMediaQuery from "@material-ui/core/useMediaQuery";
+// import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
 
 const {SERVICE_LIST} = CONSTANTS
@@ -18,7 +18,8 @@ const ServiceSelector = props => {
   // Props
   const { selectedService, handleSelectedService } = props;
   // Style hook
-  const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
+  // const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
+  const bigScreen = true;
 
   //========================================================================================
   /*                                                                                      *

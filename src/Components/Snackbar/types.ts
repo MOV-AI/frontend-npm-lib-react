@@ -15,5 +15,5 @@ export interface SnackbarProps extends OptionsObject {
 }
 
 export interface InnerSnackbarUtilsConfiguratorProps {
-  setUseSnackbarRef: (provider: ProviderContext) => void;
+  setUseSnackbarRef: (_context: ProviderContext) => void;
 }

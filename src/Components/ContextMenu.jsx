@@ -1,13 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { bindMagic } from "@tty-pt/styles";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { withStyles } from "@material-ui/core/styles";
 
 const StyledMenu = props => (
   <Menu
+    className="styled-menu"
     getContentAnchorEl={null}
     anchorOrigin={{
       vertical: "bottom",
@@ -21,20 +22,23 @@ const StyledMenu = props => (
   />
 );
 
-const StyledMenuItem = withStyles(theme => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white
+const useStyles = bindMagic(theme => ({
+  styledMenu: {
+    root: {
+      "&:focus": {
+        backgroundColor: theme.palette.primary.main,
+        "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+          color: theme.palette.common.white
+        }
       }
     }
   }
-}))(MenuItem);
+}));
 
 const ContextMenu = props => {
   const { style } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
+  useStyles();
 
   const handleClick = evt => {
     setAnchorEl(evt.currentTarget);
@@ -70,7 +74,7 @@ const ContextMenu = props => {
       >
         {props.menuList.map((item, index) => {
           return (
-            <StyledMenuItem
+            <MenuItem
               data-testid="input_menu-item"
               onClick={evt => {
                 item.onClick(evt);
@@ -82,7 +86,7 @@ const ContextMenu = props => {
             >
               {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
               <ListItemText primary={item.label || item.element} />
-            </StyledMenuItem>
+            </MenuItem>
           );
         })}
       </StyledMenu>

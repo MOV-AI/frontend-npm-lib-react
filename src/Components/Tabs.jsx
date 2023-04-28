@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import MaterialTabs from "@mui/material/MaterialTabs";
+import { makeMagic } from "@tty-pt/styles";
+import MaterialTabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 
@@ -13,8 +14,8 @@ function TabPanel(props) {
       component="div"
       role="tabpanel"
       hidden={selectedTab !== index}
-      id={`tabpanel-${index}`}
-      aria-labelledby={`tab-${index}`}
+      id={"tabpanel-" + index}
+      aria-labelledby={"tab-" + index}
       {...other}
     >
       {selectedTab === index && children}
@@ -55,9 +56,9 @@ export default function Tabs(props) {
     if (props.selectedTab !== selectedTab) {
       setSelectedTab(props.selectedTab);
     }
-  }, [props.selectedTab]);
+  }, [props.selectedTab, selectedTab]);
 
-  const handleChange = (event, newSelectedTab) => {
+  const handleChange = (_, newSelectedTab) => {
     setSelectedTab(newSelectedTab);
   };
 

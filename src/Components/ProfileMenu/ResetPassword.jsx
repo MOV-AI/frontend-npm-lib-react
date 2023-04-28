@@ -108,14 +108,14 @@ const ResetPasswordModal = forwardRef((props, ref) => {
         return User.resetPassword(userId, body);
       return user.changePassword(body);
     },
-    [variant, userId]
+    [variant, userId, user]
   );
 
   /**
    * @private Submit password change
    * @returns {Promise<{success: boolean}>} Response promise
    */
-  const changePassword = async () => {
+  const changePassword = useCallback(async () => {
     const body = {
       CurrentPassword: form[FORM_FIELDS.CURRENT_PASSWORD],
       NewPassword: form[FORM_FIELDS.NEW_PASSWORD],
@@ -139,14 +139,14 @@ const ResetPasswordModal = forwardRef((props, ref) => {
       .finally(() => {
         setLoading(false);
       });
-  };
+  }, [form, t, updatePassword]);
 
   /**
    * Get submit modal text
    */
   const getSubmitText = useCallback(() => {
     return loading ? <CircularProgress color="primary" size={16} /> : t("Save");
-  }, [loading]);
+  }, [loading, t]);
 
   //========================================================================================
   /*                                                                                      *
@@ -209,6 +209,13 @@ const ResetPasswordModal = forwardRef((props, ref) => {
   }, []);
 
   /**
+   * Handle close modal
+   */
+  const handleCancel = useCallback(() => {
+    setOpenState(false);
+  }, []);
+
+  /**
    * Handle confirmation
    */
   const handleConfirm = useCallback(() => {
@@ -229,14 +236,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
       // Show validation errors
       setErrors(validation);
     }
-  }, [form]);
-
-  /**
-   * Handle close modal
-   */
-  const handleCancel = useCallback(() => {
-    setOpenState(false);
-  }, []);
+  }, [form, changePassword, handleCancel, validateRequiredFields]);
 
   //========================================================================================
   /*                                                                                      *
@@ -249,7 +249,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    */
   useEffect(() => {
     setErrors(validateRequiredFields(form));
-  }, [form]);
+  }, [form, validateRequiredFields]);
 
   /**
    * Expose open method

@@ -39,7 +39,7 @@ const InnerSnackbarUtilsConfigurator = (
 //========================================================================================
 
 export const SnackbarUtilsConfigurator = () => {
-  const setUseSnackbarRef = useCallback(useSnackbarRefProp => {
+  const setUseSnackbarRef = useCallback((useSnackbarRefProp: any) => {
     useSnackbarRef.current = useSnackbarRefProp;
   }, []);
 
@@ -60,7 +60,7 @@ const closeSnackbar = (key: SnackbarKey) => {
   };
 };
 
-export const snackbar = (props: SnackbarProps, _theme: any) => {
+export const snackbar = (props: SnackbarProps) => {
   const {
     message,
     closable = true,
@@ -103,7 +103,7 @@ export const snackbar = (props: SnackbarProps, _theme: any) => {
     snackbarData.content = content(closeSnackbar);
   }
 
-  if (!!useSnackbarRef.current) {
+  if (useSnackbarRef.current) {
     useSnackbarRef.current?.enqueueSnackbar(message, snackbarData);
   }
   return useSnackbarRef.current;

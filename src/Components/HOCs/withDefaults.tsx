@@ -1,5 +1,7 @@
+import React from "react";
 import { I18nextProvider } from "react-i18next";
-import { withMagic, getMagicTheme, makeThemeMagicBook } from "@tty-pt/styles";
+import { WithThemeProps } from "@tty-pt/styles/lib/types";
+import { withMagic, makeThemeMagicBook } from "@tty-pt/styles";
 import { WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
 import withNotification from "./withNotification";
@@ -7,6 +9,7 @@ import withOfflineValidation from "./withOfflineValidation";
 import withTheme from "./withTheme";
 import withTranslations from "./withTranslations";
 import withError from "./withError";
+import "../../styles/Themes";
 
 export default function withDefaults(appOptions: WithDefaultsProps) {
   const {
@@ -14,8 +17,6 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     component: appComponent,
     offlineValidation = true,
     dependencies,
-    themeProps, // this should be named ApplicationTheme
-    getTheme,
     getStyle,
   } = appOptions;
 
@@ -37,12 +38,8 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
 
   const componentWithMagic = withMagic(
     componentWithAuthentication,
-    getTheme ?? getMagicTheme,
     getStyle ?? makeThemeMagicBook,
   );
 
-  return withTheme(
-    componentWithMagic,
-    themeProps
-  );
+  return withTheme(componentWithMagic as React.ComponentClass<WithThemeProps>);
 }
