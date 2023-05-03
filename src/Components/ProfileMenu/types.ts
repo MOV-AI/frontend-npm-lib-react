@@ -7,8 +7,8 @@ export interface ProfileMenuProps {
   version: string;
   extraItems: { func: MouseEventHandler; label: string }[];
   isDarkTheme: boolean;
-  isMenuOpen: boolean;
-  onClose: Function;
+  isMenuOpen?: boolean;
+  onClose?: Function;
   handleLogout: Function;
   handleToggleTheme: (
     event: React.ChangeEvent<HTMLInputElement>,
