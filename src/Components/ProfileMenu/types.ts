@@ -7,15 +7,19 @@ export interface ProfileMenuProps {
   version: string;
   extraItems: { func: MouseEventHandler; label: string }[];
   isDarkTheme: boolean;
+  isMenuOpen: boolean;
+  onClose: Function;
   handleLogout: Function;
   handleToggleTheme: (
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean
   ) => void;
   menuItemConf: {
-    [key: string]: {
-      handler: Function,
-      title: string,
-    } | React.ElementType,
-  },
+    [key: string]:
+      | {
+          handler: Function;
+          title: string;
+        }
+      | React.ElementType;
+  };
 }
