@@ -5,7 +5,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
   },
-  "main": "./src/index.js",
+  "main": "./src/",
   "exports": {
     ".": {
       "default": "./src/index.js"
