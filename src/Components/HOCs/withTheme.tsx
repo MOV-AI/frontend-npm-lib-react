@@ -1,7 +1,7 @@
 import { WithThemeProps } from "@tty-pt/styles/lib/types";
 import React, { useEffect, useState } from "react";
 
-const defaultTheme = window.localStorage.getItem("movai.theme") ?? "light"; // dark or light
+const defaultTheme = window.localStorage.getItem("movai.theme") ?? "indigo"; // dark or light
 
 export default function withTheme(
   Component: React.ComponentClass<WithThemeProps>,
@@ -10,7 +10,7 @@ export default function withTheme(
     const [theme, setTheme] = useState<string>(defaultTheme);
 
     useEffect(() => {
-      document.body.className = "size-vertical-full " + theme;
+      document.body.className = theme;
     }, [theme]);
 
     /**
@@ -18,7 +18,7 @@ export default function withTheme(
      */
     const handleToggleTheme = () => {
       const newTheme = theme === "dark" ? "light" : "dark";
-      document.body.className = "size-vertical-full " + newTheme;
+      document.body.className = newTheme;
       window.localStorage.setItem("movai.theme", newTheme); // dark or light
       setTheme(newTheme);
     };

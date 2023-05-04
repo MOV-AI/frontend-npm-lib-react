@@ -1,4 +1,4 @@
-import { defaultTheme, registerGetTheme } from "@tty-pt/styles";
+import { defaultTheme, registerGetTheme, makeMagic } from "@tty-pt/styles";
 import "@fontsource/open-sans";
 import "@fontsource/roboto";
 
@@ -22,6 +22,45 @@ const CONSTANTS = {
       secondary: "#b2b2b2"
     },
     iconColor: "#007197"
+  },
+  indigo: {
+    borderBottom: "1px solid #212121",
+    textColor: "#fff",
+    background: {
+      default: "rgb(5, 5, 5)",
+      primary: "#2E334D",
+      secondary: "#212121",
+      overlay: "radial-gradient(79.34% 81.94% at 123.17% 23.94%, #50577C 0%, #1B1E29 100%)",
+    },
+    success: {
+      main: "#3CD2A3",
+    },
+    info: {
+      main: "#4FC3F0",
+    },
+    iconColor: "#fff",
+    colors: [
+      ["Pink", {
+        main: "#E26CDE !important",
+      }],
+      ["Purple", {
+        main: "#7575CE !important",
+      }],
+    ],
+    baked: {
+      info: {
+        main: "#4FC3F0",
+      },
+      success: {
+        main: "#3CD2A3",
+      },
+      pink: {
+        main: "#E26CDE !important",
+      },
+      purple: {
+        main: "#7575CE !important",
+      },
+    }
   }
 };
 
@@ -56,7 +95,7 @@ registerGetTheme(themeName => ({
         default: "rgb(5, 5, 5)",
         paper: CONSTANTS.dark.background.primary,
         primary: CONSTANTS.dark.background.primary,
-        secondary: CONSTANTS.dark.background.secondary
+        secondary: CONSTANTS.dark.background.secondary,
       },
       accent: {
         background: "#f5f5f9",
@@ -197,7 +236,7 @@ registerGetTheme(themeName => ({
         default: "linear-gradient(122.19deg, rgb(255, 255, 255) 2.58%, rgb(255, 255, 255) 76.23%)",
         paper: CONSTANTS.light.background.primary,
         primary: CONSTANTS.light.background.primary,
-        secondary: CONSTANTS.light.background.secondary
+        secondary: CONSTANTS.light.background.secondary,
       },
       accent: {
         background: "whitesmoke",
@@ -316,4 +355,74 @@ registerGetTheme(themeName => ({
       }
     }
   },
+  indigo: {
+    ...defaultTheme,
+    label: "indigo",
+    textColor: CONSTANTS.indigo.textColor,
+    backgroundColor: "#050505",
+    bottomNavigation: { background: "#212121" },
+    globalStats: {
+      borderColor: "#474747",
+      subTextColor: "#CDCDCD",
+      upperTextColor: "#E6E6E6"
+    },
+    palette: {
+      ...defaultTheme.palette,
+      baked: CONSTANTS.indigo.baked,
+      color: [{
+        func: x => CONSTANTS.indigo.colors[x],
+        length: CONSTANTS.indigo.colors.length,
+      }],
+      type: "indigo", // Switching the indigo mode on, is a single property value change.
+      primary: {
+        ...defaultTheme.palette.primary,
+        main: "#fff"
+      },
+      success: {
+        ...defaultTheme.palette.success,
+        ...CONSTANTS.indigo.success,
+      },
+      info: {
+        ...defaultTheme.palette.info,
+        ...CONSTANTS.indigo.info,
+      },
+      divider: "#8E95BA",
+      secondary: {
+        ...defaultTheme.palette.secondary,
+        main: "#CF6679"
+      },
+      green: {
+        main: "#03DAC5"
+      },
+      background: {
+        ...defaultTheme.palette.background,
+        default: "#1B1E29",
+        paper: CONSTANTS.indigo.background.primary,
+        primary: CONSTANTS.indigo.background.primary,
+        secondary: CONSTANTS.indigo.background.secondary,
+        overlay: CONSTANTS.indigo.background.overlay,
+      },
+      accent: {
+        background: "#f5f5f9",
+        color: "rgba(0, 0, 0, 0.87)",
+        border: "#dadde9"
+      },
+      text: {
+        ...defaultTheme.palette.text,
+        primary: CONSTANTS.indigo.textColor
+      },
+      getContrastText: () => CONSTANTS.indigo.iconColor
+    },
+    icon: { color: "#fff", hoverColor: "#fff" },
+    table: { stripColor: "#505050" },
+    // magicBook: {
+    //   "!MuiIconButtonk
+    // }
+  },
 })[themeName]);
+
+makeMagic({
+  "?#root > *": {
+    minHeight: "100vh",
+  }
+});

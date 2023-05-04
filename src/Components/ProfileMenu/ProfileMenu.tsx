@@ -54,6 +54,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
     menuItemConf,
+    className,
   } = props;
 
   //========================================================================================
@@ -113,7 +114,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   //========================================================================================
 
   return (
-    <div data-testid="section_profile-menu">
+    <div data-testid="section_profile-menu" className={className}>
       <Tooltip title={i18n.t("Settings") as string || ""}>
         <IconButton
           data-testid="input_button"

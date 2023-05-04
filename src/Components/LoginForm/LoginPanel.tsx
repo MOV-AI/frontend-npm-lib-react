@@ -19,17 +19,17 @@ class NotAuthorized extends Component<{
       progress = false
     } = this.props;
 
-    return (<div className="vertical-0 align-items justify-content-space-around size-vertical-full">
+    return (<div className="vertical-0 align-items text-align justify-content-space-around">
       <Paper elevation={10}
         data-testid="section_login-panel"
-        className="container pad-big vertical-0 border-radius-big align-items size-horizontal-quarter"
+        className="container pad-big vertical-0 border-radius-big align-items size-horizontal-three-fourths"
       >
-        <div className="size-horizontal-half">
+        <div className="size-horizontal-three-fourths">
           <img
             data-testid="output_logo"
             src={logo}
             alt="logo"
-            className="center logo-image size-horizontal-full"
+            className="center logo-image size-horizontal-half"
           />
         </div>
         <Typography
@@ -42,9 +42,9 @@ class NotAuthorized extends Component<{
         </Typography>
         <Typography
           data-testid="output_message"
-          align="center"
           variant="subtitle1"
           gutterBottom
+          className="size-horizontal-full"
         >
           {message}
           {progress && <LinearProgress color="secondary" />}

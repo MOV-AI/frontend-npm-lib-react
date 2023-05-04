@@ -174,95 +174,86 @@ class LoginForm extends Component<LoginFormProps> {
     } = this.props;
     const errorMessage = this.state.formErrors || authErrorMessage;
     return (
-      <Grid
+      <div
+        className="pad-big vertical-0 align-items justify-content-space-around text-align subtitle-1"
         data-testid="section_login-form"
-        className="login-form"
         container
         direction="column"
         alignItems="center"
         justifyContent="space-evenly"
       >
-        <Paper elevation={10} className="pad root">
-          <Grid item>
+        <Paper elevation={10} className="container pad-big vertical border-radius-big align-items size-horizontal-three-fourths">
+          <div className="size-horizontal-half">
             <img
               data-testid="output_logo"
               src={logo}
               alt="logo"
-              className="center logo-image"
+              className="center logo-image size-horizontal-half"
             />
-          </Grid>
-          <Grid>
-            <Typography align="center" variant="subtitle1" gutterBottom>
-              <FormControl
-                data-testid="section_form-control"
-                className="form-control"
-                error={!!errorMessage}
-              >
-                <InputLabel htmlFor="component-username-error">
-                  Username
-                </InputLabel>
-                <Input
-                  inputProps={{ "data-testid": "input_username" }}
-                  id="component-username-error"
-                  value={this.state.username}
-                  aria-describedby="component-username-error-text"
-                  onChange={this.onChangeUsername}
-                />
-              </FormControl>
-            </Typography>
-          </Grid>
-          <Grid>
-            <Typography align="center" variant="subtitle1" gutterBottom>
-              <FormControl
-                className="form-control"
-                error={!!errorMessage}
-              >
-                <InputLabel htmlFor="component-password-error">
-                  Password
-                </InputLabel>
-                <Input
-                  inputProps={{ "data-testid": "input_password" }}
-                  required
-                  id="component-password-error"
-                  type="password"
-                  value={this.state.password}
-                  aria-describedby="component-password-error-text"
-                  onChange={this.onChangePassword}
-                  onKeyUp={this.onKeyUpPassword}
-                />
-                {errorMessage && (
-                  <FormHelperText id="component-error-text">
-                    {errorMessage}
-                  </FormHelperText>
-                )}
-                {this.state.capsLockOn && (
-                  <FormHelperText id="component-warning-text">
-                    Warning: Caps lock is ON!
-                  </FormHelperText>
-                )}
-              </FormControl>
-            </Typography>
-          </Grid>
-          <Grid>
-            <Typography align="center" variant="subtitle1" gutterBottom>
-              {this.hasMultipleDomains() && (
-                <LoginFormAdvanced
-                  selectedProvider={this.state.selectedProvider}
-                  domains={domains}
-                  onProviderChange={this.handleProviderChange}
-                />
-              )}
-            </Typography>
-          </Grid>
-          <Grid>
-            <Typography align="center" gutterBottom>
-              <Button data-testid="input_login" onClick={this.sendCreds}>
-                Login
-              </Button>
-            </Typography>
-          </Grid>
+          </div>
+          <FormControl
+            data-testid="section_form-control"
+            className="size-horizontal-full"
+            error={!!errorMessage}
+          >
+            <InputLabel htmlFor="component-username-error">
+              Username
+            </InputLabel>
+            <Input
+              inputProps={{ "data-testid": "input_username" }}
+              id="component-username-error"
+              value={this.state.username}
+              aria-describedby="component-username-error-text"
+              onChange={this.onChangeUsername}
+            />
+          </FormControl>
+          <FormControl
+            className="size-horizontal-full"
+            error={!!errorMessage}
+          >
+            <InputLabel htmlFor="component-password-error">
+              Password
+            </InputLabel>
+            <Input
+              inputProps={{ "data-testid": "input_password" }}
+              required
+              id="component-password-error"
+              type="password"
+              value={this.state.password}
+              aria-describedby="component-password-error-text"
+              onChange={this.onChangePassword}
+              onKeyUp={this.onKeyUpPassword}
+              className="margin-top"
+            />
+            {errorMessage && (
+              <FormHelperText id="component-error-text">
+                {errorMessage}
+              </FormHelperText>
+            )}
+            {this.state.capsLockOn && (
+              <FormHelperText id="component-warning-text">
+                Warning: Caps lock is ON!
+              </FormHelperText>
+            )}
+          </FormControl>
+
+          { this.hasMultipleDomains() && (
+            <div className="text-align subtitle1">
+              <LoginFormAdvanced
+                selectedProvider={this.state.selectedProvider}
+                domains={domains}
+                onProviderChange={this.handleProviderChange}
+              />
+            </div>
+          ) }
+
+          <div className="text-align">
+            <Button data-testid="input_login" onClick={this.sendCreds}>
+              Login
+            </Button>
+          </div>
         </Paper>
-      </Grid>
+      </div>
     );
   }
 }
