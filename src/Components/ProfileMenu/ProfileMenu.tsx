@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useMemo,
   useRef,
+  MutableRefObject
 } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
@@ -19,30 +20,25 @@ import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
 
 function getCustomMenuElements(menuItemConf: any, classes: any) {
-  return Object.entries(menuItemConf ?? {}).map(([key, menuItem]: [string, any]) => {
-    if (React.isValidElement(menuItem))
-      return menuItem;
+  return Object.entries(menuItemConf ?? {}).map(
+    ([key, menuItem]: [string, any]) => {
+      if (React.isValidElement(menuItem)) return menuItem;
 
-    return (<MenuItem
-      key={key}
-      data-test-id={"input_" + key}
-      className={classes.menuItemSpacing}
-      onClick={menuItem.handler}
-    >
-      { i18n.t(menuItem.title) }
-    </MenuItem>);
-  });
+      return (
+        <MenuItem
+          key={key}
+          data-testid={"input_" + key}
+          className={classes.menuItemSpacing}
+          onClick={menuItem.handler}
+        >
+          {i18n.t(menuItem.title)}
+        </MenuItem>
+      );
+    }
+  );
 }
 
 const ProfileMenu = (props: ProfileMenuProps) => {
-  // State hooks
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [username, setUsername] = useState("");
-  // Other hooks
-  const user = useMemo(() => new User(), []);
-  const classes = profileMenuStyles();
-  // Refs
-  const resetModalRef = useRef<{ open: Function }>();
   // Props
   const {
     welcomeLabel = "Hello",
@@ -51,10 +47,23 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     version = "",
     extraItems = [],
     isDarkTheme = true,
+    menuItemConf,
+    isMenuOpen,
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
-    menuItemConf,
+    onClose
   } = props;
+
+  // State hooks
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [username, setUsername] = useState("");
+  // Other hooks
+  const triggerButtonRef: MutableRefObject<HTMLElement | undefined> = useRef();
+  const menuOpenAnimation: MutableRefObject<number | "auto"> = useRef("auto");
+  const user = useMemo(() => new User(), []);
+  const classes = profileMenuStyles();
+  // Refs
+  const resetModalRef = useRef<{ open: Function }>();
 
   //========================================================================================
   /*                                                                                      *
@@ -75,7 +84,8 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    */
   const handleClose = useCallback(() => {
     setAnchorEl(null);
-  }, []);
+    onClose && onClose();
+  }, [onClose]);
 
   /**
    * Open Password Reset modal
@@ -90,7 +100,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    */
   const handleLogoutClick = useCallback(() => {
     handleLogout();
-  }, []);
+  }, [handleLogout]);
 
   //========================================================================================
   /*                                                                                      *
@@ -98,13 +108,23 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    *                                                                                      */
   //========================================================================================
 
+  useEffect(() => {
+    if (isMenuOpen) {
+      menuOpenAnimation.current = 1;
+      triggerButtonRef.current?.click();
+    }
+  }, [isMenuOpen]);
+
   // On component mount
   useEffect(() => {
     // Set authenticated user name
     setUsername(user.getUsername());
   }, [user]);
 
-  const customEl = useMemo(() => getCustomMenuElements(menuItemConf, classes), [menuItemConf, classes]);
+  const customEl = useMemo(
+    () => getCustomMenuElements(menuItemConf, classes),
+    [menuItemConf, classes]
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -116,6 +136,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     <div data-testid="section_profile-menu">
       <Tooltip title={i18n.t("Settings") || ""}>
         <IconButton
+          buttonRef={triggerButtonRef}
           data-testid="input_button"
           aria-haspopup="true"
           onClick={handleClick}
@@ -124,6 +145,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
         </IconButton>
       </Tooltip>
       <Menu
+        transitionDuration={menuOpenAnimation.current}
         data-testid="section_menu"
         anchorEl={anchorEl}
         keepMounted
@@ -159,7 +181,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               {i18n.t("Change Password")}
             </MenuItem>
           )}
-          { customEl }
+          {customEl}
           {handleToggleTheme && (
             <div className={classes.menuItemSpacing}>
               {darkThemeLabel}
