@@ -60,10 +60,7 @@ const styles = theme => ({
   }
 });
 
-// const {Deletable, Expandable, Favorite} = Renderers;
-
 const testArray = [];
-
 for (let index = 0; index < 100; index++) {
   testArray.push({
     id: index,

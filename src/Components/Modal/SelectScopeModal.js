@@ -60,8 +60,7 @@ function scopeFilter(scopeList, data) {
   return data.filter(elem => scopeList.includes(elem.scope));
 }
 
-export
-async function getAllData(workspace, data = initialData) {
+export async function getAllData(workspace, data = initialData) {
   const elements = await Promise.all(data.map(element =>
     Workspace.getDocs({ workspace, scope: element.scope }).then(response => response.scopes
       .sort((a, b) => a.ref.localeCompare(b.ref))
@@ -83,7 +82,8 @@ async function getAllData(workspace, data = initialData) {
 }
 
 const SelectScopeModal = props => {
-  const [data, setData] = useState(props.data ?? initialData);
+  const { filter, scopeList, data: propsData } = props;
+  const [data, setData] = useState(propsData ?? initialData);
   const [selectedScopeItem, setSelectedScopeItem] = useState(props.selected);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -94,26 +94,25 @@ const SelectScopeModal = props => {
   //========================================================================================
 
   const scopeFilteredData = useMemo(
-    () => scopeFilter(props.scopeList, data),
-    [data, props.scopeList]
+    () => scopeFilter(scopeList, data),
+    [data, scopeList]
   );
-
-  useEffect(() => setData(filterData(props.data ?? initialData)), [props.data]);
 
   /**
    * Filter data based filter props
    * @param {Object} _data : Raw data
    * @returns {Object} Filtered data
    */
-  const filterData = _data => {
-    const filteredData = _cloneDeep(scopeFilter(props.scopeList, _data));
-    if (!props.filter) return filteredData;
+  const filterData = useCallback(_data => {
+    const filteredData = _cloneDeep(scopeFilter(scopeList, _data));
+    if (!filter) return filteredData;
     // Filter data
     _data.forEach((scope, index) => {
-      filteredData[index].children = scope.children.filter(props.filter);
+      if (index >= filteredData.length) return;
+      filteredData[index].children = scope.children.filter(filter);
     });
     return filteredData;
-  };
+  }, [filter, scopeList]);
 
   const requestScopeVersions = useCallback(
     node => {
@@ -192,24 +191,24 @@ const SelectScopeModal = props => {
           setSelectedScopeItem(`${node.url}`);
         }
       };
-      _get(mapObj, node.deepness, () => {})();
+      _get(mapObj, node.deepness, () => { })();
     },
     [scopeFilteredData]
   );
 
-  const _getAllData = workspace => {
+  const _getAllData = useCallback(workspace => {
     getAllData(workspace, scopeFilteredData).then(combined => {
-      setData(filterData(combined));
+      setData(combined);
       setIsLoading(false);
     });
-  };
+  }, [scopeFilteredData]);
 
-  const confirmNodeSelection = node => {
+  const confirmNodeSelection = useCallback(node => {
     // Display the selected option and confirm selection
     if (node.deepness <= 1) return;
     setSelectedScopeItem(node.url);
     props.onSubmit(node.url);
-  };
+  }, [props]);
 
   const getModalTitle = scope => {
     const vowels = ["a", "e", "i", "o", "u"];
@@ -227,7 +226,7 @@ const SelectScopeModal = props => {
 
   const handleSubmit = useCallback(
     () => props.onSubmit(selectedScopeItem),
-    [selectedScopeItem]
+    [props, selectedScopeItem]
   );
   const handleNodeClick = useCallback(
     node => requestScopeVersions(node),
@@ -236,7 +235,7 @@ const SelectScopeModal = props => {
   const handleChange = useCallback(nodes => setData(nodes), []);
   const handleNodeDoubleClick = useCallback(
     nodeData => confirmNodeSelection(nodeData),
-    []
+    [confirmNodeSelection]
   );
 
   //========================================================================================
@@ -245,17 +244,11 @@ const SelectScopeModal = props => {
    *                                                                                      */
   //========================================================================================
 
-  React.useEffect(() => {
+  useEffect(() => {
     // get all information in the scopes (not filtered by message)
     _getAllData(CONSTANTS.GLOBAL_WORKSPACE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Filter Results based on props.filter
-  useEffect(() => {
-    if (isLoading || !props.filter) return;
-    // Set filtered data
-    setData(filterData(scopeFilteredData));
-  }, [props.filter, setData, scopeFilteredData]);
 
   //========================================================================================
   /*                                                                                      *
@@ -268,7 +261,7 @@ const SelectScopeModal = props => {
       onSubmit={handleSubmit}
       onCancel={props.onCancel}
       open={props.open}
-      title={getModalTitle(props.scopeList[0])}
+      title={getModalTitle(scopeList[0])}
       width="50%"
     >
       <Grid data-testid="section_select-scope-modal" container>
@@ -308,7 +301,7 @@ const SelectScopeModal = props => {
             <BasicVirtualizedTree
               onClickNode={handleNodeClick}
               onDoubleClickNode={handleNodeDoubleClick}
-              data={data}
+              data={filterData(data)}
               handleChange={handleChange}
               showIcons={false}
               height="400px"
