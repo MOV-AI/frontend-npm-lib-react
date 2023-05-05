@@ -5,13 +5,18 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
   },
-  "main": "./src/",
+  "main": "./dist/",
   "exports": {
     ".": {
-      "default": "./src/index.js"
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json",
-    "./*": "./src/*"
+    "./*": "./dist/*"
+  },
+  "@tty-pt/scripts": {
+    "entry": "./src/index.js",
+    "development": true,
+    "library": true
   },
   "proxy": {
     "/token-auth": "http://localhost/token-auth",
@@ -20,7 +25,10 @@
   },
   "scripts": {
     "test": "scripts jest",
+    "clean": "rm -rf node_modules/ package-lock.json",
+    "build": "scripts build",
     "lint": "scripts lint",
+    "watch": "scripts watch",
     "storybook": "start-storybook -p 3001",
     "build-storybook": "build-storybook"
   },
@@ -43,7 +51,7 @@
     "@mov-ai/mov-fe-lib-core": "workspace:^1.1.2-8",
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "5.0.0-alpha.128",
-    "@mui/material": "5.5.0",
+    "@mui/material": "5.12.2",
     "@mui/styles": "5.5.0",
     "@storybook/addon-actions": "^7.0.7",
     "@storybook/addon-controls": "^6.5.16",
@@ -73,7 +81,7 @@
     "@mov-ai/mov-fe-lib-core": "workspace:^1.1.2-8",
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "5.0.0-alpha.128",
-    "@mui/material": "^5.5.0",
+    "@mui/material": "^5.12.2",
     "@mui/styles": "^5.5.0"
   },
   "optionalDependencies": {
@@ -94,19 +102,31 @@
     "lodash": "^4.17.21",
     "material-icons": "^0.1.0",
     "material-table": "^2.0.3",
-    "notistack": "^3.0.1",
+    "notistack": "3.0.1",
     "prop-types": "^15.8.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-i18next": "^12.2.2",
-    "react-is": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-i18next": "12.2.2",
+    "react-is": "^18.2.0",
     "react-virtualized": "^9.22.5",
     "require-from-string": "^2.0.2",
     "stacktrace-js": "^2.0.2",
-    "styled-components": "^5.3.10"
+    "styled-components": "5.3.10"
   },
   "files": [
     "dist",
     "resources"
-  ]
+  ],
+  "pnpm": {
+    "overrides": {
+      "notistack": "local:./../../node_modules/.pnpm/notistack@3.0.1_csstype@3.1.2_react-dom@18.2.0_react@18.2.0/node_modules/notistack",
+      "styled-components": "local:./../../node_modules/.pnpm/styled-components@5.3.10_react-dom@18.2.0_react-is@18.2.0_react@18.2.0/node_modules/styled-components",
+      "react-virtualized": "local:./../../node_modules/.pnpm/react-virtualized@9.22.5_react-dom@18.2.0_react@18.2.0//node_modules/react-virtualized",
+      "react-i18next": "local:./../../node_modules/.pnpm/react-i18next@11.18.6_i18next@22.4.15_react-dom@18.2.0_react@18.2.0/node_modules/react-virtualized",
+      "@mui/material": "local:./../../node_modules/.pnpm/@mui+material@5.12.2_@emotion+react@11.10.8_@emotion+styled@11.10.8_react-dom@18.2.0_react@18.2.0/node_modules/@mui/material",
+      "@mui/icons-material": "local:./../../node_modules/.pnpm/@mui+icons-material@5.11.16_@mui+material@5.12.2_@types+react@17.0.58_react@18.2.0/node_modules/@mui/icons-material",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0"
+    }
+  }
 }
