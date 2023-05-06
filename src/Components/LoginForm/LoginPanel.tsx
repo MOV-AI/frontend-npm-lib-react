@@ -44,7 +44,7 @@ class NotAuthorized extends Component<{
           data-testid="output_message"
           variant="subtitle1"
           gutterBottom
-          className="size-horizontal-full"
+          className="size-horizontal"
         >
           {message}
           {progress && <LinearProgress color="secondary" />}

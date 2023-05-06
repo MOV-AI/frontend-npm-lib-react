@@ -193,7 +193,7 @@ class LoginForm extends Component<LoginFormProps> {
           </div>
           <FormControl
             data-testid="section_form-control"
-            className="size-horizontal-full"
+            className="size-horizontal"
             error={!!errorMessage}
           >
             <InputLabel htmlFor="component-username-error">
@@ -208,7 +208,7 @@ class LoginForm extends Component<LoginFormProps> {
             />
           </FormControl>
           <FormControl
-            className="size-horizontal-full"
+            className="size-horizontal"
             error={!!errorMessage}
           >
             <InputLabel htmlFor="component-password-error">

@@ -1,17 +1,17 @@
 import React, { Fragment, useCallback } from "react";
 import Button from "@mui/material/Button";
-import { OptionsObject, ProviderContext, SnackbarKey, useSnackbar, VariantType } from "notistack";
-export interface SnackbarProps extends OptionsObject {
+{/* import { OptionsObject, ProviderContext, SnackbarKey, useSnackbar, VariantType } from "notistack"; */}
+export interface SnackbarProps {
   message: string;
   closable: boolean;
   horizontal: "left" | "center" | "right";
   vertical: "bottom" | "top";
   closeButtonText: string;
-  severity: VariantType;
+  severity: any;
   content: any;
 }
 interface SnackbarInterface {
-  current: ProviderContext | null;
+  current: React.Context | null;
 }
 
 const useSnackbarRef: SnackbarInterface = { current: null };
@@ -28,7 +28,7 @@ export interface InnerSnackbarUtilsConfiguratorProps {
 const InnerSnackbarUtilsConfigurator = (
   props: InnerSnackbarUtilsConfiguratorProps
 ) => {
-  props.setUseSnackbarRef(useSnackbar());
+  {/* props.setUseSnackbarRef(useSnackbar()); */}
   return null;
 };
 

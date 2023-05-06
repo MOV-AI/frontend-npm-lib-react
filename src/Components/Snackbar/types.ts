@@ -1,19 +1,22 @@
-import {
-  ProviderContext,
-  SnackbarMessage,
-  VariantType,
-  OptionsObject
-} from "notistack";
 
-export interface SnackbarProps extends OptionsObject {
-  message: SnackbarMessage;
+import React from "react";
+
+// import {
+//   ProviderContext,
+//   // SnackbarMessage,
+//   // VariantType,
+//   OptionsObject
+// } from "notistack";
+
+export interface SnackbarProps {
+  message: string;
   closable: boolean;
   horizontal: "left" | "center" | "right";
   vertical: "top" | "bottom";
   closeButtonText: string;
-  severity: VariantType;
+  severity: string;
 }
 
 export interface InnerSnackbarUtilsConfiguratorProps {
-  setUseSnackbarRef: (_context: ProviderContext) => void;
+  setUseSnackbarRef: (_context: React.Context) => void;
 }
