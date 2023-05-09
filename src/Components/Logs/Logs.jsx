@@ -20,7 +20,15 @@ import useUpdateEffect from "./hooks/useUpdateEffect";
 import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
 import i18n from "../../i18n/i18n";
+import { easySub, useSub } from "Components/HOCs/withAuthentication";
 
+const logsSub = easySub([]);
+
+async function updateLogs() {
+  const response = await RobotManager.getLogs(queryParams);
+  logsSub.update(response?.data || []);
+  return response?.data || [];
+}
 import "./styles";
 import "./Logs.css";
 
@@ -126,6 +134,27 @@ const Logs = props => {
   };
 
   /**
+   * Get logs
+   */
+  const getLogs = useCallback(async keepLoading => {
+    if (!isMounted.current) return;
+    // Get selected and online robots
+    const validRobots = getSelectedRobots();
+    if (!validRobots.length) {
+      console.warn("No robots available", validRobots)
+      clearLogs();
+      setTimeout(getLogs, NO_ROBOTS_RETRY_TIMEOUT);
+      if (!keepLoading) setLoading(false);
+      // Stop method execution
+      return;
+    }
+    // Remove previously enqueued requests
+    stopLogger();
+    // Stop loader if there's not request to do
+    return validRobots;
+  }, []);
+
+  /**
    * Get robots log data
    */
   const getRobotLogData = useCallback(robots => {
@@ -177,27 +206,6 @@ const Logs = props => {
         }, requestTimeout.current);
       });
   }, [getFromDate, getLogs, getToDate, levels, levelsList, limit, searchMessage, selectedService, selectedToDate, tags]);
-
-  /**
-   * Get logs
-   */
-  const getLogs = useCallback(async keepLoading => {
-    if (!isMounted.current) return;
-    // Get selected and online robots
-    const validRobots = getSelectedRobots();
-    if (!validRobots.length) {
-      console.warn("No robots available", validRobots)
-      clearLogs();
-      setTimeout(getLogs, NO_ROBOTS_RETRY_TIMEOUT);
-      if (!keepLoading) setLoading(false);
-      // Stop method execution
-      return;
-    }
-    // Remove previously enqueued requests
-    stopLogger();
-    // Stop loader if there's not request to do
-    getRobotLogData(validRobots);
-  }, [getRobotLogData]);
 
   /**
    * Refresh logs in table

@@ -2,6 +2,10 @@ import { defaultTheme, registerGetTheme, makeMagic } from "@tty-pt/styles";
 import "@fontsource/open-sans/index.css";
 import "@fontsource/roboto/index.css";
 
+function spacing(a) {
+  return (a * 4) + "px";
+}
+
 const CONSTANTS = {
   dark: {
     borderBottom: "1px solid #212121",
@@ -70,7 +74,7 @@ const CONSTANTS = {
   }
 };
 
-registerGetTheme(themeName => ({
+const themes = {
   dark: {
     ...defaultTheme,
     label: "dark",
@@ -201,7 +205,8 @@ registerGetTheme(themeName => ({
           }
         }
       }
-    }
+    },
+    spacing,
   },
   light: {
     ...defaultTheme,
@@ -359,7 +364,8 @@ registerGetTheme(themeName => ({
           }
         }
       }
-    }
+    },
+    spacing,
   },
   indigo: {
     ...defaultTheme,
@@ -421,11 +427,19 @@ registerGetTheme(themeName => ({
     },
     icon: { color: "#fff", hoverColor: "#fff" },
     table: { stripColor: "#505050" },
+    spacing,
     // magicBook: {
     //   "!MuiIconButtonk
     // }
   },
-})[themeName]);
+};
+
+export
+function getTheme(themeName) {
+  return themes[themeName];
+}
+
+registerGetTheme(getTheme);
 
 makeMagic({
   "?#root > *": {

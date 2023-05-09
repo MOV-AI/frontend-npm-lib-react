@@ -1,5 +1,7 @@
 import { WithThemeProps } from "@tty-pt/styles/lib/types";
-import React, { useEffect, useState } from "react";
+import { ThemeProvider } from "@mui/styles";
+import { getTheme } from "styles/Themes";
+import React, { useEffect, useState, useMemo } from "react";
 
 const defaultTheme = window.localStorage.getItem("movai.theme") ?? "indigo"; // dark or light
 
@@ -24,11 +26,13 @@ export default function withTheme(
     };
 
     return (
-      <Component
-        handleToggleTheme={handleToggleTheme}
-        theme={theme}
-        {...props}
-      />
+      <ThemeProvider theme={useMemo(() => getTheme(theme), [theme])}>
+        <Component
+          handleToggleTheme={handleToggleTheme}
+          theme={theme}
+          {...props}
+        />
+      </ThemeProvider>
     );
   };
 }

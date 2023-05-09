@@ -26,7 +26,11 @@ function easySub(defaultData) {
     };
   }
 
-  return { update, subscribe, data: valueMap };
+  function easyEmit(cb) {
+    return async (...args) => update(await cb(...args));
+  }
+
+  return { update, subscribe, data: valueMap, easyEmit };
 }
 
 export
@@ -55,7 +59,7 @@ export
 const authSub = easySub(loggedOutInfo);
 
 export
-async function auth() {
+const authEmit = authSub.easyEmit(async () => {
   authSub.update({ ...loggedOutInfo, loading: true });
 
   try {
@@ -66,38 +70,34 @@ async function auth() {
     ]);
 
     if (loggedIn)
-      return authSub.update({
+      return {
         loggedIn: true,
         providers: await Authentication.getProviders(),
         currentUser,
         loading: false,
-      });
+      };
 
     try {
       const providers = await Authentication.getProviders();
-      try {
-        const res = await Authentication.refreshTokens();
+      const res = await Authentication.refreshTokens();
 
-        authSub.update({
-          loggedIn: res,
-          providers,
-          currentUser,
-          loading: false,
-        });
-      } catch (e) {
-        throw new Error("Error while trying to refresh the tokens: " + e.message)
-      }
+      return {
+        loggedIn: res,
+        providers,
+        currentUser,
+        loading: false,
+      };
     } catch (e) {
-      throw new Error("Error while trying to decode the token: " + e.message)
+      throw new Error("Error while trying to decode/refresh the token: " + e.message)
     }
   } catch (e) {
     console.error(e);
-    authSub.update({ ...loggedOutInfo, loading: false });
+    return { ...loggedOutInfo, loading: false };
   }
-}
+});
 
 if (!(window as any).mock)
-  auth();
+  authEmit();
 
 export default function withAuthentication(
   WrappedComponent: React.ComponentType,
@@ -133,7 +133,7 @@ export default function withAuthentication(
             selectedProvider
           );
           if (apiResponse.error) throw new Error(apiResponse.error);
-          auth();
+          authEmit();
         } catch (e: unknown) {
           setErrorMessage((e as Error).message);
         }
