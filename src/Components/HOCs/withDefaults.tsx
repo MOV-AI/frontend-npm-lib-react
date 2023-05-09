@@ -18,6 +18,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     offlineValidation = true,
     dependencies,
     getStyle,
+    allowGuest,
   } = appOptions;
 
   let componentWithDefaults = withError(appComponent);
@@ -31,9 +32,11 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   });
 
   const componentWithNotifications = withNotification(componentWithDefaults);
+
   const componentWithAuthentication = withAuthentication(
     componentWithNotifications,
-    appName
+    appName,
+    allowGuest,
   );
 
   const componentWithMagic = withMagic(

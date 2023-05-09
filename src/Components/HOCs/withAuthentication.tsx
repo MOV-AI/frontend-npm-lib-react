@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Authentication from "@mov-ai/mov-fe-lib-core/api/Authentication/Authentication";
@@ -6,7 +6,6 @@ import PermissionType from "@mov-ai/mov-fe-lib-core/api/PermissionType";
 import { User } from "@mov-ai/mov-fe-lib-core/api/User/User";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
-import jwtDecode from "jwt-decode";
 import i18n from "../../i18n/i18n.js";
 
 export
@@ -47,7 +46,6 @@ interface LoginData {
 export
 const loggedOutInfo = {
   loggedIn: false,
-  apps: [],
   currentUser: null,
   loading: false,
   clean: true,
@@ -67,92 +65,51 @@ async function auth() {
       // new Promise(resolve => setTimeout(resolve, 2000)),
     ]);
 
-    const { Resources: { Applications: apps = [] } } = currentUser;
-    authSub.update({
-      loggedIn,
-      currentUser,
-      apps,
-      loading: false,
-    });
+    if (loggedIn)
+      return authSub.update({
+        loggedIn: true,
+        providers: await Authentication.getProviders(),
+        currentUser,
+        loading: false,
+      });
+
+    try {
+      const providers = await Authentication.getProviders();
+      try {
+        const res = await Authentication.refreshTokens();
+
+        authSub.update({
+          loggedIn: res,
+          providers,
+          currentUser,
+          loading: false,
+        });
+      } catch (e) {
+        throw new Error("Error while trying to refresh the tokens: " + e.message)
+      }
+    } catch (e) {
+      throw new Error("Error while trying to decode the token: " + e.message)
+    }
   } catch (e) {
+    console.error(e);
     authSub.update({ ...loggedOutInfo, loading: false });
   }
 }
 
-auth();
+if (!(window as any).mock)
+  auth();
 
 export default function withAuthentication(
   WrappedComponent: React.ComponentType,
-  appName: PermissionType | string
+  appName: PermissionType | string,
+  allowGuest?: boolean,
 ) {
   return function (props: any) {
-    const RECHECK_VALID_DELAY = 10000; // milliseconds
-
     const [errorMessage, setErrorMessage] = useState("");
-    const [authenticationProviders, setAuthenticationProviders] = useState<
-      string[]
-    >([]);
-    const sub = useSub(authSub);
-    const { currentUser, loggedIn, apps, loading, clean } = sub;
-    const hasPermissions = currentUser?.Superuser || apps.includes(appName as PermissionType) || !appName;
-
-    /**
-     * Updates the Access Token and the Refresh Token
-     */
-    useEffect(() => {
-      Authentication.getProviders()
-        .then((response: any) => setAuthenticationProviders(response.domains))
-        .catch((e: any) =>
-          console.log(
-            "Error while fetching authentication providers: ",
-            e.error
-          )
-        );
-    }, []);
-
-    /**
-     * Updates the Access Token and the Refresh Token
-     */
-    useEffect(() => {
-      try {
-        const now = Math.floor(Date.now() * 1e-3);
-        const token = Authentication.getToken() as string;
-
-        // decode the token and get exp value
-        const exp = (jwtDecode(token) as { exp: number }).exp || now;
-
-        // check if token expiration time is still valid
-        const expDelta = exp - now;
-
-        const timeToRun = Math.max(
-          expDelta * 1e3 - RECHECK_VALID_DELAY,
-          RECHECK_VALID_DELAY
-        );
-
-        const timeOut = setTimeout(
-          () =>
-            Authentication.refreshTokens()
-              .then((res: boolean) => authSub.update({
-                currentUser,
-                apps,
-                loggedIn: res,
-              })).catch((error: any) =>
-                console.log("Error while trying to refresh the tokens", error)
-              ),
-          timeToRun
-        );
-
-        return () => {
-          clearTimeout(timeOut);
-        };
-      } catch (error: unknown) {
-        // token expired or no token
-        console.log(
-          "Error while trying to decode the token:",
-          (error as Error).message
-        );
-      }
-    }, []);
+    const { currentUser, loggedIn, loading, clean, providers } = useSub(authSub);
+    const hasPermissions = currentUser?.Resources?.Applications
+      ? currentUser.Superuser || currentUser.Resources.Applications.includes(appName as PermissionType) || !appName
+      : allowGuest;
 
     /**
      * handleLogOut - log out the user
@@ -199,7 +156,7 @@ export default function withAuthentication(
     const renderLoginForm = () => (
       <LoginForm
         appName={appName} 
-        domains={authenticationProviders}
+        domains={providers}
         authErrorMessage={errorMessage}
         onLoginSubmit={handleLoginSubmit}
       />

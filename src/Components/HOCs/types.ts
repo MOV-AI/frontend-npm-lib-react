@@ -16,4 +16,5 @@ export interface WithDefaultsProps {
   offlineValidation: boolean;
   dependencies?: Dependencies,
   getStyle: typeof makeThemeMagicBook;
+  allowGuest: boolean;
 }
