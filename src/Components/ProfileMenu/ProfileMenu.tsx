@@ -1,6 +1,5 @@
 import React, {
   useState,
-  useEffect,
   useCallback,
   useMemo,
   useRef,
@@ -14,7 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Toggle from "../Toggle";
 // import { profileMenuStyles } from "./styles";
-import { User } from "@mov-ai/mov-fe-lib-core";
+import { useSub, authSub } from "../HOCs/withAuthentication";
 import i18n from "../../i18n/i18n.js";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
@@ -38,9 +37,7 @@ function getCustomMenuElements(menuItemConf: any) {
 const ProfileMenu = (props: ProfileMenuProps) => {
   // State hooks
   const [anchorEl, setAnchorEl] = useState(null);
-  const [username, setUsername] = useState("");
-  // Other hooks
-  const user = useMemo(() => new User(), []);
+  const { currentUser } = useSub(authSub);
   // Refs
   const resetModalRef = useRef<{ open: Function }>();
   // Props
@@ -93,18 +90,6 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     handleLogout();
   }, [handleLogout]);
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                    React Lifecycle                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  // On component mount
-  useEffect(() => {
-    // Set authenticated user name
-    setUsername(user.getUsername());
-  }, [user]);
-
   const customEl = useMemo(() => getCustomMenuElements(menuItemConf), [menuItemConf]);
 
   //========================================================================================
@@ -138,7 +123,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           className="root"
         >
           <MenuItem className="menu-item-spacing">
-            {welcomeLabel}, {username}
+            {welcomeLabel}, {currentUser?.Label ?? "guest"}
           </MenuItem>
           {extraItems?.map((item, index) => (
             <MenuItem
@@ -150,7 +135,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
             </MenuItem>
           ))}
           <Divider variant="middle" />
-          {user.isInternalUser() && (
+          {currentUser && currentUser.isInternalUser && (
             <MenuItem
               data-testid="input_reset-password"
               className="menu-item-spacing"

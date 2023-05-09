@@ -1,11 +1,41 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import { Authentication, PermissionType, User } from "@mov-ai/mov-fe-lib-core";
+import Authentication from "@mov-ai/mov-fe-lib-core/api/Authentication/Authentication";
+import PermissionType from "@mov-ai/mov-fe-lib-core/api/PermissionType";
+import { User } from "@mov-ai/mov-fe-lib-core/api/User/User";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import jwtDecode from "jwt-decode";
 import i18n from "../../i18n/i18n.js";
+
+export
+function easySub(defaultData) {
+  const subs = new Map<Function, true>();
+  const valueMap = { value: defaultData };
+
+  function update(obj) {
+    valueMap.value = obj;
+    for (const [sub] of subs)
+      sub(obj);
+  }
+
+  function subscribe(sub: Function) {
+    subs.set(sub, true);
+    return () => {
+      subs.delete(sub);
+    };
+  }
+
+  return { update, subscribe, data: valueMap };
+}
+
+export
+function useSub(sub, defaultData?) {
+  const [data, setData] = useState(sub.data.value ?? defaultData);
+  useEffect(() => sub.subscribe(setData), []);
+  return data;
+}
 
 interface LoginData {
   username: string;
@@ -14,6 +44,43 @@ interface LoginData {
   selectedProvider: any; 
 }
 
+export
+const loggedOutInfo = {
+  loggedIn: false,
+  apps: [],
+  currentUser: null,
+  loading: false,
+  clean: true,
+};
+
+export
+const authSub = easySub(loggedOutInfo);
+
+export
+async function auth() {
+  authSub.update({ ...loggedOutInfo, loading: true });
+
+  try {
+    const [loggedIn, currentUser] = await Promise.all([
+      Authentication.checkLogin(),
+      (new User()).getCurrentUserWithPermissions(),
+      // new Promise(resolve => setTimeout(resolve, 2000)),
+    ]);
+
+    const { Resources: { Applications: apps = [] } } = currentUser;
+    authSub.update({
+      loggedIn,
+      currentUser,
+      apps,
+      loading: false,
+    });
+  } catch (e) {
+    authSub.update({ ...loggedOutInfo, loading: false });
+  }
+}
+
+auth();
+
 export default function withAuthentication(
   WrappedComponent: React.ComponentType,
   appName: PermissionType | string
@@ -21,64 +88,13 @@ export default function withAuthentication(
   return function (props: any) {
     const RECHECK_VALID_DELAY = 10000; // milliseconds
 
-    const firstRender = useRef(true);
-    const [state, setState] = useState<{
-      loggedIn: boolean;
-      hasPermissions: boolean;
-      currentUser?: object;
-    }>({
-      loggedIn: false,
-      hasPermissions: false,
-      currentUser: {}
-    });
-    const [loading, setLoading] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState("");
     const [authenticationProviders, setAuthenticationProviders] = useState<
       string[]
     >([]);
-
-    const authenticate = useCallback(() => {
-      const user = new User();
-      setLoading(true);
-      Promise.all([
-        Authentication.checkLogin(),
-        new Promise(resolve => setTimeout(resolve, 2000)),
-        user.getCurrentUserWithPermissions()
-      ])
-        .then(([loggedIn, _, _user]) => {
-          const {
-            Resources: { Applications: apps = [] },
-            Superuser: isSuperUser
-          } = _user;
-          const hasPermissions =
-            isSuperUser || apps.includes(appName as PermissionType) || !appName;
-
-          if (loggedIn) {
-            firstRender.current = false;
-          }
-
-          setState({
-            loggedIn,
-            hasPermissions,
-            currentUser: _user
-          });
-        })
-        .catch(error => {
-          console.warn("Failed login", error);
-          setState({
-            loggedIn: false,
-            hasPermissions: false
-          });
-        })
-        .finally(() => setLoading(false));
-    }, []);
-
-    /**
-     * check if the user is authenticated
-     */
-    useEffect(() => {
-      authenticate();
-    }, [authenticate]);
+    const sub = useSub(authSub);
+    const { currentUser, loggedIn, apps, loading, clean } = sub;
+    const hasPermissions = currentUser?.Superuser || apps.includes(appName as PermissionType) || !appName;
 
     /**
      * Updates the Access Token and the Refresh Token
@@ -116,13 +132,11 @@ export default function withAuthentication(
         const timeOut = setTimeout(
           () =>
             Authentication.refreshTokens()
-              .then((res: boolean) => {
-                setState(prevState => ({
-                  ...prevState,
-                  loggedIn: res
-                }));
-              })
-              .catch((error: any) =>
+              .then((res: boolean) => authSub.update({
+                currentUser,
+                apps,
+                loggedIn: res,
+              })).catch((error: any) =>
                 console.log("Error while trying to refresh the tokens", error)
               ),
           timeToRun
@@ -138,7 +152,7 @@ export default function withAuthentication(
           (error as Error).message
         );
       }
-    }, [state]);
+    }, []);
 
     /**
      * handleLogOut - log out the user
@@ -155,7 +169,6 @@ export default function withAuthentication(
     const handleLoginSubmit = useCallback(
       async ({ username, password, remember, selectedProvider }: LoginData) => {
         try {
-          setLoading(true);
           const apiResponse = await Authentication.login(
             username,
             password,
@@ -163,13 +176,12 @@ export default function withAuthentication(
             selectedProvider
           );
           if (apiResponse.error) throw new Error(apiResponse.error);
-          authenticate();
+          auth();
         } catch (e: unknown) {
           setErrorMessage((e as Error).message);
-          setLoading(false);
         }
       },
-      [authenticate]
+      []
     );
 
     /**
@@ -186,6 +198,7 @@ export default function withAuthentication(
      */
     const renderLoginForm = () => (
       <LoginForm
+        appName={appName} 
         domains={authenticationProviders}
         authErrorMessage={errorMessage}
         onLoginSubmit={handleLoginSubmit}
@@ -225,21 +238,21 @@ export default function withAuthentication(
     /**
      * renders the Login form if the user is not logged in
      */
-    if (loading && firstRender.current) return renderLoading();
-    if (!state.loggedIn && firstRender.current) return renderLoginForm();
-    if (!state.hasPermissions) return renderNotAuthorized();
+    if (loading && clean) return renderLoading();
+    if (!loggedIn && clean) return renderLoginForm();
+    if (!hasPermissions) return renderNotAuthorized();
     return (
       <React.Fragment>
         <WrappedComponent
-          currentUser={state.currentUser}
+          currentUser={currentUser}
           handleLogOut={handleLogOut}
-          loggedIn={state.loggedIn}
+          loggedIn={loggedIn}
           {...props}
         />
         {loading ? (
           renderLoading()
         ) : (
-          <Modal open={!state.loggedIn}><span>{renderLoginForm()}</span></Modal>
+          <Modal open={!loggedIn}><span>{renderLoginForm()}</span></Modal>
         )}
       </React.Fragment>
     );

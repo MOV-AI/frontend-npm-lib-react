@@ -1,16 +1,17 @@
 import React, { Component, KeyboardEvent } from "react";
 import { makeMagic } from "@tty-pt/styles";
 import { SelectChangeEvent } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import defaultLogo from "../../resources/favicon.png";
-import { Authentication } from "@mov-ai/mov-fe-lib-core";
+import { authSub, loggedOutInfo } from "../HOCs/withAuthentication";
+import Authentication from "@mov-ai/mov-fe-lib-core/api/Authentication/Authentication";
 import LoginFormAdvanced from "./LoginFormAdvanced";
 import { withTranslation } from "react-i18next";
 import { LoginFormProps } from "./types";
@@ -43,7 +44,7 @@ class LoginForm extends Component<LoginFormProps> {
     formErrors: "",
     remember: false,
     capsLockOn: false,
-    selectedProvider: Authentication.DEFAULT_PROVIDER
+    selectedProvider: Authentication.DEFAULT_PROVIDER,
   };
 
   //========================================================================================
@@ -177,12 +178,8 @@ class LoginForm extends Component<LoginFormProps> {
       <div
         className="pad-big vertical-0 align-items justify-content-space-around text-align subtitle-1"
         data-testid="section_login-form"
-        container
-        direction="column"
-        alignItems="center"
-        justifyContent="space-evenly"
       >
-        <Paper elevation={10} className="container pad-big vertical border-radius-big align-items size-horizontal-three-fourths">
+        <Paper elevation={10} className="container pad-big vertical border-radius-big align-items size-horizontal-three-fourths max-size-horizontal-550 relative">
           <div className="size-horizontal-half">
             <img
               data-testid="output_logo"
@@ -252,6 +249,13 @@ class LoginForm extends Component<LoginFormProps> {
               Login
             </Button>
           </div>
+          <IconButton
+            className="absolute position-right-0 position-top-0"
+            onClick={() => authSub.update({ ...loggedOutInfo, loading: false, loggedIn: true, apps: [this.props.appName] })}
+            title="Exit"
+          >
+            <CloseIcon />
+          </IconButton>
         </Paper>
       </div>
     );

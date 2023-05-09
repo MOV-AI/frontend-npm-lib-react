@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { makeMagic } from "@tty-pt/styles";
-import { MasterDB } from "@mov-ai/mov-fe-lib-core";
+import MasterDB from "@mov-ai/mov-fe-lib-core/api/Database/MasterDB";
 import Alert from "@mui/lab/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";

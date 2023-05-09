@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import _isEmpty from "lodash/isEmpty";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
-import { User } from "@mov-ai/mov-fe-lib-core";
+import { useSub, authSub } from "../HOCs/withAuthentication";
 import { useTranslation } from "react-i18next";
 // import { resetPasswordStyles } from "./styles";
 import { ALERT_SEVERITY } from "../../Utils/Constants";
@@ -66,14 +66,13 @@ const REQUIRED_INPUTS = {
  */
 const ResetPasswordModal = forwardRef((props, ref) => {
   // Props
+  const { currentUser } = useSub(authSub);
   const { variant, userId = "" } = props;
   // State hooks
   const [form, setForm] = useState({ ...DEFAULT_VALUES });
   const [errors, setErrors] = useState({ ...DEFAULT_ERRORS });
   const [openState, setOpenState] = useState(false);
   const [loading, setLoading] = useState(false);
-  // Other hooks
-  const user = useMemo(() => new User(), []);
   const { t } = useTranslation();
   // Refs
   const touchRef = useRef(DEFAULT_TOUCH_STATE);
@@ -105,10 +104,10 @@ const ResetPasswordModal = forwardRef((props, ref) => {
   const updatePassword = useCallback(
     body => {
       if (variant === VARIANT_OPTIONS.RESET)
-        return User.resetPassword(userId, body);
-      return user.changePassword(body);
+        return currentUser.resetPassword(currentUser.Label, body);
+      return currentUser.changePassword(body);
     },
-    [variant, userId, user]
+    [variant]
   );
 
   /**
@@ -251,18 +250,19 @@ const ResetPasswordModal = forwardRef((props, ref) => {
     setErrors(validateRequiredFields(form));
   }, [form, validateRequiredFields]);
 
-  /**
-   * Expose open method
-   */
-  useImperativeHandle(ref, () => ({
-    open
-  }));
+   /**
+    * Expose open method
+    */
+   useImperativeHandle(ref, () => ({
+     open
+   }));
 
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
    *                                                                                      */
   //========================================================================================
+  return <div />;
 
   return (
     <AbstractModal

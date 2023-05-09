@@ -1,8 +1,15 @@
 import React, { Component } from "react";
+import { makeMagic } from "@tty-pt/styles";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import LinearProgress from "@mui/material/LinearProgress";
 import defaultLogo from "../../resources/favicon.png";
+
+makeMagic({
+  maxSizeHorizontal550: {
+    maxWidth: "550px",
+  },
+});
 
 export default
 class NotAuthorized extends Component<{
@@ -22,7 +29,7 @@ class NotAuthorized extends Component<{
     return (<div className="vertical-0 align-items text-align justify-content-space-around">
       <Paper elevation={10}
         data-testid="section_login-panel"
-        className="container pad-big vertical-0 border-radius-big align-items size-horizontal-three-fourths"
+        className="container pad-big vertical-0 border-radius-big align-items size-horizontal-three-fourths max-size-horizontal-550"
       >
         <div className="size-horizontal-three-fourths">
           <img

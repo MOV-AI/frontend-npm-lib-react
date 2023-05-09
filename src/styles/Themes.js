@@ -1,6 +1,6 @@
 import { defaultTheme, registerGetTheme, makeMagic } from "@tty-pt/styles";
-import "@fontsource/open-sans";
-import "@fontsource/roboto";
+import "@fontsource/open-sans/index.css";
+import "@fontsource/roboto/index.css";
 
 const CONSTANTS = {
   dark: {
@@ -46,6 +46,9 @@ const CONSTANTS = {
       ["Purple", {
         main: "#7575CE !important",
       }],
+      ["GrayLight", {
+        main: "#8E95BA !important",
+      }],
     ],
     baked: {
       info: {
@@ -59,6 +62,9 @@ const CONSTANTS = {
       },
       purple: {
         main: "#7575CE !important",
+      },
+      gray: {
+        light: "#8E95BA !important",
       },
     }
   }
