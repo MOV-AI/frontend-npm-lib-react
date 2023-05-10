@@ -37,6 +37,10 @@ const CONSTANTS = {
       overlay: "radial-gradient(79.34% 81.94% at 123.17% 23.94%, #50577C 0%, #1B1E29 100%)",
       grad: "linear-gradient(37.83deg, #3C415D 35.18%, #4A5070 121.84%)",
     },
+    error: {
+      main: "#FF3E3E",
+      light: "#ff6969",
+    },
     success: {
       main: "#3CD2A3",
     },

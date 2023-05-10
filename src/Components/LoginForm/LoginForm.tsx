@@ -1,20 +1,17 @@
 import React, { Component, KeyboardEvent } from "react";
-import { withStyles } from "@tty-pt/styles";
+import { withStyles, Svg } from "@tty-pt/styles";
 import { SelectChangeEvent } from "@mui/material";
 import Button from "@mui/material/Button";
-import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
-import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Visibility from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOff from "@mui/icons-material/VisibilityOffOutlined";
 {/* import defaultLogo from "../../resources/favicon.png"; */}
-import logoSvg from "../../resources/logo.svg";
+import LogoSvg from "../../resources/Logo";
 import { authSub, loggedOutInfo } from "../HOCs/withAuthentication";
 import Authentication from "@mov-ai/mov-fe-lib-core/api/Authentication/Authentication";
 import LoginFormAdvanced from "./LoginFormAdvanced";
@@ -122,7 +119,7 @@ class LoginForm extends Component<LoginFormProps> {
     HTMLTextAreaElement | HTMLInputElement
   > = event => {
     const password = event.target.value || "";
-    const errorMessage = !password ? this.props.t("PasswordRequired") : "";
+    const errorMessage = !password ? this.props.t("Password is required") : "";
     this.state.password && this.props.onChanges?.();
     this.setState({
       password,
@@ -168,7 +165,7 @@ class LoginForm extends Component<LoginFormProps> {
         className="pad-big min-size-vertical-view-big-neg vertical-0 align-items justify-content-space-around text-align subtitle-1"
         data-testid="section_login-form"
       >
-        <img src={logoSvg} />
+        <LogoSvg />
         <Paper elevation={10} className="login-form vertical-big border-radius-small size-horizontal-three-fourths max-size-horizontal-550 relative">
           <div className="text-align-left">Sign in to mov.ai account</div>
 
@@ -204,7 +201,7 @@ class LoginForm extends Component<LoginFormProps> {
           <div className="font-size-17 margin-top-medium-neg text-align-left color-primary">Forgot password</div>
 
           {errorMessage && (
-            <FormHelperText id="component-error-text">
+            <FormHelperText className="color-error-light" id="component-error-text">
               {errorMessage}
             </FormHelperText>
           )}
@@ -216,13 +213,11 @@ class LoginForm extends Component<LoginFormProps> {
           )}
 
           { this.hasMultipleDomains() && (
-            <div className="text-align subtitle1">
-              <LoginFormAdvanced
-                selectedProvider={this.state.selectedProvider}
-                domains={domains}
-                onProviderChange={this.handleProviderChange}
-              />
-            </div>
+            <LoginFormAdvanced
+              selectedProvider={this.state.selectedProvider}
+              domains={domains}
+              onProviderChange={this.handleProviderChange}
+            />
           ) }
 
           <Button color="primary" className="size-horizontal" data-testid="input_login" onClick={this.sendCreds}>
@@ -272,10 +267,15 @@ export default withTranslation()(withStyles(theme => ({
   "!login-form .MuiOutlinedInput-root input:-webkit-autofill:focus": {
     transition: "background-color 600000s 0s, color 600000s 0s",
   },
+  "!login-form .MuiSelect-select": {
+    padding: "10px",
+    textAlign: "left",
+  },
   "!login-form .MuiTextField-root .MuiFormLabel-root": {
     top: "-6px",
     left: "-4px",
   },
+  "!login-form .MuiButtonBase-root .MuiFormLabel-root": { fontSize: "0.875rem" },
   "!login-form .MuiTextField-root .MuiInputLabel-shrink": {
     top: "0px",
     left: "2px",
