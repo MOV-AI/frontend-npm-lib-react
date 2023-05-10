@@ -35,6 +35,7 @@ const CONSTANTS = {
       primary: "#2E334D",
       secondary: "#212121",
       overlay: "radial-gradient(79.34% 81.94% at 123.17% 23.94%, #50577C 0%, #1B1E29 100%)",
+      grad: "linear-gradient(37.83deg, #3C415D 35.18%, #4A5070 121.84%)",
     },
     success: {
       main: "#3CD2A3",
@@ -388,7 +389,7 @@ const themes = {
       type: "indigo", // Switching the indigo mode on, is a single property value change.
       primary: {
         ...defaultTheme.palette.primary,
-        main: "#fff"
+        ...CONSTANTS.indigo.primary
       },
       success: {
         ...defaultTheme.palette.success,
@@ -413,6 +414,7 @@ const themes = {
         primary: CONSTANTS.indigo.background.primary,
         secondary: CONSTANTS.indigo.background.secondary,
         overlay: CONSTANTS.indigo.background.overlay,
+        grad: CONSTANTS.indigo.background.grad,
       },
       accent: {
         background: "#f5f5f9",

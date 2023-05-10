@@ -1,39 +1,25 @@
 import React, { Component, KeyboardEvent } from "react";
-import { makeMagic } from "@tty-pt/styles";
+import { withStyles } from "@tty-pt/styles";
 import { SelectChangeEvent } from "@mui/material";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Input from "@mui/material/Input";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import defaultLogo from "../../resources/favicon.png";
+import Visibility from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOff from "@mui/icons-material/VisibilityOffOutlined";
+{/* import defaultLogo from "../../resources/favicon.png"; */}
+import logoSvg from "../../resources/logo.svg";
 import { authSub, loggedOutInfo } from "../HOCs/withAuthentication";
 import Authentication from "@mov-ai/mov-fe-lib-core/api/Authentication/Authentication";
 import LoginFormAdvanced from "./LoginFormAdvanced";
 import { withTranslation } from "react-i18next";
 import { LoginFormProps } from "./types";
-
-makeMagic({
-  loginForm: {
-    paddingTop: "5%",
-    root: {
-      // padding: theme.spacing(4, 4), // TODO replace with "pad"
-      borderRadius: 40
-    },
-    logoImage: {
-      display: "block",
-      marginLeft: "auto",
-      marginRight: "auto",
-      width: "50%"
-    },
-    formControl: {
-      width: "40%"
-    }
-  },
-});
 
 const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
 
@@ -157,6 +143,10 @@ class LoginForm extends Component<LoginFormProps> {
     }
   };
 
+  toggleShowPassword() {
+    this.setState({ ...this.state, showPassword: !this.state.showPassword });
+  }
+
   hasMultipleDomains = () =>
     this.props.domains?.length > 1 &&
     this.props.domains.some(ap => ap != Authentication.DEFAULT_PROVIDER);
@@ -169,70 +159,61 @@ class LoginForm extends Component<LoginFormProps> {
 
   render() {
     const {
-      logo = defaultLogo,
       domains,
       authErrorMessage
     } = this.props;
     const errorMessage = this.state.formErrors || authErrorMessage;
     return (
       <div
-        className="pad-big vertical-0 align-items justify-content-space-around text-align subtitle-1"
+        className="pad-big min-size-vertical-view-big-neg vertical-0 align-items justify-content-space-around text-align subtitle-1"
         data-testid="section_login-form"
       >
-        <Paper elevation={10} className="container pad-big vertical border-radius-big align-items size-horizontal-three-fourths max-size-horizontal-550 relative">
-          <div className="size-horizontal-half">
-            <img
-              data-testid="output_logo"
-              src={logo}
-              alt="logo"
-              className="center logo-image size-horizontal-half"
-            />
-          </div>
-          <FormControl
-            data-testid="section_form-control"
-            className="size-horizontal"
-            error={!!errorMessage}
-          >
-            <InputLabel htmlFor="component-username-error">
-              Username
-            </InputLabel>
-            <Input
-              inputProps={{ "data-testid": "input_username" }}
-              id="component-username-error"
-              value={this.state.username}
-              aria-describedby="component-username-error-text"
-              onChange={this.onChangeUsername}
-            />
-          </FormControl>
-          <FormControl
-            className="size-horizontal"
-            error={!!errorMessage}
-          >
-            <InputLabel htmlFor="component-password-error">
-              Password
-            </InputLabel>
-            <Input
-              inputProps={{ "data-testid": "input_password" }}
-              required
-              id="component-password-error"
-              type="password"
-              value={this.state.password}
-              aria-describedby="component-password-error-text"
-              onChange={this.onChangePassword}
-              onKeyUp={this.onKeyUpPassword}
-              className="margin-top"
-            />
-            {errorMessage && (
-              <FormHelperText id="component-error-text">
-                {errorMessage}
-              </FormHelperText>
-            )}
-            {this.state.capsLockOn && (
-              <FormHelperText id="component-warning-text">
-                Warning: Caps lock is ON!
-              </FormHelperText>
-            )}
-          </FormControl>
+        <img src={logoSvg} />
+        <Paper elevation={10} className="login-form vertical-big border-radius-small size-horizontal-three-fourths max-size-horizontal-550 relative">
+          <div className="text-align-left">Sign in to mov.ai account</div>
+
+          <TextField
+            inputProps={{ "data-testid": "input_username" }}
+            id="component-username-error"
+            value={this.state.username}
+            label="Username"
+            variant="outlined"
+            aria-describedby="component-username-error-text"
+            onChange={this.onChangeUsername}
+          />
+
+          <TextField
+            inputProps={{ "data-testid": "input_password" }}
+            required
+            variant="outlined"
+            id="component-password-error"
+            type={this.state.showPassword ? "text" : "password"}
+            label="Password"
+            value={this.state.password}
+            aria-describedby="component-password-error-text"
+            onChange={this.onChangePassword}
+            onKeyUp={this.onKeyUpPassword}
+            InputProps={{
+              endAdornment: (<InputAdornment position="end"> {(this.state.showPassword
+                ? <VisibilityOff className = "cursor" onClick={() => this.toggleShowPassword()} />
+                : <Visibility className="cursor" onClick={() => this.toggleShowPassword()} />
+                )} </InputAdornment>),
+            }}
+          />
+
+          <div className="font-size-17 margin-top-medium-neg text-align-left color-primary">Forgot password</div>
+
+          {errorMessage && (
+            <FormHelperText id="component-error-text">
+              {errorMessage}
+            </FormHelperText>
+          )}
+
+          {this.state.capsLockOn && (
+            <FormHelperText id="component-warning-text">
+              Warning: Caps lock is ON!
+            </FormHelperText>
+          )}
 
           { this.hasMultipleDomains() && (
             <div className="text-align subtitle1">
@@ -244,11 +225,10 @@ class LoginForm extends Component<LoginFormProps> {
             </div>
           ) }
 
-          <div className="text-align">
-            <Button data-testid="input_login" onClick={this.sendCreds}>
-              Login
-            </Button>
-          </div>
+          <Button color="primary" className="size-horizontal" data-testid="input_login" onClick={this.sendCreds}>
+            Login
+          </Button>
+
           <IconButton
             className="absolute position-right-0 position-top-0"
             onClick={() => authSub.update({ ...loggedOutInfo, loading: false, loggedIn: true, apps: [this.props.appName] })}
@@ -257,9 +237,47 @@ class LoginForm extends Component<LoginFormProps> {
             <CloseIcon />
           </IconButton>
         </Paper>
+        <div />
       </div>
     );
   }
 }
 
-export default withTranslation()(LoginForm);
+export default withTranslation()(withStyles(theme => ({
+  loginForm: {
+    background: theme.palette.background.grad,
+    padding: "86px",
+    width: "calc(438px - 2 * 86px)",
+    root: {
+      // padding: theme.spacing(4, 4), // TODO replace with "pad"
+      borderRadius: 40
+    },
+    logoImage: {
+      display: "block",
+      marginLeft: "auto",
+      marginRight: "auto",
+      width: "50%"
+    },
+    formControl: {
+      width: "40%"
+    }
+  },
+  "!login-form .MuiOutlinedInput-root input": {
+    padding: "10px",
+    fontSize: "14px",
+  },
+  "!login-form .MuiOutlinedInput-root input:-webkit-autofill": {
+    transition: "background-color 600000s 0s, color 600000s 0s",
+  },
+  "!login-form .MuiOutlinedInput-root input:-webkit-autofill:focus": {
+    transition: "background-color 600000s 0s, color 600000s 0s",
+  },
+  "!login-form .MuiTextField-root .MuiFormLabel-root": {
+    top: "-6px",
+    left: "-4px",
+  },
+  "!login-form .MuiTextField-root .MuiInputLabel-shrink": {
+    top: "0px",
+    left: "2px",
+  },
+}))(LoginForm));
