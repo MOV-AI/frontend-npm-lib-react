@@ -1,6 +1,6 @@
 import { WithThemeProps } from "@tty-pt/styles/lib/types";
 import { ThemeProvider } from "@mui/styles";
-import { getTheme } from "styles/Themes";
+import { getTheme } from "./../../styles/Themes";
 import React, { useEffect, useState, useMemo } from "react";
 
 const defaultTheme = window.localStorage.getItem("movai.theme") ?? "indigo"; // dark or light
