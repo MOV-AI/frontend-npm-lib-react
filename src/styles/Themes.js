@@ -49,15 +49,10 @@ const CONSTANTS = {
     },
     iconColor: "#fff",
     colors: [
-      ["Pink", {
-        main: "#E26CDE !important",
-      }],
-      ["Purple", {
-        main: "#7575CE !important",
-      }],
-      ["GrayLight", {
-        main: "#8E95BA !important",
-      }],
+      ["Pink", "#E26CDE !important"],
+      ["Purple", "#7575CE !important"],
+      ["GrayLight", "#8E95BA !important"],
+      ["GrayDark", "#292D3F !important"],
     ],
     baked: {
       info: {
@@ -74,6 +69,7 @@ const CONSTANTS = {
       },
       gray: {
         light: "#8E95BA !important",
+        dark: "#292D3F !important",
       },
     }
   }
