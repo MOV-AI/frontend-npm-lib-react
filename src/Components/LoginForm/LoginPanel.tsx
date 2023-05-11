@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { makeMagic } from "@tty-pt/styles";
-import Typography from "@mui/material/Typography";
+import { makeMagic, withStyles } from "@tty-pt/styles";
 import Paper from "@mui/material/Paper";
 import LinearProgress from "@mui/material/LinearProgress";
-import defaultLogo from "../../resources/favicon.png";
+import LogoSvg from "../../resources/Logo";
 
 makeMagic({
   maxSizeHorizontal550: {
@@ -11,7 +10,6 @@ makeMagic({
   },
 });
 
-export default
 class NotAuthorized extends Component<{
   logo?: string;
   title?: string;
@@ -20,43 +18,34 @@ class NotAuthorized extends Component<{
 }> {
   render() {
     const {
-      logo = defaultLogo,
       title = "",
       message = "",
       progress = false
     } = this.props;
 
-    return (<div className="vertical-0 align-items text-align justify-content-space-around">
+    return (<div className="pad-big min-size-vertical-view-big-neg vertical-0 align-items text-align justify-content-space-around">
+      <LogoSvg />
       <Paper elevation={10}
         data-testid="section_login-panel"
-        className="container pad-big vertical-0 border-radius-big align-items size-horizontal-three-fourths max-size-horizontal-550"
+        className="not-authorized vertical-big border-radius-small size-horizontal-three-fourths max-size-horizontal-550"
       >
-        <div className="size-horizontal-three-fourths">
-          <img
-            data-testid="output_logo"
-            src={logo}
-            alt="logo"
-            className="center logo-image size-horizontal-half"
-          />
-        </div>
-        <Typography
-          data-testid="output_title"
-          align="center"
-          variant="h2"
-          gutterBottom
-        >
+        { title ? (<div data-testid="output_title" className="text-align h-2">
           {title}
-        </Typography>
-        <Typography
-          data-testid="output_message"
-          variant="subtitle1"
-          gutterBottom
-          className="size-horizontal"
-        >
+        </div>) : null }
+        <div data-testid="output_message" className="size-horizontal subtitle-1">
           {message}
-          {progress && <LinearProgress color="secondary" />}
-        </Typography>
+        </div>
+        { progress && <LinearProgress color="secondary" /> }
       </Paper>
+      <div />
     </div>);
   }
 }
+
+export default withStyles(theme => ({
+  notAuthorized: {
+    background: theme.palette.background.grad,
+    padding: "86px",
+    width: "calc(438px - 2 * 86px)",
+  },
+}))(NotAuthorized);
