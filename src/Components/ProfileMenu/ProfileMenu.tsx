@@ -8,7 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Toggle from "../Toggle";
@@ -105,6 +104,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           data-testid="input_button"
           aria-haspopup="true"
           onClick={handleClick}
+          className={className}
         >
           <SettingsIcon />
         </IconButton>

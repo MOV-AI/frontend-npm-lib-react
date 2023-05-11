@@ -115,29 +115,49 @@ function getUrl(url) {
   return url;
 };
 
+const resourcesMap = {
+  application: getAppUrl,
+  layout: getLayoutUrl,
+  external: getUrl,
+  default: getUrl
+};
+
 const baseMap = {
   AdminBoard: {
+    id: "AdminBoard",
     Icon: withSvg(AdminBoardSvg),
+    url: resourcesMap.application("AdminBoard"),
     title: "Admin Board",
+    color: "success",
     order: 3,
   },
   FleetBoard: {
+    id: "FleetBoard",
     Icon: withSvg(FleetBoardSvg),
+    url: resourcesMap.application("FleetBoard"),
     title: "Fleet Board",
+    color: "info",
     order: 2,
   },
   "mov-fe-app-ide": {
+    id: "mov-fe-app-ide",
     Icon: withSvg(IDESvg),
+    url: resourcesMap.application("mov-fe-app-ide"),
     title: "Flow",
+    color: "pink",
     order: 0,
   },
   "mov-fe-app-taskmanager": {
+    id: "mov-fe-app-taskmanager",
     Icon: withSvg(TaskManagerSvg),
+    url: resourcesMap.application("mov-fe-app-taskmanager"),
     title: "Task Manager",
+    color:"purple",
     order: 1,
   }
 };
 
+export
 const appsSub = easySub([]);
 
 function appOrder(id) {
@@ -149,21 +169,29 @@ const appsEmit = appsSub.easyEmit(async ({ currentUser }) => {
     return [];
 
   const startApps = (currentUser?.Resources?.Applications ?? [])
-    .filter(app => app !== window.APP_NAME && app !== "mov-fe-app-launcher")
+    .filter(app => app !== "mov-fe-app-launcher")
     .sort((a, b) => appOrder(a) - appOrder(b));
 
-  appsSub.update(startApps.map(app => ([ "application", app ])));
+  appsSub.update(startApps.map(app => baseMap[app]));
 
-  const received = (await getAllApps()).map(app => ([
-    app.Type,
-    app.Type === "layout" ? app.Label : app.URL
-  ]));
+  const received = (await getAllApps()).map(app => {
+    const id = app.Type === "layout" ? app.Label : app.URL;
 
-  const apps = received.filter(currentUser?.Superuser
-    ? app => app[1] !== window.APP_NAME && app[1] !== "mov-fe-app-launcher"
-    : app => app[1] !== window.APP_NAME && app[1] !== "mov-fe-app-launcher" && (currentUser?.Resources?.Applications ?? []).includes(app[1])
+    return baseMap[id] ?? {
+      id,
+      Icon: withSvg(LayoutSvg),
+      title: capitalize(id),
+      url: resourcesMap[app.Type](id),
+      version: app.Version,
+      color:"gray-light",
+      order: 1,
+    };
+  });
+
+  const apps = received.filter(
+    app => (currentUser?.Resources?.Applications ?? []).includes(app.id)
   ).sort(
-    (a, b) => appOrder(a[1]) - appOrder(b[1]),
+    (a, b) => appOrder(a.id) - appOrder(b.id),
   );
 
   return apps;
@@ -171,49 +199,22 @@ const appsEmit = appsSub.easyEmit(async ({ currentUser }) => {
 
 authSub.subscribe(appsEmit);
 
-const resourcesMap = {
-  application: getAppUrl,
-  layout: getLayoutUrl,
-  external: getUrl,
-  default: getUrl
-};
-
-const colorMap = {
-  AdminBoard: "success",
-  FleetBoard: "info",
-  "mov-fe-app-taskmanager": "purple",
-  "mov-fe-app-ide": "pink",
-};
-
 function appsMap(element) {
-  const [typ, id] = element;
-
-  const base = baseMap[id] ?? {
-    Icon: withSvg(LayoutSvg),
-    title: capitalize(id),
-  };
-
-  const Icon = base.Icon;
-  const url = resourcesMap[typ ?? "default"](id);
+  const { title, id, Icon, url, color } = element;
 
   return (<ButtonBase
     key={id}
     LinkComponent="a"
     href={url} 
-    className={"text-decoration background vertical paper pad-big item-box hover-" + (colorMap[id] ?? "gray-light")}
+    className={"text-decoration background vertical paper pad-big item-box hover-" + color}
   >
     <div><Icon /></div>
-    <div className="hover">{ base.title }</div>
+    <div className="hover">{ title }</div>
   </ButtonBase>);
 }
 
 const appsElSub = easySub([]);
-
-const appsElEmit = appsElSub.easyEmit(async apps => {
-  console.log("appsElEmit", apps);
-  return apps.map(appsMap);
-});
-
+const appsElEmit = appsElSub.easyEmit(apps => apps.map(appsMap));
 appsSub.subscribe(appsElEmit);
 
 // import { homeMenuPopperStyles } from "./styles";
@@ -223,7 +224,6 @@ const HomeMenuPopper = () => {
   const [currentApps, setCurrentApps] = useState<App[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const appsEl = useSub(appsElSub);
-  console.log("HomeMenuPopper", appsEl);
 
   //========================================================================================
   /*                                                                                      *
