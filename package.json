@@ -24,7 +24,7 @@
     "/api/v1": "http://localhost/api/v1"
   },
   "scripts": {
-    "test": "scripts jest",
+    "test": "scripts test",
     "clean": "rm -rf node_modules/ package-lock.json",
     "build": "scripts build",
     "lint": "scripts lint",

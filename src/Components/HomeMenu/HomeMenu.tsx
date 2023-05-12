@@ -164,6 +164,11 @@ function appOrder(id) {
   return baseMap[id]?.order ?? 100;
 }
 
+const layoutBase = {
+  Icon: withSvg(LayoutSvg),
+  color:"gray-light",
+};
+
 const appsEmit = appsSub.easyEmit(async ({ currentUser }) => {
   if (!currentUser)
     return [];
@@ -174,23 +179,27 @@ const appsEmit = appsSub.easyEmit(async ({ currentUser }) => {
 
   appsSub.update(startApps.map(app => baseMap[app]));
 
-  const received = (await getAllApps()).map(app => {
-    const id = app.Type === "layout" ? app.Label : app.URL;
+  const received = (await getAllApps())
+    .map(app => {
+      const id = app.Type === "layout" ? app.Label : app.URL;
+      console.log("APP", app, id);
 
-    return baseMap[id] ?? {
-      id,
-      Icon: withSvg(LayoutSvg),
-      title: capitalize(id),
-      url: resourcesMap[app.Type](id),
-      version: app.Version,
-      color:"gray-light",
-      order: 1,
-    };
-  });
+      if (
+        id === "mov-fe-app-launcher"
+        || (app.Type === "application" && !(currentUser?.Resources?.Applications ?? []).includes(id))
+      )
+        return null;
 
-  const apps = received.filter(
-    app => (currentUser?.Resources?.Applications ?? []).includes(app.id)
-  ).sort(
+      return baseMap[id] ?? {
+        ...layoutBase,
+        id,
+        title: capitalize(id),
+        url: resourcesMap.layout(id),
+        version: app.Version,
+      };
+    }).filter(a => a);
+
+  const apps = received.sort(
     (a, b) => appOrder(a.id) - appOrder(b.id),
   );
 

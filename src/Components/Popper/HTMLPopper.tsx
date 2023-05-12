@@ -13,29 +13,17 @@ const HTMLPopper = (props: HTMLPopperProps) => {
     clickableElement,
     children,
     hideOnClickAway = false,
-    popperPlacement = "bottom-start"
+    popperPlacement = "bottom-end"
   } = props;
 
-  const [openPopper, setOpenPopper] = React.useState(false);
-  const anchorPopperRef = useRef<any>();
+  const [openPopper, setOpenPopper] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   //========================================================================================
   /*                                                                                      *
    *                                    Private Methods                                   *
    *                                                                                      */
   //========================================================================================
-
-  const renderPaper = () => {
-    return (
-      <Paper>
-        <div className="transition-in">
-          <div data-testid="section_wrapper" className="child-wrapper">
-            {children}
-          </div>
-        </div>
-      </Paper>
-    );
-  };
 
   //========================================================================================
   /*                                                                                      *
@@ -47,7 +35,8 @@ const HTMLPopper = (props: HTMLPopperProps) => {
     setOpenPopper(false);
   }, []);
 
-  const handlePopperOpen = useCallback(() => {
+  const handlePopperOpen = useCallback((e) => {
+    setAnchorEl(e.target);
     setOpenPopper(true);
   }, []);
 
@@ -57,38 +46,27 @@ const HTMLPopper = (props: HTMLPopperProps) => {
    *                                                                                      */
   //========================================================================================
   return (
-    <>
-      <span
-        data-testid="input_clickable"
-        onClick={handlePopperOpen}
-        ref={anchorPopperRef as any}
-      >
+    <div>
+      <span data-testid="input_clickable" onClick={handlePopperOpen}>
         {clickableElement}
       </span>
 
       <Popper
         data-testid="section_popper"
-        className="popper"
         open={openPopper}
-        anchorEl={anchorPopperRef.current}
+        anchorEl={anchorEl}
         placement={popperPlacement}
         transition
       >
-        {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={FADE_OUT_TIMEOUT}>
-            <>
-              {hideOnClickAway ? (
-                <ClickAwayListener onClickAway={handlePopperClose}>
-                  {renderPaper()}
-                </ClickAwayListener>
-              ) : (
-                renderPaper()
-              )}
-            </>
-          </Fade>
-        )}
+        <ClickAwayListener onClickAway={hideOnClickAway ? handlePopperClose : null}>
+          <Paper className="transition-in">
+            <div data-testid="section_wrapper" className="child-wrapper">
+              {children}
+            </div>
+          </Paper>
+        </ClickAwayListener>
       </Popper>
-    </>
+    </div>
   );
 };
 
