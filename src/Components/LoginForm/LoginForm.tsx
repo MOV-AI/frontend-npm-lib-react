@@ -1,5 +1,5 @@
 import React, { Component, KeyboardEvent } from "react";
-import { withStyles, Svg } from "@tty-pt/styles";
+import { withStyles } from "@tty-pt/styles";
 import { SelectChangeEvent } from "@mui/material";
 import Button from "@mui/material/Button";
 import FormHelperText from "@mui/material/FormHelperText";

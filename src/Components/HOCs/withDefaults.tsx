@@ -26,10 +26,11 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   if (offlineValidation)
     componentWithDefaults = withOfflineValidation(componentWithDefaults);
 
-  componentWithDefaults = withTranslations(componentWithDefaults, {
-    i18n: dependencies?.i18n ?? { t: a => a },
-    provider: dependencies?.["react-i18next"]?.I18nextProvider ?? I18nextProvider
-  });
+  if (!(window as any).mock)
+    componentWithDefaults = withTranslations(componentWithDefaults, {
+      i18n: dependencies?.i18n ?? { t: a => a },
+      provider: dependencies?.["react-i18next"]?.I18nextProvider ?? I18nextProvider
+    });
 
   const componentWithNotifications = withNotification(componentWithDefaults);
 

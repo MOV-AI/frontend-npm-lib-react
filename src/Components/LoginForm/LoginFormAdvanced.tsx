@@ -14,6 +14,7 @@ const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
   const textFieldEl = open ? (
     <TextField
       id="component-authentication-selector"
+      name="internal"
       aria-describedby="component-authentication-error-text"
       value={props.selectedProvider}
       label={t("Domain")}

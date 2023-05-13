@@ -20,7 +20,7 @@ import useUpdateEffect from "./hooks/useUpdateEffect";
 import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
 import i18n from "../../i18n/i18n";
-import { easySub, useSub } from "Components/HOCs/withAuthentication";
+import { easySub } from "./../HOCs/withAuthentication";
 
 const logsSub = easySub([]);
 

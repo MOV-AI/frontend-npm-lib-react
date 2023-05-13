@@ -5,14 +5,12 @@ import Checkbox from "@mui/material/Checkbox";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
-import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
+import { SERVICE_LIST } from "@mov-ai/mov-fe-lib-core/api/Utils/constants";
 import { MENU_PROPS } from "./_shared/Constants";
 // import { useSelectBoxStyle } from "../../styles";
 // import useMediaQuery from "@material-ui/core/useMediaQuery";
 // import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
-
-const {SERVICE_LIST} = CONSTANTS
 
 const ServiceSelector = props => {
   // Props

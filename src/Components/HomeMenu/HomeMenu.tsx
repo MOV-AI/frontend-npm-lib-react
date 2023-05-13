@@ -1,25 +1,19 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
-import { makeMagic, bindMagic, withSvg } from "@tty-pt/styles";
+import React, { useCallback, useState } from "react";
+import { makeMagic, withSvg } from "@tty-pt/styles";
 import Rest from "@mov-ai/mov-fe-lib-core/api/Rest/Rest";
 import { easySub, useSub, authSub } from "./../HOCs/withAuthentication";
-import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
-import { User } from "@mov-ai/mov-fe-lib-core";
 import AppsIcon from "@mui/icons-material/Apps";
 import AdminBoardSvg from "./../../resources/AdminBoard.svg";
 import FleetBoardSvg from "./../../resources/FleetBoard.svg";
 import IDESvg from "./../../resources/IDE.svg";
 import LayoutSvg from "./../../resources/Layout.svg";
 import TaskManagerSvg from "./../../resources/Task Manager.svg";
-import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
-import i18n from "../../i18n/i18n.js";
 import HomeMenuSkeleton from "./HomeMenuSkeleton";
-import { App } from "./types";
 
 makeMagic({
   homeMenuPopper: {
@@ -43,7 +37,6 @@ function ClickAway(props) {
   const { anchorEl, popperPlacement, onClickAway, children, className } = props;
 
   return (<Popper
-    data-testid="section_popper"
     open={Boolean(anchorEl)}
     anchorEl={anchorEl}
     placement={popperPlacement}
@@ -57,16 +50,15 @@ function ClickAway(props) {
 }
 
 function ClickAwayButton(props) {
-  const { Icon, popperPlacement, children, className, popperClass } = props;
+  const { Icon, popperPlacement, children, className, popperClass, dataTestId } = props;
   const [ anchorEl, setAnchorEl ] = useState(null);
 
   return (<>
-    <IconButton onClick={useCallback((e: Event) => setAnchorEl(e.target), [])}>
+    <IconButton data-testid={dataTestId} onClick={useCallback((e: Event) => setAnchorEl(e.target), [])}>
       <Icon />
     </IconButton>
 
     <ClickAway
-      data-testid="section_popper"
       anchorEl={anchorEl}
       placement={popperPlacement}
       onClickAway={() => setAnchorEl(null)}
@@ -79,10 +71,10 @@ function ClickAwayButton(props) {
   </>);
 }
 
-async function getAllApps() {
+let getAllApps = async function getAllApps() {
   const { result } = await Rest.get({ path: `v1/applications/` });
   return result;
-}
+};
 
 function capitalize(str) {
   return str.split(" ").map(word => word.substring(0, 1).toUpperCase() + word.substring(1)).join(" ");
@@ -122,6 +114,7 @@ const resourcesMap = {
   default: getUrl
 };
 
+export
 const baseMap = {
   AdminBoard: {
     id: "AdminBoard",
@@ -169,7 +162,8 @@ const layoutBase = {
   color:"gray-light",
 };
 
-const appsEmit = appsSub.easyEmit(async ({ currentUser }) => {
+export
+const appsEmit = appsSub.easyEmit(async function _appsEmit({ currentUser }) {
   if (!currentUser)
     return [];
 
@@ -181,8 +175,7 @@ const appsEmit = appsSub.easyEmit(async ({ currentUser }) => {
 
   const received = (await getAllApps())
     .map(app => {
-      const id = app.Type === "layout" ? app.Label : app.URL;
-      console.log("APP", app, id);
+      const id = app.id ?? (app.Type === "layout" ? app.Label : app.URL);
 
       if (
         id === "mov-fe-app-launcher"
@@ -206,8 +199,6 @@ const appsEmit = appsSub.easyEmit(async ({ currentUser }) => {
   return apps;
 });
 
-authSub.subscribe(appsEmit);
-
 function appsMap(element) {
   const { title, id, Icon, url, color } = element;
 
@@ -215,6 +206,7 @@ function appsMap(element) {
     key={id}
     LinkComponent="a"
     href={url} 
+    data-testid={"home-menu-link-" + id}
     className={"text-decoration background vertical paper pad-big item-box hover-" + color}
   >
     <div><Icon /></div>
@@ -223,35 +215,29 @@ function appsMap(element) {
 }
 
 const appsElSub = easySub([]);
-const appsElEmit = appsElSub.easyEmit(apps => apps.map(appsMap));
+
+export
+const appsElEmit = appsElSub.easyEmit(async function (apps) {
+  return apps.map(appsMap);
+});
+
+if ((window as any).mock)
+  getAllApps = async () => Object.values(baseMap).map(app => ({
+    id: app.id,
+    Type: "application",
+    Label: app.title,
+    URL: app.url,
+    Version: app.version
+  }));
+
+authSub.subscribe(appsEmit);
 appsSub.subscribe(appsElEmit);
 
 // import { homeMenuPopperStyles } from "./styles";
 
 const HomeMenuPopper = () => {
   // State hooks
-  const [currentApps, setCurrentApps] = useState<App[]>([]);
-  const [errorMessage, setErrorMessage] = useState("");
   const appsEl = useSub(appsElSub);
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                      SUBSCRIBERS                                     *
-   *                                                                                      */
-  //========================================================================================
-  /**
-   * subscribe to Applications updates
-   */
-  useEffect(() => {
-    (new User())
-      .getAllApps()
-      .then(res => {
-        res.success && setCurrentApps(res.result as any);
-      })
-      .catch(err => {
-        setErrorMessage(err.statusText);
-      });
-  }, []);
 
   //========================================================================================
   /*                                                                                      *
@@ -269,57 +255,44 @@ const HomeMenuPopper = () => {
    *                                                                                      */
   //========================================================================================
 
-  if (errorMessage)
-    return (<ClickAwayButton
-      Icon={AppsIcon}
-    >
-      <Paper>
-        <div
-          className="no-applications"
-          data-testid="section_no-applications"
-        >
-          <Typography variant="subtitle1">
-            {i18n.t("NoApplications") as string}
-          </Typography>
-          <Button
-            data-testid="input_launcher"
-            size="large"
-            variant="outlined"
-            color="primary"
-            className="launcher-button"
-            onClick={redirectToLocalhost}
-          >
-            {LAUNCHER_APP.toUpperCase()}
-          </Button>
-        </div>
-      </Paper>
-    </ClickAwayButton>);
+  // if (errorMessage)
+  //   return (<ClickAwayButton
+  //     Icon={AppsIcon}
+  //   >
+  //     <Paper>
+  //       <div
+  //         className="no-applications"
+  //         data-testid="section_no-applications"
+  //       >
+  //         <Typography variant="subtitle1">
+  //           {i18n.t("NoApplications") as string}
+  //         </Typography>
+  //         <Button
+  //           data-testid="input_launcher"
+  //           size="large"
+  //           variant="outlined"
+  //           color="primary"
+  //           className="launcher-button"
+  //           onClick={redirectToLocalhost}
+  //         >
+  //           {LAUNCHER_APP.toUpperCase()}
+  //         </Button>
+  //       </div>
+  //     </Paper>
+  //   </ClickAwayButton>);
 
-  if (!currentApps)
-    return (<ClickAwayButton Icon={AppsIcon}>
+  if (!appsEl)
+    return (<ClickAwayButton data-testid="home-menu" Icon={AppsIcon}>
       <Paper><HomeMenuSkeleton /></Paper>
     </ClickAwayButton>);
-
-  const arrayOfApplications: App[] = [];
-  const arrayOfExternalApps: App[] = [];
-  const arrayOfLayouts: App[] = [];
-
-  currentApps.forEach((app: App) => {
-    const appType = app.Type;
-
-    if (appType === APP_TYPES.APPLICATION && app.Label !== LAUNCHER_APP)
-      arrayOfApplications.push(app);
-    if (appType === APP_TYPES.EXTERNAL) arrayOfExternalApps.push(app);
-    if (appType === APP_TYPES.LAYOUT) arrayOfLayouts.push(app);
-  });
 
   return (<ClickAwayButton
     Icon={AppsIcon}
     className="home-menu-popper"
+    dataTestId="home-menu"
   >
-    <div className="background-gray-dark pad-medium">
+    <div data-testid="home-menu-popper" className="background-gray-dark pad-medium">
       <div
-        data-testid="section_wrapper"
         className="home-menu horizontal-medium-small flex-wrap box-sizing"
       >
         { appsEl }

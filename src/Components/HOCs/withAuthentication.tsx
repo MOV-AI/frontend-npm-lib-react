@@ -15,8 +15,10 @@ function easySub(defaultData) {
 
   function update(obj) {
     valueMap.value = obj;
+    let allPromises = [];
     for (const [sub] of subs)
-      sub(obj);
+      allPromises.push(sub(obj));
+    return Promise.all(allPromises);
   }
 
   function subscribe(sub: Function) {
@@ -66,8 +68,9 @@ const authEmit = authSub.easyEmit(async () => {
     const [loggedIn, currentUser] = await Promise.all([
       Authentication.checkLogin(),
       (new User()).getCurrentUserWithPermissions(),
-      // new Promise(resolve => setTimeout(resolve, 2000)),
     ]);
+
+    console.assert(currentUser);
 
     if (loggedIn)
       return {
@@ -77,21 +80,19 @@ const authEmit = authSub.easyEmit(async () => {
         loading: false,
       };
 
-    try {
-      const providers = await Authentication.getProviders();
-      const res = await Authentication.refreshTokens();
+    const [providers, res] = await Promise.all([
+      Authentication.getProviders(),
+      Authentication.refreshTokens(),
+    ]);
 
-      return {
-        loggedIn: res,
-        providers,
-        currentUser,
-        loading: false,
-      };
-    } catch (e) {
-      throw new Error("Error while trying to decode/refresh the token: " + e.message)
-    }
+    return {
+      loggedIn: res,
+      providers,
+      currentUser,
+      loading: false,
+    };
   } catch (e) {
-    console.error(e);
+    console.error("Auth Error: " + e.error?.message ?? e.message ?? e);
     return { ...loggedOutInfo, loading: false };
   }
 });
@@ -106,7 +107,10 @@ export default function withAuthentication(
 ) {
   return function (props: any) {
     const [errorMessage, setErrorMessage] = useState("");
-    const { currentUser, loggedIn, loading, clean, providers } = useSub(authSub);
+    const authSubRes = useSub(authSub);
+    if (!authSubRes)
+      throw new Error("No auth info");
+    const { currentUser, loggedIn, loading, clean, providers } = authSubRes;
     const hasPermissions = currentUser?.Resources?.Applications
       ? currentUser.Superuser || currentUser.Resources.Applications.includes(appName as PermissionType) || !appName
       : allowGuest;
