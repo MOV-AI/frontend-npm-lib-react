@@ -18,7 +18,7 @@ const RobotSelector = props => {
   const bigScreen = true;
   // Constants
   const INPUT_ICON = (
-    <i className="fas fa-robot icon-adornment"></i>
+    <i className="fas fa-robot margin-right-small"></i>
   );
 
   //========================================================================================

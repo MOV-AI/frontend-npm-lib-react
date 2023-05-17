@@ -1,12 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
+import { usePopper } from 'react-popper';
 import { makeMagic, withSvg } from "@tty-pt/styles";
 import Rest from "@mov-ai/mov-fe-lib-core/api/Rest/Rest";
 import { easySub, useSub, authSub } from "./../HOCs/withAuthentication";
 import ButtonBase from "@mui/material/ButtonBase";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
-import Popper from "@mui/material/Popper";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
 import AppsIcon from "@mui/icons-material/Apps";
 import AdminBoardSvg from "./../../resources/AdminBoard.svg";
 import FleetBoardSvg from "./../../resources/FleetBoard.svg";
@@ -17,10 +16,13 @@ import HomeMenuSkeleton from "./HomeMenuSkeleton";
 
 makeMagic({
   homeMenuPopper: {
+    transform: "none !important",
     top: "48px !important",
+    height: "calc(100vh - 48px)",
     "& > *": {
       boxShadow: "0px 8px 10px -5px rgba(0,0,0,0.2), 0px 16px 24px 2px rgba(0,0,0,0.14), 0px 6px 30px 5px rgba(0,0,0,0.12)",
       height: "calc(100vh - 48px)",
+      boxSizing: "border-box",
     },
   },
   homeMenu: {
@@ -33,41 +35,40 @@ makeMagic({
   },
 });
 
-function ClickAway(props) {
-  const { anchorEl, popperPlacement, onClickAway, children, className } = props;
+export
+function PopperButton(props: any) {
+  const {
+    Icon, id = "", popperPlacement, children, className = "",
+    dataTestId,
+  } = props;
+  const [ open, setOpen ] = useState(false);
+  const [referenceElement, setReferenceElement] = useState(null);
 
-  return (<Popper
-    open={Boolean(anchorEl)}
-    anchorEl={anchorEl}
-    placement={popperPlacement}
-    className={className}
-    transition
-  >
-    <ClickAwayListener onClickAway={onClickAway}>
-      {children}
-    </ClickAwayListener>
-  </Popper>);
-}
+  const clickHandler = useCallback((ev) => {
+    console.log("clickHandler", ev);
+    setReferenceElement(null);
+    setOpen(false);
+  }, [setReferenceElement]);
 
-function ClickAwayButton(props) {
-  const { Icon, popperPlacement, children, className, popperClass, dataTestId } = props;
-  const [ anchorEl, setAnchorEl ] = useState(null);
+  const [popperElement, setPopperElement] = useState(null);
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: popperPlacement,
+  });
+  const showClass = open ? "" : " display-none";
 
   return (<>
-    <IconButton data-testid={dataTestId} onClick={useCallback((e: Event) => setAnchorEl(e.target), [])}>
+    <IconButton aria-describedby={id} data-testid={dataTestId} onClick={e => {
+      setReferenceElement(e.target);
+      setOpen(true);;
+      e.stopPropagation();
+    }}>
       <Icon />
     </IconButton>
 
-    <ClickAway
-      anchorEl={anchorEl}
-      placement={popperPlacement}
-      onClickAway={() => setAnchorEl(null)}
-      className={className}
-      popperClass={popperClass}
-      transition
-    >
+    <div className={"absolute z-900 position-0" + showClass} onClick={clickHandler} />
+    <div ref={setPopperElement} className={className + " z-901" + showClass} style={styles.popper} {...attributes.popper }>
       { children }
-    </ClickAway>
+    </div>
   </>);
 }
 
@@ -256,7 +257,7 @@ const HomeMenuPopper = () => {
   //========================================================================================
 
   // if (errorMessage)
-  //   return (<ClickAwayButton
+  //   return (<PopperButton
   //     Icon={AppsIcon}
   //   >
   //     <Paper>
@@ -279,26 +280,27 @@ const HomeMenuPopper = () => {
   //         </Button>
   //       </div>
   //     </Paper>
-  //   </ClickAwayButton>);
+  //   </PopperButton>);
 
   if (!appsEl)
-    return (<ClickAwayButton data-testid="home-menu" Icon={AppsIcon}>
+    return (<PopperButton data-testid="home-menu" Icon={AppsIcon}>
       <Paper><HomeMenuSkeleton /></Paper>
-    </ClickAwayButton>);
+    </PopperButton>);
 
-  return (<ClickAwayButton
+  return (<PopperButton
     Icon={AppsIcon}
     className="home-menu-popper"
+    data-testid="home-menu-popper"
     dataTestId="home-menu"
   >
-    <div data-testid="home-menu-popper" className="background-gray-dark pad-medium">
+    <div className="background-gray-dark pad-medium">
       <div
         className="home-menu horizontal-medium-small flex-wrap box-sizing"
       >
         { appsEl }
       </div>
     </div>
-  </ClickAwayButton>);
+  </PopperButton>);
 };
 
 export default HomeMenuPopper;

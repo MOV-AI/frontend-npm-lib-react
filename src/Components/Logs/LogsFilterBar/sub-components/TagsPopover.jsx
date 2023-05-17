@@ -3,8 +3,8 @@ import Chip from "@mui/material/Chip";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import FiltersIcon from "@mui/icons-material/Tune";
-import LabelIcon from "@mui/icons-material/Label";
+import TuneIcon from "@mui/icons-material/Tune";
+import { PopperButton } from "../../../HomeMenu/HomeMenu";
 import AddIcon from "@mui/icons-material/Add";
 // import { useTagsStyles } from "../../styles";
 
@@ -82,28 +82,22 @@ const TagsPopover = props => {
    *                                                                                      */
   //========================================================================================
 
-  return (
-    <FiltersIcon
-      icon={<LabelIcon data-testid="output_icon"></LabelIcon>}
-      title="Tags"
-      isActive={tags?.length > 0}
-    >
-      <div data-testid="section_tags" className="tags-container">
-        <TextField
-          className="add-tag-text"
-          value={tagText}
-          onChange={handleOnChangeKey}
-          onKeyUp={handleKeyUp}
-          label="Add Tag"
-          InputProps={{
-            endAdornment: renderEndAdornment()
-          }}
-          size="small"
-        />
-        <div className="tags-list">{tags?.map(renderTag)}</div>
-      </div>
-    </FiltersIcon>
-  );
+  return (<PopperButton id="settings" Icon={TuneIcon}>
+    <div data-testid="section_tags" className="background-gray-dark pad vertical z-901 tags-container">
+      <TextField
+        className="add-tag-text"
+        value={tagText}
+        onChange={handleOnChangeKey}
+        onKeyUp={handleKeyUp}
+        label="Add Tag"
+        InputProps={{
+          endAdornment: renderEndAdornment()
+        }}
+        size="small"
+      />
+      <div className="tags-list">{tags?.map(renderTag)}</div>
+    </div>
+  </PopperButton>);
 };
 
 export default TagsPopover;

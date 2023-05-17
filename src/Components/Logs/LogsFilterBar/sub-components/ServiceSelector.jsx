@@ -5,8 +5,10 @@ import Checkbox from "@mui/material/Checkbox";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
+import TuneIcon from "@mui/icons-material/Tune";
 import { SERVICE_LIST } from "@mov-ai/mov-fe-lib-core/api/Utils/constants";
 import { MENU_PROPS } from "./_shared/Constants";
+import { PopperButton } from "../../../HomeMenu/HomeMenu";
 // import { useSelectBoxStyle } from "../../styles";
 // import useMediaQuery from "@material-ui/core/useMediaQuery";
 // import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
@@ -64,12 +66,7 @@ const ServiceSelector = props => {
   //========================================================================================
 
   return (
-    <div
-      data-testid="section_services"
-      className={
-        bigScreen ? "toggle-container" : "small-toggle-container"
-      }
-    >
+    <PopperButton id="services" Icon={TuneIcon} className={"pad background-gray-dark " + (bigScreen ? "toggle-container" : "small-toggle-container")}>
       <FormControl className="form-control">
         <Select
           inputProps={{ "data-testid": "input_select" }}
@@ -86,7 +83,7 @@ const ServiceSelector = props => {
           {SERVICE_LIST.map(renderServiceItem)}
         </Select>
       </FormControl>
-    </div>
+    </PopperButton>
   );
 };
 

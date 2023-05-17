@@ -76,72 +76,64 @@ const LogsFilterBar = props => {
 
   return (
     <AppBar position="static" color="inherit">
-      <Toolbar data-testid="section_logs-filter-bar" variant="dense">
-        <div className="flex-container">
-          {/* Robot Selector */}
-          <RobotSelector
-            selectedRobots={selectedRobots}
-            handleRobotChange={handleRobotChange}
-          />
-        </div>
-        <div className="double-flex-container display-flex center">
-          {/* Search Input */}
-          <SearchInput
-            messageRegex={messageRegex}
-            handleMessageRegex={handleMessageRegex}
-          />
-        </div>
-        <div className="double-flex-container">
-          {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
-          <LevelSelector
-            levels={levels}
-            handleLevels={handleLevels}
-            levelsList={levelsList}
-          />
-        </div>
-        <div className="double-flex-container">
-          {/* Toggle: BACKEND, SPAWNER */}
-          <ServiceSelector
-            selectedService={selectedService}
-            handleSelectedService={handleSelectedService}
-          />
-        </div>
-        <div
-          className="double-flex-container display-flex space-between"
-        >
-          <div className="double-flex-container display-flex">
-            {/* Tags */}
-            <TagsPopover
-              tags={tags}
-              handleAddTag={handleAddTag}
-              handleDeleteTag={handleDeleteTag}
-            />
-            {/* Date time filter */}
-            <TimeFilters
-              selectedFromDate={selectedFromDate}
-              selectedToDate={selectedToDate}
-              handleDateChange={handleDateChange}
-            />
-            {/* Export Logs */}
-            <Tooltip title={t("Download logs")}>
-              <IconButton
-                onClick={handleExport}
-              >
-                <GetAppIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
-          <div className="flex-container display-flex flex-end">
-            {/* Settings */}
-            <SettingsPopover
-              limit={limit}
-              handleLimit={handleLimit}
-              columns={columns}
-              handleColumns={handleColumns}
-            />
-          </div>
-        </div>
-      </Toolbar>
+      <div className="paper pad horizontal align-items">
+
+        {/* Robot Selector */}
+        <RobotSelector
+          selectedRobots={selectedRobots}
+          handleRobotChange={handleRobotChange}
+        />
+
+        {/* Search Input */}
+        <SearchInput
+          messageRegex={messageRegex}
+          handleMessageRegex={handleMessageRegex}
+        />
+
+        {/* Toggle: INFO, DEBUG, ERROR, CRITICAL */}
+        <LevelSelector
+          levels={levels}
+          handleLevels={handleLevels}
+          levelsList={levelsList}
+        />
+
+        {/* Toggle: BACKEND, SPAWNER */}
+        <ServiceSelector
+          selectedService={selectedService}
+          handleSelectedService={handleSelectedService}
+        />
+
+        {/* Tags */}
+        <TagsPopover
+          tags={tags}
+          handleAddTag={handleAddTag}
+          handleDeleteTag={handleDeleteTag}
+        />
+
+        {/* Date time filter */}
+        <TimeFilters
+          selectedFromDate={selectedFromDate}
+          selectedToDate={selectedToDate}
+          handleDateChange={handleDateChange}
+        />
+
+        {/* Export Logs */}
+        <Tooltip title={t("Download logs")}>
+          <IconButton
+            onClick={handleExport}
+          >
+            <GetAppIcon />
+          </IconButton>
+        </Tooltip>
+
+        {/* Settings */}
+        <SettingsPopover
+          limit={limit}
+          handleLimit={handleLimit}
+          columns={columns}
+          handleColumns={handleColumns}
+        />
+      </div>
     </AppBar>
   );
 };

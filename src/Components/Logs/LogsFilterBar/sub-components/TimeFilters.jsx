@@ -2,8 +2,9 @@ import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 // import KeyboardDateTimePicker from "@mui/x-date-pickers/KeyboardDateTimePicker";
 // import MuiPickersUtilsProvider from "@mui/x-date-pickers/MuiPickersUtilsProvider";
+import TextField from "@mui/material/TextField";
 import TodayIcon from "@mui/icons-material/Today";
-import FiltersIcon from "@mui/icons-material/Tune";
+import { PopperButton } from "../../../HomeMenu/HomeMenu";
 import { DATE_KEY_OPTION } from "../../utils/Constants";
 
 const DATE_TIME_FORMAT = "yyyy/MM/dd HH:mm";
@@ -42,32 +43,33 @@ const TimeFilters = props => {
    *                                                                                      */
   //========================================================================================
 
-  return (
-    <FiltersIcon
-      icon={<TodayIcon />}
-      title={t("Date Range")}
-      isActive={!selectedFromDate || !selectedToDate}
-    >
-      {/* From -> To Date */}
-      <div>
-        <div
-          key="time-picker"
-          size="small"
-          label={t("From date")}
-          value={selectedFromDate}
-          onChange={handleFromDateChange}
-          format={DATE_TIME_FORMAT}
-        />
-        <div
-          key="time-picker2"
-          size="small"
-          label={t("To date")}
-          value={selectedToDate}
-          onChange={handleToDateChange}
-          format={DATE_TIME_FORMAT}
-        />
-      </div>
-    </FiltersIcon>
+  return (<PopperButton
+    id="settings"
+    Icon={TodayIcon}
+    className={!selectedFromDate || !selectedToDate ? "active" : ""}
+  >
+    {/* From -> To Date */}
+    <div className="background-gray-dark pad vertical">
+      <TextField
+        key="time-picker"
+        size="small"
+        type="datetime-local"
+        label={t("From date")}
+        value={selectedFromDate}
+        onChange={handleFromDateChange}
+        format={DATE_TIME_FORMAT}
+      />
+      <TextField
+        key="time-picker2"
+        size="small"
+        type="datetime-local"
+        label={t("To date")}
+        value={selectedToDate}
+        onChange={handleToDateChange}
+        format={DATE_TIME_FORMAT}
+      />
+    </div>
+  </PopperButton>
   );
 };
 
