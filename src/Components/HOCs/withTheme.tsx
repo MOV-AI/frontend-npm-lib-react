@@ -12,7 +12,7 @@ export default function withTheme(
     const [theme, setTheme] = useState<string>(defaultTheme);
 
     useEffect(() => {
-      document.body.className = theme;
+      (document.body.parentElement as HTMLElement).className = theme;
     }, [theme]);
 
     /**
@@ -20,7 +20,7 @@ export default function withTheme(
      */
     const handleToggleTheme = () => {
       const newTheme = theme === "dark" ? "light" : "dark";
-      document.body.className = newTheme;
+      (document.body.parentElement as HTMLElement).className = newTheme;
       window.localStorage.setItem("movai.theme", newTheme); // dark or light
       setTheme(newTheme);
     };

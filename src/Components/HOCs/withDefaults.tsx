@@ -1,7 +1,7 @@
 import React from "react";
 import { I18nextProvider } from "react-i18next";
 import { WithThemeProps } from "@tty-pt/styles/lib/types";
-import { withMagic, makeThemeMagicBook } from "@tty-pt/styles";
+import { withMagic } from "@tty-pt/styles";
 import { WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
 import withNotification from "./withNotification";
@@ -9,7 +9,7 @@ import withOfflineValidation from "./withOfflineValidation";
 import withTheme from "./withTheme";
 import withTranslations from "./withTranslations";
 import withError from "./withError";
-import "../../styles/Themes";
+import { defaultGetStyle } from "../../styles/Themes";
 
 export default function withDefaults(appOptions: WithDefaultsProps) {
   const {
@@ -42,7 +42,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
 
   const componentWithMagic = withMagic(
     componentWithAuthentication,
-    getStyle ?? makeThemeMagicBook,
+    getStyle ?? defaultGetStyle,
   );
 
   return withTheme(componentWithMagic as React.ComponentClass<WithThemeProps>);

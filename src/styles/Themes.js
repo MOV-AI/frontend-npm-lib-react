@@ -1,4 +1,9 @@
-import { defaultTheme, registerGetTheme, makeMagic } from "@tty-pt/styles";
+import {
+  defaultTheme,
+  registerGetTheme,
+  makeMagic,
+  makeThemeMagicBook
+} from "@tty-pt/styles";
 import "@fontsource/open-sans/index.css";
 import "@fontsource/roboto/index.css";
 
@@ -15,7 +20,15 @@ const CONSTANTS = {
       primary: "#424242",
       secondary: "#212121"
     },
-    iconColor: "#fff"
+    iconColor: "#fff",
+    colors: [
+      ["GrayDark", "#2b2b2b !important"],
+    ],
+    baked: {
+      gray: {
+        dark: "#2b2b2b !important",
+      },
+    },
   },
   light: {
     borderBottom: "1px solid #ccc",
@@ -23,9 +36,18 @@ const CONSTANTS = {
     background: {
       default: "linear-gradient(122.19deg, rgb(255, 255, 255) 2.58%, rgb(255, 255, 255) 76.23%)",
       primary: "#e2e2e2",
-      secondary: "#b2b2b2"
+      secondary: "#b2b2b2",
+      overlay: "radial-gradient(79.34% 81.94% at 123.17% 23.94%, #ffffff 0%, #eeeeee 100%)",
     },
-    iconColor: "#007197"
+    iconColor: "#007197",
+    colors: [
+      ["GrayDark", "#cccccc !important"],
+    ],
+    baked: {
+      gray: {
+        dark: "#cccccc !important",
+      },
+    },
   },
   indigo: {
     borderBottom: "1px solid #212121",
@@ -89,6 +111,11 @@ const themes = {
     },
     palette: {
       ...defaultTheme.palette,
+      baked: CONSTANTS.dark.baked,
+      color: [{
+        func: x => CONSTANTS.dark.colors[x],
+        length: CONSTANTS.dark.colors.length,
+      }],
       type: "dark", // Switching the dark mode on, is a single property value change.
       primary: {
         ...defaultTheme.palette.primary,
@@ -232,6 +259,11 @@ const themes = {
     },
     palette: {
       ...defaultTheme.palette,
+      baked: CONSTANTS.light.baked,
+      color: [{
+        func: x => CONSTANTS.light.colors[x],
+        length: CONSTANTS.light.colors.length,
+      }],
       primary: {
         ...defaultTheme.palette.primary,
         main: "#007197"
@@ -249,6 +281,7 @@ const themes = {
         paper: CONSTANTS.light.background.primary,
         primary: CONSTANTS.light.background.primary,
         secondary: CONSTANTS.light.background.secondary,
+        overlay: CONSTANTS.light.background.overlay,
       },
       accent: {
         background: "whitesmoke",
@@ -257,7 +290,8 @@ const themes = {
       },
       text: {
         ...defaultTheme.palette.text,
-        primary: CONSTANTS.light.textColor
+        primary: CONSTANTS.light.textColor,
+        secondary: "rgba(0, 0, 0, 0.57)",
       },
       getContrastText: () => CONSTANTS.light.iconColor
     },
@@ -448,3 +482,10 @@ makeMagic({
     minHeight: "100vh",
   }
 });
+
+export
+function defaultGetStyle(themeName, theme) {
+  return {
+    ...makeThemeMagicBook(themeName, theme),
+  };
+}
