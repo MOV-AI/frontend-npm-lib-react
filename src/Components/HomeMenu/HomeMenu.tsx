@@ -39,7 +39,6 @@ export
 function PopperButton(props: any) {
   const {
     Icon, id = "", popperPlacement, children, className = "",
-    dataTestId,
   } = props;
   const [ open, setOpen ] = useState(false);
   const [referenceElement, setReferenceElement] = useState(null);
@@ -57,7 +56,7 @@ function PopperButton(props: any) {
   const showClass = open ? "" : " display-none";
 
   return (<>
-    <IconButton aria-describedby={id} data-testid={dataTestId} onClick={e => {
+    <IconButton aria-describedby={id} data-testid={props["data-testid"]} onClick={e => {
       setReferenceElement(e.target);
       setOpen(true);;
       e.stopPropagation();
@@ -291,9 +290,8 @@ const HomeMenuPopper = () => {
     Icon={AppsIcon}
     className="home-menu-popper"
     data-testid="home-menu-popper"
-    dataTestId="home-menu"
   >
-    <div className="background-gray-dark pad-medium">
+    <div data-testid="home-menu" className="background-gray-dark pad-medium">
       <div
         className="home-menu horizontal-medium-small flex-wrap box-sizing"
       >

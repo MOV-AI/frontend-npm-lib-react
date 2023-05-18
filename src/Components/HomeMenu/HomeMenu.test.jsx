@@ -35,7 +35,7 @@ it("renders for user maria (Renders and links to the right place)", async () => 
 
   const button = getByTestId("home-menu");
   expect(button).toBeTruthy();
-  act(() => fireEvent.click(button));
+  await act(() => fireEvent.click(button));
   const container = getByTestId("home-menu-popper");
   expect(container).toBeTruthy();
 

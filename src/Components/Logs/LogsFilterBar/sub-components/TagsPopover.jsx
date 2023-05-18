@@ -49,7 +49,7 @@ const TagsPopover = props => {
     return (
       <InputAdornment position="end">
         <IconButton
-          inputProps={{ "data-testid": "input_button" }}
+          data-testid="input_button"
           onClick={addTag}
         >
           <AddIcon />
