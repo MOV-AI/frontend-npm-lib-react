@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef, useEffect } from "react";
+import React, { useMemo, useCallback, useState, useRef, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import RobotLogModal from "../Modal/RobotLogModal";
@@ -62,7 +62,6 @@ const Logs = props => {
   const requestTimeout = useRef(DEFAULT_TIMEOUT_IN_MS);
   const lastRequestTimeRef = useRef(null);
   const refreshLogsTimeoutRef = useRef();
-  const handleContainerRef = useRef();
   const logsDataRef = useRef([]);
   const logModalRef = useRef();
   const isMounted = useRef();
@@ -470,52 +469,44 @@ const Logs = props => {
    *                                        Render                                        *
    *                                                                                      */
   //========================================================================================
-  const formatedLogsData = formatLogsData();
-  return (
-    <div className="external-div">
-      <div data-testid="section_logs" className="wrapper">
-        <LogsFilterBar
-          selectedRobots={formatSelectedRobots()}
-          updateRobotSelection={onChangeRobotSelection}
-          handleLevels={onChangeLevels}
-          handleSelectedService={onChangeServices}
-          handleLimit={onChangeLimit}
-          handleColumns={onChangeColumns}
-          handleMessageRegex={onChangeMessage}
-          handleDateChange={onChangeDate}
-          handleAddTag={addTag}
-          handleDeleteTag={deleteTag}
-          handleExport={handleExport}
-          levels={levels}
-          levelsList={levelsList}
-          selectedService={selectedService}
-          limit={limit}
-          columns={columns}
-          columnList={COLUMN_LIST}
-          tags={tags}
-          messageRegex={searchMessage}
-          selectedFromDate={selectedFromDate}
-          selectedToDate={selectedToDate}
-          logsData={formatedLogsData}
-        ></LogsFilterBar>
-        <div
-          data-testid="section_table-container"
-          ref={handleContainerRef}
-          className="table-container"
-        >
-          <LogsTable
-            columns={columns}
-            columnList={COLUMN_LIST}
-            logsData={formatedLogsData}
-            levelsList={levelsList}
-            onRowClick={openLogDetails}
-            noRowsRenderer={handleNoRows}
-          ></LogsTable>
-        </div>
-      </div>
-      <RobotLogModal ref={logModalRef} props={ROBOT_LOG_TYPE}></RobotLogModal>
+  const formatedLogsData = useMemo(() => formatLogsData(), [formatLogsData]);
+  return (<>
+    <div className="vertical-0">
+      <LogsFilterBar
+        selectedRobots={formatSelectedRobots()}
+        updateRobotSelection={onChangeRobotSelection}
+        handleLevels={onChangeLevels}
+        handleSelectedService={onChangeServices}
+        handleLimit={onChangeLimit}
+        handleColumns={onChangeColumns}
+        handleMessageRegex={onChangeMessage}
+        handleDateChange={onChangeDate}
+        handleAddTag={addTag}
+        handleDeleteTag={deleteTag}
+        handleExport={handleExport}
+        levels={levels}
+        levelsList={levelsList}
+        selectedService={selectedService}
+        limit={limit}
+        columns={columns}
+        columnList={COLUMN_LIST}
+        tags={tags}
+        messageRegex={searchMessage}
+        selectedFromDate={selectedFromDate}
+        selectedToDate={selectedToDate}
+        logsData={formatedLogsData}
+      ></LogsFilterBar>
+      <LogsTable
+        columns={columns}
+        columnList={COLUMN_LIST}
+        logsData={formatedLogsData}
+        levelsList={levelsList}
+        onRowClick={openLogDetails}
+        noRowsRenderer={handleNoRows}
+      ></LogsTable>
     </div>
-  );
+    <RobotLogModal ref={logModalRef} props={ROBOT_LOG_TYPE}></RobotLogModal>
+  </>);
 };
 
 export default Logs;

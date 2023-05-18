@@ -3,7 +3,7 @@ import Chip from "@mui/material/Chip";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import TuneIcon from "@mui/icons-material/Tune";
+import LabelIcon from "@mui/icons-material/Label";
 import { PopperButton } from "../../../HomeMenu/HomeMenu";
 import AddIcon from "@mui/icons-material/Add";
 // import { useTagsStyles } from "../../styles";
@@ -82,7 +82,7 @@ const TagsPopover = props => {
    *                                                                                      */
   //========================================================================================
 
-  return (<PopperButton id="settings" Icon={TuneIcon}>
+  return (<PopperButton id="settings" Icon={LabelIcon}>
     <div data-testid="section_tags" className="background-gray-dark pad vertical z-901 tags-container">
       <TextField
         className="add-tag-text"
