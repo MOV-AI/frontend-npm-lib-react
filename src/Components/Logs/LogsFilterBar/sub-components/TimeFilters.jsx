@@ -1,10 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-// import KeyboardDateTimePicker from "@mui/x-date-pickers/KeyboardDateTimePicker";
-// import MuiPickersUtilsProvider from "@mui/x-date-pickers/MuiPickersUtilsProvider";
-import TextField from "@mui/material/TextField";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TodayIcon from "@mui/icons-material/Today";
-import { PopperButton } from "../../../HomeMenu/HomeMenu";
+import { PopperButtonBase } from "../../../HomeMenu/HomeMenu";
 import { DATE_KEY_OPTION } from "../../utils/Constants";
 
 const DATE_TIME_FORMAT = "yyyy/MM/dd HH:mm";
@@ -14,6 +12,8 @@ const TimeFilters = props => {
   const { selectedFromDate, selectedToDate, handleDateChange } = props;
   // Translation hook
   const { t } = useTranslation();
+  const openState = useState(false);
+  const [ open ] = openState;
 
   //========================================================================================
   /*                                                                                      *
@@ -43,14 +43,15 @@ const TimeFilters = props => {
    *                                                                                      */
   //========================================================================================
 
-  return (<PopperButton
+  return (<PopperButtonBase
     id="settings"
     Icon={TodayIcon}
     className={!selectedFromDate || !selectedToDate ? "active" : ""}
+    openState={openState}
   >
     {/* From -> To Date */}
-    <div className="background-gray-dark pad vertical">
-      <TextField
+    <div className="background-gray-dark pad vertical display-none">
+      <DatePicker
         key="time-picker"
         size="small"
         type="datetime-local"
@@ -59,7 +60,7 @@ const TimeFilters = props => {
         onChange={handleFromDateChange}
         format={DATE_TIME_FORMAT}
       />
-      <TextField
+      <DatePicker
         key="time-picker2"
         size="small"
         type="datetime-local"
@@ -69,7 +70,7 @@ const TimeFilters = props => {
         format={DATE_TIME_FORMAT}
       />
     </div>
-  </PopperButton>
+  </PopperButtonBase>
   );
 };
 

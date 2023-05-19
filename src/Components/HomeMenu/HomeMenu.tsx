@@ -36,11 +36,12 @@ makeMagic({
 });
 
 export
-function PopperButton(props: any) {
+function PopperButtonBase(props: any) {
   const {
-    Icon, id = "", popperPlacement, children, className = "",
+    Icon, id = "", popperPlacement, children,
+    className = "", openState, keepOpen,
   } = props;
-  const [ open, setOpen ] = useState(false);
+  const [ open, setOpen ] = openState;
   const [referenceElement, setReferenceElement] = useState(null);
 
   const clickHandler = useCallback((ev) => {
@@ -66,9 +67,19 @@ function PopperButton(props: any) {
 
     <div className={"absolute z-900 position-0" + showClass} onClick={clickHandler} />
     <div ref={setPopperElement} className={className + " z-901" + showClass} style={styles.popper} {...attributes.popper }>
-      { children }
+      { open || keepOpen ? children : null }
     </div>
   </>);
+}
+
+export
+function PopperButton(props: any) {
+  const { children, ...rest } = props;
+  const openState = useState(false);
+
+  return (<PopperButtonBase openState={openState} {...rest}>
+    { props.children }
+  </PopperButtonBase>);
 }
 
 let getAllApps = async function getAllApps() {

@@ -9,6 +9,7 @@ import withOfflineValidation from "./withOfflineValidation";
 import withTheme from "./withTheme";
 import withTranslations from "./withTranslations";
 import withError from "./withError";
+import withDate from "./withDate";
 import { defaultGetStyle } from "../../styles/Themes";
 
 export default function withDefaults(appOptions: WithDefaultsProps) {
@@ -45,5 +46,5 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     getStyle ?? defaultGetStyle,
   );
 
-  return withTheme(componentWithMagic as React.ComponentClass<WithThemeProps>);
+  return withDate(withTheme(componentWithMagic as React.ComponentClass<WithThemeProps>));
 }
