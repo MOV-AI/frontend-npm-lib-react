@@ -1,8 +1,10 @@
+import React from "react";
 import {
   defaultTheme,
   registerGetTheme,
   makeMagic,
-  makeThemeMagicBook
+  makeThemeMagicBook,
+  useTheme as baseUseTheme,
 } from "@tty-pt/styles";
 import "@fontsource/open-sans/index.css";
 import "@fontsource/roboto/index.css";
@@ -473,6 +475,19 @@ const themes = {
 export
 function getTheme(themeName) {
   return themes[themeName];
+}
+
+export
+function useTheme() {
+  return getTheme(baseUseTheme());
+}
+
+export
+function withTheme(Component) {
+  return function WithTheme(props) {
+    const theme = useTheme();
+    return <Component theme={theme} { ...props }/>;
+  };
 }
 
 registerGetTheme(getTheme);
