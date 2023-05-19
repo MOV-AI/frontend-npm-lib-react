@@ -1,14 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 const useUpdateEffect = (fn, inputs) => {
-  const didMountRef = useRef(false);
+  const [didMount, setDidMount] = useState(false);
 
   useEffect(() => {
-    if (didMountRef.current) {
+    if (didMount)
       return fn();
-    }
-    didMountRef.current = true;
-  }, [inputs, fn]);
+    setDidMount(true);
+  }, inputs.concat([fn]));
 };
 
 export default useUpdateEffect;

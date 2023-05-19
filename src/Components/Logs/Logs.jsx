@@ -153,58 +153,58 @@ const Logs = props => {
     return validRobots;
   }, []);
 
-  /**
-   * Get robots log data
-   */
-  const getRobotLogData = useCallback(robots => {
-    // If component is no longer mounted
-    if (!isMounted.current) return;
-    console.assert(robots.length);
-    // Set loading state if log data is not empty
-    if (logsDataRef.current.length) setLoading(true);
-    // Get request parameters
-    const queryParams = {
-      level: { selected: levels, list: levelsList },
-      service: { selected: selectedService },
-      tag: { selected: tags },
-      searchMessage: searchMessage,
-      date: { from: getFromDate(), to: getToDate() },
-      robot: { selected: robots },
-      limit: limit
-    };
+  // /**
+  //  * Get robots log data
+  //  */
+  // const getRobotLogData = useCallback(robots => {
+  //   // If component is no longer mounted
+  //   if (!isMounted.current) return;
+  //   console.assert(robots.length);
+  //   // Set loading state if log data is not empty
+  //   if (logsDataRef.current.length) setLoading(true);
+  //   // Get request parameters
+  //   const queryParams = {
+  //     level: { selected: levels, list: levelsList },
+  //     service: { selected: selectedService },
+  //     tag: { selected: tags },
+  //     searchMessage: searchMessage,
+  //     date: { from: getFromDate(), to: getToDate() },
+  //     robot: { selected: robots },
+  //     limit: limit
+  //   };
 
-    const requestTime = new Date().getTime();
-    clearTimeout(getLogsTimeoutRef.current);
-    RobotManager.getLogs(queryParams)
-      .then(response => {
-        setLogsData(prevState => {
-          const oldLogs = prevState || [];
-          const newLogs = response?.data || [];
-          return [...oldLogs, ...newLogs];
-        });
-        // Reset timeout for next request to default value
-        lastRequestTimeRef.current = requestTime;
-        requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
-        // Doesn't enqueue next request if the 'selectedToDate' inserted manually by the user is before now
-        return !(selectedToDate && selectedToDate < requestTime);
-      })
-      .catch(err => {
-        // Add more time for the next request if it fails
-        console.warn("Failed logs request", err);
-        console.warn("Retry in ", requestTimeout.current);
-        requestTimeout.current += RETRY_IN_MS;
-        // Enqueue next request
-        return true;
-      })
-      .then(enqueueNextRequest => {
-        setLoading(false);
-        clearTimeout(getLogsTimeoutRef.current);
-        if (!enqueueNextRequest) return;
-        getLogsTimeoutRef.current = setTimeout(() => {
-          getLogs();
-        }, requestTimeout.current);
-      });
-  }, [getFromDate, getLogs, getToDate, levels, levelsList, limit, searchMessage, selectedService, selectedToDate, tags]);
+  //   const requestTime = new Date().getTime();
+  //   clearTimeout(getLogsTimeoutRef.current);
+  //   RobotManager.getLogs(queryParams)
+  //     .then(response => {
+  //       setLogsData(prevState => {
+  //         const oldLogs = prevState || [];
+  //         const newLogs = response?.data || [];
+  //         return [...oldLogs, ...newLogs];
+  //       });
+  //       // Reset timeout for next request to default value
+  //       lastRequestTimeRef.current = requestTime;
+  //       requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
+  //       // Doesn't enqueue next request if the 'selectedToDate' inserted manually by the user is before now
+  //       return !(selectedToDate && selectedToDate < requestTime);
+  //     })
+  //     .catch(err => {
+  //       // Add more time for the next request if it fails
+  //       console.warn("Failed logs request", err);
+  //       console.warn("Retry in ", requestTimeout.current);
+  //       requestTimeout.current += RETRY_IN_MS;
+  //       // Enqueue next request
+  //       return true;
+  //     })
+  //     .then(enqueueNextRequest => {
+  //       setLoading(false);
+  //       clearTimeout(getLogsTimeoutRef.current);
+  //       if (!enqueueNextRequest) return;
+  //       getLogsTimeoutRef.current = setTimeout(() => {
+  //         getLogs();
+  //       }, requestTimeout.current);
+  //     });
+  // }, [getFromDate, getLogs, getToDate, levels, levelsList, limit, searchMessage, selectedService, selectedToDate, tags]);
 
   /**
    * Refresh logs in table
@@ -254,9 +254,9 @@ const Logs = props => {
   }, [robotsData]);
 
   // On change filter
-  useUpdateEffect(() => {
-    refreshLogs();
-  }, [levels, selectedService, columns, tags]);
+  // useUpdateEffect(() => {
+  //   refreshLogs();
+  // }, [levels, selectedService, columns, tags]);
 
   // Add timeout before refresh logs on text input change
   //  This will prevent unnecessary re-renders while the user is still typing
