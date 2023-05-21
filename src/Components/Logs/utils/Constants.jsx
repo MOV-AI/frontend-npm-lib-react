@@ -21,17 +21,11 @@ export const ROBOT_STATES = {
 };
 
 export const COLUMN_LIST = {
-  Date: {
-    label: "Date",
-    dataKey: "time",
-    width: 110,
-    render: time => getJustDateFromServer(time)
-  },
   Time: {
     label: "Time",
     dataKey: "time",
-    width: 100,
-    render: time => getJustTimeFromServer(time)
+    width: 110,
+    render: time => time
   },
   Level: {
     label: "Level",
@@ -57,7 +51,7 @@ export const COLUMN_LIST = {
 
 export const DEFAULT_SELECTED_SERVICES = ["BACKEND", "SPAWNER"];
 export const DEFAULT_SELECTED_LEVELS = ["INFO", "ERROR", "CRITICAL"];
-export const DEFAULT_SELECTED_COLUMNS = ["Date", "Time", "Robot", "Message"];
+export const DEFAULT_SELECTED_COLUMNS = ["Time", "Robot", "Message"];
 export const DEFAULT_LIMIT = 50;
 export const ROBOT_LOG_TYPE = ["module", "service"];
 

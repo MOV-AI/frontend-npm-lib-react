@@ -76,7 +76,7 @@ const LogsFilterBar = props => {
 
   return (
     <AppBar position="static" color="inherit">
-      <div className="paper pad horizontal align-items">
+      <div className="paper pad horizontal flex-wrap align-items">
 
         {/* Robot Selector */}
         <RobotSelector
