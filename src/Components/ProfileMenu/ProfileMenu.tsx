@@ -109,6 +109,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           <SettingsIcon />
         </IconButton>
       </Tooltip>
+
       <Menu
         data-testid="section_menu"
         anchorEl={anchorEl}
@@ -157,12 +158,11 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           {logoutLabel}
         </MenuItem>
         <Divider variant="middle" />
-        <div
-          data-testid="section_footer"
-          className="menu-item-spacing profile-menu-footer"
+        <MenuItem
+          className="menu-item-spacing"
         >
           {version}
-        </div>
+        </MenuItem>
       </Menu>
       {/* Password Modal */}
       <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>

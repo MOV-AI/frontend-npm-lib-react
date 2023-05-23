@@ -262,8 +262,6 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    *                                        Render                                        *
    *                                                                                      */
   //========================================================================================
-  return <div />;
-
   return (
     <AbstractModal
       onSubmit={handleConfirm}

@@ -493,6 +493,9 @@ function withTheme(Component) {
 registerGetTheme(getTheme);
 
 makeMagic({
+  "?body": {
+    margin: 0,
+  },
   "?#root > *": {
     minHeight: "100vh",
   }
