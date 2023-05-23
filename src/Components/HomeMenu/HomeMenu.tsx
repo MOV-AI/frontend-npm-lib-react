@@ -44,8 +44,7 @@ function PopperButtonBase(props: any) {
   const [ open, setOpen ] = openState;
   const [referenceElement, setReferenceElement] = useState(null);
 
-  const clickHandler = useCallback((ev) => {
-    console.log("clickHandler", ev);
+  const clickHandler = useCallback(() => {
     setReferenceElement(null);
     setOpen(false);
   }, [setReferenceElement]);
@@ -300,9 +299,9 @@ const HomeMenuPopper = () => {
   return (<PopperButton
     Icon={AppsIcon}
     className="home-menu-popper"
-    data-testid="home-menu-popper"
+    data-testid="home-menu"
   >
-    <div data-testid="home-menu" className="background-gray-dark pad-medium">
+    <div data-testid="home-menu-popper" className="background-gray-dark pad-medium">
       <div
         className="home-menu horizontal-medium-small flex-wrap box-sizing"
       >
