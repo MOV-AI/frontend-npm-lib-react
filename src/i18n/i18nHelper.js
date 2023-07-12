@@ -34,7 +34,7 @@ const translationsBuilder = (
 };
 
 export const i18nHelper = {
-  createInstance: (files, language) => {
+  createInstance: (files, language, namespace) => {
     const instance = i18n.createInstance();
     const translationsConfig = translationsBuilder(files, language);
     instance.use(initReactI18next).init(translationsConfig);

@@ -1,5 +1,3 @@
-import { SelectChangeEvent } from "@mui/material";
-
 export interface LoginFormProps {
   logo?: string;
   domains: string[];
@@ -11,11 +9,14 @@ export interface LoginFormProps {
     remember: boolean;
     selectedProvider: string;
   }) => void;
-  t: (slationKey: string) => string;
+  t: (translationKey: string) => string;
 }
 
 export interface LoginFormAdvancedProps {
   domains: string[];
   selectedProvider: string;
-  onProviderChange: (event: SelectChangeEvent<string>) => void;
+  onProviderChange: (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>,
+    child: React.ReactNode
+  ) => void;
 }

@@ -1,6 +1,6 @@
-import { bindMagic } from "@tty-pt/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
-export const verticalBarStyles = bindMagic(() => ({
+export const verticalBarStyles = makeStyles(theme => ({
   container: {
     width: "65px",
     height: "100%",

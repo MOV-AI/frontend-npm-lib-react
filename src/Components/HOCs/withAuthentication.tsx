@@ -1,119 +1,137 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import Authentication from "@mov-ai/mov-fe-lib-core/api/Authentication/Authentication";
-import PermissionType from "@mov-ai/mov-fe-lib-core/api/PermissionType";
-import { User } from "@mov-ai/mov-fe-lib-core/api/User/User";
+import { Authentication, PermissionType, User } from "@mov-ai/mov-fe-lib-core";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
+import jwtDecode from "jwt-decode";
 import i18n from "../../i18n/i18n.js";
 
-export
-function easySub(defaultData) {
-  const subs = new Map<Function, true>();
-  const valueMap = { value: defaultData };
-
-  function update(obj) {
-    valueMap.value = obj;
-    let allPromises = [];
-    for (const [sub] of subs)
-      allPromises.push(sub(obj));
-    return Promise.all(allPromises);
-  }
-
-  function subscribe(sub: Function) {
-    subs.set(sub, true);
-    return () => {
-      subs.delete(sub);
-    };
-  }
-
-  function easyEmit(cb) {
-    return async (...args) => update(await cb(...args));
-  }
-
-  return { update, subscribe, data: valueMap, easyEmit };
-}
-
-export
-function useSub(sub, defaultData?) {
-  const [data, setData] = useState(sub.data.value ?? defaultData);
-  useEffect(() => sub.subscribe(setData), []);
-  return data;
-}
-
-interface LoginData {
-  username: string;
-  password: string;
-  remember: any;
-  selectedProvider: any; 
-}
-
-export
-const loggedOutInfo = {
-  loggedIn: false,
-  currentUser: null,
-  loading: false,
-  clean: true,
-};
-
-export
-const authSub = easySub(loggedOutInfo);
-
-export
-const authEmit = authSub.easyEmit(async () => {
-  authSub.update({ ...loggedOutInfo, loading: true });
-
-  try {
-    const [loggedIn, currentUser] = await Promise.all([
-      Authentication.checkLogin(),
-      (new User()).getCurrentUserWithPermissions(),
-    ]);
-
-    console.assert(currentUser);
-
-    if (loggedIn)
-      return {
-        loggedIn: true,
-        providers: await Authentication.getProviders(),
-        currentUser,
-        loading: false,
-      };
-
-    const [providers, res] = await Promise.all([
-      Authentication.getProviders(),
-      Authentication.refreshTokens(),
-    ]);
-
-    return {
-      loggedIn: res,
-      providers,
-      currentUser,
-      loading: false,
-    };
-  } catch (e) {
-    console.error("Auth Error: " + e.error?.message ?? e.message ?? e);
-    return { ...loggedOutInfo, loading: false };
-  }
-});
-
-if (!(window as any).mock)
-  authEmit();
-
-export default function withAuthentication(
-  WrappedComponent: React.ComponentType,
-  appName: PermissionType | string,
-  allowGuest?: boolean,
+export default function withAuthentication<P extends object>(
+  WrappedComponent: React.ComponentType<P>,
+  appName: PermissionType | string
 ) {
   return function (props: any) {
+    const RECHECK_VALID_DELAY = 10000; // milliseconds
+
+    const firstRender = useRef(true);
+    const [state, setState] = useState<{
+      loggedIn: boolean;
+      hasPermissions: boolean;
+      currentUser?: object;
+    }>({
+      loggedIn: false,
+      hasPermissions: false,
+      currentUser: {}
+    });
+    const [loading, setLoading] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState("");
-    const authSubRes = useSub(authSub);
-    if (!authSubRes)
-      throw new Error("No auth info");
-    const { currentUser, loggedIn, loading, clean, providers } = authSubRes;
-    const hasPermissions = currentUser?.Resources?.Applications
-      ? currentUser.Superuser || currentUser.Resources.Applications.includes(appName as PermissionType) || !appName
-      : allowGuest;
+    const [authenticationProviders, setAuthenticationProviders] = useState<
+      string[]
+    >([]);
+
+    const authenticate = useCallback(() => {
+      const user = new User();
+      setLoading(true);
+      Promise.all([
+        Authentication.checkLogin(),
+        new Promise(resolve => setTimeout(resolve, 2000)),
+        user.getCurrentUserWithPermissions()
+      ])
+        .then(([loggedIn, _, _user]) => {
+          const {
+            Resources: { Applications: apps = [] },
+            Superuser: isSuperUser
+          } = _user;
+          const hasPermissions =
+            isSuperUser || apps.includes(appName as PermissionType) || !appName;
+
+          if (loggedIn) {
+            firstRender.current = false;
+          }
+
+          setState({
+            loggedIn,
+            hasPermissions,
+            currentUser: _user
+          });
+        })
+        .catch(error => {
+          console.warn("Failed login", error);
+          setState({
+            loggedIn: false,
+            hasPermissions: false
+          });
+        })
+        .finally(() => setLoading(false));
+    }, []);
+
+    /**
+     * check if the user is authenticated
+     */
+    useEffect(() => {
+      authenticate();
+    }, []);
+
+    /**
+     * Updates the Access Token and the Refresh Token
+     */
+    useEffect(() => {
+      Authentication.getProviders()
+        .then(response => setAuthenticationProviders(response.domains))
+        .catch(e =>
+          console.log(
+            "Error while fetching authentication providers: ",
+            e.error
+          )
+        );
+    }, []);
+
+    /**
+     * Updates the Access Token and the Refresh Token
+     */
+    useEffect(() => {
+      try {
+        const now = Math.floor(Date.now() * 1e-3);
+        const token = Authentication.getToken() as string;
+
+        // decode the token and get exp value
+        const exp = (jwtDecode(token) as { exp: number }).exp || now;
+
+        // check if token expiration time is still valid
+        const expDelta = exp - now;
+
+        const timeToRun = Math.max(
+          expDelta * 1e3 - RECHECK_VALID_DELAY,
+          RECHECK_VALID_DELAY
+        );
+
+        const timeOut = setTimeout(
+          () =>
+            Authentication.refreshTokens()
+              .then(res => {
+                setState(prevState => ({
+                  ...prevState,
+                  loggedIn: res
+                }));
+              })
+              .catch(error =>
+                console.log("Error while trying to refresh the tokens", error)
+              ),
+          timeToRun
+        );
+
+        return () => {
+          clearTimeout(timeOut);
+        };
+      } catch (error: unknown) {
+        // token expired or no token
+        console.log(
+          "Error while trying to decode the token:",
+          (error as Error).message
+        );
+      }
+    }, [state]);
 
     /**
      * handleLogOut - log out the user
@@ -128,8 +146,9 @@ export default function withAuthentication(
      * @param {{ username, password, remember, selectedProvider }}
      */
     const handleLoginSubmit = useCallback(
-      async ({ username, password, remember, selectedProvider }: LoginData) => {
+      async ({ username, password, remember, selectedProvider }) => {
         try {
+          setLoading(true);
           const apiResponse = await Authentication.login(
             username,
             password,
@@ -137,9 +156,10 @@ export default function withAuthentication(
             selectedProvider
           );
           if (apiResponse.error) throw new Error(apiResponse.error);
-          authEmit();
+          authenticate();
         } catch (e: unknown) {
           setErrorMessage((e as Error).message);
+          setLoading(false);
         }
       },
       []
@@ -159,8 +179,7 @@ export default function withAuthentication(
      */
     const renderLoginForm = () => (
       <LoginForm
-        appName={appName} 
-        domains={providers}
+        domains={authenticationProviders}
         authErrorMessage={errorMessage}
         onLoginSubmit={handleLoginSubmit}
       />
@@ -182,13 +201,13 @@ export default function withAuthentication(
           title={i18n.t("NotAuthorized")}
           message={
             <>
-              <p>{i18n.t("NotAuthorizedDescription") as string}</p>
+              <p>{i18n.t("NotAuthorizedDescription")}</p>
               <Button
                 variant="outlined"
                 data-testid="input_unauthorized_login"
                 onClick={handleLoginAfterNotAuthorized}
               >
-                {i18n.t("NotAuthorizedRedirectToLogin") as string}
+                {i18n.t("NotAuthorizedRedirectToLogin")}
               </Button>
             </>
           }
@@ -199,21 +218,21 @@ export default function withAuthentication(
     /**
      * renders the Login form if the user is not logged in
      */
-    if (loading && clean) return renderLoading();
-    if (!loggedIn && clean) return renderLoginForm();
-    if (!hasPermissions) return renderNotAuthorized();
+    if (loading && firstRender.current) return renderLoading();
+    if (!state.loggedIn && firstRender.current) return renderLoginForm();
+    if (!state.hasPermissions) return renderNotAuthorized();
     return (
       <React.Fragment>
         <WrappedComponent
-          currentUser={currentUser}
+          currentUser={state.currentUser}
           handleLogOut={handleLogOut}
-          loggedIn={loggedIn}
+          loggedIn={state.loggedIn}
           {...props}
         />
         {loading ? (
           renderLoading()
         ) : (
-          <Modal open={!loggedIn}><span>{renderLoginForm()}</span></Modal>
+          <Modal open={!state.loggedIn}><span>{renderLoginForm()}</span></Modal>
         )}
       </React.Fragment>
     );
