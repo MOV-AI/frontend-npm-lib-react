@@ -1,4 +1,4 @@
-import { makeMagic, bindMagic } from "@tty-pt/styles";
+import { makeMagic } from "@tty-pt/styles";
 
 makeMagic({
   logs: {
@@ -47,9 +47,9 @@ const logFilterCommonStyles = theme => {
   };
 };
 
-export const useRobotSelectorStyles = bindMagic(logFilterCommonStyles)
+export const useRobotSelectorStyles = makeStyles(logsFilterCommonStyles)
 
-export const useSearchInputStyles = bindMagic(theme => ({
+export const useSearchInputStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
   searchText: {
     minWidth: "150px",
@@ -61,7 +61,7 @@ export const useSearchInputStyles = bindMagic(theme => ({
   }
 }));
 
-export const useSelectBoxStyle = bindMagic(theme => ({
+export const useSelectBoxStyle = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
   selectBox: { 
       minWidth: "290px" 
@@ -71,7 +71,7 @@ export const useSelectBoxStyle = bindMagic(theme => ({
   }
 }));
 
-export const useTagsStyles = bindMagic(theme => ({
+export const useTagsStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
   addTagText: {
     width: "100%"
@@ -90,7 +90,7 @@ export const useTagsStyles = bindMagic(theme => ({
   }
 }));
 
-export const useSettingsStyles = bindMagic(theme => ({
+export const useSettingsStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
   filtersButton: {
     display: "flex",
@@ -112,7 +112,7 @@ export const useSettingsStyles = bindMagic(theme => ({
   }
 }));
 
-export const useLogFilterStyles = bindMagic(theme => ({
+export const useLogFilterStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
   flexContainer: {
     flex: 1,

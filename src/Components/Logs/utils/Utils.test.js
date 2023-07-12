@@ -1,4 +1,3 @@
-import "@testing-library/jest-dom";
 import { findsUniqueKey } from "./Utils";
 
 test("test findsUniqueKey", () => {

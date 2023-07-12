@@ -1,38 +1,38 @@
 import { WithThemeProps } from "@tty-pt/styles/lib/types";
-import { ThemeProvider } from "@mui/styles";
-import { getTheme } from "./../../styles/Themes";
-import React, { useEffect, useState, useMemo } from "react";
-
-const defaultTheme = window.localStorage.getItem("movai.theme") ?? "indigo"; // dark or light
+import React, { useState } from "react";
 
 export default function withTheme(
-  Component: React.ComponentClass<WithThemeProps>,
+  Component: React.ComponentType<WithThemeProps>,
+  ApplicationTheme: {
+    getTheme: () => string;
+    setTheme: (theme: string) => void;
+    [themeName: string]: any;
+  }
 ) {
   return function (props: any) {
-    const [theme, setTheme] = useState<string>(defaultTheme);
-
-    useEffect(() => {
-      (document.body.parentElement as HTMLElement).className = theme;
-    }, [theme]);
+    const [theme, setTheme] = useState<string>(ApplicationTheme.getTheme());
 
     /**
      * Handle theme toggle
      */
     const handleToggleTheme = () => {
       const newTheme = theme === "dark" ? "light" : "dark";
-      (document.body.parentElement as HTMLElement).className = newTheme;
-      window.localStorage.setItem("movai.theme", newTheme); // dark or light
+      ApplicationTheme.setTheme(newTheme);
       setTheme(newTheme);
     };
 
+    React.useEffect(() => {
+      const currentTheme = ApplicationTheme.getTheme() as string;
+      document.body.style.background =
+        ApplicationTheme[currentTheme].backgroundColor;
+    }, [theme]);
+
     return (
-      <ThemeProvider theme={useMemo(() => getTheme(theme), [theme])}>
-        <Component
-          handleToggleTheme={handleToggleTheme}
-          theme={theme}
-          {...props}
-        />
-      </ThemeProvider>
+      <Component
+        handleToggleTheme={handleToggleTheme}
+        theme={theme}
+        {...props}
+      />
     );
   };
 }

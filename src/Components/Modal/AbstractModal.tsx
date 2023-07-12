@@ -55,13 +55,13 @@ const AbstractModal = (props: AbstractModalProps) => {
    * @param {Event} event : KeyPress event
    */
   const handleKeyPress = useCallback(
-    (event: any) => {
+    event => {
       if (onKeyPress) return onKeyPress(event);
       if (event.key === "Enter") {
         handleSubmit();
       }
     },
-    [handleSubmit, onKeyPress]
+    [handleSubmit]
   );
 
   //========================================================================================
@@ -76,19 +76,35 @@ const AbstractModal = (props: AbstractModalProps) => {
       onKeyPress={handleKeyPress}
       open={open}
       onClose={onCancel}
-      className="absotute position-0 vertical-0 justify-content align-items"
+      className="root"
     >
-      <div className="relative paper pad vertical">
-        <div className="horizontal align-items border-bottom">
-          <div data-testid="output_title" className="flex-grow h-5">{title}</div>
-          <div data-testid="input_close" onClick={onCancel}>
+      <Card
+        className="card"
+        style={{
+          ...style,
+          minWidth: width,
+          minHeight: height
+        }}
+      >
+        <CardContent className="card-content">
+          <Typography data-testid="output_title" variant="h5">
+            {title}
+          </Typography>
+          <Typography
+            data-testid="input_close"
+            component="div"
+            className="close-button"
+            onClick={onCancel}
+          >
             <CloseIcon></CloseIcon>
-          </div>
-        </div>
-        <Typography component="div" className="children-container">
-          {props.children}
-        </Typography>
-        <div className="horizontal justify-content-end">
+          </Typography>
+          <Divider className="divider" />
+          <Typography component="div" className="children-container">
+            {props.children}
+          </Typography>
+        </CardContent>
+        <Divider />
+        <CardActions>
           {hasSubmitButton && (
             <Button
               data-testid="input_submit"
@@ -109,8 +125,8 @@ const AbstractModal = (props: AbstractModalProps) => {
               {cancelText}
             </Button>
           )}
-        </div>
-      </div>
+        </CardActions>
+      </Card>
     </Modal>
   );
 };

@@ -1,4 +1,4 @@
-import { bindMagic } from "@tty-pt/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 const menuButtonStyles = {
   margin: "5px",
@@ -6,7 +6,7 @@ const menuButtonStyles = {
   flexBasis: "27%"
 };
 
-export const homeMenuPopperStyles = bindMagic(() => ({
+export const homeMenuPopperStyles = makeStyles(theme => ({
   iconButton: { cursor: "pointer", height: "100%" },
   popperIndex: { zIndex: 1400 },
   menuWrapper: {
@@ -53,7 +53,7 @@ export const homeMenuPopperStyles = bindMagic(() => ({
   }
 }));
 
-export const menuAppStyles = bindMagic(theme => ({
+export const menuAppStyles = makeStyles(theme => ({
   appMiniature: {
     color: theme.palette.getContrastText("#fff"),
     width: "60px",

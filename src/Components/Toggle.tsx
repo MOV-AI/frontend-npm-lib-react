@@ -6,24 +6,29 @@ import Switch from "@mui/material/Switch";
 import { ToggleProps } from "./types";
 
 makeMagic({
-  label: {
-    fontFamily: "Roboto",
-    fontStyle: "normal",
-    fontWeight: "normal",
-    fontSize: "14px",
-    marginLeft: 0,
-    marginRight: 0,
-    marginBottom: 0
+  toggle: {
+    label: {
+      fontFamily: "Roboto",
+      fontStyle: "normal",
+      fontWeight: "normal",
+      fontSize: "14px",
+      marginLeft: 0,
+      marginRight: 0,
+      marginBottom: 0
+    },
+    // colorSwitchBase: {
+    //   color: grey[300],
+    //   "&$colorChecked": {
+    //     color: green[500],
+    //     "& + $colorBar": {
+    //       backgroundColor: green[500]
+    //     }
+    //   }
+    // },
+    colorBar: {},
+    colorChecked: {},
   },
-  "!MuiSwitch-switchBase.Mui-checked": {
-    color: "#4caf50",
-  },
-  "!MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track": {
-    backgroundColor: "#4caf50",
-  },
-  colorBar: {},
-  colorChecked: {},
-}, ".toggle ");
+});
 
 const Toggle = (props: ToggleProps) => {
   return (

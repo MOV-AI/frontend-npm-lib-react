@@ -20,28 +20,8 @@ module.exports = {
         "react",
         "@typescript-eslint"
     ],
-  "ignorePatterns": ["**/*.test.*", "src/__mocks__/*" ],
     "rules": {
-      "react/prop-types": 0,
-      "react/display-name": 0,
-      "@typescript-eslint/no-empty-function": ["error", { "allow": ["arrowFunctions"] }],
-      "@typescript-eslint/ban-types": [
-        "error",
-        {
-          "types": {
-            // un-ban a type that's banned by default
-            "Function": false
-          },
-          "extendDefaults": true
-        }
-      ],
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        { 
-          "argsIgnorePattern": "^_",
-        }
-      ],
-
+        "react/prop-types": 0,
+        "react/display-name": 0
     }
 }
