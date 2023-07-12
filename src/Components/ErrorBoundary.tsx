@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from "react";
 import StackTrace, { StackFrame } from "stacktrace-js";
 
-function getStackLine(error : any, stackFrame : StackFrame) {
+function getStackLine(error: Error, stackFrame : StackFrame) {
   const { functionName, fileName, lineNumber } = stackFrame;
   return "Error: " + error.message + "\n    in " + functionName + " (at " + fileName + ":" + lineNumber + ")";
 }
@@ -41,7 +41,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps,ErrorBoundaryState> {
     if (!this.state.errorInfo)
       return children;
 
-    return (<div className="vertical pad color-primary">
+    return (<div className="vertical pad color">
       <div className="h-5">Something went wrong</div>
       <pre className="margin-0">
         { this.state.stackLine }

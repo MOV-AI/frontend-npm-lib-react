@@ -20,7 +20,7 @@ const MenuApp = (props: MenuAppProps) => {
    * @param {object} element : App object
    */
   const handleAppClick = useCallback(
-    event => {
+    (event: React.MouseEvent<HTMLButtonElement>) => {
       if (app.Label) Utils.loadResources(event, app);
     },
     [app]
@@ -42,7 +42,7 @@ const MenuApp = (props: MenuAppProps) => {
     >
       <div>
         <div className={`app-icon ${app.Icon}`} />
-        <div className="app-miniature">{app.Label}</div>
+        <div className="app-miniature">{app.Label as string}</div>
       </div>
     </Button>
   );

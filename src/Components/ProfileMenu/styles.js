@@ -1,6 +1,6 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { bindMagic } from "@tty-pt/styles";
 
-export const profileMenuStyles = makeStyles(theme => {
+export const profileMenuStyles = bindMagic(theme => {
   return {
     root: { // c("vertical0")
       display: "flex",
@@ -19,7 +19,7 @@ export const profileMenuStyles = makeStyles(theme => {
   };
 });
 
-export const resetPasswordStyles = makeStyles(theme => ({
+export const resetPasswordStyles = bindMagic(() => ({
   root: {
     display: "flex",
     flexDirection: "column"

@@ -7,11 +7,9 @@ const VerticalBar = (props: VerticalBarProps) => {
   const {
     upperElement = <div></div>,
     creatorElement = null,
-    navigationList = [<div></div>],
+    navigationList = [<div key="navDef"></div>],
     lowerElement = <div></div>,
-    backgroundColor = "#424242",
     useDividers = false,
-    unsetAccountAreaPadding = false
   } = props;
   // Style hook
 

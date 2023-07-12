@@ -1,6 +1,6 @@
-import { makeStyles } from "@tty-pt/styles";
+import { bindMagic } from "@tty-pt/styles";
 
-export const modalStyles = makeStyles(theme => {
+export const modalStyles = bindMagic(theme => {
   return {
     modal: {
       root: {

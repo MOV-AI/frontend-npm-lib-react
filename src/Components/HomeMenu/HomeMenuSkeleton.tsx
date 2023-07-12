@@ -1,5 +1,5 @@
 import React from "react";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from "@mui/lab/Skeleton";
 // import { homeMenuPopperStyles } from "./styles";
 
 const HomeMenuSkeleton = () => {

@@ -1,17 +1,17 @@
 import React, { Fragment, useCallback } from "react";
 import Button from "@mui/material/Button";
-import { OptionsObject, ProviderContext, SnackbarKey, useSnackbar, VariantType } from "notistack";
-export interface SnackbarProps extends OptionsObject {
+{/* import { OptionsObject, ProviderContext, SnackbarKey, useSnackbar, VariantType } from "notistack"; */}
+export interface SnackbarProps {
   message: string;
   closable: boolean;
   horizontal: "left" | "center" | "right";
   vertical: "bottom" | "top";
   closeButtonText: string;
-  severity: VariantType;
+  severity: any;
   content: any;
 }
 interface SnackbarInterface {
-  current: ProviderContext | null;
+  current: React.Context | null;
 }
 
 const useSnackbarRef: SnackbarInterface = { current: null };
@@ -28,7 +28,7 @@ export interface InnerSnackbarUtilsConfiguratorProps {
 const InnerSnackbarUtilsConfigurator = (
   props: InnerSnackbarUtilsConfiguratorProps
 ) => {
-  props.setUseSnackbarRef(useSnackbar());
+  {/* props.setUseSnackbarRef(useSnackbar()); */}
   return null;
 };
 
@@ -39,7 +39,7 @@ const InnerSnackbarUtilsConfigurator = (
 //========================================================================================
 
 export const SnackbarUtilsConfigurator = () => {
-  const setUseSnackbarRef = useCallback(useSnackbarRefProp => {
+  const setUseSnackbarRef = useCallback((useSnackbarRefProp: any) => {
     useSnackbarRef.current = useSnackbarRefProp;
   }, []);
 
@@ -60,7 +60,7 @@ const closeSnackbar = (key: SnackbarKey) => {
   };
 };
 
-export const snackbar = (props: SnackbarProps, _theme: any) => {
+export const snackbar = (props: SnackbarProps) => {
   const {
     message,
     closable = true,
@@ -103,7 +103,7 @@ export const snackbar = (props: SnackbarProps, _theme: any) => {
     snackbarData.content = content(closeSnackbar);
   }
 
-  if (!!useSnackbarRef.current) {
+  if (useSnackbarRef.current) {
     useSnackbarRef.current?.enqueueSnackbar(message, snackbarData);
   }
   return useSnackbarRef.current;
