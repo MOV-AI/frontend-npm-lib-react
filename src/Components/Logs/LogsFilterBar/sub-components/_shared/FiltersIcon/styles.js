@@ -1,6 +1,6 @@
-import { makeStyles, alpha } from "@material-ui/core/styles";
+import { bindMagic } from "@tty-pt/styles";
 
-export const filterIconStyles = makeStyles(theme => ({
+export const filterIconStyles = bindMagic(theme => ({
   button: {
     margin: theme.spacing(1),
     color: theme.palette.primary.main,
@@ -9,7 +9,7 @@ export const filterIconStyles = makeStyles(theme => ({
   iconActive: {
     color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
-    backgroundColor: alpha(theme.palette.primary.main, 0.1)
+    // backgroundColor: alpha(theme.palette.primary.main, 0.1)
   },
   buttonApplyFilters: {
     background: theme.palette.primary.main,

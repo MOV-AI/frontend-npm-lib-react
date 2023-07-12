@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { makeMagic } from "@tty-pt/styles";
-import { MasterDB } from "@mov-ai/mov-fe-lib-core";
-import Alert from "@material-ui/lab/Alert";
+import MasterDB from "@mov-ai/mov-fe-lib-core/api/Database/MasterDB";
+import Alert from "@mui/lab/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
 
@@ -65,7 +65,7 @@ export default function withOfflineValidation(Component: React.ComponentType) {
                 </Button>
               }
             >
-              Connection failed... You're now in offline mode, please wait to
+              Connection failed... You&apos;re now in offline mode, please wait to
               reconnect.
             </Alert>
           )}
@@ -75,7 +75,7 @@ export default function withOfflineValidation(Component: React.ComponentType) {
               variant="filled"
               severity="success"
             >
-              You're now online!
+              You&apos;re now online!
             </Alert>
           )}
         </React.Fragment>
