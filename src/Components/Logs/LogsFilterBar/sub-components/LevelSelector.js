@@ -1,13 +1,11 @@
 import React, { useCallback } from "react";
-import {
-  Input,
-  Select,
-  Checkbox,
-  MenuItem,
-  FormControl,
-  ListItemText
-} from "@material-ui/core";
-import { useSelectBoxStyle } from "../../styles";
+import Input from "@mui/material/Input";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
+// import { useSelectBoxStyle } from "../../styles";
 import { MENU_PROPS } from "./_shared/Constants";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
@@ -16,7 +14,6 @@ const LevelSelector = props => {
   // Props
   const { levels, handleLevels, levelsList } = props;
   // Style hook
-  const classes = useSelectBoxStyle();
   const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
 
 
@@ -69,26 +66,23 @@ const LevelSelector = props => {
    *                                                                                      */
   //========================================================================================
 
-  return (
-    <div data-testid="section_levels" className={bigScreen ? classes.toggleContainer : classes.smallToggleContainer}>
-      <FormControl className={classes.formControl}>
-        <Select
-          inputProps={{ "data-testid": "input_select" }}
-          labelId="demo-mutiple-checkbox-label"
-          id="demo-mutiple-checkbox"
-          className={bigScreen ? classes.selectBox : classes.smallSelectBox }
-          multiple
-          value={levels}
-          onChange={handleLevels}
-          input={<Input />}
-          renderValue={renderValue}
-          MenuProps={MENU_PROPS}
-        >
-          {levelsList.map(renderLevelItem)}
-        </Select>
-      </FormControl>
-    </div>
-  );
+  return (<div data-testid="section_levels" className={bigScreen ? "toggle-container" : "small-toggle-container"}>
+    <FormControl className="form-control">
+      <Select
+        labelId="demo-mutiple-checkbox-label"
+        id="demo-mutiple-checkbox"
+        className={bigScreen ? "select-box" : "small-select-box" }
+        multiple
+        value={levels}
+        onChange={handleLevels}
+        input={<Input />}
+        renderValue={renderValue}
+        MenuProps={MENU_PROPS}
+      >
+        {levelsList.map(renderLevelItem)}
+      </Select>
+    </FormControl>
+  </div>);
 };
 
 export default LevelSelector;

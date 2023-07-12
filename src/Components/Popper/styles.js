@@ -1,6 +1,6 @@
-import { makeStyles } from "@material-ui/core";
+import { bindMagic } from "@tty-pt/styles";
 
-export const infoButtonStyles = makeStyles(theme => ({
+export const infoButtonStyles = bindMagic(() => ({
   childWrapper: {
     padding: "10px 0",
     top: "auto",

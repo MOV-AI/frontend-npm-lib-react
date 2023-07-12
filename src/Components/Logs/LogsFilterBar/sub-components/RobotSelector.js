@@ -1,14 +1,12 @@
 import React, { useCallback } from "react";
-import {
-  Input,
-  Select,
-  Checkbox,
-  MenuItem,
-  FormControl,
-  ListItemText
-} from "@material-ui/core";
+import Input from "@mui/material/Input";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
 import { MENU_PROPS } from "./_shared/Constants";
-import { useRobotSelectorStyles } from "../../styles";
+// import { useRobotSelectorStyles } from "../../styles";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
@@ -16,11 +14,10 @@ const RobotSelector = props => {
   // Props
   const { selectedRobots, handleRobotChange } = props;
   // Style hook
-  const classes = useRobotSelectorStyles();
   const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
   // Constants
   const INPUT_ICON = (
-    <i className={`fas fa-robot ${classes.iconAdornment}`}></i>
+    <i className="fas fa-robot icon-adornment"></i>
   );
 
   //========================================================================================
@@ -67,9 +64,9 @@ const RobotSelector = props => {
   return (
     <div
       data-testid="section_robot-selector"
-      className={bigScreen ? classes.toggleContainer : classes.smallToggleContainer}
+      className={bigScreen ? "toggle-container" : "small-toggle-container"}
     >
-      <FormControl className={classes.formControl}>
+      <FormControl className="form-control">
         <Select
           data-testid="input_change-robot"
           labelId="select-label"

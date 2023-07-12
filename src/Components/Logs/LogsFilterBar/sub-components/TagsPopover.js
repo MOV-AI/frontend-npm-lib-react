@@ -1,9 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { Chip, InputAdornment, IconButton, TextField } from "@material-ui/core";
-import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
-import LabelIcon from "@material-ui/icons/Label";
-import AddIcon from "@material-ui/icons/Add";
-import { useTagsStyles } from "../../styles";
+import Chip from "@mui/material/Chip";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import FiltersIcon from "@mui/icons-material/Filters";
+import LabelIcon from "@mui/icons-material/Label";
+import AddIcon from "@mui/icons-material/Add";
+// import { useTagsStyles } from "../../styles";
 
 const TagsPopover = props => {
   // Props
@@ -11,7 +14,6 @@ const TagsPopover = props => {
   // State hook
   const [tagText, setTagText] = useState("");
   // Style hook
-  const classes = useTagsStyles();
 
   //========================================================================================
   /*                                                                                      *
@@ -68,7 +70,7 @@ const TagsPopover = props => {
         key={tag.key}
         label={tag.label}
         onDelete={() => handleDeleteTag(tag)}
-        className={classes.chip}
+        className="chip"
         size="small"
       />
     );
@@ -86,9 +88,9 @@ const TagsPopover = props => {
       title="Tags"
       isActive={tags?.length > 0}
     >
-      <div data-testid="section_tags" className={classes.tagsContainer}>
+      <div data-testid="section_tags" className="tags-container">
         <TextField
-          className={classes.addTagText}
+          className="add-tag-text"
           value={tagText}
           onChange={handleOnChangeKey}
           onKeyUp={handleKeyUp}
@@ -98,7 +100,7 @@ const TagsPopover = props => {
           }}
           size="small"
         />
-        <div className={classes.tagsList}>{tags?.map(renderTag)}</div>
+        <div className="tags-list">{tags?.map(renderTag)}</div>
       </div>
     </FiltersIcon>
   );

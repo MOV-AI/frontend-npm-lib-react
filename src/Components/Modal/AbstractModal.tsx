@@ -1,16 +1,14 @@
 import React, { useCallback } from "react";
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "@mui/icons-material/Close";
 import _debounce from "lodash/debounce";
-import {
-  Card,
-  Typography,
-  CardContent,
-  Divider,
-  Button,
-  CardActions,
-  Modal
-} from "@material-ui/core";
-import { modalStyles } from "./styles";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
+import CardContent from "@mui/material/CardContent";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
+import CardActions from "@mui/material/CardActions";
+import Modal from "@mui/material/Modal";
+{/* import { modalStyles } from "./styles"; */}
 import i18n from "../../i18n/i18n.js";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";
 import { AbstractModalProps } from "./types";
@@ -34,7 +32,6 @@ const AbstractModal = (props: AbstractModalProps) => {
     style = {}
   } = props;
   // Styles hook
-  const classes = modalStyles();
 
   //========================================================================================
   /*                                                                                      *
@@ -58,13 +55,13 @@ const AbstractModal = (props: AbstractModalProps) => {
    * @param {Event} event : KeyPress event
    */
   const handleKeyPress = useCallback(
-    event => {
+    (event: any) => {
       if (onKeyPress) return onKeyPress(event);
       if (event.key === "Enter") {
         handleSubmit();
       }
     },
-    [handleSubmit]
+    [handleSubmit, onKeyPress]
   );
 
   //========================================================================================
@@ -79,35 +76,19 @@ const AbstractModal = (props: AbstractModalProps) => {
       onKeyPress={handleKeyPress}
       open={open}
       onClose={onCancel}
-      className={classes.root}
+      className="absotute position-0 vertical-0 justify-content align-items"
     >
-      <Card
-        className={classes.card}
-        style={{
-          ...style,
-          minWidth: width,
-          minHeight: height
-        }}
-      >
-        <CardContent className={classes.cardContent}>
-          <Typography data-testid="output_title" variant="h5">
-            {title}
-          </Typography>
-          <Typography
-            data-testid="input_close"
-            component="div"
-            className={classes.closeButton}
-            onClick={onCancel}
-          >
+      <div className="relative paper pad vertical">
+        <div className="horizontal align-items border-bottom">
+          <div data-testid="output_title" className="flex-grow h-5">{title}</div>
+          <div data-testid="input_close" onClick={onCancel}>
             <CloseIcon></CloseIcon>
-          </Typography>
-          <Divider className={classes.divider} />
-          <Typography component="div" className={classes.childrenContainer}>
-            {props.children}
-          </Typography>
-        </CardContent>
-        <Divider />
-        <CardActions>
+          </div>
+        </div>
+        <Typography component="div" className="children-container">
+          {props.children}
+        </Typography>
+        <div className="horizontal justify-content-end">
           {hasSubmitButton && (
             <Button
               data-testid="input_submit"
@@ -128,8 +109,8 @@ const AbstractModal = (props: AbstractModalProps) => {
               {cancelText}
             </Button>
           )}
-        </CardActions>
-      </Card>
+        </div>
+      </div>
     </Modal>
   );
 };

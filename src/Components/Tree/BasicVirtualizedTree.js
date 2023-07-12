@@ -4,10 +4,10 @@ import Tree from "react-virtualized-tree";
 import "material-icons/css/material-icons.css";
 import "react-virtualized/styles.css";
 import "react-virtualized-tree/lib/main.css";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import _get from "lodash/get";
 import { ListItemsTreeWithSearch } from "./TreeSearch";
@@ -135,7 +135,6 @@ class BasicVirtualizedTree extends Component {
   };
 
   render() {
-    const { classes } = this.props;
     const iconStyle = <i className="fas fa-home" />;
     const nodes = this.props.data;
     return (
@@ -169,10 +168,10 @@ class BasicVirtualizedTree extends Component {
                     onDoubleClick={() => this.props.onDoubleClickNode(node)}
                     p={2}
                     className={
-                      !_get(node, `children`, false) ? classes.preContainer : ""
+                      !_get(node, `children`, false) ? "pre-container" : ""
                     }
                   >
-                    <Box p={1} className={classes.inlineFlex}>
+                    <Box p={1} className="inline-flex">
                       <Grid alignContent={"space-between"} container>
                         {_get(node, `children`, false) &&
                           node.state?.expanded && (
@@ -196,11 +195,11 @@ class BasicVirtualizedTree extends Component {
                         <div
                           className={
                             !_get(node, `children`, false)
-                              ? classes.spaceBetween
+                              ? "space-between"
                               : ""
                           }
                         >
-                          <div className={classes.ellipsis}>{node.name}</div>
+                          <div className="ellipsis">{node.name}</div>
                         </div>
                       </Grid>
                     </Box>

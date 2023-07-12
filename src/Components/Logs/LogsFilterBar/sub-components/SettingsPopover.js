@@ -1,19 +1,17 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Input,
-  Select,
-  Checkbox,
-  MenuItem,
-  FormControl,
-  ListItemText,
-  TextField,
-  Typography
-} from "@material-ui/core";
-import TuneIcon from "@material-ui/icons/Tune";
-import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
+import Input from "@mui/material/Input";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import TuneIcon from "@mui/icons-material/Tune";
+import FiltersIcon from "@mui/icons-material/Filters";
 import { COLUMN_LIST } from "../../utils/Constants";
-import { useSettingsStyles } from "../../styles";
+// import { useSettingsStyles } from "../../styles";
 import { MENU_PROPS } from "./_shared/Constants";
 
 const SettingsPopover = props => {
@@ -27,7 +25,6 @@ const SettingsPopover = props => {
   // Translation hook
   const { t } = useTranslation();
   // Style hooks
-  const classes = useSettingsStyles();
 
   //========================================================================================
   /*                                                                                      *
@@ -61,15 +58,15 @@ const SettingsPopover = props => {
 
   return (
     <FiltersIcon icon={<TuneIcon></TuneIcon>} title={t("Configuration")}>
-      <div className={classes.filtersButton}>
+      <div className="filters-button">
         {/* Limit Input */}
-        <Typography component="div" className={classes.inputHeader}>
+        <Typography component="div" className="input-header">
           {`${t("Limit p/Robot")}:`}
         </Typography>
         <TextField
           value={limit}
           onChange={handleLimit}
-          className={classes.limitText}
+          className="limit-text"
           id="outlined-number"
           placeholder={t("limit")}
           type="number"
@@ -78,12 +75,12 @@ const SettingsPopover = props => {
           size="small"
         />
       </div>
-      <div className={classes.columnsFilter}>
+      <div className="columns-filter">
         {/* Columns Selection */}
-        <Typography component="div" className={classes.inputHeader}>
+        <Typography component="div" className="input-header">
           {`${t("Columns")}:`}
         </Typography>
-        <FormControl className={classes.formControl}>
+        <FormControl className="form-control">
           <Select
             labelId="demo-mutiple-checkbox-label"
             id="demo-mutiple-checkbox"

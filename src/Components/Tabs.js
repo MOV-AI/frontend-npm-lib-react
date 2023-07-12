@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
-import MaterialTabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
+import MaterialTabs from "@mui/material/MaterialTabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
 
 function TabPanel(props) {
   const { children, selectedTab, index, ...other } = props;
@@ -36,21 +35,20 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  root: {
+makeMagic({
+  tabs: {
     flexGrow: 1,
-    height: "100%"
-  },
-  tabPanel: {
-    flexGrow: 1,
-    minHeight: 0,
-    height: "calc(100% - 48px)",
-    overflowY: "auto"
+    height: "100%",
+    tabPanel: {
+      flexGrow: 1,
+      minHeight: 0,
+      height: "calc(100% - 48px)",
+      overflowY: "auto"
+    }
   }
-}));
+});
 
 export default function Tabs(props) {
-  const classes = useStyles();
   const [selectedTab, setSelectedTab] = React.useState(props.selectedTab);
 
   React.useEffect(() => {
@@ -64,7 +62,7 @@ export default function Tabs(props) {
   };
 
   return (
-    <div data-testid="section_tabs-wrapper" className={classes.root}>
+    <div data-testid="section_tabs-wrapper" className="tabs">
       <MaterialTabs
         value={selectedTab}
         onChange={handleChange}
@@ -80,7 +78,7 @@ export default function Tabs(props) {
           key={index}
           selectedTab={selectedTab}
           index={index}
-          className={props.scrollable ? classes.tabPanel : undefined}
+          className={props.scrollable ? "tab-panel" : undefined}
         >
           {tab.component}
         </TabPanel>

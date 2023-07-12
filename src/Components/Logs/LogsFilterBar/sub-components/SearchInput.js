@@ -1,9 +1,11 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { InputAdornment, TextField, IconButton } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
-import ResetSearch from "@material-ui/icons/Close";
-import { useSearchInputStyles } from "../../styles";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
+import ResetSearch from "@mui/icons-material/ResetSearch";
+// import { useSearchInputStyles } from "../../styles";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
@@ -13,7 +15,6 @@ const SearchInput = props => {
   // Props
   const { messageRegex, handleMessageRegex } = props;
   // Style hook
-  const classes = useSearchInputStyles();
   const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
 
   //========================================================================================
@@ -39,13 +40,11 @@ const SearchInput = props => {
   /**
    * Render input start adornment
    */
-  const renderStartAdornment = useCallback(() => {
-    return (
-      <InputAdornment className={classes.iconAdornment} position="start">
-        <SearchIcon data-testid="output_icon" fontSize="small" />
-      </InputAdornment>
-    );
-  }, [classes]);
+  const startAdornment = (
+    <InputAdornment className="icon-adornment" position="start">
+      <SearchIcon data-testid="output_icon" fontSize="small" />
+    </InputAdornment>
+  );
 
   /**
    * Render input end adornment
@@ -72,14 +71,14 @@ const SearchInput = props => {
 
   return (
     <TextField
-      className={bigScreen ? classes.searchText : classes.smallSearchText}
+      className={bigScreen ? "search-text" : "small-search-text"}
       placeholder={t("Search")}
       value={messageRegex}
       onChange={onChangeText}
       InputProps={
         ({ "data-testid": "output_search" },
         {
-          startAdornment: renderStartAdornment(),
+          startAdornment: startAdornment,
           endAdornment: renderEndAdornment()
         })
       }

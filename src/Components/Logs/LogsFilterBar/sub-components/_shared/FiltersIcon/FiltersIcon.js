@@ -1,9 +1,11 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
-import { IconButton, Tooltip, Typography } from "@material-ui/core";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import StyledMenu from "./StyledMenu";
-import { filterIconStyles } from "./styles";
+// import { filterIconStyles } from "./styles";
 
 const FiltersIcon = props => {
   // Props
@@ -11,7 +13,6 @@ const FiltersIcon = props => {
   // State hooks
   const [anchorEl, setAnchorEl] = useState();
   // Style hook
-  const classes = filterIconStyles();
 
   //========================================================================================
   /*                                                                                      *
@@ -49,7 +50,7 @@ const FiltersIcon = props => {
           size="small"
           onClick={handleOpen}
           disabled={disabled}
-          className={isActive ? classes.iconActive : classes.icon}
+          className={isActive ? "icon-active" : "icon"}
         >
           {icon}
         </IconButton>
@@ -59,14 +60,14 @@ const FiltersIcon = props => {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
-        className={classes.height}
+        className="height"
       >
         <Typography
           component="div"
           data-testid="section_filters-icon"
-          className={classes.filterIconRoot}
+          className="filter-icon-root"
         >
-          <Typography component="div" className={classes.titleRow}>
+          <Typography component="div" className="title-row">
             <Typography
               component="div"
               data-testid="output_title"
@@ -74,17 +75,17 @@ const FiltersIcon = props => {
             >
               {title}
             </Typography>
-            <Typography component="div" className={classes.spacer}></Typography>
+            <Typography component="div" className="spacer"></Typography>
             <Typography
               data-testid="input_close"
               component="div"
               onClick={handleClose}
-              className={classes.icon}
+              className="icon"
             >
               <i className="fas fa-times"></i>
             </Typography>
           </Typography>
-          <Typography component="div" className={classes.childrenContainer}>
+          <Typography component="div" className="children-container">
             {children}
           </Typography>
         </Typography>

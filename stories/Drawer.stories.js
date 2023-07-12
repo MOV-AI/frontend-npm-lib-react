@@ -1,9 +1,9 @@
 import React from "react";
 import Drawer from "../src/Components/Drawer";
 import Button from "../src/Components/Button";
-import List from "@material-ui/core/List";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
-import { ListItem } from "@material-ui/core";
 export default {
   title: "Drawer"
 };

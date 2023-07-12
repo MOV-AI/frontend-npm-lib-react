@@ -1,24 +1,23 @@
 import React, {
   useState,
-  useEffect,
   useCallback,
   useMemo,
   useRef,
 } from "react";
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import SettingsIcon from "@material-ui/icons/Settings";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
+import Tooltip from "@mui/material/Tooltip";
+import SettingsIcon from "@mui/icons-material/Settings";
 import Toggle from "../Toggle";
-import { profileMenuStyles } from "./styles";
-import Divider from "@material-ui/core/Divider";
-import { User } from "@mov-ai/mov-fe-lib-core";
-import { Typography, Tooltip } from "@material-ui/core";
+// import { profileMenuStyles } from "./styles";
+import { useSub, authSub } from "../HOCs/withAuthentication";
 import i18n from "../../i18n/i18n.js";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
 
-function getCustomMenuElements(menuItemConf: any, classes: any) {
+function getCustomMenuElements(menuItemConf: any) {
   return Object.entries(menuItemConf ?? {}).map(([key, menuItem]: [string, any]) => {
     if (React.isValidElement(menuItem))
       return menuItem;
@@ -26,10 +25,10 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
     return (<MenuItem
       key={key}
       data-test-id={"input_" + key}
-      className={classes.menuItemSpacing}
+      className="menu-item-spacing"
       onClick={menuItem.handler}
     >
-      { i18n.t(menuItem.title) }
+      { i18n.t(menuItem.title) as string }
     </MenuItem>);
   });
 }
@@ -37,10 +36,7 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
 const ProfileMenu = (props: ProfileMenuProps) => {
   // State hooks
   const [anchorEl, setAnchorEl] = useState(null);
-  const [username, setUsername] = useState("");
-  // Other hooks
-  const user = useMemo(() => new User(), []);
-  const classes = profileMenuStyles();
+  const { currentUser } = useSub(authSub);
   // Refs
   const resetModalRef = useRef<{ open: Function }>();
   // Props
@@ -54,6 +50,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
     menuItemConf,
+    className,
   } = props;
 
   //========================================================================================
@@ -66,7 +63,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    * Handle click to open ProfileMenu
    * @param {Event} event : Click event
    */
-  const handleClick = useCallback(event => {
+  const handleClick = useCallback((event: any) => {
     setAnchorEl(event.currentTarget);
   }, []);
 
@@ -90,21 +87,9 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    */
   const handleLogoutClick = useCallback(() => {
     handleLogout();
-  }, []);
+  }, [handleLogout]);
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                    React Lifecycle                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  // On component mount
-  useEffect(() => {
-    // Set authenticated user name
-    setUsername(user.getUsername());
-  }, [user]);
-
-  const customEl = useMemo(() => getCustomMenuElements(menuItemConf, classes), [menuItemConf, classes]);
+  const customEl = useMemo(() => getCustomMenuElements(menuItemConf), [menuItemConf]);
 
   //========================================================================================
   /*                                                                                      *
@@ -113,80 +98,75 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   //========================================================================================
 
   return (
-    <div data-testid="section_profile-menu">
-      <Tooltip title={i18n.t("Settings") || ""}>
+    <>
+      <Tooltip title={i18n.t("Settings") as string || ""}>
         <IconButton
           data-testid="input_button"
           aria-haspopup="true"
           onClick={handleClick}
+          className={className}
         >
           <SettingsIcon />
         </IconButton>
       </Tooltip>
+
       <Menu
         data-testid="section_menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        className="body-1"
       >
-        <Typography
-          data-testid="section_welcome"
-          component="div"
-          variant="body1"
-          className={classes.root}
-        >
-          <div className={classes.menuItemSpacing}>
-            {welcomeLabel}, {username}
-          </div>
-          <Divider variant="middle" />
-          {extraItems?.map((item, index) => (
-            <MenuItem
-              className={classes.menuItemSpacing}
-              onClick={item.func}
-              key={`extraItem-${item.label}-${index}`}
-            >
-              {item.label}
-            </MenuItem>
-          ))}
-          <Divider variant="middle" />
-          {user.isInternalUser() && (
-            <MenuItem
-              data-testid="input_reset-password"
-              className={classes.menuItemSpacing}
-              onClick={handlePasswordReset}
-            >
-              {i18n.t("Change Password")}
-            </MenuItem>
-          )}
-          { customEl }
-          {handleToggleTheme && (
-            <div className={classes.menuItemSpacing}>
-              {darkThemeLabel}
-              <Toggle
-                onToggle={handleToggleTheme}
-                toggle={isDarkTheme}
-              ></Toggle>
-            </div>
-          )}
+        <MenuItem className="menu-item-spacing">
+          {welcomeLabel}, {currentUser?.Label ?? "guest"}
+        </MenuItem>
+        {extraItems?.map((item, index) => (
           <MenuItem
-            className={classes.menuItemSpacing}
-            onClick={handleLogoutClick}
+            className="menu-item-spacing"
+            onClick={item.func}
+            key={`extraItem-${item.label}-${index}`}
           >
-            {logoutLabel}
+            {item.label}
           </MenuItem>
-          <Divider variant="middle" />
-          <div
-            data-testid="section_footer"
-            className={`${classes.menuItemSpacing} ${classes.profileMenuFooter}`}
+        ))}
+        <Divider variant="middle" />
+        {currentUser && currentUser.isInternalUser && (
+          <MenuItem
+            data-testid="input_reset-password"
+            className="menu-item-spacing"
+            onClick={handlePasswordReset}
           >
-            {version}
-          </div>
-        </Typography>
+            {i18n.t("Change Password") as string}
+          </MenuItem>
+        )}
+        { customEl }
+        {handleToggleTheme && (
+          <MenuItem className="menu-item-spacing">
+            {darkThemeLabel}
+            <Toggle
+              label=""
+              onToggle={handleToggleTheme}
+              toggle={isDarkTheme}
+            ></Toggle>
+          </MenuItem>
+        )}
+        <MenuItem
+          className="menu-item-spacing"
+          onClick={handleLogoutClick}
+        >
+          {logoutLabel}
+        </MenuItem>
+        <Divider variant="middle" />
+        <MenuItem
+          className="menu-item-spacing"
+        >
+          {version}
+        </MenuItem>
       </Menu>
       {/* Password Modal */}
       <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>
-    </div>
+    </>
   );
 };
 

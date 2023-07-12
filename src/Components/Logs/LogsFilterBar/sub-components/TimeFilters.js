@@ -5,8 +5,8 @@ import {
   MuiPickersUtilsProvider
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import TodayIcon from "@material-ui/icons/Today";
-import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
+import TodayIcon from "@mui/icons-material/Today";
+import FiltersIcon from "@mui/icons-material/Filters";
 import { DATE_KEY_OPTION } from "../../utils/Constants";
 
 const DATE_TIME_FORMAT = "yyyy/MM/dd HH:mm";

@@ -1,9 +1,11 @@
 import React from "react";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import PropTypes from "prop-types";
-import MaterialCollapse from "@material-ui/core/Collapse";
-import { Divider, ListItem, List } from "@material-ui/core";
+import MaterialCollapse from "@mui/material/MaterialCollapse";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import List from "@mui/material/List";
 import { EMPTY_FUNCTION } from "../Utils/Constants";
 
 const Collapse = props => {
