@@ -6,6 +6,7 @@
     "registry": "https://npm.pkg.github.com/mov-ai"
   },
   "main": "./dist/",
+  "type": "commonjs",
   "exports": {
     ".": {
       "default": "./dist/index.js"

@@ -507,3 +507,5 @@ function defaultGetStyle(themeName, theme) {
     ...makeThemeMagicBook(themeName, theme),
   };
 }
+
+export default themes;
