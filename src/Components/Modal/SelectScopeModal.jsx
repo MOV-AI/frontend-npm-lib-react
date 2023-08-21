@@ -61,8 +61,7 @@ function scopeFilter(scopeList, data) {
   return data.filter(elem => scopeList.includes(elem.scope));
 }
 
-export
-async function getAllData(workspace, data = initialData) {
+export async function getAllData(workspace, data = initialData) {
   const elements = await Promise.all(data.map(element =>
     Workspace.getDocs({ workspace, scope: element.scope }).then(response => response.scopes
       .sort((a, b) => a.ref.localeCompare(b.ref))
@@ -84,7 +83,8 @@ async function getAllData(workspace, data = initialData) {
 }
 
 const SelectScopeModal = props => {
-  const [data, setData] = useState(props.data ?? initialData);
+  const { filter, scopeList, data: propsData } = props;
+  const [data, setData] = useState(propsData ?? initialData);
   const [selectedScopeItem, setSelectedScopeItem] = useState(props.selected);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -95,8 +95,8 @@ const SelectScopeModal = props => {
   //========================================================================================
 
   const scopeFilteredData = useMemo(
-    () => scopeFilter(props.scopeList, data),
-    [data, props.scopeList]
+    () => scopeFilter(scopeList, data),
+    [data, scopeList]
   );
 
   useEffect(() => setData(filterData(props.data ?? initialData)), [props.data, filterData]);
@@ -107,14 +107,16 @@ const SelectScopeModal = props => {
    * @returns {Object} Filtered data
    */
   const filterData = useCallback(_data => {
-    const filteredData = _cloneDeep(scopeFilter(props.scopeList, _data));
-    if (!props.filter) return filteredData;
+    const filteredData = _cloneDeep(scopeFilter(scopeList, _data));
+    if (!filter) return filteredData;
     // Filter data
     _data.forEach((scope, index) => {
-      filteredData[index].children = scope.children.filter(props.filter);
+      if (index >= filteredData.length)
+        return;
+      filteredData[index].children = scope.children.filter(filter);
     });
     return filteredData;
-  }, [props.filter, props.scopeList]);
+  }, [filter, scopeList]);
 
   const requestScopeVersions = useCallback(
     node => {
@@ -210,7 +212,7 @@ const SelectScopeModal = props => {
     if (node.deepness <= 1) return;
     setSelectedScopeItem(node.url);
     props.onSubmit(node.url);
-  }, [props]);
+  }, [props.onSubmit]);
 
   const getModalTitle = scope => {
     const vowels = ["a", "e", "i", "o", "u"];
@@ -228,7 +230,7 @@ const SelectScopeModal = props => {
 
   const handleSubmit = useCallback(
     () => props.onSubmit(selectedScopeItem),
-    [selectedScopeItem, props]
+    [props.onSubmit, selectedScopeItem]
   );
   const handleNodeClick = useCallback(
     node => requestScopeVersions(node),
@@ -246,17 +248,17 @@ const SelectScopeModal = props => {
    *                                                                                      */
   //========================================================================================
 
-  React.useEffect(() => {
+  useEffect(() => {
     // get all information in the scopes (not filtered by message)
     _getAllData(CONSTANTS.GLOBAL_WORKSPACE);
   }, [_getAllData]);
 
   // Filter Results based on props.filter
   useEffect(() => {
-    if (isLoading || !props.filter) return;
+    if (isLoading || !filter) return;
     // Set filtered data
     setData(filterData(scopeFilteredData));
-  }, [props.filter, setData, scopeFilteredData, filterData, isLoading]);
+  }, [filter, setData, scopeFilteredData, filterData, isLoading]);
 
   //========================================================================================
   /*                                                                                      *
@@ -269,7 +271,7 @@ const SelectScopeModal = props => {
       onSubmit={handleSubmit}
       onCancel={props.onCancel}
       open={props.open}
-      title={getModalTitle(props.scopeList[0])}
+      title={getModalTitle(scopeList[0])}
       width="50%"
     >
       <Grid data-testid="section_select-scope-modal" container>
@@ -309,7 +311,7 @@ const SelectScopeModal = props => {
             <BasicVirtualizedTree
               onClickNode={handleNodeClick}
               onDoubleClickNode={handleNodeDoubleClick}
-              data={data}
+              data={filterData(data)}
               handleChange={handleChange}
               showIcons={false}
               height="400px"

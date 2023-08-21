@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import withAuthentication from "../src/Components/HOCs/withAuthentication";
 import AbstractModal from "../src/Components/Modal/AbstractModal";
 import ConfirmAlertModal from "../src/Components/Modal/ConfirmAlertModal";
@@ -48,13 +48,17 @@ simpleConfirm.story = {
 const scopeList = ["Annotations", "Callback", "Configuration", "Flow", "Nodes", "Layouts", "Scenes"];
 
 function SelectScope() {
-  const [ modalData, setModalData ] = useState(null);
+  const [modalData, setModalData] = useState(null);
 
   useEffect(() => {
     getAllData("global").then(setModalData);
   }, []);
 
-  return <SelectScopeModal data={modalData} scopeList={scopeList} open />;
+  const filterLambda = useCallback(({name}) => {
+    return name.includes("_")
+  }, []);
+
+  return <SelectScopeModal data={modalData} scopeList={scopeList} open filter={filterLambda} />;
 }
 
 const AuthSelectScope = withAuthentication(SelectScope);

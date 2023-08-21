@@ -50,7 +50,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
     menuItemConf,
-    className,
+    onClose
   } = props;
 
   //========================================================================================
@@ -72,7 +72,8 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    */
   const handleClose = useCallback(() => {
     setAnchorEl(null);
-  }, []);
+    onClose && onClose();
+  }, [onClose]);
 
   /**
    * Open Password Reset modal
