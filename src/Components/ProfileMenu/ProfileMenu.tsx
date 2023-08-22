@@ -50,7 +50,8 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
     menuItemConf,
-    onClose
+    className,
+    onClose,
   } = props;
 
   //========================================================================================
