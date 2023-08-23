@@ -55,7 +55,6 @@ export const homeMenuPopperStyles = makeStyles(theme => ({
 
 export const menuAppStyles = makeStyles(theme => ({
   appMiniature: {
-    color: theme.palette.getContrastText("#fff"),
     width: "60px",
     height: "32px",
     display: "flex",
@@ -66,7 +65,6 @@ export const menuAppStyles = makeStyles(theme => ({
     marginBottom: "10px"
   },
   appIcon: {
-    color: theme.palette.getContrastText("#fff"),
     fontSize: "48px",
     marginBottom: "10px",
     marginTop: "20px"
