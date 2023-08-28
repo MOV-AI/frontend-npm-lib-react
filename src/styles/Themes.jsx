@@ -36,7 +36,7 @@ const CONSTANTS = {
     borderBottom: "1px solid #ccc",
     textColor: "rgba(0, 0, 0, 0.87)",
     background: {
-      default: "linear-gradient(122.19deg, #ebebeb 2.58%, #ffffff 76.23%)",
+      default: "#ffffff",
       primary: "#e2e2e2",
       secondary: "#b2b2b2",
       overlay: "radial-gradient(79.34% 81.94% at 123.17% 23.94%, #ffffff 0%, #eeeeee 100%)",
