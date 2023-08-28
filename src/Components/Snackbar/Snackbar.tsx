@@ -1,6 +1,7 @@
 import React, { Fragment, useCallback } from "react";
 import { Button } from "@material-ui/core";
 import { OptionsObject, ProviderContext, SnackbarKey, useSnackbar, VariantType } from "notistack";
+import "./Snackbar.style.css";
 export interface SnackbarProps extends OptionsObject {
   message: string;
   closable: boolean;
@@ -11,10 +12,13 @@ export interface SnackbarProps extends OptionsObject {
   content: any;
 }
 interface SnackbarInterface {
-  current: ProviderContext | null;
+  current: ProviderContext;
 }
 
-const useSnackbarRef: SnackbarInterface = { current: null };
+const useSnackbarRef: SnackbarInterface = { current: {
+  closeSnackbar: () => {},
+  enqueueSnackbar: () => "defaultKey",
+} };
 
 //========================================================================================
 /*                                                                                      *
@@ -56,7 +60,7 @@ export const SnackbarUtilsConfigurator = () => {
 
 const closeSnackbar = (key: SnackbarKey) => {
   return () => {
-    useSnackbarRef.current?.closeSnackbar(key);
+    useSnackbarRef.current.closeSnackbar(key);
   };
 };
 
@@ -104,7 +108,7 @@ export const snackbar = (props: SnackbarProps, _theme: any) => {
   }
 
   if (!!useSnackbarRef.current) {
-    useSnackbarRef.current?.enqueueSnackbar(message, snackbarData);
+    useSnackbarRef.current.enqueueSnackbar(message, snackbarData);
   }
   return useSnackbarRef.current;
 };

@@ -1,6 +1,7 @@
-import { withStyles, ThemeProvider } from "@material-ui/styles";
+import React from "react";
 import { I18nextProvider } from "react-i18next";
-import { withMagicClasses, makeMagicBook } from "@tty-pt/styles";
+import { WithThemeProps } from "@tty-pt/styles/src/types";
+import { withMagic } from "@tty-pt/styles";
 import { WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
 import withNotification from "./withNotification";
@@ -8,6 +9,7 @@ import withOfflineValidation from "./withOfflineValidation";
 import withTheme from "./withTheme";
 import withTranslations from "./withTranslations";
 import withError from "./withError";
+import { defaultGetTheme, defaultGetStyle } from "../../styles/Themes";
 
 export default function withDefaults(appOptions: WithDefaultsProps) {
   const {
@@ -15,37 +17,38 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     component: appComponent,
     offlineValidation = true,
     dependencies,
-    themeProps, // this should be named ApplicationTheme
     getStyle,
+    getTheme,
+    allowGuest,
   } = appOptions;
 
-  const realGetStyle = (getStyle ?? dependencies["@tty-pt/styles"]?.makeMagicBook ?? makeMagicBook);
+  let componentWithDefaults = withError(appComponent);
 
-  let componentWithDefaults = (dependencies["@material-ui/styles"]?.withStyles ?? withStyles)(
-    realGetStyle
-  )(
-    (dependencies["@tty-pt/styles"]?.withMagicClasses ?? withMagicClasses)(
-      withError(appComponent, dependencies),
-      dependencies["@tty-pt/styles"]?.MagicContext
-    )
-  );
-  if (offlineValidation) {
+  if (offlineValidation)
     componentWithDefaults = withOfflineValidation(componentWithDefaults);
-  }
-  if (dependencies.i18n) {
+
+  if (!(window as any).mock)
     componentWithDefaults = withTranslations(componentWithDefaults, {
-      i18n: dependencies.i18n,
-      provider: dependencies["react-i18next"]?.I18nextProvider ?? I18nextProvider
+      i18n: dependencies?.i18n ?? { t: a => a },
+      provider: dependencies?.["react-i18next"]?.I18nextProvider ?? I18nextProvider
     });
-  }
+
   const componentWithNotifications = withNotification(componentWithDefaults);
+
   const componentWithAuthentication = withAuthentication(
     componentWithNotifications,
-    appName
+    appName,
+    allowGuest,
   );
-  return withTheme(
+
+  const componentWithMagic = withMagic(
     componentWithAuthentication,
-    dependencies["@material-ui/styles"]?.ThemeProvider ?? ThemeProvider,
-    themeProps
+    getStyle ?? defaultGetStyle,
+    getTheme ?? defaultGetTheme,
+  );
+
+  return withTheme(
+    componentWithMagic as React.ComponentClass<WithThemeProps>,
+    dependencies?.["@material-ui/styles"]?.ThemeProvider,
   );
 }
