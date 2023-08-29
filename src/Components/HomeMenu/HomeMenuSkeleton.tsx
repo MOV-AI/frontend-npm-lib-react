@@ -2,7 +2,8 @@ import React from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { homeMenuPopperStyles } from "./styles";
 
-const HomeMenuSkeleton = () => {
+export default
+function HomeMenuSkeleton() {
   const classes = homeMenuPopperStyles();
   const sklArr = ["btn1", "btn2", "btn3", "btn4", "btn5", "btn6"];
 
@@ -27,6 +28,4 @@ const HomeMenuSkeleton = () => {
       })}
     </div>
   );
-};
-
-export default HomeMenuSkeleton;
+}

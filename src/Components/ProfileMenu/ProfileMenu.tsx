@@ -38,7 +38,8 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
   );
 }
 
-const ProfileMenu = (props: ProfileMenuProps) => {
+export default
+function ProfileMenu(props: ProfileMenuProps) {
   // Props
   const {
     welcomeLabel = "Hello",
@@ -210,6 +211,4 @@ const ProfileMenu = (props: ProfileMenuProps) => {
       <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>
     </div>
   );
-};
-
-export default ProfileMenu;
+}

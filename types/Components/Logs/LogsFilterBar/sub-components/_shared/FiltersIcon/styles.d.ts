@@ -1,0 +1,1 @@
+export const filterIconStyles: (props?: any) => import("@material-ui/styles").ClassNameMap<"height" | "button" | "checkbox" | "icon" | "childrenContainer" | "limitText" | "iconActive" | "buttonApplyFilters" | "filterIconRoot" | "titleRow" | "spacer">;

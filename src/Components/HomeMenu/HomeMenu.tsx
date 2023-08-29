@@ -12,7 +12,7 @@ import { App } from "./types";
 
 import { homeMenuPopperStyles } from "./styles";
 
-const HomeMenuPopper = () => {
+function HomeMenuPopper() {
   // State hooks
   const classes = homeMenuPopperStyles();
   const [currentApps, setCurrentApps] = useState<App[]>([]);
@@ -147,6 +147,6 @@ const HomeMenuPopper = () => {
       </span>
     </Tooltip>
   );
-};
+}
 
 export default HomeMenuPopper;
