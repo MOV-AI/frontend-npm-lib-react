@@ -14,7 +14,6 @@ import SearchInput from "./Components/SearchInput";
 import Breadcrumb from "./Components/Breadcrumb";
 import Select from "./Components/Select";
 import { snackbar } from "./Components/Snackbar/Snackbar";
-import Themes from "./styles/Themes";
 import Style from "./styles/Style";
 import Logs from "./Components/Logs/Logs";
 import LoginForm from "./Components/LoginForm/LoginForm";
@@ -58,7 +57,6 @@ export {
   Table,
   Tabs,
   Text,
-  Themes,
   Toggle,
   SearchInput,
   Breadcrumb,
