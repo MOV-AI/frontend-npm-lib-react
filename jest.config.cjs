@@ -1,7 +1,7 @@
 module.exports = {
   verbose: true,
   transformIgnorePatterns: [
-	  "/node_modules/(?!(@babylonjs/core|@mov-ai/mov-fe-lib-core)/).*", // This regex will make sure @swc/jest also transforms @babylonjs/core
+	  "/node_modules/(?!(@babylonjs/core|@tty-pt/sub|@mov-ai/mov-fe-lib-core)/).*", // This regex will make sure @swc/jest also transforms @babylonjs/core
   ],
   testPathIgnorePatterns: [
 	  '/node_modules/',
