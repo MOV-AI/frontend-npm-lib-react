@@ -10,6 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import SettingsIcon from "@material-ui/icons/Settings";
+import { setTheme, useThemeName } from "@tty-pt/styles";
 import Toggle from "../Toggle";
 import { profileMenuStyles } from "./styles";
 import Divider from "@material-ui/core/Divider";
@@ -47,7 +48,6 @@ function ProfileMenu(props: ProfileMenuProps) {
     logoutLabel = "Logout",
     version = "",
     extraItems = [],
-    isDarkTheme = true,
     menuItemConf,
     isMenuOpen,
     handleLogout = () => console.log("logout"),
@@ -127,6 +127,12 @@ function ProfileMenu(props: ProfileMenuProps) {
     [menuItemConf, classes]
   );
 
+  const themeName = useThemeName();
+
+  const realHandleToggleTheme = useCallback(() => {
+    setTheme(themeName === "light" ? "dark" : "light");
+  }, [themeName]);
+
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -135,7 +141,7 @@ function ProfileMenu(props: ProfileMenuProps) {
 
   return (
     <div data-testid="section_profile-menu">
-      <Tooltip title={i18n.t("Settings") || ""}>
+      <Tooltip title={<>i18n.t("Settings") || ""</>}>
         <IconButton
           buttonRef={triggerButtonRef}
           data-testid="input_button"
@@ -187,8 +193,8 @@ function ProfileMenu(props: ProfileMenuProps) {
             <div className={classes.menuItemSpacing}>
               {darkThemeLabel}
               <Toggle
-                onToggle={handleToggleTheme}
-                toggle={isDarkTheme}
+                onToggle={realHandleToggleTheme}
+                toggle={themeName === "dark"}
               ></Toggle>
             </div>
           )}

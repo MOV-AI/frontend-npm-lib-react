@@ -1,6 +1,6 @@
 import React from "react";
 import { I18nextProvider } from "react-i18next";
-import { WithThemeProps } from "@tty-pt/styles/src/types";
+import { WithThemeProps } from "@tty-pt/styles/dist/types";
 import { withMagic } from "@tty-pt/styles";
 import { WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
@@ -9,7 +9,7 @@ import withOfflineValidation from "./withOfflineValidation";
 import withTheme from "./withTheme";
 import withTranslations from "./withTranslations";
 import withError from "./withError";
-import { defaultGetTheme, defaultGetStyle } from "../../styles/Themes";
+import { defaultGetStyle } from "../../styles/Themes";
 
 export default function withDefaults(appOptions: WithDefaultsProps) {
   const {
@@ -18,7 +18,6 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     offlineValidation = true,
     dependencies,
     getStyle,
-    getTheme,
     allowGuest,
   } = appOptions;
 
@@ -44,7 +43,6 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   const componentWithMagic = withMagic(
     componentWithAuthentication,
     getStyle ?? defaultGetStyle,
-    getTheme ?? defaultGetTheme,
   );
 
   return withTheme(

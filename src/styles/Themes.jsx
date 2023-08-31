@@ -1,11 +1,10 @@
 import React from "react";
 import {
-  defaultTheme,
   makeMagic,
   makeThemeMagicBook,
-  useTheme as baseUseTheme,
+  registerThemes,
+  useTheme,
 } from "@tty-pt/styles";
-import { createTheme } from '@material-ui/core/styles';
 import "@fontsource/open-sans/index.css";
 import "@fontsource/roboto/index.css";
 
@@ -55,7 +54,6 @@ const CONSTANTS = {
 
 const themes = {
   dark: {
-    ...defaultTheme,
     label: "dark",
     textColor: CONSTANTS.dark.textColor,
     backgroundColor: "#050505",
@@ -66,7 +64,6 @@ const themes = {
       upperTextColor: "#E6E6E6"
     },
     palette: {
-      ...defaultTheme.palette,
       baked: CONSTANTS.dark.baked,
       colorOct: [{
         func: x => CONSTANTS.dark.colors[x],
@@ -74,18 +71,15 @@ const themes = {
       }],
       type: "dark", // Switching the dark mode on, is a single property value change.
       primary: {
-        ...defaultTheme.palette.primary,
         main: "#36b5e6"
       },
       secondary: {
-        ...defaultTheme.palette.secondary,
         main: "#CF6679"
       },
       green: {
         main: "#03DAC5"
       },
       background: {
-        ...defaultTheme.palette.background,
         default: "rgb(5, 5, 5)",
         paper: CONSTANTS.dark.background.primary,
         primary: CONSTANTS.dark.background.primary,
@@ -97,7 +91,6 @@ const themes = {
         border: "#dadde9"
       },
       text: {
-        ...defaultTheme.palette.text,
         primary: CONSTANTS.dark.textColor
       },
       getContrastText: () => CONSTANTS.dark.iconColor
@@ -193,7 +186,6 @@ const themes = {
     spacing,
   },
   light: {
-    ...defaultTheme,
     font: {
       Roboto: {
         fontFamily: "Roboto"
@@ -214,25 +206,21 @@ const themes = {
       upperTextColor: "#474747"
     },
     palette: {
-      ...defaultTheme.palette,
       baked: CONSTANTS.light.baked,
       colorOct: [{
         func: x => CONSTANTS.light.colors[x],
         length: CONSTANTS.light.colors.length,
       }],
       primary: {
-        ...defaultTheme.palette.primary,
         main: "#007197"
       },
       secondary: {
-        ...defaultTheme.palette.secondary,
         main: "#BE2424"
       },
       green: {
         main: "#03DAC5"
       },
       background: {
-        ...defaultTheme.palette.background,
         default: CONSTANTS.light.background.default,
         paper: CONSTANTS.light.background.primary,
         primary: CONSTANTS.light.background.primary,
@@ -245,7 +233,6 @@ const themes = {
         border: "darkgray"
       },
       text: {
-        ...defaultTheme.palette.text,
         primary: CONSTANTS.light.textColor,
         secondary: "rgba(0, 0, 0, 0.57)",
         disabled: "#00000",
@@ -361,47 +348,6 @@ const themes = {
   },
 };
 
-delete themes.light.breakpoints;
-delete themes.light.shadows;
-delete themes.light.transitions;
-delete themes.light.zIndex;
-delete themes.light.typography.pxToRem;
-delete themes.light.palette.action;
-delete themes.light.palette.common;
-delete themes.light.palette.grey;
-
-delete themes.dark.breakpoints;
-delete themes.dark.shadows;
-delete themes.dark.transitions;
-delete themes.dark.zIndex;
-delete themes.dark.typography.pxToRem;
-delete themes.dark.palette.action;
-delete themes.dark.palette.common;
-delete themes.dark.palette.grey;
-
-export const created = Object.entries(themes).reduce((a, i) => ({
-  ...a,
-  [i[0]]: createTheme(i[1]),
-}), {});
-
-export
-function defaultGetTheme(themeName) {
-  return created[themeName];
-}
-
-export
-function useTheme() {
-  return getTheme(baseUseTheme());
-}
-
-export
-function withTheme(Component) {
-  return function WithTheme(props) {
-    const theme = useTheme();
-    return <Component theme={theme} { ...props }/>;
-  };
-}
-
 makeMagic({
   "?body": {
     margin: 0,
@@ -421,4 +367,14 @@ function defaultGetStyle(theme, themeName) {
   };
 }
 
-export default themes;
+registerThemes(themes);
+
+export { makeMagic } from "@tty-pt/styles";
+
+export
+function withTheme(Component) {
+  return function WithTheme(props) {
+    const theme = useTheme();
+    return <Component theme={theme} { ...props }/>;
+  };
+}
