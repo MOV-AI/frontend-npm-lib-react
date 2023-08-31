@@ -10,10 +10,7 @@ export interface ProfileMenuProps {
   isMenuOpen?: boolean;
   onClose?: Function;
   handleLogout: Function;
-  handleToggleTheme: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => void;
+  handleToggleTheme: boolean;
   menuItemConf: {
     [key: string]:
       | {

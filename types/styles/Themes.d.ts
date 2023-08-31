@@ -1,5 +1,4 @@
 export function defaultGetTheme(themeName: any): any;
-export function useTheme(): any;
 export function withTheme(Component: any): (props: any) => React.JSX.Element;
 export function defaultGetStyle(theme: any, themeName: any): {
     "?body": {

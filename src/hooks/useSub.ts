@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Sub } from "@mov-ai/mov-fe-lib-core/dist/api/Utils/Sub";
+import { Sub } from "@tty-pt/sub";
 
 type setState<T extends any> = (newState: T) => void;
 export default

@@ -1,7 +1,9 @@
 import React, { useState, useCallback } from "react";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
-import { Authentication, PermissionType, User, makeSub } from "@mov-ai/mov-fe-lib-core";
+import { Authentication, PermissionType, User } from "@mov-ai/mov-fe-lib-core";
+import { makeSub } from "@tty-pt/sub";
+import { Emit } from "@tty-pt/sub/dist/types";
 import useSub from "../../hooks/useSub";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
@@ -18,8 +20,7 @@ interface LoginSub {
   loggedIn: boolean,
   currentUser: any,
   loading: boolean,
-  clean: boolean,
-  providers: string[],
+  providers: { domains: string[] },
 }
 
 export
@@ -27,15 +28,14 @@ const loggedOutInfo = {
   loggedIn: false,
   currentUser: null,
   loading: false,
-  clean: true,
-  providers: [],
+  providers: { domains: [] },
 };
 
 export
 const authSub = makeSub<LoginSub>(loggedOutInfo);
 
 export
-const authEmit = authSub.makeEmit(async () => {
+const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
   authSub.update({ ...loggedOutInfo, loading: true });
 
   try {
@@ -84,7 +84,7 @@ export default function withAuthentication(
     const authSubRes = useSub<LoginSub>(authSub) as LoginSub;
     if (!authSubRes)
       throw new Error("No auth info");
-    const { currentUser, loggedIn, loading, clean, providers } = authSubRes;
+    const { currentUser, loggedIn, loading, providers } = authSubRes;
     const hasPermissions = (currentUser?.Resources?.Applications)
       ? (currentUser.Superuser || currentUser.Resources.Applications.includes(appName as PermissionType) || !appName)
       : (currentUser?.Superuser || allowGuest);
@@ -134,7 +134,7 @@ export default function withAuthentication(
     const renderLoginForm = () => (
       <LoginForm
         appName={appName} 
-        domains={providers}
+        domains={providers.domains}
         authErrorMessage={errorMessage}
         onLoginSubmit={handleLoginSubmit}
       />
@@ -173,8 +173,8 @@ export default function withAuthentication(
     /**
      * renders the Login form if the user is not logged in
      */
-    if (loading && clean) return renderLoading();
-    if (!loggedIn && clean) return renderLoginForm();
+    if (loading) return renderLoading();
+    if (!loggedIn) return renderLoginForm();
     if (!hasPermissions) return renderNotAuthorized();
     return (
       <React.Fragment>
