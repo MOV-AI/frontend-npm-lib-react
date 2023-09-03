@@ -18,7 +18,6 @@ function ThemeContainer(props: any) {
   };
 
   const muiTheme = useTheme();
-  console.log("muiTheme", muiTheme);
 
   return <ThemeProvider theme={muiTheme}>
     <Component
