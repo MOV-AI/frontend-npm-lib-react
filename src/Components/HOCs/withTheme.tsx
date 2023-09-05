@@ -4,6 +4,10 @@ import { ThemeProvider as DefaultThemeProvider } from "@material-ui/styles";
 import useSub from "./../../hooks/useSub";
 import React from "react";
 
+setTheme(
+  window.localStorage.getItem("@tty-pt/styles/theme") ?? "dark"
+);
+
 function ThemeContainer(props: any) {
   const { ThemeProvider, Component } = props;
   const sub = useSub<ThemeSub>(themeSub);

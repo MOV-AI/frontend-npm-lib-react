@@ -141,7 +141,7 @@ function ProfileMenu(props: ProfileMenuProps) {
 
   return (
     <div data-testid="section_profile-menu">
-      <Tooltip title={<>i18n.t("Settings") || ""</>}>
+      <Tooltip title={<>{ i18n.t("Settings") || "" }</>}>
         <IconButton
           buttonRef={triggerButtonRef}
           data-testid="input_button"
