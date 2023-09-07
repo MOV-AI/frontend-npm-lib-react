@@ -1,0 +1,46 @@
+declare const _default: React.MemoExoticComponent<{
+    (props: any): React.JSX.Element;
+    propTypes: {
+        levels: PropTypes.Requireable<any[]>;
+        levelsList: PropTypes.Requireable<any[]>;
+        handleLevels: PropTypes.Requireable<(...args: any[]) => any>;
+        selectedService: PropTypes.Requireable<any[]>;
+        handleSelectedService: PropTypes.Requireable<(...args: any[]) => any>;
+        limit: PropTypes.Requireable<number>;
+        handleLimit: PropTypes.Requireable<(...args: any[]) => any>;
+        columns: PropTypes.Requireable<any[]>;
+        handleColumns: PropTypes.Requireable<(...args: any[]) => any>;
+        handleDeleteTag: PropTypes.Requireable<(...args: any[]) => any>;
+        handleExport: PropTypes.Requireable<(...args: any[]) => any>;
+        messageRegex: PropTypes.Requireable<string>;
+        handleMessageRegex: PropTypes.Requireable<(...args: any[]) => any>;
+        selectedFromDate: PropTypes.Requireable<string>;
+        selectedToDate: PropTypes.Requireable<string>;
+        handleDateChange: PropTypes.Requireable<(...args: any[]) => any>;
+        selectedRobots: PropTypes.Requireable<any[]>;
+        updateRobotSelection: PropTypes.Requireable<(...args: any[]) => any>;
+        t: PropTypes.Requireable<(...args: any[]) => any>;
+    };
+    defaultProps: {
+        levels: never[];
+        levelsList: never[];
+        handleLevels: () => void;
+        selectedService: never[];
+        handleSelectedService: () => void;
+        limit: number;
+        handleLimit: () => void;
+        columns: never[];
+        handleColumns: () => void;
+        handleDeleteTag: () => void;
+        handleExport: () => void;
+        messageRegex: string;
+        handleMessageRegex: () => void;
+        handleDateChange: () => void;
+        selectedRobots: never[];
+        updateRobotSelection: () => void;
+        t: (string: any) => any;
+    };
+}>;
+export default _default;
+import React from "react";
+import PropTypes from "prop-types";
