@@ -9,7 +9,6 @@
     "allowJs": true,
     "checkJs": false,
     "declaration": true,
-    "emitDeclarationOnly": true,
     "outDir": "dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
