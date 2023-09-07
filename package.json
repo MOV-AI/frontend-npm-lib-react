@@ -67,7 +67,7 @@
     "@swc/jest": "^0.2.26",
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.2.5",
-    "@tty-pt/styles": "0.2.2-8",
+    "@tty-pt/styles": "0.2.2-9",
     "@types/jest": "^26.0.23",
     "@types/node": "^20.5.7",
     "@types/prop-types": "^15.7.5",
@@ -102,7 +102,7 @@
   },
   "peerDependencies": {
     "@mov-ai/mov-fe-lib-core": "^1.1.2-25",
-    "@tty-pt/styles": "0.2.2-8",
+    "@tty-pt/styles": "0.2.2-9",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-virtualized": "9.22.3"
