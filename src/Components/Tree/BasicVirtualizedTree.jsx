@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Tree from "react-virtualized-tree";
 import "material-icons/css/material-icons.css";
-import "react-virtualized/styles.css";
-import "react-virtualized-tree/lib/main.css";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Box from "@material-ui/core/Box";

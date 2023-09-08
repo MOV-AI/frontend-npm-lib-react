@@ -1,11 +1,21 @@
 {
   "name": "@mov-ai/mov-fe-lib-react",
-  "version": "1.1.2-17",
+  "version": "1.2.1-1",
   "description": "The Mov.AI's frontend library for React.",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/mov-ai"
-  },
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*",
+    "./resources/*": "./resources/*"
+  },
   "proxy": {
     "/token-auth": "http://localhost/token-auth",
     "/ws/subscriber": "http://localhost/ws/subscriber",
@@ -14,7 +24,7 @@
   "scripts": {
     "test": "jest",
     "testDev": "jest --watchAll",
-    "build": "webpack --mode=production",
+    "build": "tsc -d && cd src && find . -type f \\( -name \"*.json\" -o -name \"*.css\" \\) -exec cp --parents {} ../dist/ \\; ",
     "buildDev": "webpack --mode=development --watch",
     "clean": "rm -rf node_modules/ package-lock.json",
     "storybook": "start-storybook -p 3001",
@@ -53,10 +63,19 @@
     "@storybook/manager-webpack5": "^6.4.19",
     "@storybook/preset-create-react-app": "^1.5.2",
     "@storybook/react": "^6.4.19",
-    "@testing-library/jest-dom": "^5.16.2",
-    "@testing-library/react": "^12.1.0",
-    "@tty-pt/styles": "^0.0.3-15",
-    "@types/jest": "27.5.1",
+    "@swc/cli": "^0.1.62",
+    "@swc/core": "^1.3.56",
+    "@swc/jest": "^0.2.26",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.2.5",
+    "@tty-pt/styles": "0.2.2-12",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^20.5.7",
+    "@types/prop-types": "^15.7.5",
+    "@types/react": "^16.14.45",
+    "@types/react-dom": "^16.9.19",
+    "@types/roslib": "^1.1.8",
+    "@types/testing-library__jest-dom": "^5.9.5",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "babel-jest": "^28.1.0",
@@ -65,52 +84,60 @@
     "eslint": "^8.36.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "http-proxy-middleware": "^2.0.1",
+    "http-proxy-middleware": "^2.0.6",
     "jest": "^28.1.0",
-    "jest-environment-jsdom": "^29.0.3",
+    "jest-environment-jsdom": "^29.5.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
+    "react-virtualized": "9.22.3",
     "storybook-addon-mock": "^2.4.1",
     "style-loader": "^3.3.0",
-    "ts-jest": "^28.0.3",
+    "styled-components": "^6.0.7",
+    "ts-jest": "^28.0.8",
     "ts-loader": "^9.3.1",
-    "typescript": "^4.8.3",
+    "typescript": "^4.9.5",
     "url-loader": "^4.1.1",
     "webpack": "^5.53.0",
     "webpack-cli": "^4.8.0",
     "webpack-node-externals": "^3.0.0"
   },
   "peerDependencies": {
-    "@tty-pt/styles": "^0.0.3-15",
-    "react": ">=16.14.0",
-    "react-dom": ">=16.14.0"
+    "@mov-ai/mov-fe-lib-core": "^1.1.2-25",
+    "@tty-pt/styles": "0.2.2-12",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-virtualized": "9.22.3"
   },
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
     "@fontsource/open-sans": "^4.5.11",
     "@fontsource/roboto": "^4.5.8",
+    "@material-table/core": "^4.3.46",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@material-ui/pickers": "^3.3.10",
     "@material-ui/styles": "^4.11.5",
-    "@mov-ai/mov-fe-lib-core": "^1.1.2-9",
+    "@mov-ai/mov-fe-lib-core": "^1.1.2-25",
+    "@tty-pt/sub": "^1.0.9",
     "clsx": "^1.1.1",
-    "i18next": "^21.0.2",
+    "i18next": "^21.8.10",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "material-icons": "^0.1.0",
-    "material-table": "^1.69.3",
     "notistack": "^1.0.10",
     "prop-types": "^15.7.2",
-    "react-i18next": "^11.12.0",
-    "react-virtualized": "^9.22.3",
+    "react-i18next": "^11.17.2",
     "react-virtualized-tree": "^3.4.1",
-    "stacktrace-js": "^2.0.2",
-    "styled-components": "^5.3.1"
+    "roslib": "^1.3.0",
+    "stacktrace-js": "^2.0.2"
+  },
+  "resolutions": {
+    "react-virtualized": "9.22.3"
   },
   "files": [
     "dist",
-    "resources"
+    "resources",
+    "favicon.png"
   ]
 }

@@ -23,7 +23,7 @@ import _isEqual from "lodash/isEqual";
 import i18n from "../../i18n/i18n";
 
 import { useStyles } from "./styles";
-import "./Logs.css";
+import "./Logs.style.css";
 
 // TODO this should be exported. Fleetboard uses it
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
@@ -171,15 +171,10 @@ const Logs = props => {
         // Enqueue next request
         return true;
       })
-      .then(enqueueNextRequest => {
+      .then(() => {
         setLoading(false);
-        clearTimeout(getLogsTimeoutRef.current);
-        if (!enqueueNextRequest) return;
-        getLogsTimeoutRef.current = setTimeout(() => {
-          getLogs();
-        }, requestTimeout.current);
       });
-  }, [getFromDate, getLogs, getToDate, levels, levelsList, limit, searchMessage, selectedService, selectedToDate, tags]);
+  }, [getFromDate, getToDate, levels, levelsList, limit, searchMessage, selectedService, selectedToDate, tags]);
 
   /**
    * Get logs
