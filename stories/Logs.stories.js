@@ -1,12 +1,11 @@
 import React from "react";
 import withMock from "storybook-addon-mock";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
-import { ThemeProvider } from "@material-ui/styles";
 
 import { authParams } from "./_mockLogin";
-import Themes from "../src/styles/Themes";
 import Logs from "../src/Components/Logs/Logs";
 import withAuthentication from "../src/Components/HOCs/withAuthentication";
+import withTheme from "../src/Components/HOCs/withTheme";
 
 export default {
   title: "Logs Component",
@@ -44,7 +43,7 @@ const LogsTable = () => {
 };
 
 const Template = () => {
-  const AuthLogs = withAuthentication(LogsTable);
+  const AuthLogs = withTheme(withAuthentication(LogsTable));
   return <AuthLogs />;
 };
 
