@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "es2020",
+    "target": "esnext",
+    "module": "ESNext",
     "baseUrl": "./src",
     "rootDir": "./src",
     "moduleResolution": "node",
     "jsx": "react",
     "allowJs": true,
     "checkJs": false,
-    "declaration": true,
     "outDir": "dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,7 +16,6 @@
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "downlevelIteration": true,
-    "resolveJsonModule": true,
     "types": ["node", "jest", "testing-library__jest-dom"]
   },
   "include": ["src/**/*", "typings.d.ts", "dist/@mov-ai/*"]

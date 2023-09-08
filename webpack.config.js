@@ -7,7 +7,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "index.js",
     library: "MovaiReact",
-    libraryTarget: "umd"
+    libraryTarget: "commonjs2"
   },
   target: "web",
   devtool: "source-map",

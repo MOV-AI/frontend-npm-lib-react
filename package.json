@@ -4,11 +4,12 @@
   "description": "The Mov.AI's frontend library for React.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "module": "./dist/index.ts",
+  "module": "./dist/index.js",
+  "type": "module",
   "exports": {
     ".": {
       "require": "./dist/index.js",
-      "import": "./dist/index.ts",
+      "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json",
@@ -23,7 +24,7 @@
   "scripts": {
     "test": "jest",
     "testDev": "jest --watchAll",
-    "build": "tsc && cd src && find . -type f -exec cp --parents {} ../dist/ \\; && cd - && webpack --mode=production",
+    "build": "tsc -d && cd src && find . -type f \\( -name \"*.json\" -o -name \"*.css\" \\) -exec cp --parents {} ../dist/ \\; ",
     "buildDev": "webpack --mode=development --watch",
     "clean": "rm -rf node_modules/ package-lock.json",
     "storybook": "start-storybook -p 3001",
@@ -67,7 +68,7 @@
     "@swc/jest": "^0.2.26",
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.2.5",
-    "@tty-pt/styles": "0.2.2-9",
+    "@tty-pt/styles": "0.2.2-12",
     "@types/jest": "^26.0.23",
     "@types/node": "^20.5.7",
     "@types/prop-types": "^15.7.5",
@@ -102,7 +103,7 @@
   },
   "peerDependencies": {
     "@mov-ai/mov-fe-lib-core": "^1.1.2-25",
-    "@tty-pt/styles": "0.2.2-9",
+    "@tty-pt/styles": "0.2.2-12",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-virtualized": "9.22.3"
@@ -118,7 +119,7 @@
     "@material-ui/pickers": "^3.3.10",
     "@material-ui/styles": "^4.11.5",
     "@mov-ai/mov-fe-lib-core": "^1.1.2-25",
-    "@tty-pt/sub": "^1.0.7",
+    "@tty-pt/sub": "^1.0.9",
     "clsx": "^1.1.1",
     "i18next": "^21.8.10",
     "jwt-decode": "^3.1.2",
