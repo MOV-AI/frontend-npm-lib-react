@@ -129,9 +129,24 @@ const Logs = props => {
   };
 
   /**
-   * Get robots log data
+   * Get logs
    */
-  const getRobotLogData = useCallback(robots => {
+  const getLogs = useCallback(async keepLoading => {
+    if (!isMounted.current) return;
+    // Get selected and online robots
+    const robots = getSelectedRobots();
+    if (!robots.length) {
+      console.warn("No robots available", robots)
+      clearLogs();
+      setTimeout(getLogs, NO_ROBOTS_RETRY_TIMEOUT);
+      if (!keepLoading) setLoading(false);
+      // Stop method execution
+      return;
+    }
+    // Remove previously enqueued requests
+    stopLogger();
+    // Stop loader if there's not request to do
+
     // If component is no longer mounted
     if (!isMounted.current) return;
     console.assert(robots.length);
@@ -179,28 +194,7 @@ const Logs = props => {
           getLogs();
         }, requestTimeout.current);
       });
-  }, [getFromDate, getLogs, getToDate, levels, levelsList, limit, searchMessage, selectedService, selectedToDate, tags]);
-
-  /**
-   * Get logs
-   */
-  const getLogs = useCallback(async keepLoading => {
-    if (!isMounted.current) return;
-    // Get selected and online robots
-    const validRobots = getSelectedRobots();
-    if (!validRobots.length) {
-      console.warn("No robots available", validRobots)
-      clearLogs();
-      setTimeout(getLogs, NO_ROBOTS_RETRY_TIMEOUT);
-      if (!keepLoading) setLoading(false);
-      // Stop method execution
-      return;
-    }
-    // Remove previously enqueued requests
-    stopLogger();
-    // Stop loader if there's not request to do
-    getRobotLogData(validRobots);
-  }, [getRobotLogData]);
+  }, [getFromDate, getToDate, levels, levelsList, limit, searchMessage, selectedService, selectedToDate, tags]);
 
   /**
    * Refresh logs in table

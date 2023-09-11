@@ -1,4 +1,3 @@
-import { createTheme } from "@material-ui/core/styles";
 import "@fontsource/open-sans";
 import "@fontsource/roboto";
 
@@ -58,8 +57,7 @@ const themeFactory = particular => ({
 });
 
 const Themes = {
-  dark: createTheme(
-    themeFactory({
+  dark: themeFactory({
       label: "dark",
       textColor: CONSTANTS.dark.textColor,
       backgroundColor: "#050505",
@@ -81,6 +79,7 @@ const Themes = {
           main: "#03DAC5"
         },
         background: {
+          default: "#050505",
           primary: CONSTANTS.dark.background.primary,
           secondary: CONSTANTS.dark.background.secondary
         },
@@ -88,6 +87,10 @@ const Themes = {
           background: "#f5f5f9",
           color: "rgba(0, 0, 0, 0.87)",
           border: "#dadde9"
+        },
+        text: {
+          primary: CONSTANTS.dark.textColor,
+          disabled: "#ffffff",
         },
         getContrastText: () => CONSTANTS.dark.iconColor
       },
@@ -177,12 +180,16 @@ const Themes = {
               borderRadius: "4px"
             }
           }
-        }
+        },
+        MuiPaper: {
+          root: {
+            color: CONSTANTS.dark.textColor + " !important",
+            backgroundColor: CONSTANTS.dark.background.primary + " !important",
+          }
+        },
       }
-    })
-  ),
-  light: createTheme(
-    themeFactory({
+  }),
+  light: themeFactory({
       font: {
         Roboto: {
           fontFamily: "Roboto"
@@ -193,8 +200,7 @@ const Themes = {
       },
       label: "light",
       textColor: CONSTANTS.light.textColor,
-      backgroundColor:
-        "linear-gradient(122.19deg, #FFFFFF 2.58%, #FFFFFF 76.23%)", // it was white before
+      backgroundColor: "#ffffff",
       bottomNavigation: { background: "#c3c3c3" },
       icon: { color: "#757575", hoverColor: "black" },
       table: { stripColor: "whitesmoke" },
@@ -214,6 +220,7 @@ const Themes = {
           main: "#03DAC5"
         },
         background: {
+          default: "#ffffff",
           primary: CONSTANTS.light.background.primary,
           secondary: CONSTANTS.light.background.secondary
         },
@@ -221,6 +228,9 @@ const Themes = {
           background: "whitesmoke",
           color: CONSTANTS.light.textColor,
           border: "darkgray"
+        },
+        text: {
+          primary: CONSTANTS.light.textColor,
         },
         getContrastText: () => CONSTANTS.light.iconColor
       },
@@ -329,17 +339,12 @@ const Themes = {
           }
         }
       }
-    })
-  )
-};
-
-Themes.getTheme = () => {
-  const theme = window.localStorage.getItem("movai.theme"); // dark or light
-  return theme ? theme : "dark";
-};
-
-Themes.setTheme = value => {
-  window.localStorage.setItem("movai.theme", value);
+  }),
 };
 
 export default Themes;
+
+export
+function defaultGetStyle(_theme) {
+  return {};
+}

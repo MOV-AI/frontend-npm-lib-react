@@ -226,7 +226,7 @@ const SelectScopeModal = props => {
 
   const handleSubmit = useCallback(
     () => props.onSubmit(selectedScopeItem),
-    [props, selectedScopeItem]
+    [props.onSubmit, selectedScopeItem]
   );
   const handleNodeClick = useCallback(
     node => requestScopeVersions(node),
