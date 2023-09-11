@@ -1,18 +1,14 @@
 import React from "react";
-
-import { ThemeProvider } from "@material-ui/styles";
 import LoginForm from "../src/Components/LoginForm/LoginForm";
-import Themes from "../src/styles/Themes";
+import withTheme from "../src/Components/HOCs/withTheme";
 
-export const loginForm = () => {
+export const loginForm = withTheme(() => {
   return (
     <div style={{ height: "100vh" }}>
-      <ThemeProvider theme={Themes["dark"]}>
-        <LoginForm></LoginForm>
-      </ThemeProvider>
+      <LoginForm />
     </div>
   );
-};
+});
 
 loginForm.story = {
   name: "Login Form"

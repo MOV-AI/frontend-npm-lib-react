@@ -3,6 +3,7 @@ import withMock from "storybook-addon-mock";
 import HomeMenu from "../src/Components/HomeMenu/HomeMenu";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import withAuthentication from "../src/Components/HOCs/withAuthentication";
+import withTheme from "../src/Components/HOCs/withTheme";
 
 export default {
   title: "Home menu",
@@ -18,7 +19,7 @@ const HomeMenuSimple = () => {
 };
 
 const Template = () => {
-  const AuthHome = withAuthentication(HomeMenuSimple);
+  const AuthHome = withTheme(withAuthentication(HomeMenuSimple));
   return <AuthHome />;
 };
 
