@@ -151,7 +151,7 @@ const Themes = {
         },
         MuiIconButton: {
           root: {
-            color: "#36b5e6"
+            color: "#36b5e6 !important"
           }
         },
         MuiListItem: {

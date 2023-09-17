@@ -42,6 +42,5 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     componentWithAuthentication as (props: any) => JSX.Element,
     ApplicationTheme,
     getStyle,
-    dependencies?.["@material-ui/core/styles"],
   );
 }

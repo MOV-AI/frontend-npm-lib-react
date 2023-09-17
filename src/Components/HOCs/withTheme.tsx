@@ -2,7 +2,7 @@ import { createTheme, ThemeProvider, withStyles, Theme, ThemeOptions } from "@ma
 import DefaultApplicationTheme, { defaultGetStyle } from "../../styles/Themes";
 import { makeSub } from "../../Utils/Sub";
 import useSub from "../../hooks/useSub";
-import { MuiCoreStyles, ApplicationThemeType } from "./types";
+import { ApplicationThemeType } from "./types";
 import React from "react";
 
 type ThemeNameType = "dark" | "light";
@@ -11,7 +11,6 @@ interface ThemeSub {
   themeName: ThemeNameType;
   ApplicationTheme: ApplicationThemeType;
   getStyle: typeof defaultGetStyle;
-  muiCoreStyles: MuiCoreStyles,
 };
 
 export
@@ -19,11 +18,6 @@ const themeSub = makeSub<ThemeSub>({
   themeName: (window.localStorage.getItem("movai.theme") ?? "dark") as ThemeNameType,
   ApplicationTheme: DefaultApplicationTheme,
   getStyle: defaultGetStyle,
-  muiCoreStyles: {
-    ThemeProvider,
-    createTheme,
-    withStyles,
-  },
 });
 
 const setTheme = themeSub.makeEmitNow((current: ThemeSub, themeName: ThemeNameType): ThemeSub => {
@@ -39,7 +33,7 @@ function createThemes(current: ThemeSub): Record<ThemeNameType, Theme> {
   let ApplicationTheme: Record<ThemeNameType, Theme | ThemeOptions>  = { ...current.ApplicationTheme };
 
   for (const [key, value]  of Object.entries(ApplicationTheme))
-    ApplicationTheme[key as ThemeNameType] = current.muiCoreStyles.createTheme(value);
+    ApplicationTheme[key as ThemeNameType] = createTheme(value);
 
   return ApplicationTheme as Record<ThemeNameType, Theme>;
 }
@@ -48,14 +42,12 @@ export default function withTheme(
   Component: (props: any) => JSX.Element,
   ApplicationTheme?: typeof DefaultApplicationTheme,
   getStyle?: typeof defaultGetStyle,
-  muiCoreStyles?: MuiCoreStyles,
 ) {
   let current = themeSub.current();
 
-  if (muiCoreStyles || ApplicationTheme || getStyle) {
+  if (ApplicationTheme || getStyle) {
     current = {
       ...current,
-      muiCoreStyles: muiCoreStyles ?? current.muiCoreStyles,
       ApplicationTheme: ApplicationTheme ?? current.ApplicationTheme,
       getStyle: getStyle ?? current.getStyle
     };
@@ -67,7 +59,7 @@ export default function withTheme(
     themeSub.update(current);
   }
 
-  const StyledComponent = (current.muiCoreStyles.withStyles)(getStyle ?? defaultGetStyle)(Component);
+  const StyledComponent = withStyles(getStyle ?? defaultGetStyle)(Component);
 
   return function (props: any) {
     const sub = useSub<ThemeSub>(themeSub);
@@ -88,16 +80,14 @@ export default function withTheme(
         (muiTheme as any).backgroundColor;
     }, [muiTheme]);
 
-    const ThemeProviderInstance = sub.muiCoreStyles.ThemeProvider;
-
     return (
-      <ThemeProviderInstance theme={muiTheme}>
+      <ThemeProvider theme={muiTheme}>
         <StyledComponent
           handleToggleTheme={handleToggleTheme}
           theme={theme}
           {...props}
         />
-      </ThemeProviderInstance>
+      </ThemeProvider>
     );
   };
 }
