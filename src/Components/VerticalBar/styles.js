@@ -6,7 +6,11 @@ export const verticalBarStyles = makeStyles(theme => ({
     height: "100%",
     display: "flex",
     flexDirection: "column",
-    backgroundColor: props => props.backgroundColor
+    backgroundColor: props => props.backgroundColor,
+    "& .MuiSvgIcon-root": {
+      color: theme.palette.primary.main,
+      fill: theme.palette.primary.main,
+    },
   },
   divider: {
     width: "100%"

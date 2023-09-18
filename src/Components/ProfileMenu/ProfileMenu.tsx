@@ -46,7 +46,6 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     logoutLabel = "Logout",
     version = "",
     extraItems = [],
-    isDarkTheme = true,
     menuItemConf,
     isMenuOpen,
     handleLogout = () => console.log("logout"),
@@ -187,7 +186,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               {darkThemeLabel}
               <Toggle
                 onToggle={handleToggleTheme}
-                toggle={isDarkTheme}
+                toggle={(window.localStorage.getItem("movai.theme") ?? "dark") === "dark"}
               ></Toggle>
             </div>
           )}
