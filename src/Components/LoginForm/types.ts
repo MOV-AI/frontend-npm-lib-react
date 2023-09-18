@@ -1,4 +1,5 @@
 export interface LoginFormProps {
+  appName?: string;
   classes: {
     [cssClass: string]: any;
   };

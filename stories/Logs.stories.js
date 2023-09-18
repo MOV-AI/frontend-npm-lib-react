@@ -1,10 +1,8 @@
 import React from "react";
 import withMock from "storybook-addon-mock";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
-import { ThemeProvider } from "@material-ui/styles";
 
 import { authParams } from "./_mockLogin";
-import Themes from "../src/styles/Themes";
 import Logs from "../src/Components/Logs/Logs";
 import withAuthentication from "../src/Components/HOCs/withAuthentication";
 
@@ -36,9 +34,7 @@ const LogsTable = () => {
 
   return (
     <div style={{ height: "90vh" }}>
-      <ThemeProvider theme={Themes["light"]}>
-        <Logs robotsData={formatRobotData()}></Logs>
-      </ThemeProvider>
+      <Logs robotsData={formatRobotData()}></Logs>
     </div>
   );
 };

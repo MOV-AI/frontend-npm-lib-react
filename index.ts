@@ -32,18 +32,22 @@ import ErrorBoundary from "./src/Components/ErrorBoundary";
 import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
 import withAuthentication from "./src/Components/HOCs/withAuthentication";
 import withNotification from "./src/Components/HOCs/withNotification";
-import withTheme from "./src/Components/HOCs/withTheme";
+import withTheme, { themeSub } from "./src/Components/HOCs/withTheme";
 import withDefaults from "./src/Components/HOCs/withDefaults";
 import withError from "./src/Components/HOCs/withError";
 // import Translations
 import { Translations } from "./src/i18n/locales";
 import { i18nHelper } from "./src/i18n/i18nHelper";
+export * from "./src/Utils/Sub";
+import useSub from "./src/hooks/useSub";
 
 export {
   withOfflineValidation,
   withAuthentication,
   withNotification,
   withTheme,
+  themeSub,
+  useSub,
   withDefaults,
   withError,
   Button,

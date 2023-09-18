@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import MaterialTable from "material-table";
+import MaterialTable from "@material-table/core";
 
 import { forwardRef } from "react";
 
