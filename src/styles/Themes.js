@@ -59,6 +59,7 @@ const themeFactory = particular => ({
 const Themes = {
   dark: themeFactory({
       label: "dark",
+      trigger: 1,
       textColor: CONSTANTS.dark.textColor,
       backgroundColor: "#050505",
       bottomNavigation: { background: "#212121" },
