@@ -11,6 +11,7 @@ interface ThemeSub {
   themeName: ThemeNameType;
   ApplicationTheme: ApplicationThemeType;
   getStyle: typeof defaultGetStyle;
+  created: boolean;
 };
 
 export
@@ -18,6 +19,7 @@ const themeSub = makeSub<ThemeSub>({
   themeName: (window.localStorage.getItem("movai.theme") ?? "dark") as ThemeNameType,
   ApplicationTheme: DefaultApplicationTheme,
   getStyle: defaultGetStyle,
+  created: false,
 });
 
 const setTheme = themeSub.makeEmitNow((current: ThemeSub, themeName: ThemeNameType): ThemeSub => {
@@ -43,7 +45,7 @@ export default function withTheme(
   ApplicationTheme?: typeof DefaultApplicationTheme,
   getStyle?: typeof defaultGetStyle,
 ) {
-  let current = themeSub.current();
+  let current = themeSub.current(), changed = false;
 
   if (ApplicationTheme || getStyle) {
     current = {
@@ -51,13 +53,20 @@ export default function withTheme(
       ApplicationTheme: ApplicationTheme ?? current.ApplicationTheme,
       getStyle: getStyle ?? current.getStyle
     };
-    const NewApplicationTheme = createThemes(current);
+    changed = true;
+  }
+
+  if (!current.created) {
     current = {
       ...current,
-      ApplicationTheme: NewApplicationTheme,
+      created: true,
+      ApplicationTheme: createThemes(current),
     };
-    themeSub.update(current);
+    changed = true;
   }
+
+  if (changed)
+    themeSub.update(current);
 
   const StyledComponent = withStyles(getStyle ?? defaultGetStyle)(Component);
 

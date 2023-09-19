@@ -7,7 +7,7 @@ const CONSTANTS = {
     textColor: "#fff",
     background: {
       primary: "#424242",
-      secondary: "#212121"
+      secondary: "#212121",
     },
     iconColor: "#fff"
   },
@@ -98,7 +98,8 @@ const Themes = {
       icon: { color: "#c6c6c6", hoverColor: "#fff" },
       table: { stripColor: "#505050" },
       verticalBar: {
-        iconColor: "#9e9e9e"
+        iconColor: "#9e9e9e",
+        background: "#2b2b2b"
       },
       overrides: {
         MuiTableCell: {
@@ -236,7 +237,8 @@ const Themes = {
         getContrastText: () => CONSTANTS.light.iconColor
       },
       verticalBar: {
-        iconColor: "#616161"
+        iconColor: "#616161",
+        background: "#cccccc"
       },
       overrides: {
         MuiTableCell: {
