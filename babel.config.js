@@ -5,7 +5,8 @@ module.exports = {
       "@babel/preset-env",
       {
         targets: {
-          node: "current"
+          chrome: "78",
+          node: "12"
         }
       }
     ],
