@@ -11,7 +11,6 @@ interface ThemeSub {
   themeName: ThemeNameType;
   ApplicationTheme: ApplicationThemeType;
   getStyle: typeof defaultGetStyle;
-  created: boolean;
 };
 
 export
@@ -19,7 +18,6 @@ const themeSub = makeSub<ThemeSub>({
   themeName: (window.localStorage.getItem("movai.theme") ?? "dark") as ThemeNameType,
   ApplicationTheme: DefaultApplicationTheme,
   getStyle: defaultGetStyle,
-  created: false,
 });
 
 const setTheme = themeSub.makeEmitNow((current: ThemeSub, themeName: ThemeNameType): ThemeSub => {
@@ -56,10 +54,9 @@ export default function withTheme(
     changed = true;
   }
 
-  if (!current.created) {
+  if (!current.ApplicationTheme[current.themeName].breakpoints) {
     current = {
       ...current,
-      created: true,
       ApplicationTheme: createThemes(current),
     };
     changed = true;
