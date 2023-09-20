@@ -43,7 +43,7 @@ export default function withTheme(
   ApplicationTheme?: typeof DefaultApplicationTheme,
   getStyle?: typeof defaultGetStyle,
 ) {
-  let current = themeSub.current();
+  let current = themeSub.current(), changed = false;
 
   if (ApplicationTheme || getStyle) {
     current = {
@@ -51,13 +51,19 @@ export default function withTheme(
       ApplicationTheme: ApplicationTheme ?? current.ApplicationTheme,
       getStyle: getStyle ?? current.getStyle
     };
-    const NewApplicationTheme = createThemes(current);
+    changed = true;
+  }
+
+  if (!current.ApplicationTheme[current.themeName].breakpoints) {
     current = {
       ...current,
-      ApplicationTheme: NewApplicationTheme,
+      ApplicationTheme: createThemes(current),
     };
-    themeSub.update(current);
+    changed = true;
   }
+
+  if (changed)
+    themeSub.update(current);
 
   const StyledComponent = withStyles(getStyle ?? defaultGetStyle)(Component);
 

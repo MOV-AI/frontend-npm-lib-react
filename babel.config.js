@@ -5,7 +5,8 @@ module.exports = {
       "@babel/preset-env",
       {
         targets: {
-          node: "current"
+          chrome: "78",
+          node: "12"
         }
       }
     ],
@@ -14,6 +15,7 @@ module.exports = {
   plugins: [
     ["@babel/plugin-proposal-class-properties", { loose: true }],
     ["@babel/plugin-transform-runtime", { loose: true }],
-    ["@babel/plugin-proposal-private-methods", { loose: true }]
+    ["@babel/plugin-proposal-private-methods", { loose: true }],
+    ["@babel/plugin-transform-private-property-in-object", { loose: true }]
   ]
 };
