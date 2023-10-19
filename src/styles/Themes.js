@@ -1,5 +1,6 @@
 import "@fontsource/open-sans";
 import "@fontsource/roboto";
+import _merge from "lodash/merge";
 
 const CONSTANTS = {
   dark: {
@@ -22,8 +23,7 @@ const CONSTANTS = {
   }
 };
 
-const themeFactory = particular => ({
-  ...particular,
+const themeFactory = particular => _merge(particular, {
   typography: {
     fontFamily: "Open Sans",
     h1: {
@@ -53,6 +53,30 @@ const themeFactory = particular => ({
   },
   cursorPointer: {
     cursor: "pointer"
+  },
+  spacing: 8,
+  overrides: {
+    MuiListItem: {
+      root: {
+        width: "100% !important",
+      },
+    },
+    MuiSwitch: {
+      thumb: {
+          transform: "translateY(-2px)",
+      },
+      switchBase: {
+        "&.Mui-checked": {
+          transform: "translateX(8px)",
+        }
+      },
+      track: {
+        position: "absolute",
+        width: "46px",
+        height: "16px",
+        borderRadius: "8px",
+      }
+    },
   }
 });
 
@@ -169,8 +193,12 @@ const Themes = {
           }
         },
         MuiInputBase: {
+          root: {
+            color: CONSTANTS.dark.textColor + " !important",
+          },
           input: {
-            font: "Roboto"
+            font: "Roboto",
+            color: CONSTANTS.dark.textColor + " !important",
           }
         },
         MuiFilledInput: {
@@ -308,8 +336,12 @@ const Themes = {
           }
         },
         MuiInputBase: {
+          root: {
+            color: CONSTANTS.light.textColor + " !important",
+          },
           input: {
-            font: "Roboto"
+            font: "Roboto",
+            color: CONSTANTS.light.textColor + " !important",
           }
         },
         MuiFilledInput: {

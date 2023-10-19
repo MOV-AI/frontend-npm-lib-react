@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import { Popover } from "@material-ui/core";
 
 const StyledMenu = withStyles(_theme => ({

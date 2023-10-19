@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 
 export const profileMenuStyles = makeStyles(theme => {
   return {
@@ -9,7 +9,7 @@ export const profileMenuStyles = makeStyles(theme => {
     menuItemSpacing: {
       fontSize: "18px",
       minHeight: "18px",
-      padding: theme.spacing(1.25, 2),
+      padding: theme.spacing(1.25, 2) + " !important",
       ...theme.cursorDefault
     },
     profileMenuFooter: {
@@ -19,7 +19,7 @@ export const profileMenuStyles = makeStyles(theme => {
   };
 });
 
-export const resetPasswordStyles = makeStyles(theme => ({
+export const resetPasswordStyles = makeStyles(_theme => ({
   root: {
     display: "flex",
     flexDirection: "column"

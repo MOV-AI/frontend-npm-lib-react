@@ -1,4 +1,5 @@
-import { createTheme, ThemeProvider, withStyles, Theme, ThemeOptions } from "@material-ui/core/styles";
+import { createTheme, Theme, ThemeOptions } from "@material-ui/core/styles";
+import { ThemeProvider, withStyles } from "@material-ui/styles";
 import DefaultApplicationTheme, { defaultGetStyle } from "../../styles/Themes";
 import { makeSub } from "../../Utils/Sub";
 import useSub from "../../hooks/useSub";
@@ -29,11 +30,11 @@ const setTheme = themeSub.makeEmitNow((current: ThemeSub, themeName: ThemeNameTy
   };
 });
 
-function createThemes(current: ThemeSub): Record<ThemeNameType, Theme> {
+function createThemes(current: ThemeSub, userCreateTheme: typeof createTheme = createTheme): Record<ThemeNameType, Theme> {
   let ApplicationTheme: Record<ThemeNameType, Theme | ThemeOptions>  = { ...current.ApplicationTheme };
 
   for (const [key, value]  of Object.entries(ApplicationTheme))
-    ApplicationTheme[key as ThemeNameType] = createTheme(value);
+    ApplicationTheme[key as ThemeNameType] = userCreateTheme(value);
 
   return ApplicationTheme as Record<ThemeNameType, Theme>;
 }
@@ -42,6 +43,7 @@ export default function withTheme(
   Component: (props: any) => JSX.Element,
   ApplicationTheme?: typeof DefaultApplicationTheme,
   getStyle?: typeof defaultGetStyle,
+  userCreateTheme?: typeof createTheme,
 ) {
   let current = themeSub.current(), changed = false;
 
@@ -57,7 +59,7 @@ export default function withTheme(
   if (!current.ApplicationTheme[current.themeName].breakpoints) {
     current = {
       ...current,
-      ApplicationTheme: createThemes(current),
+      ApplicationTheme: createThemes(current, userCreateTheme),
     };
     changed = true;
   }
