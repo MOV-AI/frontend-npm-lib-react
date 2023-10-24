@@ -1,8 +1,9 @@
-import { makeStyles, alpha } from "@material-ui/core/styles";
+import { alpha } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 
 export const filterIconStyles = makeStyles(theme => ({
   button: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(1) + " !important",
     color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main
   },
@@ -28,7 +29,7 @@ export const filterIconStyles = makeStyles(theme => ({
   checkbox: { marginLeft: "10px" },
   limitText: {
     width: "50px",
-    margin: theme.spacing(0, 3, 0, 3)
+    margin: theme.spacing(0, 3, 0, 3) + "!important",
   },
   filterIconRoot: {
     display: "flex",

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component, KeyboardEvent } from "react";
+import React, { Component, KeyboardEvent } from "react";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -8,7 +8,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import LoginFormAdvanced from "./LoginFormAdvanced";
@@ -16,9 +16,6 @@ import { withTranslation } from "react-i18next";
 import { LoginFormProps } from "./types";
 
 const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
-const EMPTY_FUNCTION = () => {
-  /** Empty on purpose */
-};
 
 class LoginForm extends Component<LoginFormProps> {
   state = {

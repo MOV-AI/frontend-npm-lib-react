@@ -74,8 +74,8 @@ const HTMLPopper = (props: HTMLPopperProps) => {
         placement={popperPlacement}
         transition
       >
-        {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={FADE_OUT_TIMEOUT}>
+        {({ TransitionProps }: { TransitionProps: object }) => (
+          <Fade {...TransitionProps as object} timeout={FADE_OUT_TIMEOUT}>
             <>
               {hideOnClickAway ? (
                 <ClickAwayListener onClickAway={handlePopperClose}>

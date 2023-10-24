@@ -6,7 +6,7 @@ const common = {
 const styles = theme => ({
   ...common,
   root: {
-    padding: theme.spacing(4, 4),
+    padding: theme.spacing(4, 4) + " !important",
     borderRadius: 40
   },
   container: {
@@ -20,7 +20,7 @@ const styles = theme => ({
   }
 });
 
-const advancedSectionStyles = theme => ({
+const advancedSectionStyles = _theme => ({
   ...common,
   container: {
     flexGrow: 1
