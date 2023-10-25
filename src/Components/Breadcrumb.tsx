@@ -1,16 +1,16 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
-import { MouseEventHandler } from "react";
 import { BreadcrumbProps } from "./types";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     "& > * + *": {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2) + " !important",
     }
   },
   link: {

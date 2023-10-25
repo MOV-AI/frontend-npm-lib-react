@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { withStyles, alpha } from "@material-ui/core/styles";
+import { alpha } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import PropTypes from "prop-types";
@@ -12,16 +13,16 @@ const styles = theme => ({
     "&:hover": {
       backgroundColor: alpha(theme.palette.common.white, 0.25)
     },
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2) + " !important",
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
+      marginLeft: theme.spacing(3) + " !important",
       width: "auto"
     }
   },
   searchIcon: {
-    width: theme.spacing(7),
+    width: theme.spacing(7) + " !important",
     height: "100%",
     position: "absolute",
     pointerEvents: "none",
@@ -33,7 +34,7 @@ const styles = theme => ({
     color: "inherit"
   },
   inputInput: {
-    padding: theme.spacing(1, 1, 1, 7),
+    padding: theme.spacing(1, 1, 1, 7) + " !important",
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {

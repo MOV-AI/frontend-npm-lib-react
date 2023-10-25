@@ -5,7 +5,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { ListItem, ListItemAvatar, ListItemText } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import WarningIcon from "@material-ui/icons/Warning";
 import ViewModuleIcon from "@material-ui/icons/ViewModule";

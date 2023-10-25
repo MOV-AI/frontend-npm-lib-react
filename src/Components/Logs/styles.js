@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 
 export const useStyles = makeStyles(_theme => ({
   tableContainer: {
@@ -30,14 +30,14 @@ export const useStyles = makeStyles(_theme => ({
 const logFilterCommonStyles = theme => {
   return {
     toggleContainer: {
-      margin: theme.spacing(2),
+      margin: theme.spacing(2) + " !important",
     },
     smallToggleContainer: {
       display: "flex",
       justifyContent: "center"
     },
     formControl: {
-      margin: theme.spacing(1),
+      margin: theme.spacing(1) + " !important",
       minWidth: 120,
       maxWidth: 300
     },
@@ -53,11 +53,11 @@ export const useSearchInputStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
   searchText: {
     minWidth: "150px",
-    paddingLeft: theme.spacing(3)
+    paddingLeft: theme.spacing(3) + " !important",
   },
   smallSearchText: {
     marginLeft: "18px !important",
-    paddingLeft: theme.spacing(3)
+    paddingLeft: theme.spacing(3) + " !important",
   }
 }));
 
@@ -79,14 +79,14 @@ export const useTagsStyles = makeStyles(theme => ({
   tagsContainer: {
     display: "flex",
     flexDirection: "column",
-    padding: theme.spacing(0.5),
-    margin: theme.spacing(0, 3, 0, 3)
+    padding: theme.spacing(0.5) + " !important",
+    margin: theme.spacing(0, 3, 0, 3) + " !important",
   },
   tagsList: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3) + " !important",
   },
   chip: {
-    margin: theme.spacing(0.5)
+    margin: theme.spacing(0.5) + " !important",
   }
 }));
 
@@ -108,8 +108,8 @@ export const useSettingsStyles = makeStyles(theme => ({
   },
   limitText: {
     width: "50px",
-    margin: theme.spacing(0, 3, 0, 3)
-  }
+    margin: theme.spacing(0, 3, 0, 3) + " !important",
+  },
 }));
 
 export const useLogFilterStyles = makeStyles(theme => ({

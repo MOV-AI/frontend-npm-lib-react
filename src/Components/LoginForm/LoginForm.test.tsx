@@ -1,8 +1,11 @@
 import React from "react";
 import { render, fireEvent, within } from "@testing-library/react";
+import withTheme from "./../HOCs/withTheme";
 import LoginForm from "./LoginForm";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";
+
+const Themed = withTheme(LoginForm as any);
 
 const SOME_DOMAIN_NAME = "OTHER_DOMAIN";
 const SINGLE_DOMAINS = [Authentication.DEFAULT_PROVIDER];
@@ -11,7 +14,7 @@ const MULTIPLE_DOMAINS = [Authentication.DEFAULT_PROVIDER, SOME_DOMAIN_NAME];
 describe("Render", () => {
   it("renders the component (smoke test)", () => {
     const { container } = render(
-      <LoginForm
+      <Themed
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
         onLoginSubmit={EMPTY_FUNCTION}
@@ -24,11 +27,11 @@ describe("Render", () => {
 describe("Initial value", () => {
   it("Initial value of username should be empty", () => {
     const { getByTestId } = render(
-      <LoginForm
+      <Themed
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
         onLoginSubmit={EMPTY_FUNCTION}
-      ></LoginForm>
+      />
     );
     const input = getByTestId("input_username") as HTMLInputElement;
     expect(input.value).toBe("");
@@ -36,7 +39,7 @@ describe("Initial value", () => {
 
   it("Initial value of password should be empty", () => {
     const { getByTestId } = render(
-      <LoginForm
+      <Themed
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
         onLoginSubmit={EMPTY_FUNCTION}
@@ -50,7 +53,7 @@ describe("Initial value", () => {
 describe("Domain Selector", () => {
   it("Should not be visible if only default domain exists", () => {
     const { queryByText } = render(
-      <LoginForm
+      <Themed
         domains={SINGLE_DOMAINS}
         authErrorMessage={""}
         onLoginSubmit={EMPTY_FUNCTION}
@@ -62,7 +65,7 @@ describe("Domain Selector", () => {
 
   it("Should be visible if default and other domain exists", () => {
     const { queryByText } = render(
-      <LoginForm
+      <Themed
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
         onLoginSubmit={EMPTY_FUNCTION}
@@ -74,11 +77,11 @@ describe("Domain Selector", () => {
 
   it("Shoud display the domains", async () => {
     const { getByRole } = render(
-      <LoginForm
+      <Themed
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
         onLoginSubmit={EMPTY_FUNCTION}
-      ></LoginForm>
+      />
     );
 
     const domainSelector = getByRole("button", {
@@ -97,11 +100,11 @@ describe("Selected Domain", () => {
   it("When selector is not visible selected domain should be the default", () => {
     const handleSubmit = jest.fn();
     const { queryByText, getByTestId } = render(
-      <LoginForm
+      <Themed
         domains={SINGLE_DOMAINS}
         authErrorMessage={""}
         onLoginSubmit={handleSubmit}
-      ></LoginForm>
+      />
     );
 
     const domainSelector = queryByText("Domain");
@@ -129,11 +132,11 @@ describe("Selected Domain", () => {
 
   it("When selector is visible, initial value of selected domain should be the default", () => {
     const { getByTestId } = render(
-      <LoginForm
+      <Themed
         authErrorMessage={""}
         onLoginSubmit={EMPTY_FUNCTION}
         domains={["other", Authentication.DEFAULT_PROVIDER]}
-      ></LoginForm>
+      />
     );
     const domainSelector = getByTestId("input_domain") as HTMLInputElement;
     expect(domainSelector).toBeInTheDocument();
@@ -144,11 +147,11 @@ describe("Selected Domain", () => {
 describe("Handle changes", () => {
   it("Selecting a value makes it the current domain value", () => {
     const { getByTestId } = render(
-      <LoginForm
+      <Themed
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
         onLoginSubmit={EMPTY_FUNCTION}
-      ></LoginForm>
+      />
     );
     const domainSelector = getByTestId("input_domain") as HTMLInputElement;
     expect(domainSelector).toBeInTheDocument();
@@ -165,7 +168,7 @@ describe("Submit", () => {
   it("Should not be called if username is empty", () => {
     const handleSubmit = jest.fn();
     const { getByTestId } = render(
-      <LoginForm
+      <Themed
         onLoginSubmit={handleSubmit}
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
@@ -186,11 +189,11 @@ describe("Submit", () => {
   it("Should not be called if password is empty", () => {
     const handleSubmit = jest.fn();
     const { getByTestId } = render(
-      <LoginForm
+      <Themed
         onLoginSubmit={handleSubmit}
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
-      ></LoginForm>
+      />
     );
 
     const passwordInput = getByTestId("input_password");
@@ -209,11 +212,11 @@ describe("Submit", () => {
     const password = "password";
     const username = "username";
     const { getByTestId } = render(
-      <LoginForm
+      <Themed
         onLoginSubmit={handleSubmit}
         domains={MULTIPLE_DOMAINS}
         authErrorMessage={""}
-      ></LoginForm>
+      />
     );
 
     const usernameInput = getByTestId("input_username");
