@@ -1,1 +1,2 @@
 - [FP-2607](https://movai.atlassian.net/browse/FP-2607): Bad styles depending on dependency tree (lib-react problem) - detected in fleet
+- [FP-2616](https://movai.atlassian.net/browse/FP-2607): Improve switch style

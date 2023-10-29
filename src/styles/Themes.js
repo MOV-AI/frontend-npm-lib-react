@@ -66,8 +66,9 @@ const themeFactory = particular => _merge(particular, {
           transform: "translateY(-2px)",
       },
       switchBase: {
+        transform: "translateX(16px)",
         "&.Mui-checked": {
-          transform: "translateX(8px)",
+          transform: "translateX(24px)",
         }
       },
       track: {
