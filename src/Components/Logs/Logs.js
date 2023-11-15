@@ -169,7 +169,7 @@ const Logs = props => {
       .then(response => {
         setLogsData(prevState => {
           const oldLogs = prevState || [];
-          const newLogs = response?.data || [];
+          const newLogs = (response?.data || []).filter(({ message }) => !message.includes("DeprecationWarning"));
           return [...oldLogs, ...newLogs];
         });
         // Reset timeout for next request to default value
