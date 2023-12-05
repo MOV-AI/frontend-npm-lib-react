@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef, useEffect } from "react";
+import React, { useCallback, useState, useRef, useEffect, useMemo } from "react";
 import { Typography } from "@material-ui/core";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import RobotLogModal from "../Modal/RobotLogModal";
@@ -39,12 +39,6 @@ function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   document.body.removeChild(a);
 }
 
-/**
- * CONSTANTS
- */
-const DEFAULT_TIMEOUT_IN_MS = 3000;
-const RETRY_IN_MS = 2000;
-
 const NO_ROBOTS_RETRY_TIMEOUT = 1000;
 const Logs = props => {
   // Props
@@ -52,9 +46,7 @@ const Logs = props => {
   // Style hook
   const classes = useStyles();
   // Refs
-  const getLogsTimeoutRef = useRef();
   const selectedRobotsRef = useRef({});
-  const requestTimeout = useRef(DEFAULT_TIMEOUT_IN_MS);
   const lastRequestTimeRef = useRef(null);
   const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
@@ -124,9 +116,16 @@ const Logs = props => {
   /**
    * Prevent all subsequent requests from being dispatched
    */
-  const stopLogger = () => {
-    clearTimeout(getLogsTimeoutRef.current);
-  };
+  const stopLogger = () => {};
+
+  const baseParams = useMemo(() => ({
+    level: { selected: levels, list: levelsList },
+    service: { selected: selectedService },
+    tag: { selected: tags },
+    searchMessage: searchMessage,
+    robot: { selected: getSelectedRobots() },
+    limit: limit
+  }), [levels, levelsList, selectedService, tags, searchMessage, limit, getSelectedRobots]);
 
   /**
    * Get logs
@@ -152,49 +151,41 @@ const Logs = props => {
     console.assert(robots.length);
     // Set loading state if log data is not empty
     if (logsDataRef.current.length) setLoading(true);
-    // Get request parameters
-    const queryParams = {
-      level: { selected: levels, list: levelsList },
-      service: { selected: selectedService },
-      tag: { selected: tags },
-      searchMessage: searchMessage,
-      date: { from: getFromDate(), to: getToDate() },
-      robot: { selected: robots },
-      limit: limit
-    };
 
     const requestTime = new Date().getTime();
-    clearTimeout(getLogsTimeoutRef.current);
-    RobotManager.getLogs(queryParams)
-      .then(response => {
+    RobotManager.getLogs({
+      ...baseParams,
+      date: { from: getFromDate(), to: getToDate() },
+    }).then(response => {
         setLogsData(prevState => {
           const oldLogs = prevState || [];
-          const newLogs = response?.data || [];
+          const newLogs = (response?.data || [])
+            .map(log => ({ ...log, time: new Date(log.time * 1000) }));
           return [...oldLogs, ...newLogs];
         });
         // Reset timeout for next request to default value
         lastRequestTimeRef.current = requestTime;
-        requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
         // Doesn't enqueue next request if the 'selectedToDate' inserted manually by the user is before now
         return !(selectedToDate && selectedToDate < requestTime);
       })
       .catch(err => {
         // Add more time for the next request if it fails
         console.warn("Failed logs request", err);
-        console.warn("Retry in ", requestTimeout.current);
-        requestTimeout.current += RETRY_IN_MS;
         // Enqueue next request
         return true;
       })
       .then(enqueueNextRequest => {
         setLoading(false);
-        clearTimeout(getLogsTimeoutRef.current);
         if (!enqueueNextRequest) return;
-        getLogsTimeoutRef.current = setTimeout(() => {
-          getLogs();
-        }, requestTimeout.current);
       });
-  }, [getFromDate, getToDate, levels, levelsList, limit, searchMessage, selectedService, selectedToDate, tags]);
+  }, [getFromDate, getToDate, baseParams, selectedToDate]);
+
+  useEffect(() => { RobotManager.openLogs(baseParams).then(sock => {
+    sock.onmessage = (msg) => {
+      const item = JSON.parse(msg?.data ?? {});
+      setLogsData(prevState => [{ ...item, time: new Date(item.time / 1000) }, ...(prevState ?? [])]);
+    }
+  }) }, [baseParams, setLogsData]);
 
   /**
    * Refresh logs in table
