@@ -1,5 +1,3 @@
-import { getJustDateFromServer, getJustTimeFromServer } from "./Utils";
-
 export const SIMPLE_LEVELS_LIST = [
   { value: "INFO", label: "Info" },
   { value: "ERROR", label: "Error" },
@@ -25,13 +23,13 @@ export const COLUMN_LIST = {
     label: "Date",
     dataKey: "time",
     width: 110,
-    render: time => getJustDateFromServer(time)
+    render: time => time.toLocaleDateString(),
   },
   Time: {
     label: "Time",
     dataKey: "time",
     width: 100,
-    render: time => getJustTimeFromServer(time)
+    render: time => time.toLocaleTimeString()
   },
   Level: {
     label: "Level",
