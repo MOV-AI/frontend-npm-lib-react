@@ -1,23 +1,20 @@
-import React, { useCallback, useRef } from "react";
-import { infoButtonStyles } from "./styles";
-import PropTypes from "prop-types";
-import { Fade, Paper, Popper } from "@material-ui/core";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import React, { useState, useCallback, useRef } from "react";
+{/* import { infoButtonStyles } from "./styles"; */}
+import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { HTMLPopperProps } from "./types";
 
-const FADE_OUT_TIMEOUT = 350;
-
 const HTMLPopper = (props: HTMLPopperProps) => {
-  const classes = infoButtonStyles();
   const {
     clickableElement,
     children,
     hideOnClickAway = false,
-    popperPlacement = "bottom-start"
+    popperPlacement = "bottom-end"
   } = props;
 
-  const [openPopper, setOpenPopper] = React.useState(false);
-  const anchorPopperRef = useRef<any>();
+  const [openPopper, setOpenPopper] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   //========================================================================================
   /*                                                                                      *
@@ -25,29 +22,18 @@ const HTMLPopper = (props: HTMLPopperProps) => {
    *                                                                                      */
   //========================================================================================
 
-  const renderPaper = () => {
-    return (
-      <Paper>
-        <div className={classes.transitionIn}>
-          <div data-testid="section_wrapper" className={classes.childWrapper}>
-            {children}
-          </div>
-        </div>
-      </Paper>
-    );
-  };
-
   //========================================================================================
   /*                                                                                      *
    *                                        Handlers                                      *
    *                                                                                      */
   //========================================================================================
 
-  const handlePopperClose = useCallback(() => {
+  const handlePopperClose = useCallback((e: MouseEvent|TouchEvent) => {
     setOpenPopper(false);
   }, []);
 
-  const handlePopperOpen = useCallback(() => {
+  const handlePopperOpen = useCallback((e) => {
+    setAnchorEl(e.target);
     setOpenPopper(true);
   }, []);
 
@@ -57,38 +43,27 @@ const HTMLPopper = (props: HTMLPopperProps) => {
    *                                                                                      */
   //========================================================================================
   return (
-    <>
-      <span
-        data-testid="input_clickable"
-        onClick={handlePopperOpen}
-        ref={anchorPopperRef as any}
-      >
+    <div>
+      <span data-testid="input_clickable" onClick={handlePopperOpen}>
         {clickableElement}
       </span>
 
       <Popper
         data-testid="section_popper"
-        className={classes.popper}
         open={openPopper}
-        anchorEl={anchorPopperRef.current}
+        anchorEl={anchorEl}
         placement={popperPlacement}
         transition
       >
-        {({ TransitionProps }: { TransitionProps: object }) => (
-          <Fade {...TransitionProps as object} timeout={FADE_OUT_TIMEOUT}>
-            <>
-              {hideOnClickAway ? (
-                <ClickAwayListener onClickAway={handlePopperClose}>
-                  {renderPaper()}
-                </ClickAwayListener>
-              ) : (
-                renderPaper()
-              )}
-            </>
-          </Fade>
-        )}
+        <ClickAwayListener onClickAway={(hideOnClickAway ? handlePopperClose : null) as (e: MouseEvent|TouchEvent) => void}>
+          <Paper className="transition-in">
+            <div data-testid="section_wrapper" className="child-wrapper">
+              {children}
+            </div>
+          </Paper>
+        </ClickAwayListener>
       </Popper>
-    </>
+    </div>
   );
 };
 

@@ -127,7 +127,9 @@ export default {
 
 export const profileMenu = args => {
   return (
-    <ProfileMenu {...args} handleToggleTheme={EMPTY_FUNCTION} />
+    <div className="dark">
+      <ProfileMenu {...args} handleToggleTheme={EMPTY_FUNCTION} />
+    </div>
   );
 };
 

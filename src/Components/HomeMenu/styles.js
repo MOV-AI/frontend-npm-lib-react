@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 const menuButtonStyles = {
   margin: "5px",
@@ -6,7 +6,7 @@ const menuButtonStyles = {
   flexBasis: "27%"
 };
 
-export const homeMenuPopperStyles = makeStyles(theme => ({
+export const homeMenuPopperStyles = makeStyles(() => ({
   iconButton: { cursor: "pointer", height: "100%" },
   popperIndex: { zIndex: 1400 },
   menuWrapper: {

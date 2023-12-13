@@ -1,5 +1,7 @@
 import "@fontsource/open-sans";
 import "@fontsource/roboto";
+import { createTheme } from "@mui/material";
+import { themeSub } from "@tty-pt/styles";
 import _merge from "lodash/merge";
 
 const CONSTANTS = {
@@ -10,7 +12,25 @@ const CONSTANTS = {
       primary: "#424242",
       secondary: "#212121",
     },
-    iconColor: "#fff"
+    iconColor: "#fff",
+    colors: [
+      ["Pink", "#E26CDE !important"],
+      ["Purple", "#7575CE !important"],
+      ["GrayLight", "#8E95BA !important"],
+      ["GrayDark", "#2b2b2b !important"],
+    ],
+    baked: {
+      pink: {
+        main: "#E26CDE !important",
+      },
+      purple: {
+        main: "#7575CE !important",
+      },
+      gray: {
+        light: "#8E95BA !important",
+        dark: "#2b2b2b !important",
+      },
+    },
   },
   light: {
     borderBottom: "1px solid #ccc",
@@ -19,11 +39,76 @@ const CONSTANTS = {
       primary: "#e2e2e2",
       secondary: "#b2b2b2"
     },
-    iconColor: "#007197"
+    iconColor: "#007197",
+    colors: [
+      ["Pink", "#E26CDE !important"],
+      ["Purple", "#7575CE !important"],
+      ["GrayLight", "#8E95BA !important"],
+      ["GrayDark", "#cccccc !important"],
+    ],
+    baked: {
+      pink: {
+        main: "#E26CDE !important",
+      },
+      purple: {
+        main: "#7575CE !important",
+      },
+      gray: {
+        light: "#8E95BA !important",
+        dark: "#cccccc !important",
+      },
+    },
+  },
+  indigo: {
+    borderBottom: "1px solid #212121",
+    textColor: "#fff",
+    background: {
+      default: "rgb(5, 5, 5)",
+      primary: "#2E334D",
+      secondary: "#212121",
+      overlay: "radial-gradient(79.34% 81.94% at 123.17% 23.94%, #50577C 0%, #1B1E29 100%)",
+      grad: "linear-gradient(37.83deg, #3C415D 35.18%, #4A5070 121.84%)",
+    },
+    error: {
+      main: "#FF3E3E",
+      light: "#ff6969",
+    },
+    success: {
+      main: "#3CD2A3",
+    },
+    info: {
+      main: "#4FC3F0",
+    },
+    iconColor: "#fff",
+    colors: [
+      ["Pink", "#E26CDE !important"],
+      ["Purple", "#7575CE !important"],
+      ["GrayLight", "#8E95BA !important"],
+      ["GrayDark", "#292D3F !important"],
+    ],
+    borderBottom: "1px solid #ccc",
+    baked: {
+      info: {
+        main: "#4FC3F0",
+      },
+      success: {
+        main: "#3CD2A3",
+      },
+      pink: {
+        main: "#E26CDE !important",
+      },
+      purple: {
+        main: "#7575CE !important",
+      },
+      gray: {
+        light: "#8E95BA !important",
+        dark: "#292D3F !important",
+      },
+    }
   }
 };
 
-const themeFactory = particular => _merge(particular, {
+const themeFactory = particular => createTheme(_merge(particular, {
   typography: {
     fontFamily: "Open Sans",
     h1: {
@@ -55,6 +140,7 @@ const themeFactory = particular => _merge(particular, {
     cursor: "pointer"
   },
   spacing: 8,
+  spacing: (number) => number * 8 + "px",
   overrides: {
     MuiListItem: {
       root: {
@@ -79,7 +165,7 @@ const themeFactory = particular => _merge(particular, {
       }
     },
   }
-});
+}));
 
 const Themes = {
   dark: themeFactory({
@@ -95,6 +181,10 @@ const Themes = {
       },
       palette: {
         type: "dark", // Switching the dark mode on, is a single property value change.
+        colorOct: [{
+          func: x => CONSTANTS.dark.colors[x],
+          length: CONSTANTS.dark.colors.length,
+        }],
         primary: {
           main: "#36b5e6"
         },
@@ -241,6 +331,10 @@ const Themes = {
         upperTextColor: "#474747"
       },
       palette: {
+        colorOct: [{
+          func: x => CONSTANTS.light.colors[x],
+          length: CONSTANTS.light.colors.length,
+        }],
         primary: {
           main: "#007197"
         },
@@ -376,9 +470,67 @@ const Themes = {
         }
       }
   }),
+  indigo: themeFactory({
+    label: "indigo",
+    textColor: CONSTANTS.indigo.textColor,
+    backgroundColor: "#050505",
+    bottomNavigation: { background: "#212121" },
+    globalStats: {
+      borderColor: "#474747",
+      subTextColor: "#CDCDCD",
+      upperTextColor: "#E6E6E6"
+    },
+    palette: {
+      baked: CONSTANTS.indigo.baked,
+      colorOct: [{
+        func: x => CONSTANTS.indigo.colors[x],
+        length: CONSTANTS.indigo.colors.length,
+      }],
+      type: "indigo", // Switching the indigo mode on, is a single property value change.
+      primary: {
+        main: "#36b5e6"
+      },
+      divider: "#8E95BA",
+      secondary: {
+        main: "#CF6679"
+      },
+      green: {
+        main: "#03DAC5"
+      },
+      background: {
+        default: "#1B1E29",
+        paper: CONSTANTS.indigo.background.primary,
+        primary: CONSTANTS.indigo.background.primary,
+        secondary: CONSTANTS.indigo.background.secondary,
+        overlay: CONSTANTS.indigo.background.overlay,
+        grad: CONSTANTS.indigo.background.grad,
+      },
+      accent: {
+        background: "#f5f5f9",
+        color: "rgba(0, 0, 0, 0.87)",
+        border: "#dadde9"
+      },
+      text: {
+        primary: CONSTANTS.indigo.textColor,
+        disabled: "#ffffff",
+      },
+      getContrastText: () => CONSTANTS.indigo.iconColor
+    },
+    icon: { color: "#fff", hoverColor: "#fff" },
+    table: { stripColor: "#505050" },
+    verticalBar: {
+      iconColor: "#9e9e9e",
+      background: "#2b2b2b"
+    },
+    // spacing,
+    // magicBook: {
+    //   "!MuiIconButtonk
+    // }
+  }),
 };
 
 export default Themes;
+themeSub.add(Themes);
 
 export
 function defaultGetStyle(_theme) {

@@ -1,8 +1,8 @@
-import { PopperPlacementType } from "@material-ui/core";
+import React from "react";
 
 export interface HTMLPopperProps {
-  clickableElement: JSX.Element;
-  children?: JSX.Element;
+  clickableElement: React.ComponentType;
+  children?: any;
   hideOnClickAway?: boolean;
-  popperPlacement?: PopperPlacementType;
+  popperPlacement?: any;
 }

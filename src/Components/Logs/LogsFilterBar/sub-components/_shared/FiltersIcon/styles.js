@@ -1,5 +1,5 @@
-import { alpha } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/styles";
+// import { alpha } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
 
 export const filterIconStyles = makeStyles(theme => ({
   button: {
@@ -10,7 +10,7 @@ export const filterIconStyles = makeStyles(theme => ({
   iconActive: {
     color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
-    backgroundColor: alpha(theme.palette.primary.main, 0.1)
+    // backgroundColor: alpha(theme.palette.primary.main, 0.1)
   },
   buttonApplyFilters: {
     background: theme.palette.primary.main,

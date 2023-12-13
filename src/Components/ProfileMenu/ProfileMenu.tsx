@@ -6,15 +6,16 @@ import React, {
   useRef,
   MutableRefObject
 } from "react";
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import SettingsIcon from "@material-ui/icons/Settings";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { User } from "@mov-ai/mov-fe-lib-core";
 import Toggle from "../Toggle";
 import { profileMenuStyles } from "./styles";
-import Divider from "@material-ui/core/Divider";
-import { User } from "@mov-ai/mov-fe-lib-core";
-import { Typography, Tooltip } from "@material-ui/core";
 import i18n from "../../i18n/i18n.js";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
@@ -50,14 +51,15 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     isMenuOpen,
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
-    onClose
+    onClose,
+    className,
   } = props;
 
   // State hooks
   const [anchorEl, setAnchorEl] = useState(null);
   const [username, setUsername] = useState("");
   // Other hooks
-  const triggerButtonRef: MutableRefObject<HTMLElement | undefined> = useRef();
+  const triggerButtonRef = useRef<HTMLElement>();
   const menuOpenAnimation: MutableRefObject<number | "auto"> = useRef("auto");
   const user = useMemo(() => new User(), []);
   const classes = profileMenuStyles();
@@ -132,16 +134,19 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   //========================================================================================
 
   return (
-    <div data-testid="section_profile-menu">
+    <div data-testid="section_profile-menu" className={className}>
       <Tooltip title={i18n.t("Settings") || ""}>
+        <span
+          ref={triggerButtonRef as React.LegacyRef<HTMLElement>}
+        >
         <IconButton
-          buttonRef={triggerButtonRef}
           data-testid="input_button"
           aria-haspopup="true"
           onClick={handleClick}
         >
           <SettingsIcon />
         </IconButton>
+      </span>
       </Tooltip>
       <Menu
         transitionDuration={menuOpenAnimation.current}
@@ -155,15 +160,15 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           data-testid="section_welcome"
           component="div"
           variant="body1"
-          className={classes.root}
+          className="root"
         >
-          <div className={classes.menuItemSpacing}>
+          <div className="menu-item-spacing">
             {welcomeLabel}, {username}
           </div>
           <Divider variant="middle" />
           {extraItems?.map((item, index) => (
             <MenuItem
-              className={classes.menuItemSpacing}
+              className="menu-item-spacing"
               onClick={item.func}
               key={`extraItem-${item.label}-${index}`}
             >
@@ -174,7 +179,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           {user.isInternalUser() && (
             <MenuItem
               data-testid="input_reset-password"
-              className={classes.menuItemSpacing}
+              className="menu-item-spacing"
               onClick={handlePasswordReset}
             >
               {i18n.t("Change Password")}
@@ -182,16 +187,16 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           )}
           {customEl}
           {handleToggleTheme && (
-            <div className={classes.menuItemSpacing}>
+            <div className="menu-item-spacing">
               {darkThemeLabel}
               <Toggle
                 onToggle={handleToggleTheme}
-                toggle={(window.localStorage.getItem("movai.theme") ?? "dark") === "dark"}
+                toggle={(window.localStorage.getItem("@tty-pt/styles/theme") ?? "dark") === "dark"}
               ></Toggle>
             </div>
           )}
           <MenuItem
-            className={classes.menuItemSpacing}
+            className="menu-item-spacing"
             onClick={handleLogoutClick}
           >
             {logoutLabel}
@@ -199,7 +204,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           <Divider variant="middle" />
           <div
             data-testid="section_footer"
-            className={`${classes.menuItemSpacing} ${classes.profileMenuFooter}`}
+            className="menu-item-spacing profile-menu-footer"
           >
             {version}
           </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider } from "@material-ui/core";
+import Divider from "@mui/material/Divider";
 import { verticalBarStyles } from "./styles";
 import { VerticalBarProps } from "./types";
 
@@ -7,11 +7,9 @@ const VerticalBar = (props: VerticalBarProps) => {
   const {
     upperElement = <div></div>,
     creatorElement = null,
-    navigationList = [<div></div>],
+    navigationList = [<div key="navDef"></div>],
     lowerElement = <div></div>,
-    backgroundColor = "#424242",
     useDividers = false,
-    unsetAccountAreaPadding = false
   } = props;
   // Style hook
   const classes = verticalBarStyles(props);
@@ -23,20 +21,18 @@ const VerticalBar = (props: VerticalBarProps) => {
   //========================================================================================
 
   return (
-    <div data-testid="section_vertical-bar" className={classes.container}>
+    <div data-testid="section_vertical-bar" className={classes.container + " align-items size-vertical"}>
       <div data-testid="section_logo-wrapper" className={classes.logoArea}>
         {upperElement}
       </div>
       {useDividers && <Divider className={classes.divider} />}
       {creatorElement && (
         <>
-          <div data-testid="section_logo-area" className={classes.logoArea}>
-            {creatorElement}
-          </div>
+          {creatorElement}
           {useDividers && <Divider className={classes.divider} />}
         </>
       )}
-      <div data-testid="section_navigation" className={classes.navigationArea}>
+      <div data-testid="section_navigation" className={classes.navigationArea + " flex-grow"}>
         {navigationList.map((element, index) => {
           return (
             <div key={`navigation-item-${index}`}>
@@ -46,10 +42,8 @@ const VerticalBar = (props: VerticalBarProps) => {
           );
         })}
       </div>
-      <div data-testid="section_grow" className={classes.growArea}></div>
-      <div data-testid="section_account" className={classes.accountArea}>
-        {lowerElement}
-      </div>
+      <div data-testid="section_grow" className="grow-area"></div>
+      {lowerElement}
     </div>
   );
 };

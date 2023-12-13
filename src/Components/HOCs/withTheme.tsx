@@ -1,98 +1,68 @@
-import { createTheme, Theme, ThemeOptions } from "@material-ui/core/styles";
-import { ThemeProvider, withStyles } from "@material-ui/styles";
-import DefaultApplicationTheme, { defaultGetStyle } from "../../styles/Themes";
-import { makeSub } from "../../Utils/Sub";
-import useSub from "../../hooks/useSub";
-import { ApplicationThemeType } from "./types";
-import React from "react";
+import React, { useState } from "react";
+import { createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/styles";
+import { withMagic, themeSub, makeThemeMagicBook } from "@tty-pt/styles";
 
-type ThemeNameType = "dark" | "light";
-
-interface ThemeSub {
-  themeName: ThemeNameType;
-  ApplicationTheme: ApplicationThemeType;
-  getStyle: typeof defaultGetStyle;
-};
-
-export
-const themeSub = makeSub<ThemeSub>({
-  themeName: (window.localStorage.getItem("movai.theme") ?? "dark") as ThemeNameType,
-  ApplicationTheme: DefaultApplicationTheme,
-  getStyle: defaultGetStyle,
-});
-
-const setTheme = themeSub.makeEmitNow((current: ThemeSub, themeName: ThemeNameType): ThemeSub => {
-  window.localStorage.setItem("movai.theme", themeName);
-
-  return {
-    ...current,
-    themeName,
-  };
-});
-
-function createThemes(current: ThemeSub, userCreateTheme: typeof createTheme = createTheme): Record<ThemeNameType, Theme> {
-  let ApplicationTheme: Record<ThemeNameType, Theme | ThemeOptions>  = { ...current.ApplicationTheme };
-
-  for (const [key, value]  of Object.entries(ApplicationTheme))
-    ApplicationTheme[key as ThemeNameType] = userCreateTheme(value);
-
-  return ApplicationTheme as Record<ThemeNameType, Theme>;
-}
+let localGetStyle: typeof makeThemeMagicBook;
 
 export default function withTheme(
-  Component: (props: any) => JSX.Element,
-  ApplicationTheme?: typeof DefaultApplicationTheme,
-  getStyle?: typeof defaultGetStyle,
-  userCreateTheme?: typeof createTheme,
+  Component: React.FC,
+  userCreateTheme: typeof createTheme = createTheme,
+  getStyle?: typeof makeThemeMagicBook,
 ) {
   let current = themeSub.current(), changed = false;
+  const currentTheme = current.themes[current.name] ?? {};
 
-  if (ApplicationTheme || getStyle) {
-    current = {
-      ...current,
-      ApplicationTheme: ApplicationTheme ?? current.ApplicationTheme,
-      getStyle: getStyle ?? current.getStyle
-    };
+  localGetStyle = getStyle ?? localGetStyle ?? makeThemeMagicBook;
+
+  if (!(currentTheme as any).breakpoints) {
+    themeSub.create(userCreateTheme as any);
     changed = true;
   }
 
-  if (!current.ApplicationTheme[current.themeName].breakpoints) {
-    current = {
-      ...current,
-      ApplicationTheme: createThemes(current, userCreateTheme),
-    };
-    changed = true;
-  }
-
-  if (changed)
-    themeSub.update(current);
-
-  const StyledComponent = withStyles(getStyle ?? defaultGetStyle)(Component);
+  const StyledComponent = withMagic(Component, localGetStyle);
 
   return function (props: any) {
-    const sub = useSub<ThemeSub>(themeSub);
-    const theme = sub.themeName;
-    const muiTheme = sub.ApplicationTheme[theme] as Theme;
+    const sub = themeSub.use();
+    const theme = sub.name;
+    const muiTheme = sub.themes[theme] ?? {};
+    const [update, setUpdate] = useState(0);
 
     /**
      * Handle theme toggle
      */
     const handleToggleTheme = () => {
       const newTheme = theme === "dark" ? "light" : "dark";
-      setTheme(newTheme);
+      window.localStorage.setItem("@tty-pt/styles/theme", newTheme);
+      themeSub.name = newTheme;
     };
 
     React.useEffect(() => {
-      document.body.style.color = muiTheme.palette.text.primary;
-      document.body.style.background =
-        (muiTheme as any).backgroundColor;
+      if (muiTheme) {
+        (document.body.parentElement as HTMLElement).className = themeSub.name;
+        document.body.style.color = muiTheme.palette.text.primary;
+        document.body.style.background =
+          (muiTheme as any).backgroundColor;
+      }
     }, [muiTheme]);
+
+    React.useEffect(() => {
+      if (changed)
+        setUpdate(update + 1);
+    }, []);
+
+    if (changed)
+      return <StyledComponent
+        handleToggleTheme={handleToggleTheme}
+        theme={themeSub.current().name}
+        {...props}
+      />;
 
     return (
       <ThemeProvider theme={muiTheme}>
         <StyledComponent
           handleToggleTheme={handleToggleTheme}
-          theme={theme}
+          theme={themeSub.current().name}
           {...props}
         />
       </ThemeProvider>
