@@ -96,7 +96,6 @@ const Logs = props => {
    */
   const clearLogs = () => {
     lastRequestTimeRef.current = null;
-    setLogsData([]);
   };
 
   /**
@@ -178,7 +177,7 @@ const Logs = props => {
         setLoading(false);
         if (!enqueueNextRequest) return;
       });
-  }, [getFromDate, getToDate, baseParams, selectedToDate]);
+  }, [getFromDate, getToDate, baseParams, selectedToDate, setLogsData]);
 
   useEffect(() => { RobotManager.openLogs(baseParams).then(sock => {
     sock.onmessage = (msg) => {
