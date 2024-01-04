@@ -30,7 +30,7 @@ import HomeMenuSkeleton from "./src/Components/HomeMenu/HomeMenuSkeleton";
 import ErrorBoundary from "./src/Components/ErrorBoundary";
 // import HOCs
 import withOfflineValidation from "./src/Components/HOCs/withOfflineValidation";
-import withAuthentication from "./src/Components/HOCs/withAuthentication";
+import withAuthentication, { authSub } from "./src/Components/HOCs/withAuthentication";
 import withNotification from "./src/Components/HOCs/withNotification";
 import withTheme, { themeSub } from "./src/Components/HOCs/withTheme";
 import withDefaults from "./src/Components/HOCs/withDefaults";
@@ -48,6 +48,7 @@ export {
   withAuthentication,
   withNotification,
   withTheme,
+  authSub,
   themeSub,
   useSub,
   withDefaults,
