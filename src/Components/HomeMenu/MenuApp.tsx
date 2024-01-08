@@ -23,7 +23,7 @@ const MenuApp = (props: MenuAppProps) => {
    * @param {object} element : App object
    */
   const handleAppClick = useCallback(
-    event => {
+    (event: any) => {
       if (app.Label) Utils.loadResources(event, app);
     },
     [app]

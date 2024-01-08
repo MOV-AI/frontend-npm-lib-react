@@ -39,7 +39,7 @@ const InnerSnackbarUtilsConfigurator = (
 //========================================================================================
 
 export const SnackbarUtilsConfigurator = () => {
-  const setUseSnackbarRef = useCallback(useSnackbarRefProp => {
+  const setUseSnackbarRef = useCallback((useSnackbarRefProp: any) => {
     useSnackbarRef.current = useSnackbarRefProp;
   }, []);
 
