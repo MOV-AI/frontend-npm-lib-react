@@ -74,7 +74,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    * Handle click to open ProfileMenu
    * @param {Event} event : Click event
    */
-  const handleClick = useCallback(event => {
+  const handleClick = useCallback((event: any) => {
     setAnchorEl(event.currentTarget);
   }, []);
 
@@ -133,7 +133,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
 
   return (
     <div data-testid="section_profile-menu">
-      <Tooltip title={i18n.t("Settings") || ""}>
+      <Tooltip title={i18n.t("Settings") || "" as any}>
         <IconButton
           buttonRef={triggerButtonRef}
           data-testid="input_button"

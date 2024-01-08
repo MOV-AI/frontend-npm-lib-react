@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, ComponentType } from "react";
 import { Sub } from "../Utils/Sub";
 
 type setState<T extends any> = (newState: T) => void;
@@ -8,3 +8,10 @@ function useSub<T extends any>(sub: Sub<T>) {
   useEffect(() => sub.subscribe(setData), []);
   return data;
 };
+
+export function withSub<T>(sub: Sub<T>, Component: ComponentType) {
+  return function (props: any) {
+    const subVal = useSub<T>(sub);
+    return <Component { ...props } sub={subVal} />;
+  }
+}

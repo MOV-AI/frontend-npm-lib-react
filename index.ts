@@ -39,7 +39,7 @@ import withError from "./src/Components/HOCs/withError";
 import { Translations } from "./src/i18n/locales";
 import { i18nHelper } from "./src/i18n/i18nHelper";
 export * from "./src/Utils/Sub";
-import useSub from "./src/hooks/useSub";
+import useSub, { withSub } from "./src/hooks/useSub";
 import ExportPdf from "./src/exporters/pdf";
 import ExportCsv from "./src/exporters/csv";
 
@@ -51,6 +51,7 @@ export {
   authSub,
   themeSub,
   useSub,
+  withSub,
   withDefaults,
   withError,
   Button,
