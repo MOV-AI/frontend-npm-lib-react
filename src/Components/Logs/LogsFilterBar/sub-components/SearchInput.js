@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { useTranslation } from "react-i18next";
 import { InputAdornment, TextField, IconButton } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import ResetSearch from "@material-ui/icons/Close";
