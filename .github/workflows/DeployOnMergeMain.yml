@@ -11,13 +11,15 @@ on:
 
 jobs:
   CI:
-    uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@v1
+    uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@v2
     with:
       deploy: "true"
       run_tests: "true"
+      legacy: true
     secrets:
       auto_commit_user: ${{ secrets.RAISE_BOT_COMMIT_USER }}
       auto_commit_mail: ${{ secrets.RAISE_BOT_COMMIT_MAIL }}
+      auto_commit_pwd: ${{ secrets.RAISE_BOT_COMMIT_PASSWORD }}
       registry_user: ${{ secrets.PORTUS_APP_USER }}
       registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
       gh_token: ${{ secrets.GITHUB_TOKEN }}

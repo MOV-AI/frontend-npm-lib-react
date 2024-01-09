@@ -69,7 +69,7 @@ const HomeMenuPopper = () => {
           data-testid="section_no-applications"
         >
           <Typography variant="subtitle1">
-            {i18n.t("NoApplications")}
+            {i18n.t("NoApplications") as any}
           </Typography>
           <Button
             data-testid="input_launcher"
@@ -134,7 +134,7 @@ const HomeMenuPopper = () => {
   //========================================================================================
 
   return (
-    <Tooltip title={i18n.t("Home") || "Home"} placement="right">
+    <Tooltip title={i18n.t("Home") || "Home" as any} placement="right">
       {/* Tooltips - To accommodate disabled elements, add a simple wrapper element, such as a span. */}
       <span>
         <HTMLPopper
