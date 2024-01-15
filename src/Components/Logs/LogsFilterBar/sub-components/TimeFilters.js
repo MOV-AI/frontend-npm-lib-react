@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../i18n/i18n";
 import {
   KeyboardDateTimePicker,
   MuiPickersUtilsProvider
@@ -14,8 +14,6 @@ const DATE_TIME_FORMAT = "yyyy/MM/dd HH:mm";
 const TimeFilters = props => {
   // Props
   const { selectedFromDate, selectedToDate, handleDateChange } = props;
-  // Translation hook
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

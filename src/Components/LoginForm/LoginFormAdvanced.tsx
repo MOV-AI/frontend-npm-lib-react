@@ -12,13 +12,12 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import { advancedSectionStyles } from "./style";
 import { makeStyles } from "@material-ui/core";
-import { useTranslation } from "react-i18next";
+import { t } from "../../i18n/i18n";
 import { LoginFormAdvancedProps } from "./types";
 
 const advancedLoginStyles = makeStyles(advancedSectionStyles);
 
 const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
-  const { t } = useTranslation();
   const classes = advancedLoginStyles();
   const [open, setOpen] = useState(true);
 

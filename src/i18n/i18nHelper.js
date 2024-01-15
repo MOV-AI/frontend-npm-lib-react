@@ -1,6 +1,5 @@
 import i18n from "i18next";
 import { Translations as libReactTranslations } from "./locales";
-import { initReactI18next } from "react-i18next";
 
 const mergeTranslations = externalTranslation => {
   return Object.entries(externalTranslation).reduce(
@@ -37,7 +36,8 @@ export const i18nHelper = {
   createInstance: (files, language, namespace) => {
     const instance = i18n.createInstance();
     const translationsConfig = translationsBuilder(files, language);
-    instance.use(initReactI18next).init(translationsConfig);
+    instance.init(translationsConfig);
+    // instance.use(initReactI18next).init(translationsConfig);
     return instance;
   }
 };

@@ -13,7 +13,6 @@ export interface LoginFormProps {
     remember: boolean;
     selectedProvider: string;
   }) => void;
-  t: (translationKey: string) => string;
 }
 
 export interface LoginFormAdvancedProps {
