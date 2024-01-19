@@ -147,7 +147,6 @@ const ProfileMenu = (props: ProfileMenuProps) => {
         transitionDuration={menuOpenAnimation.current}
         data-testid="section_menu"
         anchorEl={anchorEl}
-        keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >

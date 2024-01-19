@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "./../../../../i18n/i18n";
 import {
   Input,
   Select,
@@ -24,8 +24,6 @@ const SettingsPopover = props => {
     columns,
     handleColumns
   } = props;
-  // Translation hook
-  const { t } = useTranslation();
   // Style hooks
   const classes = useSettingsStyles();
 

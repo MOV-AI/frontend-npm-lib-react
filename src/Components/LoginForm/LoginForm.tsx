@@ -12,7 +12,7 @@ import { withStyles } from "@material-ui/styles";
 import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import LoginFormAdvanced from "./LoginFormAdvanced";
-import { withTranslation } from "react-i18next";
+import { t } from "./../../i18n/i18n";
 import { LoginFormProps } from "./types";
 
 const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
@@ -103,7 +103,7 @@ class LoginForm extends Component<LoginFormProps> {
     HTMLTextAreaElement | HTMLInputElement
   > = event => {
     const username = event.target.value || "";
-    const errorMessage = !username ? this.props.t("UsernameRequired") : "";
+    const errorMessage = !username ? t("UsernameRequired") : "";
     this.state.username && this.props.onChanges?.();
     this.setState({ username: event.target.value, formErrors: errorMessage });
   };
@@ -116,7 +116,7 @@ class LoginForm extends Component<LoginFormProps> {
     HTMLTextAreaElement | HTMLInputElement
   > = event => {
     const password = event.target.value || "";
-    const errorMessage = !password ? this.props.t("PasswordRequired") : "";
+    const errorMessage = !password ? t("PasswordRequired") : "";
     this.state.password && this.props.onChanges?.();
     this.setState({
       password,
@@ -249,6 +249,4 @@ class LoginForm extends Component<LoginFormProps> {
   }
 }
 
-export default withTranslation()(
-  withStyles(styles, { withTheme: true })(LoginForm)
-);
+export default withStyles(styles, { withTheme: true })(LoginForm);

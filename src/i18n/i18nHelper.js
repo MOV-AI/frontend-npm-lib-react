@@ -1,27 +1,10 @@
 import i18n from "i18next";
 import { Translations as libReactTranslations } from "./locales";
-import { initReactI18next } from "react-i18next";
-
-const mergeTranslations = externalTranslation => {
-  return Object.entries(externalTranslation).reduce(
-    (result, [lang, appTranslations]) => {
-      result[lang] = {
-        translation: {
-          ...libReactTranslations[lang],
-          ...appTranslations
-        }
-      };
-      return result;
-    },
-    libReactTranslations
-  );
-};
 
 const translationsBuilder = (
-  files = {},
-  language = window?.SERVER_DATA?.Language || "en"
+  resources = libReactTranslations,
+  language = window?.SERVER_DATA?.Language || "en",
 ) => {
-  const resources = mergeTranslations(files);
   return {
     resources,
     lng: language,
@@ -34,10 +17,10 @@ const translationsBuilder = (
 };
 
 export const i18nHelper = {
-  createInstance: (files, language, namespace) => {
+  createInstance: (files, language) => {
     const instance = i18n.createInstance();
     const translationsConfig = translationsBuilder(files, language);
-    instance.use(initReactI18next).init(translationsConfig);
+    instance.init(translationsConfig);
     return instance;
   }
 };

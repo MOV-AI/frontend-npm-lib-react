@@ -1,11 +1,9 @@
 import React from "react";
-import { I18nextProvider } from "react-i18next";
 import { Dependencies, WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
 import withNotification from "./withNotification";
 import withOfflineValidation from "./withOfflineValidation";
 import withTheme from "./withTheme";
-import withTranslations from "./withTranslations";
 import withError from "./withError";
 
 export default function withDefaults(appOptions: WithDefaultsProps) {
@@ -23,12 +21,6 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
 
   if (offlineValidation)
     componentWithDefaults = withOfflineValidation(componentWithDefaults);
-
-  if (!(window as any).mock)
-    componentWithDefaults = withTranslations(componentWithDefaults, {
-      i18n: dependencies.i18n ?? { t: a => a },
-      provider: dependencies["react-i18next"]?.I18nextProvider ?? I18nextProvider
-    });
 
   const componentWithNotifications = withNotification(componentWithDefaults);
 

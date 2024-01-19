@@ -63,7 +63,6 @@ const ContextMenu = props => {
         data-testid="section_menu"
         id="customized-menu"
         anchorEl={anchorEl}
-        keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
         {...props.styledMenuProps}

@@ -5,7 +5,7 @@ import { Emit, makeSub } from "../../Utils/Sub";
 import useSub from "../../hooks/useSub";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
-import i18n from "../../i18n/i18n.js";
+import { t } from "../../i18n/i18n";
 
 interface LoginData {
   username: string;
@@ -151,16 +151,16 @@ export default function withAuthentication(
     const renderNotAuthorized = () => {
       return (
         <LoginPanel
-          title={i18n.t("NotAuthorized")}
+          title={t("NotAuthorized")}
           message={
             <>
-              <p>{i18n.t("NotAuthorizedDescription") as string}</p>
+              <p>{t("NotAuthorizedDescription") as string}</p>
               <Button
                 variant="outlined"
                 data-testid="input_unauthorized_login"
                 onClick={handleLoginAfterNotAuthorized}
               >
-                {i18n.t("NotAuthorizedRedirectToLogin") as string}
+                {t("NotAuthorizedRedirectToLogin") as string}
               </Button>
             </>
           }
