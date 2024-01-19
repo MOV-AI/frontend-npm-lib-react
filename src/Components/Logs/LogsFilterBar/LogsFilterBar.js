@@ -11,7 +11,7 @@ import ServiceSelector from "./sub-components/ServiceSelector";
 import TagsPopover from "./sub-components/TagsPopover";
 import TimeFilters from "./sub-components/TimeFilters";
 import SettingsPopover from "./sub-components/SettingsPopover";
-import { useTranslation } from "react-i18next";
+import { t } from "./../../../i18n/i18n";
 // Styles
 import { useLogFilterStyles } from "../styles";
 
@@ -23,8 +23,6 @@ const EMPTY_FUNCTION = () => {
 const LogsFilterBar = props => {
   // Style Hook
   const classes = useLogFilterStyles();
-  // Translation hook
-  const { t } = useTranslation();
   // Props
   const {
     updateRobotSelection,

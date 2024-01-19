@@ -1,15 +1,13 @@
 import React, { useCallback } from "react";
-import { useTranslation } from "react-i18next";
 import { InputAdornment, TextField, IconButton } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import ResetSearch from "@material-ui/icons/Close";
 import { useSearchInputStyles } from "../../styles";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
+import { t } from "../../../../i18n/i18n";
 
 const SearchInput = props => {
-  // Translation hook
-  const { t } = useTranslation();
   // Props
   const { messageRegex, handleMessageRegex } = props;
   // Style hook

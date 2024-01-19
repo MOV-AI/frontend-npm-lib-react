@@ -12,7 +12,7 @@ import _isEmpty from "lodash/isEmpty";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { User } from "@mov-ai/mov-fe-lib-core";
-import { useTranslation } from "react-i18next";
+import { t } from "./../../i18n/i18n";
 import { resetPasswordStyles } from "./styles";
 import { ALERT_SEVERITY } from "../../Utils/Constants";
 import { snackbar } from "../Snackbar/Snackbar";
@@ -75,7 +75,6 @@ const ResetPasswordModal = forwardRef((props, ref) => {
   // Other hooks
   const user = useMemo(() => new User(), []);
   const classes = resetPasswordStyles();
-  const { t } = useTranslation();
   // Refs
   const touchRef = useRef(DEFAULT_TOUCH_STATE);
 
