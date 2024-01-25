@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, within } from "@testing-library/react";
+import { screen, render, fireEvent, within } from "@testing-library/react";
 import withTheme from "./../HOCs/withTheme";
 import LoginForm from "./LoginForm";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";

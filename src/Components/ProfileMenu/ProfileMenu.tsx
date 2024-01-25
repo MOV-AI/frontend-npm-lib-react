@@ -15,7 +15,7 @@ import { profileMenuStyles } from "./styles";
 import Divider from "@material-ui/core/Divider";
 import { User } from "@mov-ai/mov-fe-lib-core";
 import { Typography, Tooltip } from "@material-ui/core";
-import i18n from "../../i18n/i18n.js";
+import i18n from "i18next";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
 

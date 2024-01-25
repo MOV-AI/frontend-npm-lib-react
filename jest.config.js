@@ -2,7 +2,8 @@ module.exports = {
   preset: "ts-jest",
   verbose: true,
   testEnvironment: "jsdom",
-  moduleFileExtensions: ["ts", "tsx", "js", "json", "node"],
+  setupFiles: ["<rootDir>/jest.setup.js"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   testPathIgnorePatterns: [
     '/node_modules/',
     '/dist/'

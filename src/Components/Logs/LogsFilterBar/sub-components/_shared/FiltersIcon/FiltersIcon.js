@@ -43,7 +43,7 @@ const FiltersIcon = props => {
 
   return (
     <React.Fragment>
-      <Tooltip title={tooltip || title}>
+      <Tooltip title={tooltip || title || ""}>
         <IconButton
           data-testid="input_button"
           size="small"

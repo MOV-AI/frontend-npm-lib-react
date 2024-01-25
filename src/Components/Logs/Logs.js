@@ -20,7 +20,7 @@ import { findsUniqueKey, getDateTime } from "./utils/Utils";
 import useUpdateEffect from "./hooks/useUpdateEffect";
 import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
-import i18n from "../../i18n/i18n";
+import i18n from "i18next";
 
 import { useStyles } from "./styles";
 import "./Logs.css";

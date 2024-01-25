@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { t } from "../../../../i18n/i18n";
+import i18n from "i18next";
 import {
   KeyboardDateTimePicker,
   MuiPickersUtilsProvider
@@ -46,7 +46,7 @@ const TimeFilters = props => {
   return (
     <FiltersIcon
       icon={<TodayIcon />}
-      title={t("Date Range")}
+      title={i18n.t("Date Range")}
       isActive={!selectedFromDate || !selectedToDate}
     >
       {/* From -> To Date */}
@@ -56,7 +56,7 @@ const TimeFilters = props => {
           size="small"
           variant="inline"
           ampm={false}
-          label={t("From date")}
+          label={i18n.t("From date")}
           value={selectedFromDate}
           onChange={handleFromDateChange}
           format={DATE_TIME_FORMAT}
@@ -66,7 +66,7 @@ const TimeFilters = props => {
           size="small"
           variant="inline"
           ampm={false}
-          label={t("To date")}
+          label={i18n.t("To date")}
           value={selectedToDate}
           onChange={handleToDateChange}
           format={DATE_TIME_FORMAT}
