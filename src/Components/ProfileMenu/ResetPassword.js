@@ -12,7 +12,7 @@ import _isEmpty from "lodash/isEmpty";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { User } from "@mov-ai/mov-fe-lib-core";
-import { t } from "./../../i18n/i18n";
+import i18n from "i18next";
 import { resetPasswordStyles } from "./styles";
 import { ALERT_SEVERITY } from "../../Utils/Constants";
 import { snackbar } from "../Snackbar/Snackbar";
@@ -90,12 +90,12 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    */
   const getTitle = () => {
     const TITLE_BY_VARIANT = {
-      [VARIANT_OPTIONS.CHANGE]: t("Change Password"),
-      [VARIANT_OPTIONS.RESET]: t("Reset Password")
+      [VARIANT_OPTIONS.CHANGE]: i18n.t("Change Password"),
+      [VARIANT_OPTIONS.RESET]: i18n.t("Reset Password")
     };
     return variant in TITLE_BY_VARIANT
       ? TITLE_BY_VARIANT[variant]
-      : t("Change Password");
+      : i18n.t("Change Password");
   };
 
   /**
@@ -126,7 +126,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
     return updatePassword(body)
       .then(response => {
         if (!response.success) throw new Error(response.statusText);
-        const message = t("Password Updated");
+        const message = i18n.t("Password Updated");
         snackbar({ message, severity: ALERT_SEVERITY.SUCCESS });
         return response;
       })
@@ -145,7 +145,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    * Get submit modal text
    */
   const getSubmitText = useCallback(() => {
-    return loading ? <CircularProgress color="primary" size={16} /> : t("Save");
+    return loading ? <CircularProgress color="primary" size={16} /> : i18n.t("Save");
   }, [loading]);
 
   //========================================================================================
@@ -271,7 +271,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
       title={getTitle()}
       open={openState}
       disableActions={loading}
-      cancelText={t("Cancel")}
+      cancelText={i18n.t("Cancel")}
       submitText={getSubmitText()}
     >
       <div data-testid="section_reset-password" className={classes.root}>
@@ -282,7 +282,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
                 inputProps={{ "data-testid": "input_current-password" }}
                 type="password"
                 autocomplete="off"
-                label={t("Current Password")}
+                label={i18n.t("Current Password")}
                 autoFocus={true}
                 className={classes.input}
                 id={FORM_FIELDS.CURRENT_PASSWORD}
@@ -294,7 +294,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
               inputProps={{ "data-testid": "input_new-password" }}
               type="password"
               autocomplete="off"
-              label={t("New Password")}
+              label={i18n.t("New Password")}
               className={classes.input}
               id={FORM_FIELDS.NEW_PASSWORD}
               onChange={handleChange}
@@ -306,7 +306,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
               inputProps={{ "data-testid": "input_confirm-password" }}
               type="password"
               autocomplete="off"
-              label={t("Confirm Password")}
+              label={i18n.t("Confirm Password")}
               className={classes.input}
               id={FORM_FIELDS.CONFIRM_PASSWORD}
               onChange={handleChange}

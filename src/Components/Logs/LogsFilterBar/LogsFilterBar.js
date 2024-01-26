@@ -11,7 +11,7 @@ import ServiceSelector from "./sub-components/ServiceSelector";
 import TagsPopover from "./sub-components/TagsPopover";
 import TimeFilters from "./sub-components/TimeFilters";
 import SettingsPopover from "./sub-components/SettingsPopover";
-import { t } from "./../../../i18n/i18n";
+import i18n from "i18next";
 // Styles
 import { useLogFilterStyles } from "../styles";
 
@@ -120,7 +120,7 @@ const LogsFilterBar = props => {
               handleDateChange={handleDateChange}
             />
             {/* Export Logs */}
-            <Tooltip title={t("Download logs")}>
+            <Tooltip title={i18n.t("Download logs")}>
               <IconButton
                 onClick={handleExport}
               >
@@ -162,7 +162,6 @@ LogsFilterBar.propTypes = {
   handleDateChange: PropTypes.func,
   selectedRobots: PropTypes.array,
   updateRobotSelection: PropTypes.func,
-  t: PropTypes.func
 };
 
 LogsFilterBar.defaultProps = {
@@ -182,7 +181,6 @@ LogsFilterBar.defaultProps = {
   handleDateChange: EMPTY_FUNCTION,
   selectedRobots: [],
   updateRobotSelection: EMPTY_FUNCTION,
-  t: string => string
 };
 
 //The function returns true when the compared props equal, preventing the component from re-rendering

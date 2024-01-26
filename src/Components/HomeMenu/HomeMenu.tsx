@@ -4,7 +4,7 @@ import { User } from "@mov-ai/mov-fe-lib-core";
 import AppsIcon from "@material-ui/icons/Apps";
 import Tooltip from "@material-ui/core/Tooltip";
 import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
-import i18n from "../../i18n/i18n.js";
+import i18n from "i18next";
 import HTMLPopper from "../Popper/HTMLPopper";
 import HomeMenuSkeleton from "./HomeMenuSkeleton";
 import MenuApp from "./MenuApp";

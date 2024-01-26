@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { t } from "./../../../../i18n/i18n";
+import i18n from "i18next";
 import {
   Input,
   Select,
@@ -58,18 +58,18 @@ const SettingsPopover = props => {
   //========================================================================================
 
   return (
-    <FiltersIcon icon={<TuneIcon></TuneIcon>} title={t("Configuration")}>
+    <FiltersIcon icon={<TuneIcon></TuneIcon>} title={i18n.t("Configuration")}>
       <div className={classes.filtersButton}>
         {/* Limit Input */}
         <Typography component="div" className={classes.inputHeader}>
-          {`${t("Limit p/Robot")}:`}
+          {`${i18n.t("Limit p/Robot")}:`}
         </Typography>
         <TextField
           value={limit}
           onChange={handleLimit}
           className={classes.limitText}
           id="outlined-number"
-          placeholder={t("limit")}
+          placeholder={i18n.t("limit")}
           type="number"
           InputLabelProps={{ shrink: true }}
           InputProps={{ inputProps: { min: 1, max: 100 } }}
@@ -79,7 +79,7 @@ const SettingsPopover = props => {
       <div className={classes.columnsFilter}>
         {/* Columns Selection */}
         <Typography component="div" className={classes.inputHeader}>
-          {`${t("Columns")}:`}
+          {`${i18n.t("Columns")}:`}
         </Typography>
         <FormControl className={classes.formControl}>
           <Select
