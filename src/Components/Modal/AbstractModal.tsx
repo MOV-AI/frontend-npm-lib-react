@@ -11,7 +11,7 @@ import {
   Modal
 } from "@material-ui/core";
 import { modalStyles } from "./styles";
-import i18n from "../../i18n/i18n.js";
+import i18n from "i18next";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";
 import { AbstractModalProps } from "./types";
 

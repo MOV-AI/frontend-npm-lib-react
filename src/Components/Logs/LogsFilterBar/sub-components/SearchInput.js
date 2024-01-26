@@ -5,7 +5,7 @@ import ResetSearch from "@material-ui/icons/Close";
 import { useSearchInputStyles } from "../../styles";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
-import { t } from "../../../../i18n/i18n";
+import i18n from "i18next";
 
 const SearchInput = props => {
   // Props
@@ -71,7 +71,7 @@ const SearchInput = props => {
   return (
     <TextField
       className={bigScreen ? classes.searchText : classes.smallSearchText}
-      placeholder={t("Search")}
+      placeholder={i18n.t("Search")}
       value={messageRegex}
       onChange={onChangeText}
       InputProps={

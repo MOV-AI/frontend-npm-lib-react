@@ -5,7 +5,7 @@ import { Emit, makeSub } from "../../Utils/Sub";
 import useSub from "../../hooks/useSub";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
-import { t } from "../../i18n/i18n";
+import i18n from "i18next";
 
 interface LoginData {
   username: string;
@@ -64,7 +64,8 @@ const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
       loading: false,
     };
   } catch (e: any) {
-    console.error("Auth Error: " + e.error?.message ?? e.message ?? e);
+    if (!(globalThis as any).mock)
+      console.error("Auth Error: " + e.error?.message ?? e.message ?? e);
     return { ...loggedOutInfo, loading: false };
   }
 });
@@ -151,16 +152,16 @@ export default function withAuthentication(
     const renderNotAuthorized = () => {
       return (
         <LoginPanel
-          title={t("NotAuthorized")}
+          title={i18n.t("NotAuthorized")}
           message={
             <>
-              <p>{t("NotAuthorizedDescription") as string}</p>
+              <p>{i18n.t("NotAuthorizedDescription") as string}</p>
               <Button
                 variant="outlined"
                 data-testid="input_unauthorized_login"
                 onClick={handleLoginAfterNotAuthorized}
               >
-                {t("NotAuthorizedRedirectToLogin") as string}
+                {i18n.t("NotAuthorizedRedirectToLogin") as string}
               </Button>
             </>
           }

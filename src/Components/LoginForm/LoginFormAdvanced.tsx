@@ -12,7 +12,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import { advancedSectionStyles } from "./style";
 import { makeStyles } from "@material-ui/core";
-import { t } from "./../../i18n/i18n";
+import i18n from "i18next";
 import { LoginFormAdvancedProps } from "./types";
 
 const advancedLoginStyles = makeStyles(advancedSectionStyles);
@@ -30,7 +30,7 @@ const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
         onClick={() => setOpen(!open)}
         disabled={!props.domains?.length}
       >
-        <InputLabel className={classes.label}>{t("Advanced") as string}</InputLabel>
+        <InputLabel className={classes.label}>{i18n.t("Advanced") as string}</InputLabel>
       </Button>
       <Collapse in={open}>
         <List dense={true} component="div">
@@ -44,7 +44,7 @@ const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
                 }
               >
                 <InputLabel htmlFor="component-authentication-selector">
-                  {t("Domain") as string}
+                  {i18n.t("Domain") as string}
                 </InputLabel>
                 <Select
                   id="component-authentication-selector"

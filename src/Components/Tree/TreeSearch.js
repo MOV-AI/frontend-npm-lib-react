@@ -10,7 +10,7 @@ import {
 import PropTypes from "prop-types";
 import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
-import i18n from "../../i18n/i18n.js";
+import i18n from "i18next";
 
 class TreeSearch extends Component {
   searchInput = null;
