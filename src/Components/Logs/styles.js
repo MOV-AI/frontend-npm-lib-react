@@ -4,19 +4,13 @@ export const useStyles = makeStyles(_theme => ({
   tableContainer: {
     flexGrow: 1,
     minHeight: 0,
-    overflow: "hidden"
+    overflow: "auto"
   },
   externalDiv: {
     width: "100%",
     height: "100%",
     display: "flex",
     flexDirection: "column"
-  },
-  noRows: {
-    display: "flex",
-    fontSize: "20px",
-    justifyContent: "center",
-    padding: "32px"
   },
   wrapper: {
     flexGrow: "1",
@@ -114,6 +108,9 @@ export const useSettingsStyles = makeStyles(theme => ({
 
 export const useLogFilterStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
+  root: {
+    overflow: "auto",
+  },
   flexContainer: {
     flex: 1,
   },

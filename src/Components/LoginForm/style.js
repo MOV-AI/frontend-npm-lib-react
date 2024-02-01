@@ -3,10 +3,10 @@ const common = {
     width: "40%"
   }
 };
-const styles = theme => ({
+const styles = () => ({
   ...common,
   root: {
-    padding: theme.spacing(4, 4) + " !important",
+    padding: "32px 32px !important",
     borderRadius: 40
   },
   container: {
