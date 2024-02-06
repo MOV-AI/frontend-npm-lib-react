@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { AppBar, Toolbar, IconButton, Tooltip } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -25,14 +25,13 @@ const LogsFilterBar = props => {
   const classes = useLogFilterStyles();
   // Props
   const {
-    updateRobotSelection,
-    selectedRobots,
+    handleRobotChange,
+    robots,
     messageRegex,
     handleMessageRegex,
     levels,
-    levelsList,
     handleLevels,
-    selectedService,
+    service,
     handleSelectedService,
     tags,
     handleAddTag,
@@ -41,29 +40,9 @@ const LogsFilterBar = props => {
     selectedFromDate,
     selectedToDate,
     handleDateChange,
-    limit,
-    handleLimit,
     columns,
     handleColumns,
   } = props;
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                       Handlers                                       *
-   *                                                                                      */
-  //========================================================================================
-
-  /**
-   * Handle Robot selection change
-   */
-  const handleRobotChange = useCallback(
-    event => {
-      const arrayEvent = event?.target?.value;
-      const selectedId = arrayEvent[arrayEvent.length - 1];
-      updateRobotSelection(selectedId);
-    },
-    [updateRobotSelection]
-  );
 
   //========================================================================================
   /*                                                                                      *
@@ -72,12 +51,12 @@ const LogsFilterBar = props => {
   //========================================================================================
 
   return (
-    <AppBar position="static" color="inherit">
+    <AppBar position="static" color="inherit" className={classes.root}>
       <Toolbar data-testid="section_logs-filter-bar" variant="dense">
         <div className={classes.flexContainer}>
           {/* Robot Selector */}
           <RobotSelector
-            selectedRobots={selectedRobots}
+            robots={robots}
             handleRobotChange={handleRobotChange}
           />
         </div>
@@ -93,13 +72,12 @@ const LogsFilterBar = props => {
           <LevelSelector
             levels={levels}
             handleLevels={handleLevels}
-            levelsList={levelsList}
           />
         </div>
         <div className={classes.doubleFlexContainer}>
           {/* Toggle: BACKEND, SPAWNER */}
           <ServiceSelector
-            selectedService={selectedService}
+            service={service}
             handleSelectedService={handleSelectedService}
           />
         </div>
@@ -131,8 +109,6 @@ const LogsFilterBar = props => {
           <div className={`${classes.flexContainer} ${classes.displayFlex} ${classes.flexEnd}`}>
             {/* Settings */}
             <SettingsPopover
-              limit={limit}
-              handleLimit={handleLimit}
               columns={columns}
               handleColumns={handleColumns}
             />
@@ -144,13 +120,11 @@ const LogsFilterBar = props => {
 };
 
 LogsFilterBar.propTypes = {
-  levels: PropTypes.array,
-  levelsList: PropTypes.array,
+  levels: PropTypes.object,
   handleLevels: PropTypes.func,
-  selectedService: PropTypes.array,
+  service: PropTypes.object,
+  tags: PropTypes.object,
   handleSelectedService: PropTypes.func,
-  limit: PropTypes.number,
-  handleLimit: PropTypes.func,
   columns: PropTypes.array,
   handleColumns: PropTypes.func,
   handleDeleteTag: PropTypes.func,
@@ -160,18 +134,16 @@ LogsFilterBar.propTypes = {
   selectedFromDate: PropTypes.string,
   selectedToDate: PropTypes.string,
   handleDateChange: PropTypes.func,
-  selectedRobots: PropTypes.array,
-  updateRobotSelection: PropTypes.func,
+  robots: PropTypes.object,
+  handleRobotChange: PropTypes.func,
 };
 
 LogsFilterBar.defaultProps = {
-  levels: [],
-  levelsList: [],
+  levels: {},
+  service: {},
+  tags: {},
   handleLevels: EMPTY_FUNCTION,
-  selectedService: [],
   handleSelectedService: EMPTY_FUNCTION,
-  limit: 1,
-  handleLimit: EMPTY_FUNCTION,
   columns: [],
   handleColumns: EMPTY_FUNCTION,
   handleDeleteTag: EMPTY_FUNCTION,
@@ -179,8 +151,8 @@ LogsFilterBar.defaultProps = {
   messageRegex: "",
   handleMessageRegex: EMPTY_FUNCTION,
   handleDateChange: EMPTY_FUNCTION,
-  selectedRobots: [],
-  updateRobotSelection: EMPTY_FUNCTION,
+  robots: {},
+  handleRobotChange: EMPTY_FUNCTION,
 };
 
 //The function returns true when the compared props equal, preventing the component from re-rendering

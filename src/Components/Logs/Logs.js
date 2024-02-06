@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef, useEffect, useMemo } from "react";
 import { Typography } from "@material-ui/core";
-import { RobotManager, getFeatures } from "@mov-ai/mov-fe-lib-core";
+import { RobotManager, Features } from "@mov-ai/mov-fe-lib-core";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
@@ -8,17 +8,14 @@ import LogsSkeleton from "./LogsSkeleton";
 import {
   ROBOT_STATES,
   DATE_KEY_OPTION,
-  ADVANCED_LEVELS_LIST,
   COLUMN_LIST,
-  DEFAULT_LIMIT,
   DEFAULT_SELECTED_COLUMNS,
-  DEFAULT_SELECTED_LEVELS,
-  DEFAULT_SELECTED_SERVICES,
+  DEFAULT_LEVELS,
+  DEFAULT_SERVICE,
   ROBOT_LOG_TYPE,
 } from "./utils/Constants";
-import { findsUniqueKey, getDateTime } from "./utils/Utils";
+import { getDateTime } from "./utils/Utils";
 import useUpdateEffect from "./hooks/useUpdateEffect";
-import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
 import i18n from "i18next";
 
@@ -39,302 +36,156 @@ function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   document.body.removeChild(a);
 }
 
-/**
- * CONSTANTS
- */
-const DEFAULT_TIMEOUT_IN_MS = 3000;
-const RETRY_IN_MS = 2000;
+function noSelection(obj) {
+  for (let key in obj) {
+    if (obj[key])
+      return false;
+  }
+  return true;
+}
 
-const NO_ROBOTS_RETRY_TIMEOUT = 1000;
+function onChangeSelect(set, event) {
+  const selected = event.target.value.reduce((a, key) => ({ ...a, [key]: true }), {});
+  set(prevState => Object.entries(prevState).reduce((a, [key]) => ({
+    ...a,
+    [key]: !!selected[key],
+  }), {}));
+}
+
+function getRobots(robotsData) {
+  return robotsData
+    .map(robot => robot.name)
+    .reduce((a, robot) => ({ ...a, [robot]: true }), {});
+}
+
+async function hashString(string) {
+  const msgUint8 = new TextEncoder().encode(string);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
+const MAX_FETCH_LOGS = 10000;
+const MAX_LOGS = 2000;
+let logsDataGlobal = [];
+
 const Logs = props => {
-  // Props
   const { robotsData } = props;
-  // Style hook
   const classes = useStyles();
-  // Refs
   const getLogsTimeoutRef = useRef();
-  const selectedRobotsRef = useRef({});
-  const requestTimeout = useRef(DEFAULT_TIMEOUT_IN_MS);
-  const lastRequestTimeRef = useRef(null);
+  const [robots, setRobots] = useState(getRobots(robotsData));
   const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
-  const logsDataRef = useRef([]);
   const logModalRef = useRef();
-  const isMounted = useRef();
-  // State hooks
-  const [selectedRobots, setSelectedRobots] = useState({});
-  const [levels, setLevels] = useState(DEFAULT_SELECTED_LEVELS);
-  const [levelsList] = useState(ADVANCED_LEVELS_LIST);
-  const [selectedService, setSelectedService] = useState(
-    DEFAULT_SELECTED_SERVICES
-  );
-  const [limit, setLimit] = useState(DEFAULT_LIMIT);
+  const [levels, setLevels] = useState(DEFAULT_LEVELS);
+  const [service, setService] = useState(DEFAULT_SERVICE);
   const [columns, setColumns] = useState(DEFAULT_SELECTED_COLUMNS);
-  const [tags, setTags] = useState([]);
-  const [searchMessage, setSearchMessage] = useState("");
-  const [selectedFromDate, setSelectedFromDate] = useState(null);
+  const [tags, setTags] = useState({});
+  const [message, setMessage] = useState("");
+  const [selectedFromDate, setSelectedFromDate] = useState("");
   const [selectedToDate, setSelectedToDate] = useState(null);
-  const [logsData, setLogsData] = useState([]);
+  const [lastRequestTime, setLastRequestTime] = useState(null);
+  const [logsData, setLogsData] = useState(logsDataGlobal);
   const [loading, setLoading] = useState(true);
+  const restLogs = useMemo(() => !Features.get("logStreaming"), []);
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                    Private Methods                                   *
-   *                                                                                      */
-  //========================================================================================
+  const filteredLogs = useMemo(() => (
+    logsData.filter(item => (
+      (levels[item.level] || noSelection(levels))
+      && (service[item.service] || noSelection(service))
+      && (tags[item.tag] || noSelection(tags))
+      && (item.message || "").includes(message)
+      && (robots[item.robot] || noSelection(robots))
+    )).slice(0, MAX_LOGS)
+  ), [logsData, levels, service, message, robots]);
 
-  /**
-   * Get From Date filter
-   *  Consider last successfull request and date on filter
-   * @returns {string} From Date in string or empty
-   */
-  const getFromDate = useCallback(() => {
-    return selectedFromDate || lastRequestTimeRef.current || "";
-  }, [selectedFromDate]);
-  /**
-   * Get To Date filter
-   * @returns {string} To Date in string or empty
-   */
-  const getToDate = useCallback(() => {
-    return selectedToDate || "";
-  }, [selectedToDate]);
+  // if robotsData changes, update robots
+  useEffect(() => { setRobots(getRobots(robotsData)); }, [setRobots, robotsData]);
 
-  /**
-   * Clear robot logs
-   */
-  const clearLogs = () => {
-    lastRequestTimeRef.current = null;
-    if (getFeatures().restLogs)
-      setLogsData([]);
-  };
-
-  /**
-   * Get selected robot names to compose search query
-   * @returns {array<string>}
-   */
-  const getSelectedRobots = () => {
-    return Object.values(selectedRobotsRef.current)
-      .filter(
-        robot =>
-          robot.isSelected && // Get selected robots only
-          robot.name // Get only robots with name
-      )
-      .map(robot => robot.name);
-  };
-
-  /**
-   * Prevent all subsequent requests from being dispatched
-   */
-  const stopLogger = () => {
-    clearTimeout(getLogsTimeoutRef.current);
-  };
-
-  const baseParams = useMemo(() => ({
-    level: { selected: levels, list: levelsList },
-    service: { selected: selectedService },
-    tag: { selected: tags },
-    searchMessage: searchMessage,
-    robot: { selected: getSelectedRobots() },
-    limit: limit
-  }), [levels, levelsList, selectedService, tags, searchMessage, limit, getSelectedRobots]);
-
-  /**
-   * Get logs
-   */
-  const getLogs = useCallback(async keepLoading => {
-    if (!isMounted.current) return;
-    // Get selected and online robots
-    const robots = getSelectedRobots();
-    if (!robots.length) {
-      console.warn("No robots available", robots)
-      clearLogs();
-      setTimeout(getLogs, NO_ROBOTS_RETRY_TIMEOUT);
-      if (!keepLoading) setLoading(false);
-      // Stop method execution
-      return;
+  const getLogs = useCallback(() => {
+    if (logsData.length) {
+      console.assert(restLogs);
+      setLoading(true);
     }
-    // Remove previously enqueued requests
-    stopLogger();
-    // Stop loader if there's not request to do
-
-    // If component is no longer mounted
-    if (!isMounted.current) return;
-    console.assert(robots.length);
-    // Set loading state if log data is not empty
-    if (logsDataRef.current.length) setLoading(true);
 
     const requestTime = new Date().getTime();
+    // Remove previously enqueued requests
     clearTimeout(getLogsTimeoutRef.current);
     RobotManager.getLogs({
-      ...baseParams,
-      date: { from: getFromDate(), to: getToDate() },
+      limit: MAX_FETCH_LOGS,
+      date: { from: lastRequestTime ?? selectedFromDate, to: selectedToDate },
     }).then(response => {
-        setLogsData(prevState => {
-          const oldLogs = prevState || [];
-          const newLogs = (response?.data || [])
-            .map(log => ({ ...log, time: new Date(log.time * 1000) }));
-          return [...oldLogs, ...newLogs];
-        });
-        // Reset timeout for next request to default value
-        lastRequestTimeRef.current = requestTime;
-        requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
-        // Doesn't enqueue next request if the 'selectedToDate' inserted manually by the user is before now
-        return !(selectedToDate && selectedToDate < requestTime);
-      })
-      .catch(err => {
-        // Add more time for the next request if it fails
-        console.warn("Failed logs request", err);
-        requestTimeout.current += RETRY_IN_MS;
-        // Enqueue next request
-        return true;
-      })
-      .then(enqueueNextRequest => {
-        setLoading(false);
-        clearTimeout(getLogsTimeoutRef.current);
-        if (!enqueueNextRequest) return;
-        if (getFeatures().restLogs)
-          getLogsTimeoutRef.current = setTimeout(() => {
-            getLogs();
-          }, requestTimeout.current);
+      const data = response?.data || [];
+      return Promise.all([Promise.resolve(data)].concat(data.map(item => hashString(item.message))));
+    }).then(([data, ...hashes]) => {
+      setLogsData(prevState => {
+        const oldLogs = prevState || [];
+
+        return (logsDataGlobal = data.map((log, index) => {
+          const timestamp = log.time * 1000;
+          const date = new Date(timestamp);
+          return ({
+            ...log,
+            time: date.toLocaleTimeString(),
+            date: date.toLocaleDateString(),
+            key: hashes[index] + (timestamp * 1000),
+          });
+        }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
       });
-  }, [getFromDate, getToDate, baseParams, selectedToDate, setLogsData]);
-
-  useEffect(() => {
-    if (getFeatures().restLogs)
-      return;
-    RobotManager.openLogs(baseParams).then(sock => {
-      sock.onmessage = (msg) => {
-        const item = JSON.parse(msg?.data ?? {});
-        setLogsData(prevState => [{ ...item, time: new Date(item.time / 1000) }, ...(prevState ?? [])]);
-      }
-    })
-  }, [baseParams, setLogsData]);
-
-  /**
-   * Refresh logs in table
-   */
-  const refreshLogs = useCallback(() => {
-    clearLogs();
-    setLoading(true);
-    getLogs();
-  }, [getLogs]);
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    React Lifecycle                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  // on component mount
-  useEffect(() => {
-    isMounted.current = true;
-    // Start logger
-    getLogs(true);
-    // Stop logger for all robots on unmount
-    return () => {
-      stopLogger();
-      selectedRobotsRef.current = {};
-      isMounted.current = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // On change robots data
-  useEffect(() => {
-    // New robots added, will be added to the selector list
-    setSelectedRobots(prevState => {
-      const newRobots = { ...prevState };
-      robotsData.forEach(robot => {
-        const id = robot.id;
-        newRobots[id] = {
-          ...robot,
-          isSelected: prevState[id]?.isSelected ?? true
-        };
-      });
-
-      selectedRobotsRef.current = newRobots;
-      return newRobots;
+      setLastRequestTime(requestTime);
     });
-  }, [robotsData]);
+  }, [selectedFromDate, selectedToDate, logsData, setLogsData, robotsData, restLogs]);
 
-  // On change filter
+  const sock = useMemo(() => restLogs ? null : RobotManager.openLogs({}), []);
+
+  useEffect(() => {
+    getLogs();
+  }, []);
+
+  const onMessage = useCallback((msg) => {
+    const item = JSON.parse(msg?.data ?? {});
+    const date = new Date(item.time / 1000000);
+    hashString(item.message).then(hash => {
+      setLogsData((prevState) => logsDataGlobal = [
+        {
+          ...item,
+          timestamp: item.time,
+          time: date.toLocaleTimeString(),
+          date: date.toLocaleDateString(),
+          key: hash + item.time
+        },
+        ...prevState
+      ].slice(0, MAX_FETCH_LOGS));
+    });
+  }, [setLogsData]);
+
+  useEffect(() => {
+    if (restLogs)
+      return;
+
+    sock.onmessage = onMessage;
+
+    return () => {
+      sock.close();
+    };
+  }, [onMessage, sock, restLogs]);
+
   useUpdateEffect(() => {
-    refreshLogs();
-  }, [levels, selectedService, columns, tags]);
+    if (restLogs) {
+      clearTimeout(refreshLogsTimeoutRef.current);
+      refreshLogsTimeoutRef.current = setTimeout(() => {
+        setLoading(true);
+        getLogs();
+      }, 1000);
+    }
+  }, [getLogs, restLogs]);
 
-  // Add timeout before refresh logs on text input change
-  //  This will prevent unnecessary re-renders while the user is still typing
-  //  Applies for text inputs (search and limit) and date time picker
-  useUpdateEffect(() => {
-    clearTimeout(refreshLogsTimeoutRef.current);
-    refreshLogsTimeoutRef.current = setTimeout(() => {
-      refreshLogs();
-    }, 1000);
-  }, [searchMessage, limit, selectedFromDate, selectedToDate]);
+  const onChangeRobots = useCallback(event => onChangeSelect(setRobots, event), [setRobots]);
+  const onChangeMessage = useCallback(text => setMessage(text), []);
+  const onChangeLevels = useCallback(event => onChangeSelect(setLevels, event), [setLevels]);
+  const onChangeServices = useCallback(event => onChangeSelect(setService, event), [setService]);
 
-  //========================================================================================
-  /*                                                                                      *
-   *                               On filter change actions                               *
-   *                                                                                      */
-  //========================================================================================
-
-  /**
-   * On change selected robot from filter, refresh logs in table
-   * @param {string} robotId : Robot ID to toggle select state
-   */
-  const onChangeRobotSelection = useCallback(
-    robotId => {
-      setSelectedRobots(prevState => {
-        const newRobots = {
-          ...prevState,
-          [robotId]: {
-            ...prevState[robotId],
-            isSelected: !prevState[robotId].isSelected
-          }
-        };
-        selectedRobotsRef.current = newRobots;
-        return newRobots;
-      });
-      // Trigger refresh on logs
-      refreshLogs();
-    },
-    [refreshLogs]
-  );
-
-  /**
-   * On change message from filter
-   * @param {string} text : Search text
-   */
-  const onChangeMessage = useCallback(text => {
-    setSearchMessage(text);
-  }, []);
-
-  /**
-   * On change levels from filter
-   */
-  const onChangeLevels = useCallback(event => {
-    setLevels(event.target.value);
-  }, []);
-
-  /**
-   * On change selected services from filter
-   */
-  const onChangeServices = useCallback(event => {
-    setSelectedService(event.target.value);
-  }, []);
-
-  /**
-   * On change limit from filter
-   */
-  const onChangeLimit = useCallback(event => {
-    let _limit = DEFAULT_LIMIT;
-    if (event.target.value !== "") _limit = event.target.value;
-    setLimit(_limit);
-  }, []);
-
-  /**
-   * On change columns from filter
-   */
   const onChangeColumns = useCallback(event => {
     // make sure columns are always with the same order
     const newColumns = Object.keys(COLUMN_LIST).filter(col =>
@@ -343,77 +194,35 @@ const Logs = props => {
     setColumns(newColumns);
   }, []);
 
-  /**
-   * On change dates from filter
-   */
   const onChangeDate = useCallback((newDate, keyToChange) => {
     const setDate = {
       [DATE_KEY_OPTION.FROM]: date => setSelectedFromDate(date),
       [DATE_KEY_OPTION.TO]: date => setSelectedToDate(date)
     };
-    lastRequestTimeRef.current = null;
     setDate[keyToChange](newDate);
   }, []);
 
-  /**
-   * On add tag from filter
-   */
-  const addTag = useCallback(tagText => {
-    setTags(prevState => {
-      const alreadyExists = prevState.find(elem => elem.label === tagText);
-      // Don't add tag if it's empty or duplicate
-      if (tagText !== "" && !alreadyExists) {
-        return [
-          ...prevState,
-          {
-            key: findsUniqueKey(prevState, "key"),
-            label: tagText
-          }
-        ];
-      }
-      return prevState;
-    });
-  }, []);
+  const addTag = useCallback(
+    tagText => setTags(prevState => ({ ...prevState, [tagText]: true })),
+    [setTags]
+  );
 
-  /**
-   * On delete tag from filter
-   */
-  const deleteTag = useCallback(tagToDelete => {
-    setTags(prevState => {
-      return prevState.filter(tag => tag.key !== tagToDelete.key);
-    });
-  }, []);
+  const deleteTag = useCallback(tagText => setTags(prevState => {
+    const newState = { ...prevState };
+    delete newState[tagText];
+    return newState;
+  }), [setTags]);
 
-  const getLogsToExport = useCallback(() => {
-    const queryParams = {
-      level: { selected: levels, list: levelsList },
-      service: { selected: selectedService },
-      tag: { selected: tags },
-      searchMessage: searchMessage,
-      date: { from: getFromDate(), to: getToDate() },
-      robot: { selected: getSelectedRobots() },
-    };
-    return RobotManager.getLogs(queryParams)
-      .then(response => {
-        return response?.data || [];
-      })
-  }, [getFromDate, getToDate, levels, levelsList, searchMessage, selectedService, tags])
-
-  /**
-   * On export logs
-   */
   const handleExport = useCallback(() => {
     const sep = "\t";
-    getLogsToExport().then(logs => {
-      const contents = logs.map(log => {
-        const [date, time] = getDateTime(log.time);
-        return [date, time, log.robot, log.message].join(sep);
-      });
-      // from https://www.epochconverter.com/programming/
-      const dateString = !logs.length ? new Date().toISOString() : new Date(logs[0].time * 1e3).toISOString();
-      blobDownload([columns.join(sep), ...contents].join("\n"), `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
-    })
-  }, [columns, getLogsToExport]);
+    const contents = filteredLogs.map(log => {
+      const [date, time] = getDateTime(log.time);
+      return [date, time, log.robot, log.message].join(sep);
+    });
+    // from https://www.epochconverter.com/programming/
+    const dateString = !logs.length ? new Date().toISOString() : new Date(logs[0].time * 1e3).toISOString();
+    blobDownload([columns.join(sep), ...contents].join("\n"), `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
+  }, [columns, filteredLogs]);
 
   //========================================================================================
   /*                                                                                      *
@@ -443,46 +252,14 @@ const Logs = props => {
     );
   }, [classes.noRows, loading]);
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                 Format Data to Render                                *
-   *                                                                                      */
-  //========================================================================================
-
-  /**
-   *
-   */
-  const formatSelectedRobots = useCallback(() => {
-    return Object.values(selectedRobots);
-  }, [selectedRobots]);
-
-  /**
-   * Format logs data to be displayed
-   * @returns {array} All selected robots Logs
-   */
-  const formatLogsData = useCallback(() => {
-    // Remove duplicates
-    const data = _uniqWith(logsData, _isEqual).sort((a, b) => b.time - a.time);
-    logsDataRef.current = data;
-    // Return formated data
-    return data;
-  }, [logsData]);
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                        Render                                        *
-   *                                                                                      */
-  //========================================================================================
-  const formatedLogsData = formatLogsData();
   return (
     <div className={classes.externalDiv}>
       <div data-testid="section_logs" className={classes.wrapper}>
         <LogsFilterBar
-          selectedRobots={formatSelectedRobots()}
-          updateRobotSelection={onChangeRobotSelection}
+          robots={robots}
+          handleRobotChange={onChangeRobots}
           handleLevels={onChangeLevels}
           handleSelectedService={onChangeServices}
-          handleLimit={onChangeLimit}
           handleColumns={onChangeColumns}
           handleMessageRegex={onChangeMessage}
           handleDateChange={onChangeDate}
@@ -490,16 +267,13 @@ const Logs = props => {
           handleDeleteTag={deleteTag}
           handleExport={handleExport}
           levels={levels}
-          levelsList={levelsList}
-          selectedService={selectedService}
-          limit={limit}
+          service={service}
           columns={columns}
           columnList={COLUMN_LIST}
           tags={tags}
-          messageRegex={searchMessage}
+          messageRegex={message}
           selectedFromDate={selectedFromDate}
           selectedToDate={selectedToDate}
-          logsData={formatedLogsData}
         ></LogsFilterBar>
         <div
           data-testid="section_table-container"
@@ -509,8 +283,8 @@ const Logs = props => {
           <LogsTable
             columns={columns}
             columnList={COLUMN_LIST}
-            logsData={formatedLogsData}
-            levelsList={levelsList}
+            logsData={filteredLogs}
+            levels={levels}
             onRowClick={openLogDetails}
             noRowsRenderer={handleNoRows}
           ></LogsTable>

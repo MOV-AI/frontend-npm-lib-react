@@ -7,7 +7,6 @@ import {
   MenuItem,
   FormControl,
   ListItemText,
-  TextField,
   Typography
 } from "@material-ui/core";
 import TuneIcon from "@material-ui/icons/Tune";
@@ -19,8 +18,6 @@ import { MENU_PROPS } from "./_shared/Constants";
 const SettingsPopover = props => {
   // Props
   const {
-    limit,
-    handleLimit,
     columns,
     handleColumns
   } = props;
@@ -59,23 +56,6 @@ const SettingsPopover = props => {
 
   return (
     <FiltersIcon icon={<TuneIcon></TuneIcon>} title={i18n.t("Configuration")}>
-      <div className={classes.filtersButton}>
-        {/* Limit Input */}
-        <Typography component="div" className={classes.inputHeader}>
-          {`${i18n.t("Limit p/Robot")}:`}
-        </Typography>
-        <TextField
-          value={limit}
-          onChange={handleLimit}
-          className={classes.limitText}
-          id="outlined-number"
-          placeholder={i18n.t("limit")}
-          type="number"
-          InputLabelProps={{ shrink: true }}
-          InputProps={{ inputProps: { min: 1, max: 100 } }}
-          size="small"
-        />
-      </div>
       <div className={classes.columnsFilter}>
         {/* Columns Selection */}
         <Typography component="div" className={classes.inputHeader}>

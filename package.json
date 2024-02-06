@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-react",
-  "version": "1.3.0-3",
+  "version": "1.3.0-4",
   "description": "The Mov.AI's frontend library for React.",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
@@ -12,6 +12,7 @@
     "/api/v1": "http://localhost/api/v1"
   },
   "scripts": {
+    "lock": "mv ../../pnpm-workspace.yaml ../../pnpm-workspace.yaml.bak ; pnpm i ; mv ../../pnpm-workspace.yaml.bak ../../pnpm-workspace.yaml",
     "test": "jest --config jest.config.js",
     "testDev": "jest --config jest.config.js --watchAll",
     "build": "webpack --mode=production",
@@ -44,9 +45,13 @@
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-react": "^7.14.5",
     "@fortawesome/fontawesome-free": "^6.2.1",
+    "@material-table/core": "^4.3.11",
     "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
+    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@material-ui/pickers": "^3.3.10",
     "@material-ui/styles": "^4.11.5",
-    "@mov-ai/mov-fe-lib-core": "^1.2.0-3",
+    "@mov-ai/mov-fe-lib-core": "^1.2.0-7",
     "@storybook/addon-actions": "^6.4.19",
     "@storybook/addon-controls": "^6.4.19",
     "@storybook/addon-docs": "^6.4.19",
@@ -87,8 +92,13 @@
     "webpack-node-externals": "^3.0.0"
   },
   "peerDependencies": {
+    "@material-table/core": "^4.3.11",
     "@material-ui/core": "^4.12.4",
-    "@mov-ai/mov-fe-lib-core": "^1.2.0-3",
+    "@material-ui/icons": "^4.11.3",
+    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@material-ui/pickers": "^3.3.10",
+    "@material-ui/styles": "^4.11.5",
+    "@mov-ai/mov-fe-lib-core": "^1.2.0-7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -97,10 +107,6 @@
     "@date-io/date-fns": "^1.3.13",
     "@fontsource/open-sans": "^4.5.11",
     "@fontsource/roboto": "^4.5.8",
-    "@material-table/core": "^4.3.11",
-    "@material-ui/icons": "^4.11.3",
-    "@material-ui/lab": "^4.0.0-alpha.61",
-    "@material-ui/pickers": "^3.3.10",
     "@types/react": "^18.2.45",
     "clsx": "^1.1.1",
     "filefy": "^0.1.11",
@@ -114,8 +120,23 @@
     "prop-types": "^15.7.2",
     "react-virtualized": "^9.22.3",
     "react-virtualized-tree": "^3.4.1",
+    "react-virtuoso": "^4.6.3",
     "stacktrace-js": "^2.0.2",
     "styled-components": "^5.3.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "@types/react": "^18.2.45",
+      "@types/react-dom": "^18.2.18",
+      "@material-table/core": "^4.3.11",
+      "@material-ui/core": "^4.12.4",
+      "@material-ui/icons": "^4.11.3",
+      "@material-ui/lab": "^4.0.0-alpha.61",
+      "@material-ui/pickers": "^3.3.10",
+      "@material-ui/styles": "^4.11.5"
+    }
   },
   "files": [
     "dist",

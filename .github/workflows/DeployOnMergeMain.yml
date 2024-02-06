@@ -2,20 +2,17 @@ name: "Deploy - On branch main/release Push"
 on:
   push:
     branches:
+      - dev
       - main
       - "releases/**"
 
-    paths-ignore:
-      - "package.json"
-      - "package-lock.json"
-
 jobs:
   CI:
-    uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@v2
+    uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@pnpm
     with:
       deploy: "true"
       run_tests: "true"
-      legacy: true
+      pm: "pnpm"
     secrets:
       auto_commit_user: ${{ secrets.RAISE_BOT_COMMIT_USER }}
       auto_commit_mail: ${{ secrets.RAISE_BOT_COMMIT_MAIL }}

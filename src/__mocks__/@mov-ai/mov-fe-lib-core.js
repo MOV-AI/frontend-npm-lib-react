@@ -1,3 +1,5 @@
+import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
+
 const Authentication = {
   checkLogin: jest.fn().mockResolvedValue(false),
   refreshTokens: jest.fn().mockResolvedValue(true),
@@ -18,8 +20,5 @@ const User = function () {
 };
 
 // Constansts
-
-const SERVICE_LIST = ["backend", "spawner"];
-const CONSTANTS = { SERVICE_LIST };
 
 export { Authentication, User, CONSTANTS };

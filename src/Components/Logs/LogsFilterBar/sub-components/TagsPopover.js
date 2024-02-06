@@ -8,6 +8,7 @@ import { useTagsStyles } from "../../styles";
 const TagsPopover = props => {
   // Props
   const { tags, handleAddTag, handleDeleteTag } = props;
+  const selectedTags = Object.entries(tags).filter(([_key, value]) => value).map(([key]) => key);
   // State hook
   const [tagText, setTagText] = useState("");
   // Style hook
@@ -65,8 +66,8 @@ const TagsPopover = props => {
     return (
       <Chip
         data-testid="output_chip"
-        key={tag.key}
-        label={tag.label}
+        key={tag}
+        label={tag}
         onDelete={() => handleDeleteTag(tag)}
         className={classes.chip}
         size="small"
@@ -84,7 +85,7 @@ const TagsPopover = props => {
     <FiltersIcon
       icon={<LabelIcon data-testid="output_icon"></LabelIcon>}
       title="Tags"
-      isActive={tags?.length > 0}
+      isActive={selectedTags.length > 0}
     >
       <div data-testid="section_tags" className={classes.tagsContainer}>
         <TextField
@@ -98,7 +99,7 @@ const TagsPopover = props => {
           }}
           size="small"
         />
-        <div className={classes.tagsList}>{tags?.map(renderTag)}</div>
+        <div className={classes.tagsList}>{selectedTags.map(renderTag)}</div>
       </div>
     </FiltersIcon>
   );
