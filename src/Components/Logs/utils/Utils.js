@@ -1,3 +1,10 @@
+import React  from "react";
+import {
+  Checkbox,
+  MenuItem,
+  ListItemText
+} from "@material-ui/core";
+
 // Makes sure to find unique "i" of chip array
 // Input: [{key: 0, label: "Chip1"}, {key: 2, label: "Chip3"}], keyName= "key"
 // Output: 1
@@ -41,4 +48,23 @@ export function getDateTime(timestamp) {
   const date = getJustDateFromServer(timestamp);
   const time = getJustTimeFromServer(timestamp);
   return [ date, time ];
+}
+
+export function getSelector(labelMap, map) {
+  const selected = Object.entries(map).filter(([_key, value]) => value).map(([key]) => key);
+
+  return {
+    list: Object.keys(map),
+    selected,
+    menu: Object.keys(map).map(name => (
+      <MenuItem key={name} value={name}>
+        <Checkbox
+          inputProps={{ "data-testid": "input_checkbox" }}
+          checked={map[name]}
+        />
+        <ListItemText data-testid="output_label" primary={labelMap[name]} />
+      </MenuItem>
+    )),
+    renderValue: () => selected.map(name => labelMap[name]).join(", "),
+  };
 }
