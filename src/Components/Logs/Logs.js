@@ -66,6 +66,15 @@ async function hashString(string) {
   return hashHex;
 }
 
+function matchTags(tags, item) {
+  for (const tag in tags)
+    if (item[tag])
+      continue;
+    else
+      return false;
+  return true;
+}
+
 const MAX_FETCH_LOGS = 10000;
 const MAX_LOGS = 2000;
 let logsDataGlobal = [];
@@ -94,7 +103,7 @@ const Logs = props => {
     logsData.filter(item => (
       (levels[item.level] || noSelection(levels))
       && (service[item.service] || noSelection(service))
-      && (tags[item.tag] || noSelection(tags))
+      && (matchTags(tags, item) || noSelection(tags))
       && (item.message || "").includes(message)
       && (robots[item.robot] || noSelection(robots))
     )).slice(0, MAX_LOGS)
