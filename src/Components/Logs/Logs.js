@@ -1,6 +1,8 @@
 import React, { useCallback, useState, useRef, useEffect, useMemo } from "react";
 import { Typography } from "@material-ui/core";
 import { RobotManager, Features } from "@mov-ai/mov-fe-lib-core";
+import { makeSub } from "../../Utils/Sub";
+import useSub from "../../hooks/useSub";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
@@ -21,6 +23,26 @@ import i18n from "i18next";
 
 import { useStyles } from "./styles";
 import "./Logs.css";
+
+const logsSub = makeSub({
+  robots: {},
+  levels: DEFAULT_LEVELS,
+  service: DEFAULT_SERVICE,
+  columns: DEFAULT_SELECTED_COLUMNS,
+  tags: {},
+  message: "",
+  selectedFromDate: null,
+  selectedToDate: null,
+});
+
+const setRobots = logsSub.makeEmit((current, robots) => ({ ...current, robots }));
+const setLevels = logsSub.makeEmit((current, levels) => ({ ...current, levels }));
+const setService = logsSub.makeEmit((current, service) => ({ ...current, service }));
+const setColumns = logsSub.makeEmit((current, columns) => ({ ...current, columns }));
+const setTags = logsSub.makeEmit((current, tags) => ({ ...current, tags }));
+const setMessage = logsSub.makeEmit((current, message) => ({ ...current, message }));
+const setSelectedFromDate = logsSub.makeEmit((current, selectedFromDate) => ({ ...current, selectedFromDate }));
+const setSelectedToDate = logsSub.makeEmit((current, selectedToDate) => ({ ...current, selectedToDate }));
 
 // TODO this should be exported. Fleetboard uses it
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
@@ -44,9 +66,9 @@ function noSelection(obj) {
   return true;
 }
 
-function onChangeSelect(set, event) {
+function onChangeSelect(set, prevState, event) {
   const selected = event.target.value.reduce((a, key) => ({ ...a, [key]: true }), {});
-  set(prevState => Object.entries(prevState).reduce((a, [key]) => ({
+  set(Object.entries(prevState).reduce((a, [key]) => ({
     ...a,
     [key]: !!selected[key],
   }), {}));
@@ -68,7 +90,7 @@ async function hashString(string) {
 
 function matchTags(tags, item) {
   for (const tag in tags)
-    if (item[tag])
+    if (item[tag] !== undefined)
       continue;
     else
       return false;
@@ -83,17 +105,14 @@ const Logs = props => {
   const { robotsData } = props;
   const classes = useStyles();
   const getLogsTimeoutRef = useRef();
-  const [robots, setRobots] = useState(getRobots(robotsData));
   const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
   const logModalRef = useRef();
-  const [levels, setLevels] = useState(DEFAULT_LEVELS);
-  const [service, setService] = useState(DEFAULT_SERVICE);
-  const [columns, setColumns] = useState(DEFAULT_SELECTED_COLUMNS);
-  const [tags, setTags] = useState({});
-  const [message, setMessage] = useState("");
-  const [selectedFromDate, setSelectedFromDate] = useState("");
-  const [selectedToDate, setSelectedToDate] = useState(null);
+  const sub = useSub(logsSub);
+  const {
+    robots, levels, service, columns, tags,
+    message, selectedFromDate, selectedToDate,
+  } = sub;
   const [lastRequestTime, setLastRequestTime] = useState(null);
   const [logsData, setLogsData] = useState(logsDataGlobal);
   const [loading, setLoading] = useState(true);
@@ -106,6 +125,8 @@ const Logs = props => {
       && (matchTags(tags, item) || noSelection(tags))
       && (item.message || "").includes(message)
       && (robots[item.robot] || noSelection(robots))
+      && (!selectedFromDate || item.timestamp >= selectedFromDate)
+      && (!selectedToDate || item.timestamp <= selectedToDate)
     )).slice(0, MAX_LOGS)
   ), [logsData, levels, service, message, robots]);
 
@@ -130,12 +151,23 @@ const Logs = props => {
     }).then(([data, ...hashes]) => {
       setLogsData(prevState => {
         const oldLogs = prevState || [];
+        let j = data.length - 1;
 
-        return (logsDataGlobal = data.map((log, index) => {
+        for (let i = 0; j > -1 && i < oldLogs.length; i++, j--) {
+          const timestamp = new Date(data[j].time * 1000);
+
+          if (timestamp < oldLogs[i].timestamp
+            || (hashes[j] + (timestamp * 1000)) !== oldLogs[i].key)
+
+            break;
+        }
+
+        return (logsDataGlobal = data.slice(0, j).map((log, index) => {
           const timestamp = log.time * 1000;
           const date = new Date(timestamp);
           return ({
             ...log,
+            timestamp: date,
             time: date.toLocaleTimeString(),
             date: date.toLocaleDateString(),
             key: hashes[index] + (timestamp * 1000),
@@ -159,7 +191,7 @@ const Logs = props => {
       setLogsData((prevState) => logsDataGlobal = [
         {
           ...item,
-          timestamp: item.time,
+          timestamp: date,
           time: date.toLocaleTimeString(),
           date: date.toLocaleDateString(),
           key: hash + item.time
@@ -190,10 +222,10 @@ const Logs = props => {
     }
   }, [getLogs, restLogs]);
 
-  const onChangeRobots = useCallback(event => onChangeSelect(setRobots, event), [setRobots]);
+  const onChangeRobots = useCallback(event => onChangeSelect(setRobots, robots, event), [setRobots, robots]);
   const onChangeMessage = useCallback(text => setMessage(text), []);
-  const onChangeLevels = useCallback(event => onChangeSelect(setLevels, event), [setLevels]);
-  const onChangeServices = useCallback(event => onChangeSelect(setService, event), [setService]);
+  const onChangeLevels = useCallback(event => onChangeSelect(setLevels, levels, event), [setLevels, levels]);
+  const onChangeServices = useCallback(event => onChangeSelect(setService, service, event), [setService, service]);
 
   const onChangeColumns = useCallback(event => {
     // make sure columns are always with the same order
@@ -212,15 +244,15 @@ const Logs = props => {
   }, []);
 
   const addTag = useCallback(
-    tagText => setTags(prevState => ({ ...prevState, [tagText]: true })),
-    [setTags]
+    tagText => setTags({ ...tags, [tagText]: true }),
+    [setTags, tags]
   );
 
-  const deleteTag = useCallback(tagText => setTags(prevState => {
-    const newState = { ...prevState };
+  const deleteTag = useCallback(tagText => {
+    const newState = { ...tags };
     delete newState[tagText];
-    return newState;
-  }), [setTags]);
+    setTags(newState);
+  }, [setTags, tags]);
 
   const handleExport = useCallback(() => {
     const sep = "\t";
