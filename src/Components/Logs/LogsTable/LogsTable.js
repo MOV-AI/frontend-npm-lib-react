@@ -83,7 +83,7 @@ const MuiVirtualizedTable = props => {
     style={{ height: rowHeight }}
   >
     {row[column.dataKey]}
-  </TableCell>)), []);
+  </TableCell>)), [columns]);
 
   const CustomTable = useCallback(
     React.forwardRef((props, ref) => <Table ref={ref} {...props} className={classes.table} />),
@@ -120,7 +120,7 @@ const MuiVirtualizedTable = props => {
     <TableRow className={classes.tableHead}>
       {columns.map(headerRender)}
     </TableRow>
-  ), [classes]);
+  ), [classes, columns]);
 
   if (!data.length)
     return (
@@ -131,7 +131,7 @@ const MuiVirtualizedTable = props => {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
+          <TableRow data-testid="no-rows">
             <TableCell colSpan={columns.length} className={classes.noRows}>
               { i18n.t("No matches found") }
             </TableCell>
