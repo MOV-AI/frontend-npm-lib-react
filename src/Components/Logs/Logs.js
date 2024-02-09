@@ -154,9 +154,10 @@ const Logs = props => {
         let j = data.length - 1;
 
         for (let i = 0; j > -1 && i < oldLogs.length; i++, j--) {
-          const timestamp = new Date(data[j].time * 1000);
+          const timestamp = data[j].time * 1000;
+          const date = new Date(timestamp);
 
-          if (timestamp < oldLogs[i].timestamp
+          if (date < oldLogs[i].timestamp
             || (hashes[j] + (timestamp * 1000)) !== oldLogs[i].key)
 
             break;
