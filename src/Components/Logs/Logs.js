@@ -6,7 +6,6 @@ import useSub from "../../hooks/useSub";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
-import LogsSkeleton from "./LogsSkeleton";
 import {
   ROBOT_STATES,
   DATE_KEY_OPTION,
@@ -113,13 +112,11 @@ const Logs = props => {
     robots, levels, service, columns, tags,
     message, selectedFromDate, selectedToDate,
   } = sub;
-  const [lastRequestTime, setLastRequestTime] = useState(null);
   const [logsData, setLogsData] = useState(logsDataGlobal);
-  const [loading, setLoading] = useState(true);
   const restLogs = useMemo(() => !Features.get("logStreaming"), []);
 
   const filteredLogs = useMemo(() => (
-    logsData.filter(item => (
+    logsDataGlobal.filter(item => (
       (levels[item.level] || noSelection(levels))
       && (service[item.service] || noSelection(service))
       && (matchTags(tags, item) || noSelection(tags))
@@ -128,55 +125,50 @@ const Logs = props => {
       && (!selectedFromDate || item.timestamp >= selectedFromDate)
       && (!selectedToDate || item.timestamp <= selectedToDate)
     )).slice(0, MAX_LOGS)
-  ), [logsData, levels, service, message, robots]);
+  ), [logsData, levels, service, message, tags, robots, selectedFromDate, selectedToDate]);
 
   // if robotsData changes, update robots
   useEffect(() => { setRobots(getRobots(robotsData)); }, [setRobots, robotsData]);
 
   const getLogs = useCallback(() => {
-    if (logsData.length) {
-      console.assert(restLogs);
-      setLoading(true);
-    }
-
-    const requestTime = new Date().getTime();
     // Remove previously enqueued requests
     clearTimeout(getLogsTimeoutRef.current);
     RobotManager.getLogs({
       limit: MAX_FETCH_LOGS,
-      date: { from: lastRequestTime ?? selectedFromDate, to: selectedToDate },
+      date: { from: logsDataGlobal.length ? logsDataGlobal[logsDataGlobal.length - 1].timestamp : selectedFromDate, to: selectedToDate },
     }).then(response => {
       const data = response?.data || [];
       return Promise.all([Promise.resolve(data)].concat(data.map(item => hashString(item.message))));
     }).then(([data, ...hashes]) => {
-      setLogsData(prevState => {
-        const oldLogs = prevState || [];
-        let j = data.length - 1;
+      const oldLogs = logsDataGlobal || [];
+      let j = data.length - 1;
 
-        for (let i = 0; j > -1 && i < oldLogs.length; i++, j--) {
-          const timestamp = new Date(data[j].time * 1000);
+      for (let i = 0; j > -1 && i < oldLogs.length; i++, j--) {
+        const timestamp = data[j].time * 1000;
+        const date = new Date(timestamp);
 
-          if (timestamp < oldLogs[i].timestamp
-            || (hashes[j] + (timestamp * 1000)) !== oldLogs[i].key)
+        if (date === oldLogs[i].timestamp && (hashes[j] + (timestamp * 1000)) === oldLogs[i].key)
+          break;
 
-            break;
-        }
+        if (date < oldLogs[i].timestamp)
+          break;
+      }
 
-        return (logsDataGlobal = data.slice(0, j).map((log, index) => {
-          const timestamp = log.time * 1000;
-          const date = new Date(timestamp);
-          return ({
-            ...log,
-            timestamp: date,
-            time: date.toLocaleTimeString(),
-            date: date.toLocaleDateString(),
-            key: hashes[index] + (timestamp * 1000),
-          });
-        }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
-      });
-      setLastRequestTime(requestTime);
+      const newLogs =  (logsDataGlobal = data.slice(0, j).map((log, index) => {
+        const timestamp = log.time * 1000;
+        const date = new Date(timestamp);
+        return ({
+          ...log,
+          timestamp: date,
+          time: date.toLocaleTimeString(),
+          date: date.toLocaleDateString(),
+          key: hashes[index] + (timestamp * 1000),
+        });
+      }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
+
+      setLogsData(newLogs);
     });
-  }, [selectedFromDate, selectedToDate, logsData, setLogsData, robotsData, restLogs]);
+  }, [selectedFromDate, selectedToDate, setLogsData, robotsData, restLogs]);
 
   const sock = useMemo(() => restLogs ? null : RobotManager.openLogs({}), []);
 
@@ -216,7 +208,6 @@ const Logs = props => {
     if (restLogs) {
       clearTimeout(refreshLogsTimeoutRef.current);
       refreshLogsTimeoutRef.current = setTimeout(() => {
-        setLoading(true);
         getLogs();
       }, 1000);
     }
@@ -284,14 +275,10 @@ const Logs = props => {
   const handleNoRows = useCallback(() => {
     return (
       <Typography data-testid="output_no-rows" variant="h2">
-        {loading ? (
-          <LogsSkeleton></LogsSkeleton>
-        ) : (
-          <div className={classes.noRows}>{i18n.t("No matches found")}</div>
-        )}
+        <div className={classes.noRows}>{i18n.t("No matches found")}</div>
       </Typography>
     );
-  }, [classes.noRows, loading]);
+  }, [classes.noRows]);
 
   return (
     <div className={classes.externalDiv}>
