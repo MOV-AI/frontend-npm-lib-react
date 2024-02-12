@@ -168,7 +168,7 @@ const Logs = props => {
 
       setLogsData(newLogs);
     });
-  }, [selectedFromDate, selectedToDate, setLogsData, robotsData, restLogs]);
+  }, [selectedFromDate, selectedToDate, logsData, setLogsData, robotsData, restLogs]);
 
   const sock = useMemo(() => restLogs ? null : RobotManager.openLogs({}), []);
 
