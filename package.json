@@ -107,6 +107,7 @@
     "@date-io/date-fns": "^1.3.13",
     "@fontsource/open-sans": "^4.5.11",
     "@fontsource/roboto": "^4.5.8",
+    "@tty-pt/sub": "^2.2.11",
     "@types/react": "^18.2.45",
     "clsx": "^1.1.1",
     "filefy": "^0.1.11",

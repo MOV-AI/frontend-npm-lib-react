@@ -1,8 +1,7 @@
 import React, { useCallback, useState, useRef, useEffect, useMemo } from "react";
 import { Typography } from "@material-ui/core";
 import { RobotManager, Features } from "@mov-ai/mov-fe-lib-core";
-import { makeSub } from "../../Utils/Sub";
-import useSub from "../../hooks/useSub";
+import { Sub } from "@tty-pt/sub";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
@@ -23,7 +22,7 @@ import i18n from "i18next";
 import { useStyles } from "./styles";
 import "./Logs.css";
 
-const logsSub = makeSub({
+const logsSub = new Sub({
   robots: {},
   levels: DEFAULT_LEVELS,
   service: DEFAULT_SERVICE,
@@ -34,14 +33,14 @@ const logsSub = makeSub({
   selectedToDate: null,
 });
 
-const setRobots = logsSub.makeEmit((current, robots) => ({ ...current, robots }));
-const setLevels = logsSub.makeEmit((current, levels) => ({ ...current, levels }));
-const setService = logsSub.makeEmit((current, service) => ({ ...current, service }));
-const setColumns = logsSub.makeEmit((current, columns) => ({ ...current, columns }));
-const setTags = logsSub.makeEmit((current, tags) => ({ ...current, tags }));
-const setMessage = logsSub.makeEmit((current, message) => ({ ...current, message }));
-const setSelectedFromDate = logsSub.makeEmit((current, selectedFromDate) => ({ ...current, selectedFromDate }));
-const setSelectedToDate = logsSub.makeEmit((current, selectedToDate) => ({ ...current, selectedToDate }));
+const setRobots = logsSub.makeEmit((robots, current) => ({ ...current, robots }));
+const setLevels = logsSub.makeEmit((levels, current) => ({ ...current, levels }));
+const setService = logsSub.makeEmit((service, current) => ({ ...current, service }));
+const setColumns = logsSub.makeEmit((columns, current) => ({ ...current, columns }));
+const setTags = logsSub.makeEmit((tags, current) => ({ ...current, tags }));
+const setMessage = logsSub.makeEmit((message, current) => ({ ...current, message }));
+const setSelectedFromDate = logsSub.makeEmit((selectedFromDate, current) => ({ ...current, selectedFromDate }));
+const setSelectedToDate = logsSub.makeEmit((selectedToDate, current) => ({ ...current, selectedToDate }));
 
 // TODO this should be exported. Fleetboard uses it
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
@@ -107,7 +106,7 @@ const Logs = props => {
   const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
   const logModalRef = useRef();
-  const sub = useSub(logsSub);
+  const sub = logsSub.use();
   const {
     robots, levels, service, columns, tags,
     message, selectedFromDate, selectedToDate,
@@ -126,6 +125,11 @@ const Logs = props => {
       && (!selectedToDate || item.timestamp <= selectedToDate)
     )).slice(0, MAX_LOGS)
   ), [logsData, levels, service, message, tags, robots, selectedFromDate, selectedToDate]);
+
+  useEffect(() => {
+    const newTags = props.tags.reduce((a, tag) => ({ ...a, [tag]: true }), {});
+    setTags(newTags);
+  }, [setTags, props.tags]);
 
   // if robotsData changes, update robots
   useEffect(() => { setRobots(getRobots(robotsData)); }, [setRobots, robotsData]);
