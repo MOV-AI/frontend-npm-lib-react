@@ -37,7 +37,6 @@ export const filterIconStyles = makeStyles(theme => ({
     height: "-webkit-fill-available"
   },
   titleRow: {
-    padding: "10px 10px 0px 20px",
     display: "flex",
     flexDirection: "row",
     "& > div.text": {
@@ -53,6 +52,5 @@ export const filterIconStyles = makeStyles(theme => ({
     flexGrow: 1,
     display: "flex",
     flexDirection: "column",
-    margin: "10px 0px 0px 10px"
   }
 }));

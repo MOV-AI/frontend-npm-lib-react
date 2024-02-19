@@ -1,47 +1,17 @@
 import React, { useCallback, useState, useRef, useEffect, useMemo } from "react";
-import { Typography } from "@material-ui/core";
 import { RobotManager, Features } from "@mov-ai/mov-fe-lib-core";
-import { makeSub } from "../../Utils/Sub";
 import useSub from "../../hooks/useSub";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
-import {
-  ROBOT_STATES,
-  DATE_KEY_OPTION,
-  COLUMN_LIST,
-  DEFAULT_SELECTED_COLUMNS,
-  DEFAULT_LEVELS,
-  DEFAULT_SERVICE,
-  ROBOT_LOG_TYPE,
-} from "./utils/Constants";
+import { ROBOT_LOG_TYPE } from "./utils/Constants";
+import { COLUMNS_LABEL } from "./utils/Constants";
 import { getDateTime } from "./utils/Utils";
 import useUpdateEffect from "./hooks/useUpdateEffect";
 import _isEqual from "lodash/isEqual";
-import i18n from "i18next";
-
 import { useStyles } from "./styles";
+import { logsSub } from "./sub";
 import "./Logs.css";
-
-const logsSub = makeSub({
-  robots: {},
-  levels: DEFAULT_LEVELS,
-  service: DEFAULT_SERVICE,
-  columns: DEFAULT_SELECTED_COLUMNS,
-  tags: {},
-  message: "",
-  selectedFromDate: null,
-  selectedToDate: null,
-});
-
-const setRobots = logsSub.makeEmit((current, robots) => ({ ...current, robots }));
-const setLevels = logsSub.makeEmit((current, levels) => ({ ...current, levels }));
-const setService = logsSub.makeEmit((current, service) => ({ ...current, service }));
-const setColumns = logsSub.makeEmit((current, columns) => ({ ...current, columns }));
-const setTags = logsSub.makeEmit((current, tags) => ({ ...current, tags }));
-const setMessage = logsSub.makeEmit((current, message) => ({ ...current, message }));
-const setSelectedFromDate = logsSub.makeEmit((current, selectedFromDate) => ({ ...current, selectedFromDate }));
-const setSelectedToDate = logsSub.makeEmit((current, selectedToDate) => ({ ...current, selectedToDate }));
 
 // TODO this should be exported. Fleetboard uses it
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
@@ -63,14 +33,6 @@ function noSelection(obj) {
       return false;
   }
   return true;
-}
-
-function onChangeSelect(set, prevState, event) {
-  const selected = event.target.value.reduce((a, key) => ({ ...a, [key]: true }), {});
-  set(Object.entries(prevState).reduce((a, [key]) => ({
-    ...a,
-    [key]: !!selected[key],
-  }), {}));
 }
 
 function getRobots(robotsData) {
@@ -101,7 +63,7 @@ const MAX_LOGS = 2000;
 let logsDataGlobal = [];
 
 const Logs = props => {
-  const { robotsData } = props;
+  const { robotsData, hide, force } = props;
   const classes = useStyles();
   const getLogsTimeoutRef = useRef();
   const refreshLogsTimeoutRef = useRef();
@@ -127,8 +89,16 @@ const Logs = props => {
     )).slice(0, MAX_LOGS)
   ), [logsData, levels, service, message, tags, robots, selectedFromDate, selectedToDate]);
 
+  useEffect(() => {
+    for (const key of Object.keys(props.force ?? {}))
+      logsSub.set(key, {
+        ...sub[key],
+        ...force[key].reduce((a, subKey) => ({ ...a, [subKey]: 'force' }), {}),
+      });
+  }, [force]);
+
   // if robotsData changes, update robots
-  useEffect(() => { setRobots(getRobots(robotsData)); }, [setRobots, robotsData]);
+  useEffect(() => { logsSub.set("robots", getRobots(robotsData)); }, [robotsData]);
 
   const getLogs = useCallback(() => {
     // Remove previously enqueued requests
@@ -213,38 +183,6 @@ const Logs = props => {
     }
   }, [getLogs, restLogs]);
 
-  const onChangeRobots = useCallback(event => onChangeSelect(setRobots, robots, event), [setRobots, robots]);
-  const onChangeMessage = useCallback(text => setMessage(text), []);
-  const onChangeLevels = useCallback(event => onChangeSelect(setLevels, levels, event), [setLevels, levels]);
-  const onChangeServices = useCallback(event => onChangeSelect(setService, service, event), [setService, service]);
-
-  const onChangeColumns = useCallback(event => {
-    // make sure columns are always with the same order
-    const newColumns = Object.keys(COLUMN_LIST).filter(col =>
-      event.target.value.includes(col)
-    );
-    setColumns(newColumns);
-  }, []);
-
-  const onChangeDate = useCallback((newDate, keyToChange) => {
-    const setDate = {
-      [DATE_KEY_OPTION.FROM]: date => setSelectedFromDate(date),
-      [DATE_KEY_OPTION.TO]: date => setSelectedToDate(date)
-    };
-    setDate[keyToChange](newDate);
-  }, []);
-
-  const addTag = useCallback(
-    tagText => setTags({ ...tags, [tagText]: true }),
-    [setTags, tags]
-  );
-
-  const deleteTag = useCallback(tagText => {
-    const newState = { ...tags };
-    delete newState[tagText];
-    setTags(newState);
-  }, [setTags, tags]);
-
   const handleExport = useCallback(() => {
     const sep = "\t";
     const contents = filteredLogs.map(log => {
@@ -252,57 +190,19 @@ const Logs = props => {
       return [date, time, log.robot, log.message].join(sep);
     });
     // from https://www.epochconverter.com/programming/
-    const dateString = !logs.length ? new Date().toISOString() : new Date(logs[0].time * 1e3).toISOString();
-    blobDownload([columns.join(sep), ...contents].join("\n"), `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
+    const dateString = !filteredLogs.length ? new Date().toISOString() : new Date(filteredLogs[0].time * 1e3).toISOString();
+    const columnLabels = Object.keys(columns).filter(key => columns[key]).map(key => COLUMNS_LABEL[key]);
+    blobDownload([columnLabels.join(sep), ...contents].join("\n"), `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
   }, [columns, filteredLogs]);
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                Handlers for Logs Table                               *
-   *                                                                                      */
-  //========================================================================================
-
-  /**
-   * Open log details
-   */
   const openLogDetails = useCallback(log => {
     logModalRef.current.open(log.rowData);
   }, []);
 
-  /**
-   * Render Logs skeleton
-   */
-  const handleNoRows = useCallback(() => {
-    return (
-      <Typography data-testid="output_no-rows" variant="h2">
-        <div className={classes.noRows}>{i18n.t("No matches found")}</div>
-      </Typography>
-    );
-  }, [classes.noRows]);
-
   return (
     <div className={classes.externalDiv}>
       <div data-testid="section_logs" className={classes.wrapper}>
-        <LogsFilterBar
-          robots={robots}
-          handleRobotChange={onChangeRobots}
-          handleLevels={onChangeLevels}
-          handleSelectedService={onChangeServices}
-          handleColumns={onChangeColumns}
-          handleMessageRegex={onChangeMessage}
-          handleDateChange={onChangeDate}
-          handleAddTag={addTag}
-          handleDeleteTag={deleteTag}
-          handleExport={handleExport}
-          levels={levels}
-          service={service}
-          columns={columns}
-          columnList={COLUMN_LIST}
-          tags={tags}
-          messageRegex={message}
-          selectedFromDate={selectedFromDate}
-          selectedToDate={selectedToDate}
-        ></LogsFilterBar>
+        <LogsFilterBar handleExport={handleExport} hide={hide} />
         <div
           data-testid="section_table-container"
           ref={handleContainerRef}
@@ -310,7 +210,6 @@ const Logs = props => {
         >
           <LogsTable
             columns={columns}
-            columnList={COLUMN_LIST}
             logsData={filteredLogs}
             levels={levels}
             onRowClick={openLogDetails}

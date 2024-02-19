@@ -1,3 +1,5 @@
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
+
 export type EmitNow<T extends any> = (...args: any[]) => T;
 export type Emit<T extends any> = (...args: any[]) => T | Promise<T>;
 
@@ -11,6 +13,9 @@ interface Sub<T extends any> {
   };
   makeEmitNow: (cb?: EmitNow<T>) => (...args: any[]) => T;
   makeEmit: (cb?: Emit<T>) => (...args: any[]) => Promise<T>;
+  boundEmit: (path: string) => (arg: any) => T;
+  use: () => T;
+  set: (path: string, value: any) => T;
 }
 
 export
@@ -53,9 +58,35 @@ function makeSub<T extends any>(defaultData: T): Sub<T> {
     };
   }
 
+  function boundEmit(path: string = "") {
+    if (path)
+      return function (value: any) {
+        const obj = valueMap.value as object;
+        return update({ ...obj, [path]: value } as T);
+      };
+    else
+      return function (value: any) {
+        return update(value);
+      };
+  }
+
+  function set(path: string = "", value: any) {
+    if (path) {
+      const obj = valueMap.value as object;
+      return update({ ...obj, [path]: value } as T);
+    } else
+      return update(value);
+  }
+
+  function use() {
+    const [data, setData] = useState(valueMap.value) as [T, Dispatch<SetStateAction<T>>];
+    useEffect(() => subscribe(setData), []);
+    return data;
+  };
+
   function current() {
     return valueMap.value;
   }
 
-  return { current, update, subscribe, data: valueMap, makeEmit, makeEmitNow };
+  return { current, update, subscribe, data: valueMap, makeEmit, makeEmitNow, boundEmit, use, set };
 }
