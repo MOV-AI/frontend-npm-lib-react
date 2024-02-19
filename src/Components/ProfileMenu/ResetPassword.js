@@ -131,7 +131,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
         return response;
       })
       .catch(err => {
-        const message = err.message ? err.message : err.statusText;
+        const message = err.message ? err.message : i18n.t('An unexpected error occurred. Please try again.');
         snackbar({ message, severity: ALERT_SEVERITY.ERROR });
         console.warn(message, err);
         return err;
