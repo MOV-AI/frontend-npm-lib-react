@@ -37,12 +37,17 @@ const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
   authSub.update({ ...loggedOutInfo, loading: true });
 
   try {
-    const [loggedIn, currentUser] = await Promise.all([
+    const [loggedIn, currentUserBare] = await Promise.all([
       Authentication.checkLogin(),
       (new User()).getCurrentUserWithPermissions(),
     ]);
 
-    console.assert(currentUser);
+    console.assert(currentUserBare);
+
+    const currentUser = {
+      ...currentUserBare,
+      roles: currentUserBare.Roles.reduce((a, role) => ({ ...a, [role]: true }), {}),
+    };
 
     if (loggedIn)
       return {
