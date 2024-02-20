@@ -57,12 +57,6 @@ export const useSearchInputStyles = makeStyles(theme => ({
 
 export const useSelectBoxStyle = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
-  selectBox: { 
-      minWidth: "290px" 
-    },
-  smallSelectBox: {
-    width: "130px",
-  }
 }));
 
 export const useTagsStyles = makeStyles(theme => ({
@@ -73,8 +67,6 @@ export const useTagsStyles = makeStyles(theme => ({
   tagsContainer: {
     display: "flex",
     flexDirection: "column",
-    padding: theme.spacing(0.5) + " !important",
-    margin: theme.spacing(0, 3, 0, 3) + " !important",
   },
   tagsList: {
     marginTop: theme.spacing(3) + " !important",
@@ -86,10 +78,6 @@ export const useTagsStyles = makeStyles(theme => ({
 
 export const useSettingsStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
-  filtersButton: {
-    display: "flex",
-    flexDirection: "row"
-  },
   columnsFilter: {
     display: "flex",
     flexDirection: "column",
@@ -109,16 +97,15 @@ export const useSettingsStyles = makeStyles(theme => ({
 export const useLogFilterStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
   root: {
+    display: "flex",
+    flexDirection: "row",
     overflow: "auto",
+    alignItems: "center",
+    padding: "0px 16px",
+    gap: "16px",
+    overflowX: "auto",
   },
-  flexContainer: {
-    flex: 1,
+  marginLeftAuto: {
+    marginLeft: "auto",
   },
-  doubleFlexContainer: {
-    flex: 2,
-  },
-  displayFlex: { display: "flex" },
-  spaceBetween: {justifyContent: "space-between" },
-  flexEnd: {justifyContent: "flex-end" },
-  center: {justifyContent: "center" },
 }));
