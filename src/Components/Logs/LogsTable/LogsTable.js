@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/styles";
@@ -7,7 +7,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableHead from "@material-ui/core/TableHead";
 import TableCell from "@material-ui/core/TableCell";
-import { COLUMN_LIST, COLOR_CODING } from "../utils/Constants";
+import { COLOR_CODING, COLUMNS_LABEL } from "../utils/Constants";
 import i18n from "i18next";
 import { TableVirtuoso } from "react-virtuoso";
 
@@ -67,6 +67,8 @@ const MuiVirtualizedTable = props => {
     nonVirtual,
   } = props;
 
+  const columnKeys = useMemo(() => Object.keys(columns).filter(key => columns[key]), [columns]);
+
   const classes = useStyles();
 
   const getRowClassName = useCallback((item) => clsx(
@@ -75,15 +77,15 @@ const MuiVirtualizedTable = props => {
     classes.tableRowHover,
   ), [classes]);
 
-  const itemRender = useCallback((_rowIndex, row) => columns.map(column => (<TableCell
+  const itemRender = useCallback((_rowIndex, row) => columnKeys.map(dataKey => (<TableCell
     data-testid="section_table-cell"
-    key={column.dataKey}
+    key={dataKey}
     className={`${classes.tableCell} ${classes.flexContainer}`}
     variant="body"
     style={{ height: rowHeight }}
   >
-    {row[column.dataKey]}
-  </TableCell>)), [columns]);
+    {row[dataKey]}
+  </TableCell>)), [columnKeys]);
 
   const CustomTable = useCallback(
     React.forwardRef((props, ref) => <Table ref={ref} {...props} className={classes.table} />),
@@ -103,7 +105,8 @@ const MuiVirtualizedTable = props => {
     </TableRow>);
   }, [getRowClassName]);
 
-  const headerRender = useCallback(({ label }) => {
+  const headerRender = useCallback(dataKey => {
+    const label = COLUMNS_LABEL[dataKey];
     return (
       <TableCell
         key={label}
@@ -118,21 +121,21 @@ const MuiVirtualizedTable = props => {
 
   const fixedHeaderRender = useCallback(() => (
     <TableRow className={classes.tableHead}>
-      {columns.map(headerRender)}
+      {columnKeys.map(headerRender)}
     </TableRow>
-  ), [classes, columns]);
+  ), [classes, columnKeys]);
 
   if (!data.length)
     return (
       <Table stickyHeader className={classes.table}>
         <TableHead>
           <TableRow>
-            {columns.map(headerRender)}
+            {columnKeys.map(headerRender)}
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow data-testid="no-rows">
-            <TableCell colSpan={columns.length} className={classes.noRows}>
+            <TableCell colSpan={columnKeys.length} className={classes.noRows}>
               { i18n.t("No matches found") }
             </TableCell>
           </TableRow>
@@ -150,7 +153,7 @@ const MuiVirtualizedTable = props => {
       <Table stickyHeader className={classes.table}>
         <TableHead>
           <TableRow>
-            {columns.map(headerRender)}
+            {columnKeys.map(headerRender)}
           </TableRow>
         </TableHead>
         <TableBody>{rows}</TableBody>
@@ -169,12 +172,12 @@ const MuiVirtualizedTable = props => {
 MuiVirtualizedTable.propTypes = {
   data: PropTypes.array,
   nonVirtual: PropTypes.bool,
-  columns: PropTypes.array,
+  columns: PropTypes.object,
   onRowClick: PropTypes.func,
 };
 
 export default function LogsTable(props) {
-  const { logsData } = props;
+  const { columns, logsData } = props;
   return (
     <MuiVirtualizedTable
       { ...props }
@@ -183,13 +186,13 @@ export default function LogsTable(props) {
       rowCount={logsData.length}
       rowGetter={({ index }) => logsData[index]}
       data={logsData}
-      columns={props.columns.map(elem => COLUMN_LIST[elem])}
+      columns={columns}
     />
   );
 }
 
 LogsTable.propTypes = {
-  columns: PropTypes.array,
+  columns: PropTypes.object,
   logsData: PropTypes.array,
   height: PropTypes.number,
   onRowClick: PropTypes.func,
@@ -197,7 +200,7 @@ LogsTable.propTypes = {
 };
 
 LogsTable.defaultProps = {
-  columns: [],
+  columns: {},
   logsData: [],
   height: 10
 };

@@ -14,37 +14,13 @@ export const ROBOT_STATES = {
   OFFLINE: "OFFLINE"
 };
 
-export const COLUMN_LIST = {
-  Date: {
-    label: "Date",
-    dataKey: "date",
-    width: 110,
-  },
-  Time: {
-    label: "Time",
-    dataKey: "time",
-    width: 100,
-  },
-  Level: {
-    label: "Level",
-    dataKey: "level",
-    width: 100
-  },
-  Module: {
-    label: "Module",
-    dataKey: "module",
-    width: 150
-  },
-  Robot: {
-    label: "Robot",
-    dataKey: "robot",
-    width: 100
-  },
-  Message: {
-    label: "Message",
-    dataKey: "message",
-    width: 100
-  }
+export const COLUMNS_LABEL = {
+  date: "Date",
+  time: "Time",
+  level: "Level",
+  module: "Module",
+  robot: "Robot",
+  message: "Message"
 };
 
 export const DEFAULT_SERVICE = Object.keys(CONSTANTS.SERVICE_LABEL).reduce((a, item) => ({ [item]: false, ...a }), {
@@ -60,7 +36,14 @@ export const DEFAULT_LEVELS = {
   CRITICAL: true
 };
 
-export const DEFAULT_SELECTED_COLUMNS = ["Date", "Time", "Robot", "Message"];
+export const DEFAULT_COLUMNS = {
+  date: true,
+  time: true,
+  module: false,
+  robot: true,
+  message: true,
+};
+
 export const DEFAULT_LIMIT = 50;
 export const ROBOT_LOG_TYPE = ["module", "service"];
 

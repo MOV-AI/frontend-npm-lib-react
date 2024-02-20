@@ -57,10 +57,11 @@ export function getSelector(labelMap, map) {
     list: Object.keys(map),
     selected,
     menu: Object.keys(map).map(name => (
-      <MenuItem key={name} value={name}>
+      <MenuItem key={name} value={name} disabled={map[name] && map[name] !== true}>
         <Checkbox
           inputProps={{ "data-testid": "input_checkbox" }}
           checked={map[name]}
+          disabled={map[name] && map[name] !== true}
         />
         <ListItemText data-testid="output_label" primary={labelMap[name]} />
       </MenuItem>
