@@ -213,7 +213,6 @@ const Logs = props => {
             logsData={filteredLogs}
             levels={levels}
             onRowClick={openLogDetails}
-            noRowsRenderer={handleNoRows}
           ></LogsTable>
         </div>
       </div>
