@@ -39,6 +39,7 @@ export const DEFAULT_LEVELS = {
 export const DEFAULT_COLUMNS = {
   date: true,
   time: true,
+  level: false,
   module: false,
   robot: true,
   message: true,
