@@ -58,12 +58,12 @@ function matchTags(tags, item) {
   return true;
 }
 
-const MAX_FETCH_LOGS = 10000;
+const MAX_FETCH_LOGS = 20000;
 const MAX_LOGS = 2000;
 let logsDataGlobal = [];
 
 const Logs = props => {
-  const { robotsData, hide, force } = props;
+  const { robotsData, hide, force, defaults } = props;
   const classes = useStyles();
   const getLogsTimeoutRef = useRef();
   const refreshLogsTimeoutRef = useRef();
@@ -96,6 +96,14 @@ const Logs = props => {
         ...force[key].reduce((a, subKey) => ({ ...a, [subKey]: 'force' }), {}),
       });
   }, [force]);
+
+  useEffect(() => {
+    for (const key of Object.keys(props.defaults ?? {}))
+      logsSub.set(key, {
+        ...sub[key],
+        ...defaults[key],
+      });
+  }, [defaults]);
 
   // if robotsData changes, update robots
   useEffect(() => { logsSub.set("robots", getRobots(robotsData)); }, [robotsData]);
