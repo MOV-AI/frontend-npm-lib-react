@@ -19,6 +19,7 @@ export const COLUMNS_LABEL = {
   time: "Time",
   level: "Level",
   module: "Module",
+  service: "Service",
   robot: "Robot",
   message: "Message"
 };
@@ -41,6 +42,7 @@ export const DEFAULT_COLUMNS = {
   time: true,
   level: false,
   module: false,
+  service: false,
   robot: true,
   message: true,
 };
