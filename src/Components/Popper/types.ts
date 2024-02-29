@@ -1,4 +1,4 @@
-import { PopperPlacementType } from "@material-ui/core";
+import { PopperPlacementType } from "@mui/material";
 
 export interface HTMLPopperProps {
   clickableElement: JSX.Element;

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { MasterDB } from "@mov-ai/mov-fe-lib-core";
-import Alert from "@material-ui/lab/Alert";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { makeStyles } from "@material-ui/styles";
-import { Button } from "@material-ui/core";
+import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
+import { makeStyles } from "@mui/styles";
+import { Button } from "@mui/material";
 
 const useStyles = makeStyles(() => ({
   alert: { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 9999 }

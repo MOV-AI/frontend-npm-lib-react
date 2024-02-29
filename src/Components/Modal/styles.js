@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 export const modalStyles = makeStyles(theme => {
   return {
@@ -18,6 +18,9 @@ export const modalStyles = makeStyles(theme => {
     cardContent: {
       flexGrow: 1,
       maxHeight: "calc(100% - 70px)",
+      display: "flex",
+      gap: "16px",
+      flexDirection: "column",
       overflowY: "auto"
     },
     divider: {

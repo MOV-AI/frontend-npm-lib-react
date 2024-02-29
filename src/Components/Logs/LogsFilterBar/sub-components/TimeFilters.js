@@ -1,11 +1,9 @@
 import React, { useCallback } from "react";
 import i18n from "i18next";
-import {
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import TodayIcon from "@material-ui/icons/Today";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import TodayIcon from "@mui/icons-material/Today";
 import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
 import { logsSub } from "../../sub";
 
@@ -30,8 +28,8 @@ const TimeFilters = () => {
       title={i18n.t("Date Range")}
       isActive={!selectedFromDate || !selectedToDate}
     >
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardDateTimePicker
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DateTimePicker
           key="time-picker"
           size="small"
           variant="inline"
@@ -41,7 +39,7 @@ const TimeFilters = () => {
           onChange={handleFromDateChange}
           format={DATE_TIME_FORMAT}
         />
-        <KeyboardDateTimePicker
+        <DateTimePicker
           key="time-picker2"
           size="small"
           variant="inline"
@@ -51,7 +49,7 @@ const TimeFilters = () => {
           onChange={handleToDateChange}
           format={DATE_TIME_FORMAT}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     </FiltersIcon>
   );
 };

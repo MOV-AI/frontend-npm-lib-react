@@ -1,7 +1,7 @@
 import React from "react";
 import ContextMenu from "../src/Components/ContextMenu";
 import Button from "../src/Components/Button";
-import CropFree from "@material-ui/icons/CropFreeOutlined";
+import CropFree from "@mui/icons-material/CropFreeOutlined";
 
 export default {
   title: "Context Menu"

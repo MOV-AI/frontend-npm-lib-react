@@ -20,7 +20,7 @@ export interface LoginFormAdvancedProps {
   domains: string[];
   selectedProvider: string;
   onProviderChange: (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>,
+    event: React.ChangeEvent<HTMLInputElement>,
     child: React.ReactNode
   ) => void;
 }
