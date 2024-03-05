@@ -3,7 +3,7 @@ import {
   Input,
   Select,
   FormControl,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useSelectBoxStyle } from "../styles";
 import { getSelector } from "../utils/Utils";
 import { logsSub } from "../sub";

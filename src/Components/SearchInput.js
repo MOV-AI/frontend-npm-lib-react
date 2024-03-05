@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { alpha } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/styles";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
+import { alpha } from "@mui/material/styles";
+import { withStyles } from "@mui/styles";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
 import PropTypes from "prop-types";
 
 const styles = theme => ({

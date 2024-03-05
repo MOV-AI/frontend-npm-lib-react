@@ -55,13 +55,26 @@ const themeFactory = particular => _merge(particular, {
     cursor: "pointer"
   },
   spacing: 8,
-  overrides: {
-    MuiListItem: {
+  components: {
+    MuiTableCell: { styleOverrides: {
+      root: {
+        borderBottom: "none",
+      },
+      head: {
+        padding: "6px 16px !important",
+      },
+    } },
+    MuiTypography: { styleOverrides: {
+      root: {
+        color: "inherit",
+      }
+    } },
+    MuiListItem: { styleOverrides: {
       root: {
         width: "100% !important",
       },
-    },
-    MuiSwitch: {
+    } },
+    MuiSwitch: { styleOverrides: {
       thumb: {
           transform: "translateY(-2px)",
       },
@@ -77,7 +90,44 @@ const themeFactory = particular => _merge(particular, {
         height: "16px",
         borderRadius: "8px",
       }
+    } },
+    MuiTableRow: { styleOverrides: {
+      root: {
+        borderBottom: "none !important",
+      },
+    } },
+    MuiTextField: {
+      defaultProps: {
+        variant: 'standard',
+      },
     },
+    MuiSelect: {
+      defaultProps: {
+        variant: 'standard',
+      },
+    },
+    MuiDrawer: { styleOverrides: {
+      paper: {
+        position: 'unset',
+      },
+    } },
+    MuiList: { styleOverrides: {
+      root: {
+        backgroundColor: 'unset !important',
+      },
+    } },
+    MuiCssBaseline: { styleOverrides: {
+      html: {
+        height: "100%",
+      },
+      body: {
+        height: "100%",
+        overflow: "auto",
+      },
+      "#root": {
+        height: "100%",
+      },
+    } },
   }
 });
 
@@ -95,6 +145,10 @@ const Themes = {
       },
       palette: {
         type: "dark", // Switching the dark mode on, is a single property value change.
+        mode: "dark",
+        default: {
+          main: CONSTANTS.dark.textColor,
+        },
         primary: {
           main: "#36b5e6"
         },
@@ -126,13 +180,16 @@ const Themes = {
         iconColor: "#9e9e9e",
         background: "#2b2b2b"
       },
-      overrides: {
-        MuiTableCell: {
+      components: {
+        MuiTableCell: { styleOverrides: {
+          head: {
+            backgroundColor: CONSTANTS.dark.background.primary
+          },
           body: {
             color: CONSTANTS.dark.textColor
           }
-        },
-        MuiAppBar: {
+        } },
+        MuiAppBar: { styleOverrides: {
           colorDefault: {
             color: CONSTANTS.dark.textColor,
             borderColor: "black",
@@ -142,8 +199,18 @@ const Themes = {
             color: CONSTANTS.dark.textColor,
             backgroundColor: "#353535"
           }
-        },
-        MuiButton: {
+        } },
+        MuiToggleButton: { styleOverrides: {
+          root: {
+            color: "rgba(255, 255, 255, 0.38)",
+          },
+        } },
+        MuiButton: { styleOverrides: {
+          root: {
+            "&.Mui-disabled": {
+              color: "rgba(255, 255, 255, 0.3)",
+            },
+          },
           outlined: {
             margin: "8px"
           },
@@ -161,8 +228,8 @@ const Themes = {
             color: "inherit",
             margin: "8px"
           }
-        },
-        MuiButtonGroup: {
+        } },
+        MuiButtonGroup: { styleOverrides: {
           root: {
             margin: "0"
           },
@@ -175,50 +242,115 @@ const Themes = {
           groupedText: {
             margin: "0"
           }
-        },
-        MuiIconButton: {
+        } },
+        MuiIconButton: { styleOverrides: {
           root: {
             color: "#36b5e6 !important"
           }
-        },
-        MuiListItem: {
+        } },
+        MuiCheckbox: { styleOverrides: {
+          root: {
+            color: "#36b5e6 !important"
+          }
+        } },
+        MuiListItem: { styleOverrides: {
           button: {
             "&:hover": {
               backgroundColor: "rgba(54,181,230, 0.15)"
             }
           }
-        },
-        MuiFormControlLabel: {
+        } },
+        MuiFormControlLabel: { styleOverrides: {
           label: {
-            color: "rgba(255,255,255,0.8)"
+            color: "rgba(255,255,255,0.8) !important"
           }
-        },
-        MuiInputBase: {
+        } },
+        MuiInputLabel: { styleOverrides: {
+          root: {
+            color: "rgba(255,255,255,0.8) !important"
+          },
+        } },
+        MuiInputBase: { styleOverrides: {
           root: {
             color: CONSTANTS.dark.textColor + " !important",
           },
           input: {
             font: "Roboto",
             color: CONSTANTS.dark.textColor + " !important",
-          }
-        },
-        MuiFilledInput: {
-          root: {
-            border: "4px"
           },
           underline: {
-            "&::before": {
+            "&:before": {
+              borderBottomColor: CONSTANTS.dark.textColor + " !important",
+            }
+          },
+        } },
+        MuiInput: { styleOverrides: {
+          underline: {
+            "&:before": {
+              borderBottomColor: CONSTANTS.dark.textColor + " !important",
+            }
+          }
+        } },
+        MuiInputAdornment: { styleOverrides: {
+          root: {
+            color: CONSTANTS.dark.textColor + " !important",
+          }
+        } },
+        MuiSelect: { styleOverrides: {
+          icon: {
+            color: CONSTANTS.dark.textColor + " !important",
+          }
+        } },
+        MuiOutlinedInput: { styleOverrides: {
+          notchedOutline: {
+            borderColor: "rgba(255, 255, 255, 0.23) !important",
+          }
+        } },
+        MuiFilledInput: { styleOverrides: {
+          root: {
+            border: "4px",
+            backgroundColor: "rgba(255, 255, 255, 0.09)",
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 0.09)",
+            },
+            "&.Mui-focused": {
+              backgroundColor: "rgba(255, 255, 255, 0.09)",
+            },
+          },
+          input: {
+            "table &": {
+              padding: "8px 12px !important",
+            }
+          },
+          underline: {
+            "&:before": {
+              borderBottomColor: CONSTANTS.dark.textColor + " !important",
               borderRadius: "4px"
             }
           }
-        },
-        MuiPaper: {
+        } },
+        MuiInputLabel: { styleOverrides: {
+          root: {
+            color: "rgba(255, 255, 255, 0.7)"
+          },
+        } },
+        MuiBreadcrumbs: { styleOverrides: {
+          separator: {
+            color: "rgba(255, 255, 255, 0.54)",
+          },
+        } },
+        MuiPaper: { styleOverrides: {
           root: {
             color: CONSTANTS.dark.textColor + " !important",
             backgroundColor: CONSTANTS.dark.background.primary + " !important",
           }
-        },
-      }
+        } },
+        MuiCssBaseline: { styleOverrides: {
+          ".fa": {
+            color: CONSTANTS.dark.textColor,
+          },
+        } },
+     }
   }),
   light: themeFactory({
       font: {
@@ -241,6 +373,9 @@ const Themes = {
         upperTextColor: "#474747"
       },
       palette: {
+        default: {
+          main: CONSTANTS.light.textColor,
+        },
         primary: {
           main: "#007197"
         },
@@ -269,13 +404,16 @@ const Themes = {
         iconColor: "#616161",
         background: "#cccccc"
       },
-      overrides: {
-        MuiTableCell: {
+      components: {
+        MuiTableCell: { styleOverrides: {
+          head: {
+            backgroundColor: CONSTANTS.light.background.primary
+          },
           body: {
             color: CONSTANTS.light.textColor
           }
-        },
-        MuiAppBar: {
+        } },
+        MuiAppBar: { styleOverrides: {
           colorDefault: {
             color: CONSTANTS.light.textColor,
             borderColor: CONSTANTS.light.borderBottom,
@@ -285,8 +423,18 @@ const Themes = {
             color: CONSTANTS.light.textColor,
             backgroundColor: "#d2d2d2"
           }
-        },
-        MuiButton: {
+        } },
+        MuiToggleButton: { styleOverrides: {
+          root: {
+            color: "rgba(0, 0, 0, 0.38)",
+          },
+        } },
+        MuiButton: { styleOverrides: {
+          root: {
+            "&.Mui-disabled": {
+              color: "rgba(0, 0, 0, 0.3)",
+            },
+          },
           outlined: {
             margin: "8px"
           },
@@ -304,8 +452,8 @@ const Themes = {
             color: "#fff",
             margin: "8px"
           }
-        },
-        MuiButtonGroup: {
+        } },
+        MuiButtonGroup: { styleOverrides: {
           root: {
             margin: "0"
           },
@@ -318,50 +466,83 @@ const Themes = {
           groupedText: {
             margin: "0"
           }
-        },
-        MuiIconButton: {
+        } },
+        MuiIconButton: { styleOverrides: {
           root: {
-            color: "#007197"
+            color: CONSTANTS.light.iconColor + " !important",
           }
-        },
-        MuiListItem: {
+        } },
+        MuiListItem: { styleOverrides: {
           button: {
             "&:hover": {
               backgroundColor: "rgba(0,113,151, 0.15)"
             }
           }
-        },
-        MuiFormControlLabel: {
+        } },
+        MuiFormControlLabel: { styleOverrides: {
           label: {
-            color: "rgba(0,0,0,0.8)"
+            color: "rgba(0,0,0,0.54)"
           }
-        },
-        MuiInputBase: {
+        } },
+        MuiInputLabel: { styleOverrides: {
+          root: {
+            color: "rgba(0,0,0,0.54)"
+          },
+        } },
+        MuiInputAdornment: { styleOverrides: {
+          root: {
+            color: CONSTANTS.light.textColor + " !important",
+          }
+        } },
+        MuiSelect: { styleOverrides: {
+          icon: {
+            color: CONSTANTS.light.textColor + " !important",
+          }
+        } },
+        MuiInputBase: { styleOverrides: {
           root: {
             color: CONSTANTS.light.textColor + " !important",
           },
           input: {
             font: "Roboto",
             color: CONSTANTS.light.textColor + " !important",
-          }
-        },
-        MuiFilledInput: {
-          root: {
-            border: "4px"
           },
           underline: {
-            "&::before": {
+            "&:before": {
+              borderBottomColor: CONSTANTS.light.textColor + " !important",
+            }
+          }
+        } },
+        MuiFilledInput: { styleOverrides: {
+          root: {
+            border: "4px",
+            backgroundColor: "rgba(0, 0, 0, 0.09)",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.09)",
+            },
+            "&.Mui-focused": {
+              backgroundColor: "rgba(0, 0, 0, 0.09)",
+            },
+          },
+          underline: {
+            "&:before": {
+              borderBottomColor: CONSTANTS.light.textColor + " !important",
               borderRadius: "4px"
             }
           }
-        },
-        MuiPaper: {
+        } },
+        MuiBreadcrumbs: { styleOverrides: {
+          separator: {
+            color: "rgba(0, 0, 0, 0.54)",
+          },
+        } },
+        MuiPaper: { styleOverrides: {
           root: {
             color: "#272727",
             backgroundColor: CONSTANTS.light.background.primary
           }
-        },
-        MuiTableRow: {
+        } },
+        MuiTableRow: { styleOverrides: {
           head: {
             "& th": {
               backgroundColor: CONSTANTS.light.background.primary,
@@ -373,7 +554,12 @@ const Themes = {
               borderBottom: CONSTANTS.light.borderBottom
             }
           }
-        }
+        } },
+        MuiCssBaseline: { styleOverrides: {
+          ".fa": {
+            color: CONSTANTS.light.textColor,
+          },
+        } },
       }
   }),
 };

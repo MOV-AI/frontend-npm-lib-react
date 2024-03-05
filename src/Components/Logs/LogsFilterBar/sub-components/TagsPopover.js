@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useMemo } from "react";
-import { Chip, InputAdornment, IconButton, TextField } from "@material-ui/core";
+import { Chip, InputAdornment, IconButton, TextField } from "@mui/material";
 import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
-import LabelIcon from "@material-ui/icons/Label";
-import AddIcon from "@material-ui/icons/Add";
+import LabelIcon from "@mui/icons-material/Label";
+import AddIcon from "@mui/icons-material/Add";
 import { useTagsStyles } from "../../styles";
 import { logsSub } from "./../../sub";
 
