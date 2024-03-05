@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Button, Modal } from "@material-ui/core";
+import { Button, Modal } from "@mui/material";
 import { Authentication, PermissionType, User } from "@mov-ai/mov-fe-lib-core";
 import { Emit, makeSub } from "../../Utils/Sub";
 import useSub from "../../hooks/useSub";

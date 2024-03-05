@@ -1,11 +1,11 @@
 import React from "react";
-import { makeStyles } from "@material-ui/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import MaterialSelect from "@material-ui/core/Select";
+import { makeStyles } from "@mui/styles";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import MaterialSelect from "@mui/material/Select";
 import PropTypes from "prop-types";
-import { Checkbox, ListItemText } from "@material-ui/core";
+import { Checkbox, ListItemText } from "@mui/material";
 
 const useStyles = makeStyles(theme => ({
   formControl: {

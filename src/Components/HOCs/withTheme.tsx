@@ -1,5 +1,6 @@
-import { createTheme, Theme, ThemeOptions } from "@material-ui/core/styles";
-import { ThemeProvider, withStyles } from "@material-ui/styles";
+import { Theme, createTheme, ThemeOptions, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+import { withStyles } from "@mui/styles";
 import DefaultApplicationTheme, { defaultGetStyle } from "../../styles/Themes";
 import { makeSub } from "../../Utils/Sub";
 import useSub from "../../hooks/useSub";
@@ -90,6 +91,7 @@ export default function withTheme(
 
     return (
       <ThemeProvider theme={muiTheme}>
+        <CssBaseline />
         <StyledComponent
           handleToggleTheme={handleToggleTheme}
           theme={theme}

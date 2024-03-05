@@ -1,8 +1,8 @@
 import React from "react";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import { makeStyles } from "@material-ui/styles";
-import { green, grey } from "@material-ui/core/colors";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import { makeStyles } from "@mui/styles";
+import { green, grey } from "@mui/material/colors";
 import { ToggleProps } from "./types";
 
 const useStyles = makeStyles(_theme => ({

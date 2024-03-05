@@ -6,15 +6,15 @@ import React, {
   useRef,
   MutableRefObject
 } from "react";
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import SettingsIcon from "@material-ui/icons/Settings";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import SettingsIcon from "@mui/icons-material/Settings";
 import Toggle from "../Toggle";
 import { profileMenuStyles } from "./styles";
-import Divider from "@material-ui/core/Divider";
+import Divider from "@mui/material/Divider";
 import { User } from "@mov-ai/mov-fe-lib-core";
-import { Typography, Tooltip } from "@material-ui/core";
+import { Typography, Tooltip, ButtonBaseProps } from "@mui/material";
 import i18n from "i18next";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
@@ -31,12 +31,18 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
           className={classes.menuItemSpacing}
           onClick={menuItem.handler}
         >
-          {i18n.t(menuItem.title)}
+          {i18n.t(menuItem.title) as any}
         </MenuItem>
       );
     }
   );
 }
+
+const WeirdTypingsButton = React.forwardRef<HTMLButtonElement, ButtonBaseProps>((props: any, ref) => (
+  <IconButton ref={ref} { ...props }>
+    { props.children }
+  </IconButton>
+));
 
 const ProfileMenu = (props: ProfileMenuProps) => {
   // Props
@@ -57,7 +63,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [username, setUsername] = useState("");
   // Other hooks
-  const triggerButtonRef: MutableRefObject<HTMLElement | undefined> = useRef();
+  const triggerButtonRef = useRef<HTMLButtonElement>(null);
   const menuOpenAnimation: MutableRefObject<number | "auto"> = useRef("auto");
   const user = useMemo(() => new User(), []);
   const classes = profileMenuStyles();
@@ -134,14 +140,14 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   return (
     <div data-testid="section_profile-menu">
       <Tooltip title={i18n.t("Settings") || "" as any}>
-        <IconButton
-          buttonRef={triggerButtonRef}
+        <WeirdTypingsButton
+          ref={triggerButtonRef}
           data-testid="input_button"
           aria-haspopup="true"
           onClick={handleClick}
         >
           <SettingsIcon />
-        </IconButton>
+        </WeirdTypingsButton>
       </Tooltip>
       <Menu
         transitionDuration={menuOpenAnimation.current}
@@ -176,7 +182,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               className={classes.menuItemSpacing}
               onClick={handlePasswordReset}
             >
-              {i18n.t("Change Password")}
+              {i18n.t("Change Password") as any}
             </MenuItem>
           )}
           {customEl}
