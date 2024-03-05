@@ -28,24 +28,24 @@ class RobotLogModal extends Component {
 
   open = alert => {
     const { data } = this.state;
-    // Format time
-    const time = new Date(alert.time * 1000);
+    console.log("OPEN", data, alert);
     const alertButton = alert.button
       ? JSON.parse(alert.button.replace(/'/g, '"'))
       : null;
-    data.time = `${time.toLocaleTimeString("pt")}`;
-    data.action = alert.action;
-    data.message = alert.message;
-    data.robot = alert.robot;
-    data.service = alert.service;
-    data.module = alert.module;
-    if (alertButton) {
-      data.buttonText = alertButton.label;
-      data.buttonAction = this.getRobotAlertAction(alertButton);
-    }
     // Update state variables
     this.setState({
-      data,
+      data: {
+        ...(alertButton ? {
+          buttonText: alertButton.label,
+          buttonAction: this.getRobotAlertAction(alertButton),
+        } : {}),
+        time: alert.time,
+        action: alert.action,
+        message: alert.message,
+        robot: alert.robot,
+        service: alert.service,
+        module: alert.module,
+      },
       open: true,
       hasButton: !!alertButton
     });
