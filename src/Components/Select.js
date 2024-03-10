@@ -86,7 +86,7 @@ Select.propTypes = {
   value: PropTypes.string,
   options: PropTypes.array,
   noneOption: PropTypes.bool,
-  noneOptionConfig: PropTypes.objectOf({
+  noneOptionConfig: PropTypes.shape({
     value: PropTypes.string,
     text: PropTypes.text
   }),
