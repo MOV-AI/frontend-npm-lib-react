@@ -5,8 +5,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { makeStyles } from "@mui/styles";
 import { Button } from "@mui/material";
 
-const useStyles = makeStyles(() => ({
-  alert: { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 9999 }
+const useStyles = makeStyles((theme: any) => ({
+  alert: { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 9999, display: "flex", alignItems: "center", color: theme.palette.text.primary + " !important" }
 }));
 
 export default function withOfflineValidation(Component: React.ComponentType) {
