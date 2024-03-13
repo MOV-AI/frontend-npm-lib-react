@@ -346,6 +346,15 @@ const Themes = {
           }
         } },
         MuiCssBaseline: { styleOverrides: {
+          "tspan": {
+            fill: CONSTANTS.dark.textColor,
+          },
+          "text": {
+            fill: CONSTANTS.dark.textColor,
+          },
+          "line": {
+            stroke: CONSTANTS.dark.textColor + " !important",
+          },
           ".fa": {
             color: CONSTANTS.dark.textColor,
           },
@@ -556,6 +565,15 @@ const Themes = {
           }
         } },
         MuiCssBaseline: { styleOverrides: {
+          "tspan": {
+            fill: CONSTANTS.light.textColor,
+          },
+          "text": {
+            fill: CONSTANTS.light.textColor,
+          },
+          "line": {
+            stroke: CONSTANTS.light.textColor + " !important",
+          },
           ".fa": {
             color: CONSTANTS.light.textColor,
           },
