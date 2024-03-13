@@ -75,8 +75,13 @@ const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
   }
 });
 
-if (!(window as any).mock)
-  authEmit();
+if (!(window as any).mock) {
+  try {
+    authEmit();
+  } catch (e: any) {
+    console.error(e);
+  }
+}
 
 export default function withAuthentication(
   WrappedComponent: React.ComponentType,
