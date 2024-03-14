@@ -32,7 +32,6 @@
 	"./dist/",
 	"./htdocs/"
     ],
-    "include": ["src/**/*", "typings.d.ts", "./jest.setup.ts"],
     "include": [
         "./src/",
         "./lib/"
