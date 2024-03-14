@@ -36,7 +36,7 @@ export
 const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
   authSub.update({ ...loggedOutInfo, loading: true });
 
-  try {
+  {
     const [loggedIn, currentUserBare] = await Promise.all([
       Authentication.checkLogin(),
       (new User()).getCurrentUserWithPermissions(),
@@ -68,20 +68,18 @@ const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
       currentUser,
       loading: false,
     };
-  } catch (e: any) {
-    if (!(globalThis as any).mock)
-      console.error("Auth Error: " + e.error?.message ?? e.message ?? e);
-    return { ...loggedOutInfo, loading: false };
   }
 });
 
-if (!(window as any).mock) {
-  try {
-    authEmit();
-  } catch (e: any) {
-    console.error(e);
-  }
+function auth() {
+  (authEmit() as Promise<LoginSub>).catch(e => {
+    console.error("Auth Error", e?.message);
+    authSub.update({ ...loggedOutInfo, loading: false });
+  });
 }
+
+if (!(window as any).mock)
+  auth();
 
 export default function withAuthentication(
   WrappedComponent: React.ComponentType,
@@ -120,7 +118,7 @@ export default function withAuthentication(
             selectedProvider
           );
           if (apiResponse.error) throw new Error(apiResponse.error);
-          authEmit();
+          auth();
         } catch (e: unknown) {
           setErrorMessage((e as Error).message);
         }

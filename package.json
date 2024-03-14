@@ -1,19 +1,22 @@
 {
   "name": "@mov-ai/mov-fe-lib-react",
-  "version": "1.3.2-1",
+  "version": "1.3.2-2",
   "description": "The Mov.AI's frontend library for React.",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
   },
   "main": "dist/mov-react.umd.js",
-  "entry": "./src/index.js",
+  "!browser": "dist/mov-react.web.js",
+  "!module": "dist/mov-react.js",
+  "entry": "./src/mov-react.js",
+  "types": "dist/mov-react.d.ts",
   "library": "MovaiReact",
   "resolve": {
     "react": "umd/react.production.min.js"
   },
   "external": {
-    "react": "global React",
-    "@mov-ai/mov-fe-lib-core": "global Movai"
+    "react": "React",
+    "@mov-ai/mov-fe-lib-core": "Movai"
   },
   "proxy": {
     "/token-auth": "http://localhost/token-auth",
@@ -57,7 +60,7 @@
     "@storybook/manager-webpack5": "^6.4.19",
     "@storybook/preset-create-react-app": "^1.5.2",
     "@storybook/react": "^6.4.19",
-    "@tty-pt/scripts": "^0.5.9",
+    "@tty-pt/scripts": "0.5.18",
     "@types/jest": "27.5.1",
     "@types/lodash": "^4.14.182",
     "@types/node": "^20.11.22",

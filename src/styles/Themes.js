@@ -267,7 +267,7 @@ const Themes = {
         } },
         MuiInputLabel: { styleOverrides: {
           root: {
-            color: "rgba(255,255,255,0.8) !important"
+            color: "rgba(255, 255, 255, 0.7)",
           },
         } },
         MuiInputBase: { styleOverrides: {
@@ -328,11 +328,6 @@ const Themes = {
               borderRadius: "4px"
             }
           }
-        } },
-        MuiInputLabel: { styleOverrides: {
-          root: {
-            color: "rgba(255, 255, 255, 0.7)"
-          },
         } },
         MuiBreadcrumbs: { styleOverrides: {
           separator: {
