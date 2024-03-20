@@ -61,7 +61,7 @@
     "@storybook/preset-create-react-app": "^1.5.2",
     "@storybook/react": "^6.4.19",
     "@testing-library/jest-dom": "^6.4.2",
-    "@tty-pt/scripts": "^0.6.0-10",
+    "@tty-pt/scripts": "^0.6.0-11",
     "@types/jest": "27.5.1",
     "@types/lodash": "^4.14.182",
     "@types/node": "^20.11.22",
