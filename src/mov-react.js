@@ -250,6 +250,7 @@ export {
 export {
   makeStyles,
   withStyles,
+  withTheme as withBaseTheme,
   useTheme,
   ThemeProvider,
 } from "@mui/styles";
