@@ -1,6 +1,7 @@
 import "@fontsource/open-sans";
 import "@fontsource/roboto";
 import _merge from "lodash/merge";
+import "./style.css";
 
 const CONSTANTS = {
   dark: {
