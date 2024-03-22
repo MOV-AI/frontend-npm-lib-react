@@ -86,8 +86,8 @@ devDependencies:
     specifier: ^6.2.1
     version: 6.5.1
   '@mov-ai/mov-fe-lib-core':
-    specifier: ^1.2.1-6
-    version: 1.2.1-6
+    specifier: ^1.2.1-7
+    version: 1.2.1-7
   '@storybook/addon-actions':
     specifier: ^6.4.19
     version: 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -119,8 +119,8 @@ devDependencies:
     specifier: ^6.4.2
     version: 6.4.2(@types/jest@27.5.1)(jest@27.5.1)
   '@tty-pt/scripts':
-    specifier: ^0.6.0-11
-    version: 0.6.0-11(@swc/core@1.4.6)(@types/jest@27.5.1)(@types/node@20.11.22)(@types/react-dom@18.2.19)(@types/react@18.2.60)(@types/testing-library__jest-dom@5.14.9)
+    specifier: ^0.6.0-14
+    version: 0.6.0-14(@swc/core@1.4.6)(@types/jest@27.5.1)(@types/node@20.11.22)(@types/react-dom@18.2.19)(@types/react@18.2.60)(@types/testing-library__jest-dom@5.14.9)
   '@types/jest':
     specifier: 27.5.1
     version: 27.5.1
@@ -5197,8 +5197,8 @@ packages:
     resolution: {integrity: sha512-H1rQc1ZOHANWBvPcW+JpGwr+juXSxM8Q8YCkm3GhZd8REu1fHR3z99CErO1p9pkcfcxZnMdIZdIsXkOHY0NilA==}
     dev: true
 
-  /@mov-ai/mov-fe-lib-core@1.2.1-6:
-    resolution: {integrity: sha512-Cp4drVUDcfvCE2OyvVwqlg+OKR6GTE9ZYcxaTGYfdAXevE8/yX3dc22LLocjjNpxiF1GYhEhWCde1QpeC9365Q==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-core/1.2.1-6/70c53dadfd1370c39217fe3be4e667377a42fa04}
+  /@mov-ai/mov-fe-lib-core@1.2.1-7:
+    resolution: {integrity: sha512-enYtYPjKPSCD1bnm+mS2lSIfrhE72vx6FPArwrRHAmO0SULoTf/78PF5a53+FJ51dDZiX9ZUG8gERl0ujq63Sg==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-core/1.2.1-7/cb6477f2eb9b9b0fa027b295ba2d28288e08344d}
     dependencies:
       fast-equals: 5.0.1
       js-yaml: 4.1.0
@@ -7994,8 +7994,8 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /@tty-pt/scripts@0.6.0-11(@swc/core@1.4.6)(@types/jest@27.5.1)(@types/node@20.11.22)(@types/react-dom@18.2.19)(@types/react@18.2.60)(@types/testing-library__jest-dom@5.14.9):
-    resolution: {integrity: sha512-03VWrFGKuGoFNk/WplIF7Tvuo2+07EVEjTlna+HqvZu9hgLFxXh0hXrnz/oIAU1ynNlURZMs403xWeXJh+cwoQ==}
+  /@tty-pt/scripts@0.6.0-14(@swc/core@1.4.6)(@types/jest@27.5.1)(@types/node@20.11.22)(@types/react-dom@18.2.19)(@types/react@18.2.60)(@types/testing-library__jest-dom@5.14.9):
+    resolution: {integrity: sha512-JUgxJqe4PPmP0Yhdv/hXNW4TAFKbg2MxSzupt/YVtkKJbmj/P5EYsAdkuY7gaH8NCz12ZdOThx6hgOiUuU2xsA==}
     hasBin: true
     peerDependencies:
       '@types/node': ^20.10.4

@@ -5,11 +5,11 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
   },
-  "main": "dist/mov-react.cjs.js",
-  "browser": "dist/mov-react.web.js",
-  "module": "dist/mov-react.js",
+  "main": "cjs/mov-react.js",
+  "browser": "web/mov-react.js",
+  "module": "esm/mov-react.js",
   "entry": "src/mov-react.js",
-  "types": "dist/mov-react.d.ts",
+  "types": "types/mov-react.d.ts",
   "library": "MovaiReact",
   "resolve": {
     "react": "umd/react.production.min.js"
@@ -28,9 +28,9 @@
     "test": "scripts test",
     "testDev": "jest --config jest.config.js --watchAll",
     "err": "tsc --pretty false --project tsconfig.json --noEmit",
-    "build": "tsc --emitDeclarationOnly && NODE_OPTIONS='--max-old-space-size=4096' scripts build",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' scripts build",
     "buildDev": "webpack --mode=development --watch",
-    "clean": "rm -rf node_modules/ package-lock.json",
+    "clean": "rm -rf cjs esm web types",
     "storybook": "start-storybook -p 3001",
     "build-storybook": "build-storybook"
   },
@@ -50,7 +50,7 @@
   "homepage": "https://github.com/MOV-AI/frontend-npm-lib-react/blob/main/README.md",
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.2.1",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-6",
+    "@mov-ai/mov-fe-lib-core": "^1.2.1-7",
     "@storybook/addon-actions": "^6.4.19",
     "@storybook/addon-controls": "^6.4.19",
     "@storybook/addon-docs": "^6.4.19",
@@ -61,7 +61,7 @@
     "@storybook/preset-create-react-app": "^1.5.2",
     "@storybook/react": "^6.4.19",
     "@testing-library/jest-dom": "^6.4.2",
-    "@tty-pt/scripts": "^0.6.0-11",
+    "@tty-pt/scripts": "^0.6.0-14",
     "@types/jest": "27.5.1",
     "@types/lodash": "^4.14.182",
     "@types/node": "^20.11.22",
@@ -81,7 +81,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-6",
+    "@mov-ai/mov-fe-lib-core": "^1.2.1-7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -113,7 +113,10 @@
     "styled-components": "^5.3.1"
   },
   "files": [
-    "dist",
+    "cjs",
+    "web",
+    "esm",
+    "types",
     "resources"
   ]
 }
