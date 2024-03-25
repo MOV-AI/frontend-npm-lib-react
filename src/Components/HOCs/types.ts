@@ -11,6 +11,7 @@ export interface Dependencies {
 export interface ApplicationThemeType {
   dark: ThemeOptions;
   light: ThemeOptions;
+  indigo: ThemeOptions;
 }
 
 export interface WithDefaultsProps {
