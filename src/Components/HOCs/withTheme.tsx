@@ -7,7 +7,7 @@ import useSub from "../../hooks/useSub";
 import { ApplicationThemeType } from "./types";
 import React from "react";
 
-type ThemeNameType = "dark" | "light";
+type ThemeNameType = "dark" | "light" | "indigo";
 
 interface ThemeSub {
   themeName: ThemeNameType;
