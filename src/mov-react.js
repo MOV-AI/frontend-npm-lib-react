@@ -189,6 +189,7 @@ export {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
   Favorite as FavoriteIcon,
+  FiberManualRecord as FiberManualRecordIcon,
   FileCopy as FileCopyIcon,
   FileCopyOutlined as FileCopyOutlinedIcon,
   FilterList as FilterListIcon,
