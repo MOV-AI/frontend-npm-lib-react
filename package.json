@@ -71,7 +71,7 @@
     "@mui/styles": "^5.15.11",
     "@mui/x-date-pickers": "^6.19.5",
     "@mui/x-tree-view": "^6.17.0",
-    "@tty-pt/scripts": "^0.6.0-19",
+    "@tty-pt/scripts": "^0.6.0-26",
     "http-proxy-middleware": "^2.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
