@@ -191,7 +191,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               {darkThemeLabel}
               <Toggle
                 onToggle={handleToggleTheme}
-                toggle={(window.localStorage.getItem("movai.theme") ?? "dark") === "dark"}
+                toggle={(globalThis.localStorage?.getItem("movai.theme") ?? "dark") === "dark"}
               ></Toggle>
             </div>
           )}

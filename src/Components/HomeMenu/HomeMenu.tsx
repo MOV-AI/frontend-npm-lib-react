@@ -52,7 +52,7 @@ const HomeMenuPopper = () => {
   };
 
   const redirectToLocalhost = useCallback(() => {
-    window.location.replace(window.location.origin); // go to localhost or localhost:3000
+    globalThis.location.replace(globalThis.location.origin); // go to localhost or localhost:3000
   }, []);
 
   //========================================================================================

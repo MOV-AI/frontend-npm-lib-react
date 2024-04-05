@@ -17,13 +17,13 @@ interface ThemeSub {
 
 export
 const themeSub = makeSub<ThemeSub>({
-  themeName: (window.localStorage.getItem("movai.theme") ?? "dark") as ThemeNameType,
+  themeName: (globalThis.localStorage?.getItem("movai.theme") ?? "dark") as ThemeNameType,
   ApplicationTheme: DefaultApplicationTheme,
   getStyle: defaultGetStyle,
 });
 
 const setTheme = themeSub.makeEmitNow((current: ThemeSub, themeName: ThemeNameType): ThemeSub => {
-  window.localStorage.setItem("movai.theme", themeName);
+  globalThis.localStorage?.setItem("movai.theme", themeName);
 
   return {
     ...current,
@@ -84,8 +84,8 @@ export default function withTheme(
     };
 
     React.useEffect(() => {
-      document.body.style.color = muiTheme.palette.text.primary;
-      document.body.style.background =
+      globalThis.document.body.style.color = muiTheme.palette.text.primary;
+      globalThis.document.body.style.background =
         (muiTheme as any).backgroundColor;
     }, [muiTheme]);
 

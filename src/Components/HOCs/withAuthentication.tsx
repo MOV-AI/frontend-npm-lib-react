@@ -80,7 +80,7 @@ function auth() {
   });
 }
 
-if (!(window as any).mock)
+if (!(globalThis as any).mock)
   auth();
 
 export default function withAuthentication(
