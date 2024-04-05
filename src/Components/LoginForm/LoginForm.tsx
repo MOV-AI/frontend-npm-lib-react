@@ -41,7 +41,7 @@ class LoginForm extends Component<LoginFormProps> {
       return;
     this.setState({
       selectedProvider:
-        localStorage.getItem(SELECTED_DOMAIN_KEY) ||
+        globalThis.localStorage?.getItem(SELECTED_DOMAIN_KEY) ||
         Authentication.DEFAULT_PROVIDER
     });
   }
@@ -87,7 +87,7 @@ class LoginForm extends Component<LoginFormProps> {
     this.setState({
       selectedProvider: target.value
     });
-    localStorage.setItem(SELECTED_DOMAIN_KEY, target.value);
+    globalThis.localStorage?.setItem(SELECTED_DOMAIN_KEY, target.value);
   };
 
   //========================================================================================

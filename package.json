@@ -13,9 +13,8 @@
   "library": "MovaiReact",
   "exports": {
     ".": {
-      "import": "./esm/mov-react.js",
-      "browser": "./web/mov-react.js",
-      "require": "./cjs/mov-react.js"
+      "import": "esm/mov-react.js",
+      "default": "cjs/mov-react.js"
     }
   },
   "external": {
@@ -62,13 +61,13 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@material-table/core": "^6.3.2",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-9",
+    "@mov-ai/mov-fe-lib-core": "^1.2.1-10",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@mui/styles": "^5.15.15",
     "@mui/x-date-pickers": "^7.1.0",
     "@mui/x-tree-view": "^7.1.0",
-    "@tty-pt/scripts": "^0.6.0-28",
+    "@tty-pt/scripts": "^0.6.0-29",
     "http-proxy-middleware": "^3.0.0",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
@@ -77,7 +76,7 @@
   },
   "peerDependencies": {
     "@material-table/core": "^6.3.2",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-9",
+    "@mov-ai/mov-fe-lib-core": "^1.2.1-10",
     "@mui/icons-material": "^5.15.11",
     "@mui/material": "^5.15.11",
     "@mui/styles": "^5.15.11",

@@ -17,14 +17,14 @@ import "./Logs.css";
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   const blob = new Blob([file], { type: charset });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  document.body.appendChild(a);
+  const a = globalThis.document.createElement("a");
+  globalThis.document.body.appendChild(a);
   a.style = "display: none";
   a.href = url;
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
-  document.body.removeChild(a);
+  globalThis.document.body.removeChild(a);
 }
 
 function noSelection(obj) {
