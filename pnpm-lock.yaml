@@ -80,8 +80,8 @@ devDependencies:
     specifier: ^7.1.0
     version: 7.1.0(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@mui/material@5.15.15)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
   '@mui/x-tree-view':
-    specifier: ^7.1.0
-    version: 7.1.0(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@mui/material@5.15.15)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^6.17.0
+    version: 6.17.0(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@mui/material@5.15.15)(@mui/system@5.15.15)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
   '@tty-pt/scripts':
     specifier: ^0.6.0-29
     version: 0.6.0-29(@swc/core@1.4.11)(@types/node@20.12.2)(@types/react-dom@18.2.23)(@types/react@18.2.74)(@types/testing-library__jest-dom@5.14.9)
@@ -2812,13 +2812,14 @@ packages:
       - '@types/react'
     dev: true
 
-  /@mui/x-tree-view@7.1.0(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@mui/material@5.15.15)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-4WtuF6tJtqxot3CMJO7LOucWdUXNd5oqZ58Zh3SOijntZvHUtMx3wgqwwj+TNAVFxOX9mUri6FYP8FQv6YVEgA==}
+  /@mui/x-tree-view@6.17.0(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@mui/material@5.15.15)(@mui/system@5.15.15)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-09dc2D+Rjg2z8KOaxbUXyPi0aw7fm2jurEtV8Xw48xJ00joLWd5QJm1/v4CarEvaiyhTQzHImNqdgeJW8ZQB6g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.9.0
       '@emotion/styled': ^11.8.1
-      '@mui/material': ^5.15.14
+      '@mui/material': ^5.8.6
+      '@mui/system': ^5.8.0
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
     dependencies:
@@ -2827,7 +2828,7 @@ packages:
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
       '@mui/base': 5.0.0-beta.40(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@mui/material': 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
-      '@mui/system': 5.15.14(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(react@18.2.0)
+      '@mui/system': 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(react@18.2.0)
       '@mui/utils': 5.15.14(@types/react@18.2.74)(react@18.2.0)
       '@types/react-transition-group': 4.4.10
       clsx: 2.1.0
