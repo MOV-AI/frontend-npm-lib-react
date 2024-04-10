@@ -201,10 +201,17 @@ const getDefaults = constants => {
           color: alpha(constants.textColor, 0.38),
         },
       } },
+      MuiButtonBase: { styleOverrides: {
+        root: {
+          "&.Mui-disabled": {
+            color: alpha(constants.textColor, 0.3) + " !important",
+          },
+        },
+      } },
       MuiButton: { styleOverrides: {
         root: {
           "&.Mui-disabled": {
-            color: alpha(constants.textColor, 0.3),
+            color: alpha(constants.textColor, 0.3) + " !important",
           },
         },
         outlined: {
