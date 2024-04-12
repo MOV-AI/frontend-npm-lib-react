@@ -36,8 +36,6 @@ import withTheme, { themeSub } from "./Components/HOCs/withTheme";
 import withDefaults from "./Components/HOCs/withDefaults";
 import withError from "./Components/HOCs/withError";
 // import Translations
-export * from "./Utils/Sub";
-import useSub, { withSub } from "./hooks/useSub";
 import ExportPdf from "./exporters/pdf";
 import ExportCsv from "./exporters/csv";
 export {
@@ -280,8 +278,6 @@ export {
   withTheme,
   authSub,
   themeSub,
-  useSub,
-  withSub,
   withDefaults,
   withError,
   Button,

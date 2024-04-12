@@ -65,8 +65,14 @@ devDependencies:
     specifier: ^6.3.2
     version: 6.3.2(@mui/system@5.15.15)(@types/react-dom@18.2.23)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
   '@mov-ai/mov-fe-lib-core':
-    specifier: ^1.2.1-11
-    version: 1.2.1-11
+    specifier: ^1.2.1-12
+    version: 1.2.1-12
+  '@mov-ai/mov-fe-lib-scripts':
+    specifier: ^0.6.0-39
+    version: 0.6.0-39(@types/node@20.12.2)(@types/react-dom@18.2.23)(@types/react@18.2.74)(@types/testing-library__jest-dom@5.14.9)
+  '@mov-ai/mov-fe-lib-sub':
+    specifier: ^2.2.31-1
+    version: 2.2.31-1(lodash@4.17.21)
   '@mui/icons-material':
     specifier: ^5.15.15
     version: 5.15.15(@mui/material@5.15.15)(@types/react@18.2.74)(react@18.2.0)
@@ -82,9 +88,6 @@ devDependencies:
   '@mui/x-tree-view':
     specifier: ^6.17.0
     version: 6.17.0(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@mui/material@5.15.15)(@mui/system@5.15.15)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
-  '@tty-pt/scripts':
-    specifier: ^0.6.0-34
-    version: 0.6.0-34(@types/node@20.12.2)(@types/react-dom@18.2.23)(@types/react@18.2.74)(@types/testing-library__jest-dom@5.14.9)
   http-proxy-middleware:
     specifier: ^3.0.0
     version: 3.0.0
@@ -2454,8 +2457,8 @@ packages:
       - react-native
     dev: true
 
-  /@mov-ai/mov-fe-lib-core@1.2.1-11:
-    resolution: {integrity: sha512-BzyWO0sEmdgGiykv9rgSZiHmsG+8O65KOQq63zie4H5Uw8msy/6LiKE6Y95kS0m/NmPqvrGvkhX1yRFJPgIA8A==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-core/1.2.1-11/ac730f7245859176e96c6985e15dd543fd92dea1}
+  /@mov-ai/mov-fe-lib-core@1.2.1-12:
+    resolution: {integrity: sha512-8T1xSvug8yBi3uFh4Kg3SeddU17HbQC+HTUhpAe3oXR+WwtobMg8XDaZAEWbPigApFJ5r3bSUTsKluxbKvQBaQ==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-core/1.2.1-12/23ce62a061cb214ce98dc639032f8566aaf9cfb8}
     dependencies:
       fast-equals: 5.0.1
       js-yaml: 4.1.0
@@ -2467,6 +2470,125 @@ packages:
       - bufferutil
       - supports-color
       - utf-8-validate
+    dev: true
+
+  /@mov-ai/mov-fe-lib-scripts@0.6.0-39(@types/node@20.12.2)(@types/react-dom@18.2.23)(@types/react@18.2.74)(@types/testing-library__jest-dom@5.14.9):
+    resolution: {integrity: sha512-ynsIQ+EXFEYHYhk6MEh3WBsMz3hXDn5MYUFlACGr+q7XHgde1S+Stx51nMUMCmTfjo0FUNIJkDEjmS5CnaKAYg==, tarball: https://npm.pkg.github.com/download/@mov-ai/mov-fe-lib-scripts/0.6.0-39/e18edc5593f2ebc66f9132de735cc1c2c85b2f8c}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^20.11.30
+      '@types/react': '>= 16.0.0 < 20.0.0'
+      '@types/react-dom': '>= 16.0.0 < 20.0.0'
+      '@types/testing-library__jest-dom': ^5.14.5
+    dependencies:
+      '@babel/core': 7.24.3
+      '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.24.3)
+      '@babel/plugin-proposal-decorators': 7.24.1(@babel/core@7.24.3)
+      '@babel/plugin-transform-class-properties': 7.24.1(@babel/core@7.24.3)
+      '@babel/plugin-transform-modules-commonjs': 7.24.1(@babel/core@7.24.3)
+      '@babel/plugin-transform-private-methods': 7.24.1(@babel/core@7.24.3)
+      '@babel/plugin-transform-private-property-in-object': 7.24.1(@babel/core@7.24.3)
+      '@babel/plugin-transform-runtime': 7.24.3(@babel/core@7.24.3)
+      '@babel/preset-env': 7.24.3(@babel/core@7.24.3)
+      '@babel/preset-react': 7.24.1(@babel/core@7.24.3)
+      '@babel/preset-typescript': 7.24.1(@babel/core@7.24.3)
+      '@craftamap/esbuild-plugin-html': 0.6.1(esbuild@0.20.2)
+      '@pmmmwh/react-refresh-webpack-plugin': 0.5.11(react-refresh@0.14.0)(webpack-hot-middleware@2.26.1)(webpack@5.91.0)
+      '@storybook/addon-actions': 8.0.5
+      '@storybook/addon-links': 8.0.5(react@18.2.0)
+      '@storybook/react': 8.0.5(react-dom@18.2.0)(react@18.2.0)(typescript@5.4.3)
+      '@storybook/theming': 8.0.5(react-dom@18.2.0)(react@18.2.0)
+      '@svgr/webpack': 8.1.0(typescript@5.4.3)
+      '@swc/core': 1.4.13
+      '@swc/jest': 0.2.36(@swc/core@1.4.13)
+      '@testing-library/jest-dom': 6.4.2(jest@29.7.0)
+      '@testing-library/react': 14.2.2(react-dom@18.2.0)(react@18.2.0)
+      '@types/node': 20.12.2
+      '@types/react': 18.2.74
+      '@types/react-dom': 18.2.23
+      '@types/testing-library__jest-dom': 5.14.9
+      '@typescript-eslint/parser': 7.5.0(eslint@8.57.0)(typescript@5.4.3)
+      babel-loader: 9.1.3(@babel/core@7.24.3)(webpack@5.91.0)
+      chokidar: 3.6.0
+      connect-livereload: 0.6.1
+      copy-webpack-plugin: 12.0.2(webpack@5.91.0)
+      css-loader: 6.10.0(webpack@5.91.0)
+      ejs-loader: 0.5.0
+      esbuild: 0.20.2
+      esbuild-jest: 0.5.0(esbuild@0.20.2)
+      esbuild-loader: 4.1.0(webpack@5.91.0)
+      esbuild-plugin-copy: 2.1.1(esbuild@0.20.2)
+      esbuild-plugin-external-global: 1.0.1
+      esbuild-webpack-plugin: 1.1.0(webpack@5.91.0)
+      eslint: 8.57.0
+      eslint-plugin-react: 7.34.1(eslint@8.57.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
+      eslint-webpack-plugin: 4.1.0(eslint@8.57.0)(webpack@5.91.0)
+      express: 4.19.2
+      fast-glob: 3.3.2
+      file-loader: 6.2.0(webpack@5.91.0)
+      html-loader: 5.0.0(webpack@5.91.0)
+      html-webpack-plugin: 5.6.0(webpack@5.91.0)
+      jest: 29.7.0(@types/node@20.12.2)
+      jest-environment-jsdom: 29.7.0
+      json-loader: 0.5.7
+      livereload: 0.9.3
+      lodash.debounce: 4.0.8
+      mini-css-extract-plugin: 2.8.1(webpack@5.91.0)
+      react-refresh: 0.14.0
+      storybook: 8.0.5(@babel/preset-env@7.24.3)(react-dom@18.2.0)(react@18.2.0)
+      style-loader: 3.3.4(webpack@5.91.0)
+      swc-loader: 0.2.6(@swc/core@1.4.13)(webpack@5.91.0)
+      swc-webpack-plugin: 1.0.0(@swc/core@1.4.13)(webpack@5.91.0)
+      terser-webpack-plugin: 5.3.10(@swc/core@1.4.13)(esbuild@0.20.2)(webpack@5.91.0)
+      ts-loader: 9.5.1(typescript@5.4.3)(webpack@5.91.0)
+      tslib: 2.6.2
+      typescript: 5.4.3
+      url-loader: 4.1.1(file-loader@6.2.0)(webpack@5.91.0)
+      webpack: 5.91.0(@swc/core@1.4.13)(esbuild@0.20.2)(webpack-cli@5.1.4)
+      webpack-cli: 5.1.4(webpack@5.91.0)
+      webpack-dev-middleware: 7.2.1(webpack@5.91.0)
+      webpack-hot-middleware: 2.26.1
+      webpack-manifest-plugin: 5.0.0(webpack@5.91.0)
+      workbox-webpack-plugin: 7.0.0(webpack@5.91.0)
+    optionalDependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - '@jest/globals'
+      - '@rspack/core'
+      - '@swc/helpers'
+      - '@types/babel__core'
+      - '@types/bun'
+      - '@types/jest'
+      - '@types/webpack'
+      - '@webpack-cli/generators'
+      - babel-plugin-macros
+      - bufferutil
+      - canvas
+      - encoding
+      - node-notifier
+      - sockjs-client
+      - supports-color
+      - ts-node
+      - type-fest
+      - uglify-js
+      - utf-8-validate
+      - vitest
+      - webpack-bundle-analyzer
+      - webpack-dev-server
+      - webpack-plugin-serve
+    dev: true
+
+  /@mov-ai/mov-fe-lib-sub@2.2.31-1(lodash@4.17.21):
+    resolution: {integrity: sha512-xL2gM4QJv/BT0lQLVlX+AnUUUy+WRYYv+dg6v4ME/ZzG+13GASBI+9oTvFVHLxvAPTmiIFIpPTOwZqVV+l7hAQ==, tarball: https://npm.pkg.github.com/download/@mov-ai/mov-fe-lib-sub/2.2.31-1/d6dfb5ce167f5c2740c138ef47bbe22a22607229}
+    peerDependencies:
+      lodash: ^4.17.21
+    dependencies:
+      lodash: 4.17.21
+    optionalDependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: true
 
   /@mui/base@5.0.0-beta.40(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0):
@@ -3785,114 +3907,6 @@ packages:
   /@trysound/sax@0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
-    dev: true
-
-  /@tty-pt/scripts@0.6.0-34(@types/node@20.12.2)(@types/react-dom@18.2.23)(@types/react@18.2.74)(@types/testing-library__jest-dom@5.14.9):
-    resolution: {integrity: sha512-ucdAfVPnntVKXFIM2dokEtGmDNfX3K7HiyJk9A5QPZsDRs/mKUgWCQ0YTzRm8gIPHLVWD8FqIss1Pf2LERajqg==}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^20.11.30
-      '@types/react': '>= 16.0.0 < 20.0.0'
-      '@types/react-dom': '>= 16.0.0 < 20.0.0'
-      '@types/testing-library__jest-dom': ^5.14.5
-    dependencies:
-      '@babel/core': 7.24.3
-      '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.24.3)
-      '@babel/plugin-proposal-decorators': 7.24.1(@babel/core@7.24.3)
-      '@babel/plugin-transform-class-properties': 7.24.1(@babel/core@7.24.3)
-      '@babel/plugin-transform-modules-commonjs': 7.24.1(@babel/core@7.24.3)
-      '@babel/plugin-transform-private-methods': 7.24.1(@babel/core@7.24.3)
-      '@babel/plugin-transform-private-property-in-object': 7.24.1(@babel/core@7.24.3)
-      '@babel/plugin-transform-runtime': 7.24.3(@babel/core@7.24.3)
-      '@babel/preset-env': 7.24.3(@babel/core@7.24.3)
-      '@babel/preset-react': 7.24.1(@babel/core@7.24.3)
-      '@babel/preset-typescript': 7.24.1(@babel/core@7.24.3)
-      '@craftamap/esbuild-plugin-html': 0.6.1(esbuild@0.20.2)
-      '@pmmmwh/react-refresh-webpack-plugin': 0.5.11(react-refresh@0.14.0)(webpack-hot-middleware@2.26.1)(webpack@5.91.0)
-      '@storybook/addon-actions': 8.0.5
-      '@storybook/addon-links': 8.0.5(react@18.2.0)
-      '@storybook/react': 8.0.5(react-dom@18.2.0)(react@18.2.0)(typescript@5.4.3)
-      '@storybook/theming': 8.0.5(react-dom@18.2.0)(react@18.2.0)
-      '@svgr/webpack': 8.1.0(typescript@5.4.3)
-      '@swc/core': 1.4.13
-      '@swc/jest': 0.2.36(@swc/core@1.4.13)
-      '@testing-library/jest-dom': 6.4.2(jest@29.7.0)
-      '@testing-library/react': 14.2.2(react-dom@18.2.0)(react@18.2.0)
-      '@types/node': 20.12.2
-      '@types/react': 18.2.74
-      '@types/react-dom': 18.2.23
-      '@types/testing-library__jest-dom': 5.14.9
-      '@typescript-eslint/parser': 7.5.0(eslint@8.57.0)(typescript@5.4.3)
-      babel-loader: 9.1.3(@babel/core@7.24.3)(webpack@5.91.0)
-      chokidar: 3.6.0
-      connect-livereload: 0.6.1
-      copy-webpack-plugin: 12.0.2(webpack@5.91.0)
-      css-loader: 6.10.0(webpack@5.91.0)
-      ejs-loader: 0.5.0
-      esbuild: 0.20.2
-      esbuild-jest: 0.5.0(esbuild@0.20.2)
-      esbuild-loader: 4.1.0(webpack@5.91.0)
-      esbuild-plugin-copy: 2.1.1(esbuild@0.20.2)
-      esbuild-plugin-external-global: 1.0.1
-      esbuild-webpack-plugin: 1.1.0(webpack@5.91.0)
-      eslint: 8.57.0
-      eslint-plugin-react: 7.34.1(eslint@8.57.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
-      eslint-webpack-plugin: 4.1.0(eslint@8.57.0)(webpack@5.91.0)
-      express: 4.19.2
-      fast-glob: 3.3.2
-      file-loader: 6.2.0(webpack@5.91.0)
-      html-loader: 5.0.0(webpack@5.91.0)
-      html-webpack-plugin: 5.6.0(webpack@5.91.0)
-      jest: 29.7.0(@types/node@20.12.2)
-      jest-environment-jsdom: 29.7.0
-      json-loader: 0.5.7
-      livereload: 0.9.3
-      lodash.debounce: 4.0.8
-      mini-css-extract-plugin: 2.8.1(webpack@5.91.0)
-      react-refresh: 0.14.0
-      storybook: 8.0.5(@babel/preset-env@7.24.3)(react-dom@18.2.0)(react@18.2.0)
-      style-loader: 3.3.4(webpack@5.91.0)
-      swc-loader: 0.2.6(@swc/core@1.4.13)(webpack@5.91.0)
-      swc-webpack-plugin: 1.0.0(@swc/core@1.4.13)(webpack@5.91.0)
-      terser-webpack-plugin: 5.3.10(@swc/core@1.4.13)(esbuild@0.20.2)(webpack@5.91.0)
-      ts-loader: 9.5.1(typescript@5.4.3)(webpack@5.91.0)
-      tslib: 2.6.2
-      typescript: 5.4.3
-      url-loader: 4.1.1(file-loader@6.2.0)(webpack@5.91.0)
-      webpack: 5.91.0(@swc/core@1.4.13)(esbuild@0.20.2)(webpack-cli@5.1.4)
-      webpack-cli: 5.1.4(webpack@5.91.0)
-      webpack-dev-middleware: 7.2.1(webpack@5.91.0)
-      webpack-hot-middleware: 2.26.1
-      webpack-manifest-plugin: 5.0.0(webpack@5.91.0)
-      workbox-webpack-plugin: 7.0.0(webpack@5.91.0)
-    optionalDependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - '@jest/globals'
-      - '@rspack/core'
-      - '@swc/helpers'
-      - '@types/babel__core'
-      - '@types/bun'
-      - '@types/jest'
-      - '@types/webpack'
-      - '@webpack-cli/generators'
-      - babel-plugin-macros
-      - bufferutil
-      - canvas
-      - encoding
-      - node-notifier
-      - sockjs-client
-      - supports-color
-      - ts-node
-      - type-fest
-      - uglify-js
-      - utf-8-validate
-      - vitest
-      - webpack-bundle-analyzer
-      - webpack-dev-server
-      - webpack-plugin-serve
     dev: true
 
   /@types/aria-query@5.0.4:

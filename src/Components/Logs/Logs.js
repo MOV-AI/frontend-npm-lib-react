@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useRef, useEffect, useMemo } from "react";
 import { RobotManager, Features } from "@mov-ai/mov-fe-lib-core";
-import useSub from "../../hooks/useSub";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
@@ -69,7 +68,7 @@ const Logs = props => {
   const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
   const logModalRef = useRef();
-  const sub = useSub(logsSub);
+  const sub = logsSub.use();
   const {
     robots, levels, service, columns, tags,
     message, selectedFromDate, selectedToDate,
