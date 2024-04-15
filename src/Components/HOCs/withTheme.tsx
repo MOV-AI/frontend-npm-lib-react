@@ -2,8 +2,7 @@ import { Theme, createTheme, ThemeOptions, ThemeProvider } from "@mui/material/s
 import { CssBaseline } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import DefaultApplicationTheme, { defaultGetStyle } from "../../styles/Themes";
-import { makeSub } from "../../Utils/Sub";
-import useSub from "../../hooks/useSub";
+import { Sub } from "@mov-ai/mov-fe-lib-sub";
 import { ApplicationThemeType } from "./types";
 import React from "react";
 
@@ -16,13 +15,13 @@ interface ThemeSub {
 };
 
 export
-const themeSub = makeSub<ThemeSub>({
+const themeSub = new Sub<ThemeSub>({
   themeName: (globalThis.localStorage?.getItem("movai.theme") ?? "dark") as ThemeNameType,
   ApplicationTheme: DefaultApplicationTheme,
   getStyle: defaultGetStyle,
 });
 
-const setTheme = themeSub.makeEmitNow((current: ThemeSub, themeName: ThemeNameType): ThemeSub => {
+const setTheme = themeSub.makeEmit((themeName: ThemeNameType, current: ThemeSub): ThemeSub => {
   globalThis.localStorage?.setItem("movai.theme", themeName);
 
   return {
@@ -71,7 +70,7 @@ export default function withTheme(
   const StyledComponent = withStyles(getStyle ?? defaultGetStyle)(Component);
 
   return function (props: any) {
-    const sub = useSub<ThemeSub>(themeSub);
+    const sub = themeSub.use();
     const theme = sub.themeName;
     const muiTheme = sub.ApplicationTheme[theme] as Theme;
 

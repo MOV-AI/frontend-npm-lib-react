@@ -1,8 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Button, Modal } from "@mui/material";
 import { Authentication, PermissionType, User } from "@mov-ai/mov-fe-lib-core";
-import { Emit, makeSub } from "../../Utils/Sub";
-import useSub from "../../hooks/useSub";
+import { Sub } from "@mov-ai/mov-fe-lib-sub";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import i18n from "i18next";
@@ -30,11 +29,14 @@ const loggedOutInfo = {
 };
 
 export
-const authSub = makeSub<LoginSub>(loggedOutInfo);
+const authSub = new Sub<LoginSub>(loggedOutInfo);
 
 export
-const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
-  authSub.update({ ...loggedOutInfo, loading: true });
+const authEmitSync = authSub.makeEmit();
+
+export
+async function authEmit() {
+  authEmitSync({ ...loggedOutInfo, loading: true });
 
   {
     const user = (new User()).getCurrentUserWithPermissions();
@@ -52,26 +54,26 @@ const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
     };
 
     if (loggedIn)
-      return {
+      return authEmitSync({
         loggedIn: true,
         providers: await Authentication.getProviders(),
         currentUser,
         loading: false,
-      };
+      });
 
     const [providers, res] = await Promise.all([
       Authentication.getProviders(),
       Authentication.refreshTokens(),
     ]);
 
-    return {
+    return authEmitSync({
       loggedIn: res,
       providers,
       currentUser,
       loading: false,
-    };
+    });
   }
-});
+}
 
 function auth() {
   (authEmit() as Promise<LoginSub>).catch(e => {
@@ -90,7 +92,7 @@ export default function withAuthentication(
 ) {
   return function (props: any) {
     const [errorMessage, setErrorMessage] = useState("");
-    const authSubRes = useSub<LoginSub>(authSub) as LoginSub;
+    const authSubRes = authSub.use();
     if (!authSubRes)
       throw new Error("No auth info");
     const { currentUser, loggedIn, loading, providers } = authSubRes;
