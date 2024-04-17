@@ -11,7 +11,7 @@ const SearchInput = () => {
   const classes = useSearchInputStyles();
 
   const onChangeText = useCallback(event => {
-    logsSub.set("message", event.target.value);
+    logsSub.update(event.target.value, "message");
   }, []);
 
   const startAdornment = useMemo(() => (

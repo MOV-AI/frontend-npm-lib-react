@@ -90,22 +90,22 @@ const Logs = props => {
 
   useEffect(() => {
     for (const key of Object.keys(props.force ?? {}))
-      logsSub.set(key, {
+      logsSub.update({
         ...sub[key],
         ...force[key].reduce((a, subKey) => ({ ...a, [subKey]: 'force' }), {}),
-      });
+      }, key);
   }, [force]);
 
   useEffect(() => {
     for (const key of Object.keys(props.defaults ?? {}))
-      logsSub.set(key, {
+      logsSub.update({
         ...sub[key],
         ...defaults[key],
-      });
+      }, key);
   }, [defaults]);
 
   // if robotsData changes, update robots
-  useEffect(() => { logsSub.set("robots", getRobots(robotsData)); }, [robotsData]);
+  useEffect(() => { logsSub.update(getRobots(robotsData), "robots"); }, [robotsData]);
 
   const getLogs = useCallback(() => {
     // Remove previously enqueued requests
