@@ -28,7 +28,8 @@ const LogsFilterBar = props => {
     hide,
   } = props;
   const classes = useLogFilterStyles();
-  const { robots } = logsSub.use();
+  const sub = logsSub.use();
+  const { robots } = sub;
   const robotsLabel = useMemo(() => Object.keys(robots).reduce((a, key) => ({ ...a, [key]: key }), {}), [robots]);
   const robotSelector =  useSelector(robotsLabel, "robots", MENU_PROPS, useRobotSelectorStyles);
   const levelSelector = useSelector(LEVELS_LABEL, "levels", MENU_PROPS);

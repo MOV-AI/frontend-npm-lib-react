@@ -15,11 +15,11 @@ const TagsPopover = () => {
   const deleteTag = useCallback(tagText => {
     const newState = { ...tags };
     delete newState[tagText];
-    logsSub.set("tags", newState);
+    logsSub.update(newState, "tags");
   }, [tags]);
 
   const addTag = useCallback(() => {
-    logsSub.set("tags", { ...tags, [tagText]: true });
+    logsSub.update({ ...tags, [tagText]: true }, "tags");
     setTagText("");
   }, [tagText]);
 

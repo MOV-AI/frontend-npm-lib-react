@@ -71,8 +71,8 @@ devDependencies:
     specifier: ^0.6.0-39
     version: 0.6.0-39(@types/node@20.12.2)(@types/react-dom@18.2.23)(@types/react@18.2.74)(@types/testing-library__jest-dom@5.14.9)
   '@mov-ai/mov-fe-lib-sub':
-    specifier: ^2.2.31-1
-    version: 2.2.31-1(lodash@4.17.21)
+    specifier: ^2.2.31-2
+    version: 2.2.31-2(lodash@4.17.21)
   '@mui/icons-material':
     specifier: ^5.15.15
     version: 5.15.15(@mui/material@5.15.15)(@types/react@18.2.74)(react@18.2.0)
@@ -2580,8 +2580,8 @@ packages:
       - webpack-plugin-serve
     dev: true
 
-  /@mov-ai/mov-fe-lib-sub@2.2.31-1(lodash@4.17.21):
-    resolution: {integrity: sha512-xL2gM4QJv/BT0lQLVlX+AnUUUy+WRYYv+dg6v4ME/ZzG+13GASBI+9oTvFVHLxvAPTmiIFIpPTOwZqVV+l7hAQ==, tarball: https://npm.pkg.github.com/download/@mov-ai/mov-fe-lib-sub/2.2.31-1/d6dfb5ce167f5c2740c138ef47bbe22a22607229}
+  /@mov-ai/mov-fe-lib-sub@2.2.31-2(lodash@4.17.21):
+    resolution: {integrity: sha512-CEzXJApjECL/vcL4Y+GACWaml+Kk8begZou+/knPG3vRLo+7OuZ7bGGwULA1VDPfayF/anM0g0qnjQSgAl+UtQ==, tarball: https://npm.pkg.github.com/download/@mov-ai/mov-fe-lib-sub/2.2.31-2/81bdeb706678f44df41369b5a29d5a5d5da2487e}
     peerDependencies:
       lodash: ^4.17.21
     dependencies:
