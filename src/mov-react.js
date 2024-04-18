@@ -153,6 +153,7 @@ export {
   Battery50 as Battery50Icon,
   Battery60 as Battery60Icon,
   Battery80 as Battery80Icon,
+  Battery90 as Battery90Icon,
   BatteryAlert as BatteryAlertIcon,
   BatteryFull as BatteryFullIcon,
   BlockRounded as BlockRoundedIcon,
