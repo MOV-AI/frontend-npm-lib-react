@@ -93,6 +93,7 @@
   },
   "dependencies": {
     "@date-io/date-fns": "^3.0.0",
+    "date-fns": "^2.30.0",
     "@fontsource/open-sans": "^5.0.27",
     "@fontsource/roboto": "^5.0.12",
     "clsx": "^2.1.0",
