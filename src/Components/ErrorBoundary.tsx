@@ -1,5 +1,20 @@
 import React, { Component, ReactNode } from "react";
+import { withStyles } from "@mui/styles";
+import { alpha } from "@mui/material/styles";
+import { Theme } from "@mui/material/styles";
 import StackTrace, { StackFrame } from "stacktrace-js";
+
+const styles = (theme: Theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    boxSizing: "border-box",
+    backgroundColor: alpha(theme.palette.error.main, 0.2) + " !important",
+    padding: "16px",
+  }
+});
 
 function getStackLine(error : any, stackFrame : StackFrame) {
   const { functionName, fileName, lineNumber } = stackFrame;
@@ -8,6 +23,7 @@ function getStackLine(error : any, stackFrame : StackFrame) {
 
 interface ErrorBoundaryProps {
   children: ReactNode,
+  classes: object,
 }
 
 interface ErrorBoundaryState {
@@ -16,7 +32,6 @@ interface ErrorBoundaryState {
   stackLine : string
 }
 
-export default
 class ErrorBoundary extends Component<ErrorBoundaryProps,ErrorBoundaryState> {
   constructor(props : any) {
     super(props);
@@ -36,17 +51,17 @@ class ErrorBoundary extends Component<ErrorBoundaryProps,ErrorBoundaryState> {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, classes } = this.props;
 
     if (!this.state.errorInfo)
       return children;
 
-    return (<div className="vertical pad card">
-      <div className="h-5">Something went wrong</div>
-      <pre className="margin-0">
-        { this.state.stackLine }
-        { this.state.errorInfo.componentStack }
-      </pre>
+    return (<div className={classes.root}>
+      <div>
+        { "Error: " + this.state.error.message }
+      </div>
     </div>);
   }
 }
+
+export default withStyles(styles)(ErrorBoundary);
