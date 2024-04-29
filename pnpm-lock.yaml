@@ -69,13 +69,13 @@ devDependencies:
     version: 6.3.2(@mui/system@5.15.15)(@types/react-dom@18.2.23)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
   '@mov-ai/mov-fe-lib-core':
     specifier: ^1.2.1-13
-    version: 1.2.1-13(@mov-ai/mov-fe-lib-sub@2.2.31-3)
+    version: 1.2.1-13(@mov-ai/mov-fe-lib-sub@2.2.31-4)
   '@mov-ai/mov-fe-lib-scripts':
     specifier: ^0.6.0-39
     version: 0.6.0-39(@types/node@20.12.2)(@types/react-dom@18.2.23)(@types/react@18.2.74)(@types/testing-library__jest-dom@5.14.9)
   '@mov-ai/mov-fe-lib-sub':
-    specifier: ^2.2.31-3
-    version: 2.2.31-3(lodash@4.17.21)
+    specifier: ^2.2.31-4
+    version: 2.2.31-4(lodash@4.17.21)
   '@mui/icons-material':
     specifier: ^5.15.15
     version: 5.15.15(@mui/material@5.15.15)(@types/react@18.2.74)(react@18.2.0)
@@ -2461,12 +2461,12 @@ packages:
       - react-native
     dev: true
 
-  /@mov-ai/mov-fe-lib-core@1.2.1-13(@mov-ai/mov-fe-lib-sub@2.2.31-3):
+  /@mov-ai/mov-fe-lib-core@1.2.1-13(@mov-ai/mov-fe-lib-sub@2.2.31-4):
     resolution: {integrity: sha512-acAaztvGbomWKN6gIgNUDd3JFSNd6YNkNr6vV6N53ZpbdvmiZTDYe9SM2gpuhDPL5WSj4XemPW4B10FsoV512Q==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-core/1.2.1-13/7dbc2bfd8f57517c5a975b9bad890b56187810d7}
     peerDependencies:
       '@mov-ai/mov-fe-lib-sub': 2.2.31-3
     dependencies:
-      '@mov-ai/mov-fe-lib-sub': 2.2.31-3(lodash@4.17.21)
+      '@mov-ai/mov-fe-lib-sub': 2.2.31-4(lodash@4.17.21)
       fast-equals: 5.0.1
       js-yaml: 4.1.0
       jwt-decode: 3.1.2
@@ -2589,8 +2589,8 @@ packages:
       - webpack-plugin-serve
     dev: true
 
-  /@mov-ai/mov-fe-lib-sub@2.2.31-3(lodash@4.17.21):
-    resolution: {integrity: sha512-dvJ7+GWslySvOVkplkP4ecpIfqgaZqU8lXLvbyn6+frKfiHxWNiCA7yr7GRtb/i9+HnrZ+jXQNMcns1lAgchvQ==, tarball: https://npm.pkg.github.com/download/@mov-ai/mov-fe-lib-sub/2.2.31-3/cec5ffa4cf4d841f04087f709a11bc6969f75661}
+  /@mov-ai/mov-fe-lib-sub@2.2.31-4(lodash@4.17.21):
+    resolution: {integrity: sha512-Jz8nl61FxneVz5z/SBx+Yg8bJpuo1Ir/wiaN9ltDcAJ+c9zI4g25Fy235J+/iSyqkpv4ghKKqz61LKLXMQmcdw==, tarball: https://npm.pkg.github.com/download/@mov-ai/mov-fe-lib-sub/2.2.31-4/dbbc1f7ae9bff5af49e3ae8b9a86f8b895df7f90}
     peerDependencies:
       lodash: ^4.17.21
     dependencies:
