@@ -193,11 +193,10 @@ const Logs = props => {
   const handleExport = useCallback(() => {
     const sep = "\t";
     const contents = filteredLogs.map(log => {
-      const [date, time] = getDateTime(log.time);
-      return [date, time, log.robot, log.message].join(sep);
+      return [log.date, log.time, log.robot, log.message].join(sep);
     });
     // from https://www.epochconverter.com/programming/
-    const dateString = !filteredLogs.length ? new Date().toISOString() : new Date(filteredLogs[0].time * 1e3).toISOString();
+    const dateString = !filteredLogs.length ? new Date().toISOString() : new Date(filteredLogs[0].timestamp).toISOString();
     const columnLabels = Object.keys(columns).filter(key => columns[key]).map(key => COLUMNS_LABEL[key]);
     blobDownload([columnLabels.join(sep), ...contents].join("\n"), `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
   }, [columns, filteredLogs]);
