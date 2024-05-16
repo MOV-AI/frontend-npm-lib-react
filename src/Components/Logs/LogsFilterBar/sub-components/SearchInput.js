@@ -10,8 +10,8 @@ const SearchInput = () => {
   const { message } = logsSub.use();
   const classes = useSearchInputStyles();
 
-  const onChangeText = useCallback(event => {
-    logsSub.update(event.target.value, "message");
+  const onChangeText = useCallback(text => {
+    logsSub.update(text, "message");
   }, []);
 
   const startAdornment = useMemo(() => (
@@ -36,7 +36,7 @@ const SearchInput = () => {
     <TextField
       placeholder={i18n.t("Search")}
       value={message}
-      onChange={onChangeText}
+      onChange={event => onChangeText(event.target.value)}
       InputProps={(
         { "data-testid": "output_search" },
         { startAdornment, endAdornment }
