@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import { LinearProgress } from "@mui/material";
-import { withStyles } from "@mui/styles";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import { LinearProgress } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
 import { styles } from "./style";
 import defaultLogo from "../../../resources/favicon.png";
 
@@ -32,7 +32,7 @@ class NotAuthorized extends Component<{
         alignItems="center"
         justifyContent="space-evenly"
       >
-        <Paper elevation={10} style={{ flexDirection: "column" }} className={classes.root}>
+        <Paper elevation={10} className={classes.root}>
           <Grid item>
             <img
               data-testid="output_logo"

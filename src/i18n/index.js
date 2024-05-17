@@ -9,9 +9,6 @@ i18n.init({
   fallbackLng: false,
   debug: false,
   missingKeyHandler: (_lng, _ns, key, fallbackValue) => fallbackValue ?? key,
-  interpolation: {
-    escape: a => a,
-  }
 });
 export { Translations };
 export default i18n;

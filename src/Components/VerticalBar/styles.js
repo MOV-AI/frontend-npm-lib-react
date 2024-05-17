@@ -1,11 +1,10 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@material-ui/styles";
 
 export const verticalBarStyles = makeStyles(theme => ({
   container: {
     width: "65px",
     height: "100%",
     display: "flex",
-    overflow: "auto",
     flexDirection: "column",
     backgroundColor: theme.verticalBar?.background ?? theme.palette.background.primary,
     "& .MuiSvgIcon-root": {

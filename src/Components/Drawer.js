@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import MaterialDrawer from "@mui/material/Drawer";
+import MaterialDrawer from "@material-ui/core/Drawer";
 
 const Drawer = props => {
   return (

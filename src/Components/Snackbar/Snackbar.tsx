@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback } from "react";
-import { Button } from "@mui/material";
+import { Button } from "@material-ui/core";
 import { OptionsObject, ProviderContext, SnackbarKey, useSnackbar, VariantType } from "notistack";
 export interface SnackbarProps extends OptionsObject {
   message: string;

@@ -1,5 +1,5 @@
 import React from "react";
-import Skeleton from "@mui/material/Skeleton";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const LogsSkeleton = () => {
   const tableSkeleton = ["row1", "row2", "row3"];

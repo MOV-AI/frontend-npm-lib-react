@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@material-ui/styles";
 
 export const useStyles = makeStyles(_theme => ({
   tableContainer: {
@@ -98,7 +98,7 @@ export const useLogFilterStyles = makeStyles(theme => ({
   ...logFilterCommonStyles(theme),
   root: {
     display: "flex",
-    flexDirection: "row !important",
+    flexDirection: "row",
     overflow: "auto",
     alignItems: "center",
     padding: "0px 16px",

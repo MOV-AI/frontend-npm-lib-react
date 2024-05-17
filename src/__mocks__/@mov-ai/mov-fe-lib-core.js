@@ -1,4 +1,4 @@
-import { CONSTANTS, authSub } from "@mov-ai/mov-fe-lib-core";
+import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 
 const Authentication = {
   checkLogin: jest.fn().mockResolvedValue(false),
@@ -21,4 +21,4 @@ const User = function () {
 
 // Constansts
 
-export { Authentication, User, CONSTANTS, authSub };
+export { Authentication, User, CONSTANTS };

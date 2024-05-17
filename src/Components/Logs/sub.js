@@ -1,8 +1,8 @@
-import { Sub } from "@mov-ai/mov-fe-lib-sub";
+import { makeSub } from "../../Utils/Sub";
 import { DEFAULT_COLUMNS, DEFAULT_LEVELS, DEFAULT_SERVICE } from "./utils/Constants";
 
 export
-const logsSub = new Sub({
+const logsSub = makeSub({
   robots: {},
   levels: DEFAULT_LEVELS,
   service: DEFAULT_SERVICE,

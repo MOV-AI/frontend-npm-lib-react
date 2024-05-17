@@ -1,7 +1,7 @@
 import React, { useMemo, memo } from "react";
 import PropTypes from "prop-types";
-import { AppBar, IconButton, Tooltip } from "@mui/material";
-import GetAppIcon from "@mui/icons-material/GetApp";
+import { AppBar, IconButton, Tooltip } from "@material-ui/core";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import _isEqual from "lodash/isEqual";
 // Sub-Components
 import SearchInput from "./sub-components/SearchInput";
@@ -28,8 +28,7 @@ const LogsFilterBar = props => {
     hide,
   } = props;
   const classes = useLogFilterStyles();
-  const sub = logsSub.use();
-  const { robots } = sub;
+  const { robots } = logsSub.use();
   const robotsLabel = useMemo(() => Object.keys(robots).reduce((a, key) => ({ ...a, [key]: key }), {}), [robots]);
   const robotSelector =  useSelector(robotsLabel, "robots", MENU_PROPS, useRobotSelectorStyles);
   const levelSelector = useSelector(LEVELS_LABEL, "levels", MENU_PROPS);

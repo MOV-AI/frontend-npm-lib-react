@@ -4,11 +4,11 @@ import Tree from "react-virtualized-tree";
 import "material-icons/css/material-icons.css";
 import "react-virtualized/styles.css";
 import "react-virtualized-tree/lib/main.css";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import { withStyles } from "@mui/styles";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import { withStyles } from "@material-ui/styles";
 import _get from "lodash/get";
 import { ListItemsTreeWithSearch } from "./TreeSearch";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";
@@ -19,7 +19,7 @@ import { EMPTY_FUNCTION } from "../../Utils/Constants";
  *                                                                                      */
 //========================================================================================
 
-const styles = _theme => ({
+const styles = theme => ({
   horizFlex: {
     display: "flex",
     flexDirection: "row",
