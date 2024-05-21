@@ -38,6 +38,7 @@ import withError from "./Components/HOCs/withError";
 // import Translations
 import ExportPdf from "./exporters/pdf";
 import ExportCsv from "./exporters/csv";
+console.log("LIBREACT");
 export {
   Accordion,
   AccordionDetails,
@@ -98,12 +99,15 @@ export {
   RadioGroup,
   Select as BaseSelect,
   Skeleton,
+  Snackbar,
   SnackbarContent,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
   SvgIcon,
   Switch,
+  Tab,
+  Tabs as BaseTabs,
   Table as BaseTable,
   TableBody,
   TableCell,
@@ -122,6 +126,8 @@ export {
   amber,
   green,
   grey,
+  red,
+  blue,
 } from "@mui/material/colors";
 export {
   alpha,
@@ -155,6 +161,7 @@ export {
   Battery80 as Battery80Icon,
   Battery90 as Battery90Icon,
   BatteryAlert as BatteryAlertIcon,
+  BatteryChargingFull as BatteryChargingFullIcon,
   BatteryFull as BatteryFullIcon,
   BlockRounded as BlockRoundedIcon,
   Bookmark as BookmarkIcon,
@@ -183,6 +190,7 @@ export {
   Download as DownloadIcon,
   DragIndicator as DragIndicatorIcon,
   Edit as EditIcon,
+  EditOutlined as EditOutlinedIcon,
   Email as EmailIcon,
   Error as ErrorIcon,
   ExitToAppOutlined as ExitToAppOutlinedIcon,
@@ -206,13 +214,17 @@ export {
   Keyboard as KeyboardIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
+  Layers as LayersIcon,
+  LayersClear as LayersClearIcon,
   LastPage as LastPageIcon,
   LibraryBooks as LibraryBooksIcon,
   Link as LinkIcon,
+  LinkOff as LinkOffIcon,
   ListAlt as ListAltIcon,
   Lock as LockIcon,
   LockOpen as LockOpenIcon,
   LowPriority as LowPriorityIcon,
+  Menu as MenuIcon,
   Money as MoneyIcon,
   MoreHoriz as MoreHorizIcon,
   MoreVert as MoreVertIcon,
