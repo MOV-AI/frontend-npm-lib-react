@@ -33,7 +33,21 @@ const StyledMenuItem = withStyles(theme => ({
 }))(MenuItem);
 
 const ContextMenu = props => {
-  const { style } = props;
+  const {
+    element = <div>Ahaha</div>,
+    menuList = [
+      {
+        onClick: () => console.log("clicked 1"),
+        element: "Profile",
+        onClose: true
+      }
+    ],
+    lowerElement = <div></div>,
+    width = "68px",
+    backgroundColor = "#424242",
+    style = {},
+    styledMenuProps = {},
+  } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = evt => {
@@ -51,10 +65,10 @@ const ContextMenu = props => {
 
   return (
     <div data-testid="section_context-menu" style={style}>
-      {React.cloneElement(props.element, {
+      {React.cloneElement(element, {
         onClick: evt => {
-          if (props.element.props.onClick !== undefined) {
-            props.element.props.onClick(evt); // If user defined an onClick
+          if (element.props.onClick !== undefined) {
+            element.props.onClick(evt); // If user defined an onClick
           }
           handleClick(evt); // opens the contextMenu
         }
@@ -65,9 +79,9 @@ const ContextMenu = props => {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
-        {...props.styledMenuProps}
+        {...styledMenuProps}
       >
-        {props.menuList.map((item, index) => {
+        {menuList.map((item, index) => {
           return (
             <StyledMenuItem
               data-testid="input_menu-item"
@@ -96,21 +110,6 @@ ContextMenu.propTypes = {
   width: PropTypes.string,
   backgroundColor: PropTypes.string,
   styledMenuProps: PropTypes.object
-};
-ContextMenu.defaultProps = {
-  element: <div>Ahaha</div>,
-  menuList: [
-    {
-      onClick: () => console.log("clicked 1"),
-      element: "Profile",
-      onClose: true
-    }
-  ],
-  lowerElement: <div></div>,
-  width: "68px",
-  backgroundColor: "#424242",
-  style: {},
-  styledMenuProps: {}
 };
 
 export default ContextMenu;
