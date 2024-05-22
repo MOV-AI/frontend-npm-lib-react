@@ -19,7 +19,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     getStyle = () => ({}),
   } = appOptions;
 
-  let componentWithDefaults = (dependencies?.["@material-ui/styles"]?.withStyles ?? withStyles)(
+  let componentWithDefaults = (dependencies["@mui/styles"]?.withStyles ?? withStyles)(
     getStyle
   )(withError(appComponent, dependencies));
 
@@ -39,7 +39,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   );
   return withTheme(
     componentWithAuthentication,
-    dependencies?.["@material-ui/styles"]?.ThemeProvider ?? ThemeProvider,
+    dependencies["@mui/styles"]?.ThemeProvider ?? ThemeProvider,
     themeProps
   );
 }
