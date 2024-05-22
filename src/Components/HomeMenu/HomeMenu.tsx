@@ -30,9 +30,20 @@ const HomeMenuPopper = () => {
     (new User())
       .getAllApps()
       .then(res => {
-        res.success && setCurrentApps(res.result as any);
-      })
-      .catch(err => {
+        return Promise.all([
+          (new User()).getCurrentUserWithPermissions(),
+          Promise.resolve(res.success ? res.result as any : []),
+        ]);
+      }).then(([user, apps]) => {
+        const appsMap = user.Resources.Applications.reduce(
+          (a: object, url: string) => ({ ...a, [url]: true }),
+          {}
+        );
+        const filtered = apps.filter(
+          (app: any) => appsMap[app.URL]
+        );
+        setCurrentApps(filtered)
+      }).catch(err => {
         setErrorMessage(err.statusText);
       });
   }, []);
