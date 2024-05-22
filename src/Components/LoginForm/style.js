@@ -7,12 +7,10 @@ const styles = () => ({
   ...common,
   root: {
     padding: "32px 32px !important",
-    borderRadius: "40px !important",
-    gap: "16px",
-    display: "flex",
+    borderRadius: 40
   },
   container: {
-    height: "100%",
+    paddingTop: "5%"
   },
   logoImage: {
     display: "block",

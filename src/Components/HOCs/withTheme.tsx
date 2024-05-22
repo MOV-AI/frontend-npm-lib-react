@@ -1,13 +1,12 @@
-import { Theme, createTheme, ThemeOptions, ThemeProvider } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
-import { withStyles } from "@mui/styles";
+import { createTheme, Theme, ThemeOptions } from "@material-ui/core/styles";
+import { ThemeProvider, withStyles } from "@material-ui/styles";
 import DefaultApplicationTheme, { defaultGetStyle } from "../../styles/Themes";
 import { makeSub } from "../../Utils/Sub";
 import useSub from "../../hooks/useSub";
 import { ApplicationThemeType } from "./types";
 import React from "react";
 
-type ThemeNameType = "dark" | "light" | "indigo";
+type ThemeNameType = "dark" | "light";
 
 interface ThemeSub {
   themeName: ThemeNameType;
@@ -91,7 +90,6 @@ export default function withTheme(
 
     return (
       <ThemeProvider theme={muiTheme}>
-        <CssBaseline />
         <StyledComponent
           handleToggleTheme={handleToggleTheme}
           theme={theme}

@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import { withStyles } from "@mui/styles";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import { withStyles } from "@material-ui/styles";
 
 const StyledMenu = props => (
   <Menu

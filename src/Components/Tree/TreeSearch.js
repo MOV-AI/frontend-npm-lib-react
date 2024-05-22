@@ -6,10 +6,10 @@ import {
   Typography,
   Divider,
   ListItem
-} from "@mui/material";
+} from "@material-ui/core";
 import PropTypes from "prop-types";
-import SearchIcon from "@mui/icons-material/Search";
-import ClearIcon from "@mui/icons-material/Clear";
+import SearchIcon from "@material-ui/icons/Search";
+import ClearIcon from "@material-ui/icons/Clear";
 import i18n from "i18next";
 
 class TreeSearch extends Component {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider } from "@mui/material";
+import { Divider } from "@material-ui/core";
 import { verticalBarStyles } from "./styles";
 import { VerticalBarProps } from "./types";
 

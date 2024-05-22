@@ -1,6 +1,6 @@
 import React from "react";
 import Collapse from "../src/Components/Collapse";
-import List from "@mui/material/List";
+import { List } from "@material-ui/core";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 
 export default {

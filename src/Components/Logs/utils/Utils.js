@@ -3,7 +3,7 @@ import {
   Checkbox,
   MenuItem,
   ListItemText
-} from "@mui/material";
+} from "@material-ui/core";
 
 // Makes sure to find unique "i" of chip array
 // Input: [{key: 0, label: "Chip1"}, {key: 2, label: "Chip3"}], keyName= "key"

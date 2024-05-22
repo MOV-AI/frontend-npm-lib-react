@@ -1,4 +1,4 @@
-import { PropTypes } from "@mui/material";
+import { PropTypes } from "@material-ui/core";
 import { MouseEventHandler } from "react";
 
 export interface AbstractModalProps {

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Button, Modal } from "@mui/material";
+import { Button, Modal } from "@material-ui/core";
 import { Authentication, PermissionType, User } from "@mov-ai/mov-fe-lib-core";
 import { Emit, makeSub } from "../../Utils/Sub";
 import useSub from "../../hooks/useSub";
@@ -36,12 +36,10 @@ export
 const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
   authSub.update({ ...loggedOutInfo, loading: true });
 
-  {
-    const user = (new User()).getCurrentUserWithPermissions();
-
+  try {
     const [loggedIn, currentUserBare] = await Promise.all([
       Authentication.checkLogin(),
-      user,
+      (new User()).getCurrentUserWithPermissions(),
     ]);
 
     console.assert(currentUserBare);
@@ -70,18 +68,15 @@ const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
       currentUser,
       loading: false,
     };
+  } catch (e: any) {
+    if (!(globalThis as any).mock)
+      console.error("Auth Error: " + e.error?.message ?? e.message ?? e);
+    return { ...loggedOutInfo, loading: false };
   }
 });
 
-function auth() {
-  (authEmit() as Promise<LoginSub>).catch(e => {
-    console.error("Auth Error", e?.message);
-    authSub.update({ ...loggedOutInfo, loading: false });
-  });
-}
-
 if (!(window as any).mock)
-  auth();
+  authEmit();
 
 export default function withAuthentication(
   WrappedComponent: React.ComponentType,
@@ -120,7 +115,7 @@ export default function withAuthentication(
             selectedProvider
           );
           if (apiResponse.error) throw new Error(apiResponse.error);
-          auth();
+          authEmit();
         } catch (e: unknown) {
           setErrorMessage((e as Error).message);
         }

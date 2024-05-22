@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import CloseIcon from "@mui/icons-material/Close";
+import CloseIcon from "@material-ui/icons/Close";
 import _debounce from "lodash/debounce";
 import {
   Card,
@@ -9,7 +9,7 @@ import {
   Button,
   CardActions,
   Modal
-} from "@mui/material";
+} from "@material-ui/core";
 import { modalStyles } from "./styles";
 import i18n from "i18next";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";
@@ -101,6 +101,7 @@ const AbstractModal = (props: AbstractModalProps) => {
           >
             <CloseIcon></CloseIcon>
           </Typography>
+          <Divider className={classes.divider} />
           <Typography component="div" className={classes.childrenContainer}>
             {props.children}
           </Typography>
@@ -110,7 +111,7 @@ const AbstractModal = (props: AbstractModalProps) => {
           {hasSubmitButton && (
             <Button
               data-testid="input_submit"
-              color={submitColor as any}
+              color={submitColor}
               onClick={handleSubmit}
               disabled={disableActions}
             >
@@ -120,7 +121,7 @@ const AbstractModal = (props: AbstractModalProps) => {
           {hasCancelButton && (
             <Button
               data-testid="input_cancel"
-              color={cancelColor as any}
+              color={cancelColor}
               onClick={onCancel}
               disabled={disableActions}
             >
