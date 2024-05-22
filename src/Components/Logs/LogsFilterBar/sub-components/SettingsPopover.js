@@ -7,8 +7,6 @@ import {
   MenuItem,
   FormControl,
   ListItemText,
-  FormControlLabel,
-  Switch,
   TextField,
   Typography
 } from "@material-ui/core";
@@ -21,8 +19,6 @@ import { MENU_PROPS } from "./_shared/Constants";
 const SettingsPopover = props => {
   // Props
   const {
-    advancedMode,
-    handleAdvancedMode,
     limit,
     handleLimit,
     columns,
@@ -65,13 +61,6 @@ const SettingsPopover = props => {
 
   return (
     <FiltersIcon icon={<TuneIcon></TuneIcon>} title={t("Configuration")}>
-      {/* Advanced/Simple Mode */}
-      <FormControlLabel
-        control={
-          <Switch checked={advancedMode} onChange={handleAdvancedMode} />
-        }
-        label={advancedMode ? t("Advanced") : t("Simple")}
-      />
       <div className={classes.filtersButton}>
         {/* Limit Input */}
         <Typography component="div" className={classes.inputHeader}>

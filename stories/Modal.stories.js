@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import withAuthentication from "../src/Components/HOCs/withAuthentication";
 import AbstractModal from "../src/Components/Modal/AbstractModal";
 import ConfirmAlertModal from "../src/Components/Modal/ConfirmAlertModal";
+import SelectScopeModal, { getAllData } from "../src/Components/Modal/SelectScopeModal";
 export default {
   title: "Modal"
 };
@@ -41,4 +43,26 @@ export const simpleConfirm = () => {
 
 simpleConfirm.story = {
   name: "Confirm Modal"
+};
+
+const scopeList = ["Annotations", "Callback", "Configuration", "Flow", "Nodes", "Layouts", "Scenes"];
+
+function SelectScope() {
+  const [ modalData, setModalData ] = useState(null);
+
+  useEffect(() => {
+    getAllData("global").then(setModalData);
+  }, []);
+
+  return <SelectScopeModal data={modalData} scopeList={scopeList} open />;
+}
+
+const AuthSelectScope = withAuthentication(SelectScope);
+
+export const selectScope = () => {
+  return <AuthSelectScope />;
+};
+
+simpleConfirm.story = {
+  name: "Select Scope Modal"
 };

@@ -45,7 +45,7 @@ export const COLUMN_LIST = {
   },
   Robot: {
     label: "Robot",
-    dataKey: "robot",
+    dataKey: "robot_name",
     width: 100
   },
   Message: {
