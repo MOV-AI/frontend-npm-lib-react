@@ -21,7 +21,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
 
   const realGetStyle = (getStyle ?? dependencies["@tty-pt/styles"]?.makeMagicBook ?? makeMagicBook);
 
-  let componentWithDefaults = (dependencies["@material-ui/styles"]?.withStyles ?? withStyles)(
+  let componentWithDefaults = (dependencies["@mui/styles"]?.withStyles ?? withStyles)(
     realGetStyle
   )(
     (dependencies["@tty-pt/styles"]?.withMagicClasses ?? withMagicClasses)(
@@ -45,7 +45,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   );
   return withTheme(
     componentWithAuthentication,
-    dependencies["@material-ui/styles"]?.ThemeProvider ?? ThemeProvider,
+    dependencies["@mui/styles"]?.ThemeProvider ?? ThemeProvider,
     themeProps
   );
 }

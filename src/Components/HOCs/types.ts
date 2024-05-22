@@ -16,7 +16,7 @@ export interface WithDefaultsProps {
       withMagicClasses?: typeof withMagicClasses,
       makeMagicBook?: typeof makeMagicBook,
     },
-    "@material-ui/styles"?: {
+    "@mui/styles"?: {
       ThemeProvider?: typeof ThemeProvider,
       withStyles?: typeof withStyles,
     },
