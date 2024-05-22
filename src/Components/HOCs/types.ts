@@ -1,9 +1,8 @@
 import React from "react";
-import { ThemeOptions, createTheme } from "@mui/material/styles";
-import { StyleRules } from "@mui/styles";
+import { ThemeOptions, StyleRules, createTheme } from "@material-ui/core/styles";
 
 export interface Dependencies {
-  "@mui/styles"?: {
+  "@material-ui/core/styles"?: {
     createTheme?: typeof createTheme;
   },
 }
@@ -11,7 +10,6 @@ export interface Dependencies {
 export interface ApplicationThemeType {
   dark: ThemeOptions;
   light: ThemeOptions;
-  indigo: ThemeOptions;
 }
 
 export interface WithDefaultsProps {

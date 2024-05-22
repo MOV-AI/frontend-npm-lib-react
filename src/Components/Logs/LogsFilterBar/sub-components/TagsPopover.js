@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useMemo } from "react";
-import { Chip, InputAdornment, IconButton, TextField } from "@mui/material";
+import { Chip, InputAdornment, IconButton, TextField } from "@material-ui/core";
 import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
-import LabelIcon from "@mui/icons-material/Label";
-import AddIcon from "@mui/icons-material/Add";
+import LabelIcon from "@material-ui/icons/Label";
+import AddIcon from "@material-ui/icons/Add";
 import { useTagsStyles } from "../../styles";
 import { logsSub } from "./../../sub";
 
@@ -15,11 +15,11 @@ const TagsPopover = () => {
   const deleteTag = useCallback(tagText => {
     const newState = { ...tags };
     delete newState[tagText];
-    logsSub.update(newState, "tags");
+    logsSub.set("tags", newState);
   }, [tags]);
 
   const addTag = useCallback(() => {
-    logsSub.update({ ...tags, [tagText]: true }, "tags");
+    logsSub.set("tags", { ...tags, [tagText]: true });
     setTagText("");
   }, [tagText]);
 

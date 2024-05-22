@@ -3,7 +3,7 @@ import {
   Input,
   Select,
   FormControl,
-} from "@mui/material";
+} from "@material-ui/core";
 import { useSelectBoxStyle } from "../styles";
 import { getSelector } from "../utils/Utils";
 import { logsSub } from "../sub";
@@ -21,7 +21,7 @@ function useSelector(labelMap, label, menuProps, useStyles = useSelectBoxStyle) 
   const { [label]: map } = logsSub.use();
   const selector = useMemo(() => getSelector(labelMap, map), [map]);
   const classes = useStyles();
-  const set = useCallback(value => logsSub.update(value, label), [label]);
+  const set = useCallback(value => logsSub.set(label, value), [label]);
   const onChange = useCallback(event => onChangeSelect(set, map, event), [set, map]);
 
   return (

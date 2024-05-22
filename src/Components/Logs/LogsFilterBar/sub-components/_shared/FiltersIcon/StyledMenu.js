@@ -1,6 +1,6 @@
 import React from "react";
-import { withStyles } from "@mui/styles";
-import { Popover } from "@mui/material";
+import { withStyles } from "@material-ui/styles";
+import { Popover } from "@material-ui/core";
 
 const StyledMenu = withStyles(_theme => ({
   paper: {

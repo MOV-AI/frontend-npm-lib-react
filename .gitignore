@@ -9,10 +9,8 @@
 /coverage
 
 # production
-/cjs
-/web
-/esm
-/types
+/build
+/dist
 
 # misc
 .DS_Store

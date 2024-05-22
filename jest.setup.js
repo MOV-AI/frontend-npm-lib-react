@@ -1,2 +1,2 @@
-require("./src/i18n");
+import "./src/i18n";
 globalThis.mock = true;

@@ -1,6 +1,5 @@
-import "@testing-library/jest-dom";
 import React from "react";
-import { render, fireEvent, within } from "@testing-library/react";
+import { screen, render, fireEvent, within } from "@testing-library/react";
 import withTheme from "./../HOCs/withTheme";
 import LoginForm from "./LoginForm";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
@@ -76,7 +75,6 @@ describe("Domain Selector", () => {
     expect(domainSelector).toBeInTheDocument();
   });
 
-  /*
   it("Shoud display the domains", async () => {
     const { getByRole } = render(
       <Themed
@@ -96,7 +94,6 @@ describe("Domain Selector", () => {
 
     expect(options).toHaveLength(MULTIPLE_DOMAINS.length);
   });
-  */
 });
 
 describe("Selected Domain", () => {

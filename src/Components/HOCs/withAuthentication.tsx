@@ -1,9 +1,82 @@
 import React, { useState, useCallback } from "react";
-import { Button, Modal } from "@mui/material";
-import { Authentication, PermissionType, authSub, login, LoginData } from "@mov-ai/mov-fe-lib-core";
+import { Button, Modal } from "@material-ui/core";
+import { Authentication, PermissionType, User } from "@mov-ai/mov-fe-lib-core";
+import { Emit, makeSub } from "../../Utils/Sub";
+import useSub from "../../hooks/useSub";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import i18n from "i18next";
+
+interface LoginData {
+  username: string;
+  password: string;
+  remember: any;
+  selectedProvider: any; 
+}
+
+interface LoginSub {
+  loggedIn: boolean,
+  currentUser: any,
+  loading: boolean,
+  providers: { domains: string[] },
+}
+
+export
+const loggedOutInfo = {
+  loggedIn: false,
+  currentUser: null,
+  loading: false,
+  providers: { domains: [] },
+};
+
+export
+const authSub = makeSub<LoginSub>(loggedOutInfo);
+
+export
+const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
+  authSub.update({ ...loggedOutInfo, loading: true });
+
+  try {
+    const [loggedIn, currentUserBare] = await Promise.all([
+      Authentication.checkLogin(),
+      (new User()).getCurrentUserWithPermissions(),
+    ]);
+
+    console.assert(currentUserBare);
+
+    const currentUser = {
+      ...currentUserBare,
+      roles: currentUserBare.Roles.reduce((a, role) => ({ ...a, [role]: true }), {}),
+    };
+
+    if (loggedIn)
+      return {
+        loggedIn: true,
+        providers: await Authentication.getProviders(),
+        currentUser,
+        loading: false,
+      };
+
+    const [providers, res] = await Promise.all([
+      Authentication.getProviders(),
+      Authentication.refreshTokens(),
+    ]);
+
+    return {
+      loggedIn: res,
+      providers,
+      currentUser,
+      loading: false,
+    };
+  } catch (e: any) {
+    if (!(globalThis as any).mock)
+      console.error("Auth Error: " + e.error?.message ?? e.message ?? e);
+    return { ...loggedOutInfo, loading: false };
+  }
+});
+
+if (!(window as any).mock)
+  authEmit();
 
 export default function withAuthentication(
   WrappedComponent: React.ComponentType,
@@ -12,7 +85,7 @@ export default function withAuthentication(
 ) {
   return function (props: any) {
     const [errorMessage, setErrorMessage] = useState("");
-    const authSubRes = authSub.use();
+    const authSubRes = useSub<LoginSub>(authSub) as LoginSub;
     if (!authSubRes)
       throw new Error("No auth info");
     const { currentUser, loggedIn, loading, providers } = authSubRes;
@@ -33,9 +106,16 @@ export default function withAuthentication(
      * @param {{ username, password, remember, selectedProvider }}
      */
     const handleLoginSubmit = useCallback(
-      async (loginData: LoginData) => {
+      async ({ username, password, remember, selectedProvider }: LoginData) => {
         try {
-          login(loginData);
+          const apiResponse = await Authentication.login(
+            username,
+            password,
+            remember,
+            selectedProvider
+          );
+          if (apiResponse.error) throw new Error(apiResponse.error);
+          authEmit();
         } catch (e: unknown) {
           setErrorMessage((e as Error).message);
         }

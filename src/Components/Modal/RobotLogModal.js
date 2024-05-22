@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import List from "@mui/material/List";
-import Avatar from "@mui/material/Avatar";
-import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
-import { ListItem, ListItemAvatar, ListItemText } from "@mui/material";
-import { withStyles } from "@mui/styles";
-import ScheduleIcon from "@mui/icons-material/Schedule";
-import WarningIcon from "@mui/icons-material/Warning";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
-import ChatIcon from "@mui/icons-material/Chat";
+import List from "@material-ui/core/List";
+import Avatar from "@material-ui/core/Avatar";
+import Divider from "@material-ui/core/Divider";
+import Typography from "@material-ui/core/Typography";
+import { ListItem, ListItemAvatar, ListItemText } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
+import ScheduleIcon from "@material-ui/icons/Schedule";
+import WarningIcon from "@material-ui/icons/Warning";
+import ViewModuleIcon from "@material-ui/icons/ViewModule";
+import ChatIcon from "@material-ui/icons/Chat";
 import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import AbstractModal from "./AbstractModal";
 
-const styles = _theme => ({
+const styles = theme => ({
   breakWord: {
     wordBreak: "break-all"
   }
@@ -28,24 +28,24 @@ class RobotLogModal extends Component {
 
   open = alert => {
     const { data } = this.state;
-    console.log("OPEN", data, alert);
+    // Format time
+    const time = new Date(alert.time * 1000);
     const alertButton = alert.button
       ? JSON.parse(alert.button.replace(/'/g, '"'))
       : null;
+    data.time = `${time.toLocaleTimeString("pt")}`;
+    data.action = alert.action;
+    data.message = alert.message;
+    data.robot = alert.robot;
+    data.service = alert.service;
+    data.module = alert.module;
+    if (alertButton) {
+      data.buttonText = alertButton.label;
+      data.buttonAction = this.getRobotAlertAction(alertButton);
+    }
     // Update state variables
     this.setState({
-      data: {
-        ...(alertButton ? {
-          buttonText: alertButton.label,
-          buttonAction: this.getRobotAlertAction(alertButton),
-        } : {}),
-        time: alert.time,
-        action: alert.action,
-        message: alert.message,
-        robot: alert.robot,
-        service: alert.service,
-        module: alert.module,
-      },
+      data,
       open: true,
       hasButton: !!alertButton
     });

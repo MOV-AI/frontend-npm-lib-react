@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useRef, useEffect, useMemo } from "react";
 import { RobotManager, Features } from "@mov-ai/mov-fe-lib-core";
+import useSub from "../../hooks/useSub";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
@@ -16,14 +17,14 @@ import "./Logs.css";
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   const blob = new Blob([file], { type: charset });
   const url = URL.createObjectURL(blob);
-  const a = globalThis.document.createElement("a");
-  globalThis.document.body.appendChild(a);
+  const a = document.createElement("a");
+  document.body.appendChild(a);
   a.style = "display: none";
   a.href = url;
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
-  globalThis.document.body.removeChild(a);
+  document.body.removeChild(a);
 }
 
 function noSelection(obj) {
@@ -68,7 +69,7 @@ const Logs = props => {
   const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
   const logModalRef = useRef();
-  const sub = logsSub.use();
+  const sub = useSub(logsSub);
   const {
     robots, levels, service, columns, tags,
     message, selectedFromDate, selectedToDate,
@@ -90,22 +91,22 @@ const Logs = props => {
 
   useEffect(() => {
     for (const key of Object.keys(props.force ?? {}))
-      logsSub.update({
+      logsSub.set(key, {
         ...sub[key],
         ...force[key].reduce((a, subKey) => ({ ...a, [subKey]: 'force' }), {}),
-      }, key);
+      });
   }, [force]);
 
   useEffect(() => {
     for (const key of Object.keys(props.defaults ?? {}))
-      logsSub.update({
+      logsSub.set(key, {
         ...sub[key],
         ...defaults[key],
-      }, key);
+      });
   }, [defaults]);
 
   // if robotsData changes, update robots
-  useEffect(() => { logsSub.update(getRobots(robotsData), "robots"); }, [robotsData]);
+  useEffect(() => { logsSub.set("robots", getRobots(robotsData)); }, [robotsData]);
 
   const getLogs = useCallback(() => {
     // Remove previously enqueued requests

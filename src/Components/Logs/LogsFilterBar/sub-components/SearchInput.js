@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react";
-import { InputAdornment, TextField, IconButton } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import ResetSearch from "@mui/icons-material/Close";
+import { InputAdornment, TextField, IconButton } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
+import ResetSearch from "@material-ui/icons/Close";
 import { useSearchInputStyles } from "../../styles";
 import { logsSub } from "./../../sub";
 import i18n from "i18next";
@@ -11,7 +11,7 @@ const SearchInput = () => {
   const classes = useSearchInputStyles();
 
   const onChangeText = useCallback(event => {
-    logsSub.update(event.target.value, "message");
+    logsSub.set("message", event.target.value);
   }, []);
 
   const startAdornment = useMemo(() => (
