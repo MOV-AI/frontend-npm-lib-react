@@ -1,56 +1,38 @@
 import React, { Component, ReactNode } from "react";
-import { withCast } from "@tty-pt/styles";
-import { Cast } from "@tty-pt/styles/lib/types";
-import StackTrace, { StackFrame } from "stacktrace-js";
-
-function getStackLine(error : any, stackFrame : StackFrame) {
-  const { functionName, fileName, lineNumber } = stackFrame;
-  return "Error: " + error.message + "\n    in " + functionName + " (at " + fileName + ":" + lineNumber + ")";
-}
 
 interface ErrorBoundaryProps {
-  c: Cast,
   children: ReactNode,
 }
 
 interface ErrorBoundaryState {
-  error: Error|boolean,
-  errorInfo: any,
-  stackLine : string
+  error?: Error,
 }
 
 class ErrorBoundary extends Component<ErrorBoundaryProps,ErrorBoundaryState> {
   constructor(props : any) {
     super(props);
 
-    this.state = { error: false, errorInfo: false, stackLine: "" };
+    this.state = { };
   }
 
-  componentDidCatch(error : Error, errorInfo : any) {
-    // TODO use future error api
-    //    const stackLine = getStackLine(error);
-    this.setState({ error, errorInfo, stackLine: error.stack + "\n" });
-    StackTrace.fromError(error).then(err => {
-      // const stackLine = err.map(getStackLine).join("\n");
-      const stackLine = getStackLine(error, err[0]);
-      this.setState({ error, errorInfo, stackLine });
-    });
+  componentDidCatch(error : Error) {
+    console.error(error)
+    this.setState({ error });
   }
 
   render() {
-    const { children, c } = this.props;
+    const { children } = this.props;
 
-    if (!this.state.errorInfo)
+    if (!this.state.error)
       return children;
 
-    return (<div className={c("vertical pad colorPrimary")}>
-      <div className={c("h5")}>Something went wrong</div>
-      <pre className={c("margin0")}>
-        { this.state.stackLine }
-        { this.state.errorInfo.componentStack }
+    return (<div className="vertical pad colorPrimary">
+      <h5>Something went wrong</h5>
+      <pre>
+        { this.state.error?.message }
       </pre>
     </div>);
   }
 }
 
-export default withCast(ErrorBoundary);
+export default ErrorBoundary;
