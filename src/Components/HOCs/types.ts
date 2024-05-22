@@ -9,7 +9,7 @@ export interface WithDefaultsProps {
   offlineValidation: boolean;
   themeProps: any;
   dependencies: {
-    "@material-ui/styles"?: {
+    "@mui/styles"?: {
       ThemeProvider?: typeof ThemeProvider,
       withStyles?: typeof withStyles,
     },
