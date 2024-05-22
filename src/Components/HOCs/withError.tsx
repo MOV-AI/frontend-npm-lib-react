@@ -1,11 +1,7 @@
 import React from "react";
 import ErrorBoundary from "../ErrorBoundary";
-import { Magic } from "@tty-pt/styles/lib/types";
 
 interface WithErrorDependencies {
-  "tty-pt/styles"?: {
-    MagicContext?: React.Context<Magic>,
-  },
   [key: string]: any,
 }
 
@@ -26,7 +22,7 @@ function withError(Component: React.ComponentType<WithErrorProps>, defaultDepend
   function WithError(props: any): JSX.Element {
     const { key, children, dependencies = defaultDependencies, ...rest } = props;
 
-    return (<ErrorBoundary key={key} dependencies={dependencies}>
+    return (<ErrorBoundary key={key}>
       <Component { ...rest }>
         { children }
       </Component>

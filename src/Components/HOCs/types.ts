@@ -1,7 +1,5 @@
 import React from "react";
-import { ThemeProvider, withStyles } from "@material-ui/styles";
-import { Magic, MagicBook } from "@tty-pt/styles/lib/types";
-import { makeMagicBook, withMagicClasses } from "@tty-pt/styles";
+import { StyleRules, ThemeProvider, withStyles } from "@material-ui/styles";
 import i18n from "i18next";
 import { I18nextProvider } from "react-i18next";
 
@@ -11,11 +9,6 @@ export interface WithDefaultsProps {
   offlineValidation: boolean;
   themeProps: any;
   dependencies: {
-    "@tty-pt/styles"?: {
-      MagicContext?: React.Context<Magic>,
-      withMagicClasses?: typeof withMagicClasses,
-      makeMagicBook?: typeof makeMagicBook,
-    },
     "@material-ui/styles"?: {
       ThemeProvider?: typeof ThemeProvider,
       withStyles?: typeof withStyles,
@@ -25,5 +18,5 @@ export interface WithDefaultsProps {
     },
     i18n: typeof i18n,
   },
-  getStyle: (...args: any[]) => MagicBook,
+  getStyle: (theme: any) => StyleRules;
 }

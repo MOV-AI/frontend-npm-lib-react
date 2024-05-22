@@ -1,6 +1,6 @@
 import { withStyles, ThemeProvider } from "@material-ui/styles";
 import { I18nextProvider } from "react-i18next";
-import { withMagicClasses, makeMagicBook } from "@tty-pt/styles";
+import i18n from "i18next";
 import { WithDefaultsProps } from "./types";
 import withAuthentication from "./withAuthentication";
 import withNotification from "./withNotification";
@@ -16,26 +16,20 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     offlineValidation = true, // this will set to true even if it is false. is this intended?
     dependencies,
     themeProps,
-    getStyle,
+    getStyle = () => ({}),
   } = appOptions;
 
-  const realGetStyle = (getStyle ?? dependencies["@tty-pt/styles"]?.makeMagicBook ?? makeMagicBook);
+  let componentWithDefaults = (dependencies?.["@material-ui/styles"]?.withStyles ?? withStyles)(
+    getStyle
+  )(withError(appComponent, dependencies));
 
-  let componentWithDefaults = (dependencies["@material-ui/styles"]?.withStyles ?? withStyles)(
-    realGetStyle
-  )(
-    (dependencies["@tty-pt/styles"]?.withMagicClasses ?? withMagicClasses)(
-      withError(appComponent, dependencies),
-      dependencies["@tty-pt/styles"]?.MagicContext
-    )
-  );
   if (offlineValidation) {
     componentWithDefaults = withOfflineValidation(componentWithDefaults);
   }
-  if (dependencies.i18n) {
+  if (dependencies?.i18n) {
     componentWithDefaults = withTranslations(componentWithDefaults, {
-      i18n: dependencies.i18n,
-      provider: dependencies["react-i18next"]?.I18nextProvider ?? I18nextProvider
+      i18n: dependencies?.i18n ?? i18n,
+      provider: dependencies?.["react-i18next"]?.I18nextProvider ?? I18nextProvider
     });
   }
   const componentWithNotifications = withNotification(componentWithDefaults);
@@ -45,7 +39,7 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   );
   return withTheme(
     componentWithAuthentication,
-    dependencies["@material-ui/styles"]?.ThemeProvider ?? ThemeProvider,
+    dependencies?.["@material-ui/styles"]?.ThemeProvider ?? ThemeProvider,
     themeProps
   );
 }
