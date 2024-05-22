@@ -17,7 +17,7 @@
     "testDev": "jest --config jest.config.js --watchAll",
     "build": "webpack --mode=production",
     "buildDev": "webpack --mode=development --watch",
-    "clean": "rm -rf node_modules/ package-lock.json",
+    "clean": "rm -rf node_modules package-lock.json pnpm-lock.yaml",
     "storybook": "start-storybook -p 3001",
     "build-storybook": "build-storybook"
   },
