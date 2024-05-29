@@ -26,12 +26,21 @@ import i18n from "../../i18n/i18n";
 import { useStyles } from "./styles";
 import "./Logs.css";
 
+async function hashString(string) {
+  const msgUint8 = new TextEncoder().encode(string);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 /**
  * CONSTANTS
  */
 const DEFAULT_TIMEOUT_IN_MS = 3000;
 const RETRY_IN_MS = 2000;
 const UI_TAG = { key: 0, label: "ui" };
+const MAX_FETCH_LOGS = 20000;
 
 const Logs = props => {
   // Props
@@ -148,11 +157,38 @@ const Logs = props => {
     clearTimeout(getLogsTimeoutRef.current);
     RobotManager.getLogs(queryParams)
       .then(response => {
-        setLogsData(prevState => {
-          const oldLogs = prevState || [];
-          const newLogs = response?.data || [];
-          return [...oldLogs, ...newLogs];
-        });
+        const data = response?.data || [];
+        return Promise.all([Promise.resolve(data)].concat(data.map(item => hashString(item.message))));
+      }).then(([data, ...hashes]) => {
+        const oldLogs = logsDataRef.current || [];
+        let j = data.length - 1;
+
+        for (let i = 0; j > -1 && i < oldLogs.length; i++, j--) {
+          const timestamp = data[j].time * 1000;
+          const date = new Date(timestamp);
+
+          if (date === oldLogs[i].timestamp && (hashes[j] + (timestamp * 1000)) === oldLogs[i].key)
+            break;
+
+          if (date < oldLogs[i].timestamp)
+            break;
+        }
+
+        const newLogs =  (data.slice(0, j).map((log, index) => {
+          const timestamp = log.time * 1000;
+          const date = new Date(timestamp);
+          return ({
+            ...log,
+            timestamp: date,
+            time: date.toLocaleTimeString(),
+            date: date.toLocaleDateString(),
+            key: hashes[index] + (timestamp * 1000),
+          });
+        }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
+
+        logsDataRef.current = newLogs;
+        setLogsData(newLogs);
+
         // Reset timeout for next request to default value
         lastRequestTimeRef.current = requestTime;
         requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
@@ -424,18 +460,6 @@ const Logs = props => {
     return Object.values(selectedRobots);
   }, [selectedRobots]);
 
-  /**
-   * Format logs data to be displayed
-   * @returns {array} All selected robots Logs
-   */
-  const formatLogsData = useCallback(() => {
-    // Remove duplicates
-    const data = _uniqWith(logsData, _isEqual).sort((a, b) => b.time - a.time);
-    logsDataRef.current = data;
-    // Return formated data
-    return data;
-  }, [logsData, limit]);
-
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -477,7 +501,7 @@ const Logs = props => {
           <LogsTable
             columns={columns}
             columnList={COLUMN_LIST}
-            logsData={formatLogsData()}
+            logsData={logsData}
             levelsList={levelsList}
             onRowClick={openLogDetails}
             noRowsRenderer={handleNoRows}
