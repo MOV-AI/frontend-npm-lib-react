@@ -23,15 +23,13 @@ export const ROBOT_STATES = {
 export const COLUMN_LIST = {
   Date: {
     label: "Date",
-    dataKey: "time",
+    dataKey: "date",
     width: 110,
-    render: time => getJustDateFromServer(time)
   },
   Time: {
     label: "Time",
     dataKey: "time",
     width: 100,
-    render: time => getJustTimeFromServer(time)
   },
   Level: {
     label: "Level",
@@ -45,7 +43,7 @@ export const COLUMN_LIST = {
   },
   Robot: {
     label: "Robot",
-    dataKey: "robot_name",
+    dataKey: "robot",
     width: 100
   },
   Message: {

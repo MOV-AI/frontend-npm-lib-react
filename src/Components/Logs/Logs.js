@@ -38,11 +38,20 @@ function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   document.body.removeChild(a);
 }
 
+async function hashString(string) {
+  const msgUint8 = new TextEncoder().encode(string);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 /**
  * CONSTANTS
  */
 const DEFAULT_TIMEOUT_IN_MS = 3000;
 const RETRY_IN_MS = 2000;
+const MAX_FETCH_LOGS = 20000;
 
 const NO_ROBOTS_RETRY_TIMEOUT = 1000;
 const Logs = props => {
@@ -157,11 +166,38 @@ const Logs = props => {
     clearTimeout(getLogsTimeoutRef.current);
     RobotManager.getLogs(queryParams)
       .then(response => {
-        setLogsData(prevState => {
-          const oldLogs = prevState || [];
-          const newLogs = response?.data || [];
-          return [...oldLogs, ...newLogs];
-        });
+        const data = response?.data || [];
+        return Promise.all([Promise.resolve(data)].concat(data.map(item => hashString(item.message))));
+      }).then(([data, ...hashes]) => {
+        const oldLogs = logsDataRef.current || [];
+        let j = data.length - 1;
+
+        for (let i = 0; j > -1 && i < oldLogs.length; i++, j--) {
+          const timestamp = data[j].time * 1000;
+          const date = new Date(timestamp);
+
+          if (date === oldLogs[i].timestamp && (hashes[j] + (timestamp * 1000)) === oldLogs[i].key)
+            break;
+
+          if (date < oldLogs[i].timestamp)
+            break;
+        }
+
+        const newLogs =  (data.slice(0, j).map((log, index) => {
+          const timestamp = log.time * 1000;
+          const date = new Date(timestamp);
+          return ({
+            ...log,
+            timestamp: date,
+            time: date.toLocaleTimeString(),
+            date: date.toLocaleDateString(),
+            key: hashes[index] + (timestamp * 1000),
+          });
+        }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
+
+        logsDataRef.current = newLogs;
+        setLogsData(newLogs);
+
         // Reset timeout for next request to default value
         lastRequestTimeRef.current = requestTime;
         requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
@@ -385,14 +421,14 @@ const Logs = props => {
    */
   const handleExport = useCallback(() => {
     const sep = "\t";
-    const contents = logsData.map(log => {
+    const contents = logsDataRef.current.map(log => {
       const [date, time] = getDateTime(log.time);
       return date + sep + time + sep + log.robot_name + sep + log.message;
     }).join("\n");
     // from https://www.epochconverter.com/programming/
-    const dateString = new Date(logsData[0].time * 1e3).toISOString();
+    const dateString = new Date(logsDataRef.current[0].time * 1e3).toISOString();
     blobDownload(contents, `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
-  }, [logsData]);
+  }, []);
 
   //========================================================================================
   /*                                                                                      *
@@ -435,18 +471,6 @@ const Logs = props => {
     return Object.values(selectedRobots);
   }, [selectedRobots]);
 
-  /**
-   * Format logs data to be displayed
-   * @returns {array} All selected robots Logs
-   */
-  const formatLogsData = useCallback(() => {
-    // Remove duplicates
-    const data = _uniqWith(logsData, _isEqual).sort((a, b) => b.time - a.time);
-    logsDataRef.current = data;
-    // Return formated data
-    return data;
-  }, [logsData, limit]);
-
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -487,7 +511,7 @@ const Logs = props => {
           <LogsTable
             columns={columns}
             columnList={COLUMN_LIST}
-            logsData={formatLogsData()}
+            logsData={logsData}
             levelsList={levelsList}
             onRowClick={openLogDetails}
             noRowsRenderer={handleNoRows}
