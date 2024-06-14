@@ -29,11 +29,11 @@ class RobotLogModal extends Component {
   open = alert => {
     const { data } = this.state;
     // Format time
-    const time = new Date(alert.time * 1000);
+    const time = alert.timestamp;
     const alertButton = alert.button
       ? JSON.parse(alert.button.replace(/'/g, '"'))
       : null;
-    data.time = alert.date + " " + alert.time;
+    data.time = `${time.toLocaleTimeString("pt")}`;
     data.action = alert.action;
     data.message = alert.message;
     data.robot = alert.robot;
