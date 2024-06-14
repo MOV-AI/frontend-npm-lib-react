@@ -34,6 +34,31 @@ async function hashString(string) {
   return hashHex;
 }
 
+function logsDedupe(oldLogs, data, hashes) {
+  if (!oldLogs.length)
+    return data.length;
+
+  const oldDate = oldLogs[0].timestamp;
+  const oldKey = oldLogs[0].key;
+  let j;
+
+  // starting from oldest new log, compare with newest old log.
+  // decrease j until we find a log that is not present
+
+  for (j = data.length - 1; j > -1 ; j--) {
+    const timestamp = data[j].time * 1000;
+    const newDate = new Date(timestamp);
+    const newKey = hashes[j] + (timestamp * 1000);
+
+    if (newDate > oldDate || (
+      newDate === oldDate && newKey === oldKey
+    ))
+      break;
+  }
+
+  return j;
+}
+
 /**
  * CONSTANTS
  */
@@ -161,20 +186,7 @@ const Logs = props => {
         return Promise.all([Promise.resolve(data)].concat(data.map(item => hashString(item.message))));
       }).then(([data, ...hashes]) => {
         const oldLogs = logsDataRef.current || [];
-        let j = data.length - 1;
-
-        for (let i = 0; j > -1 && i < oldLogs.length; i++, j--) {
-          const timestamp = data[j].time * 1000;
-          const date = new Date(timestamp);
-
-          if (date === oldLogs[i].timestamp && (hashes[j] + (timestamp * 1000)) === oldLogs[i].key)
-            break;
-
-          if (date < oldLogs[i].timestamp)
-            break;
-        }
-
-        const newLogs =  (data.slice(0, j).map((log, index) => {
+        const newLogs = (data.slice(0, logsDedupe(oldLogs, data, hashes)).map((log, index) => {
           const timestamp = log.time * 1000;
           const date = new Date(timestamp);
           return ({
