@@ -26,15 +26,7 @@ import i18n from "../../i18n/i18n";
 import { useStyles } from "./styles";
 import "./Logs.css";
 
-async function hashString(string) {
-  const msgUint8 = new TextEncoder().encode(string);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
-}
-
-function logsDedupe(oldLogs, data, hashes) {
+function logsDedupe(oldLogs, data) {
   if (!oldLogs.length)
     return data.length;
 
@@ -48,7 +40,7 @@ function logsDedupe(oldLogs, data, hashes) {
   for (j = data.length - 1; j > -1 ; j--) {
     const timestamp = data[j].time * 1000;
     const newDate = new Date(timestamp);
-    const newKey = hashes[j] + (timestamp * 1000);
+    const newKey = data[j].message + (timestamp * 1000);
 
     if (newDate > oldDate || (
       newDate === oldDate && newKey === oldKey
@@ -183,10 +175,8 @@ const Logs = props => {
     RobotManager.getLogs(queryParams)
       .then(response => {
         const data = response?.data || [];
-        return Promise.all([Promise.resolve(data)].concat(data.map(item => hashString(item.message))));
-      }).then(([data, ...hashes]) => {
         const oldLogs = logsDataRef.current || [];
-        const newLogs = (data.slice(0, logsDedupe(oldLogs, data, hashes)).map((log, index) => {
+        const newLogs = (data.slice(0, logsDedupe(oldLogs, data)).map(log => {
           const timestamp = log.time * 1000;
           const date = new Date(timestamp);
           return ({
@@ -194,7 +184,7 @@ const Logs = props => {
             timestamp: date,
             time: date.toLocaleTimeString(),
             date: date.toLocaleDateString(),
-            key: hashes[index] + (timestamp * 1000),
+            key: log.message + (timestamp * 1000),
           });
         }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
 
