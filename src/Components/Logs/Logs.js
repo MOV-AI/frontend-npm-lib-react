@@ -40,7 +40,7 @@ function logsDedupe(oldLogs, data) {
   for (j = data.length - 1; j > -1 ; j--) {
     const timestamp = data[j].time * 1000;
     const newDate = new Date(timestamp);
-    const newKey = data[j].message + (timestamp * 1000);
+    const newKey = data[j].message + timestamp;
 
     if (newDate > oldDate || (
       newDate === oldDate && newKey === oldKey
@@ -184,7 +184,7 @@ const Logs = props => {
             timestamp: date,
             time: date.toLocaleTimeString(),
             date: date.toLocaleDateString(),
-            key: log.message + (timestamp * 1000),
+            key: log.message + timestamp,
           });
         }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
 
