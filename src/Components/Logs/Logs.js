@@ -43,7 +43,7 @@ function logsDedupe(oldLogs, data) {
     const newKey = data[j].message + timestamp;
 
     if (newDate > oldDate || (
-      newDate === oldDate && newKey === oldKey
+      newDate = oldDate && newKey !== oldKey
     ))
       break;
   }
@@ -176,7 +176,7 @@ const Logs = props => {
       .then(response => {
         const data = response?.data || [];
         const oldLogs = logsDataRef.current || [];
-        const newLogs = (data.slice(0, logsDedupe(oldLogs, data)).map(log => {
+        const newLogs = (data.slice(0, logsDedupe(oldLogs, data) + 1).map(log => {
           const timestamp = log.time * 1000;
           const date = new Date(timestamp);
           return ({
