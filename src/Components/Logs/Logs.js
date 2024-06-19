@@ -26,12 +26,38 @@ import i18n from "../../i18n/i18n";
 import { useStyles } from "./styles";
 import "./Logs.css";
 
+function logsDedupe(oldLogs, data) {
+  if (!oldLogs.length)
+    return data.length;
+
+  const oldDate = oldLogs[0].timestamp;
+  const oldKey = oldLogs[0].key;
+  let j;
+
+  // starting from oldest new log, compare with newest old log.
+  // decrease j until we find a log that is not present
+
+  for (j = data.length - 1; j > -1 ; j--) {
+    const timestamp = data[j].time * 1000;
+    const newDate = new Date(timestamp);
+    const newKey = data[j].message + timestamp;
+
+    if (newDate > oldDate || (
+      newDate = oldDate && newKey !== oldKey
+    ))
+      break;
+  }
+
+  return j;
+}
+
 /**
  * CONSTANTS
  */
 const DEFAULT_TIMEOUT_IN_MS = 3000;
 const RETRY_IN_MS = 2000;
 const UI_TAG = { key: 0, label: "ui" };
+const MAX_FETCH_LOGS = 20000;
 
 const Logs = props => {
   // Props
@@ -148,11 +174,23 @@ const Logs = props => {
     clearTimeout(getLogsTimeoutRef.current);
     RobotManager.getLogs(queryParams)
       .then(response => {
-        setLogsData(prevState => {
-          const oldLogs = prevState || [];
-          const newLogs = response?.data || [];
-          return [...oldLogs, ...newLogs];
-        });
+        const data = response?.data || [];
+        const oldLogs = logsDataRef.current || [];
+        const newLogs = (data.slice(0, logsDedupe(oldLogs, data) + 1).map(log => {
+          const timestamp = log.time * 1000;
+          const date = new Date(timestamp);
+          return ({
+            ...log,
+            timestamp: date,
+            time: date.toLocaleTimeString(),
+            date: date.toLocaleDateString(),
+            key: log.message + timestamp,
+          });
+        }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
+
+        logsDataRef.current = newLogs;
+        setLogsData(newLogs);
+
         // Reset timeout for next request to default value
         lastRequestTimeRef.current = requestTime;
         requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
@@ -424,18 +462,6 @@ const Logs = props => {
     return Object.values(selectedRobots);
   }, [selectedRobots]);
 
-  /**
-   * Format logs data to be displayed
-   * @returns {array} All selected robots Logs
-   */
-  const formatLogsData = useCallback(() => {
-    // Remove duplicates
-    const data = _uniqWith(logsData, _isEqual).sort((a, b) => b.time - a.time);
-    logsDataRef.current = data;
-    // Return formated data
-    return data;
-  }, [logsData, limit]);
-
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -477,7 +503,7 @@ const Logs = props => {
           <LogsTable
             columns={columns}
             columnList={COLUMN_LIST}
-            logsData={formatLogsData()}
+            logsData={logsData}
             levelsList={levelsList}
             onRowClick={openLogDetails}
             noRowsRenderer={handleNoRows}
