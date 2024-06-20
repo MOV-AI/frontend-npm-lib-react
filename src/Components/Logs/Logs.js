@@ -31,7 +31,7 @@ function logsDedupe(oldLogs, data) {
     return data.length;
 
   const oldDate = oldLogs[0].timestamp;
-  const oldKey = oldLogs[0].stdout;
+  const oldKey = oldLogs[0].key;
   let j;
 
   // starting from oldest new log, compare with newest old log.
@@ -39,7 +39,7 @@ function logsDedupe(oldLogs, data) {
 
   for (j = data.length - 1; j > -1 ; j--) {
     const newDate = data[j].time;
-    const newKey = data[j].stdout;
+    const newKey = data[j].message + timestamp;
 
     if (newDate > oldDate || (
       newDate === oldDate && newKey !== oldKey
@@ -182,6 +182,7 @@ const Logs = props => {
             timestamp: log.time,
             time: date.toLocaleTimeString(),
             date: date.toLocaleDateString(),
+            key: log.message + log.time,
           });
         }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
 
