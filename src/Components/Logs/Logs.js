@@ -38,12 +38,11 @@ function logsDedupe(oldLogs, data) {
   // decrease j until we find a log that is not present
 
   for (j = data.length - 1; j > -1 ; j--) {
-    const timestamp = data[j].time * 1000;
-    const newDate = new Date(timestamp);
-    const newKey = data[j].message + timestamp;
+    const newDate = data[j].time;
+    const newKey = data[j].message + newDate;
 
     if (newDate > oldDate || (
-      newDate = oldDate && newKey !== oldKey
+      newDate === oldDate && newKey !== oldKey
     ))
       break;
   }
@@ -177,14 +176,13 @@ const Logs = props => {
         const data = response?.data || [];
         const oldLogs = logsDataRef.current || [];
         const newLogs = (data.slice(0, logsDedupe(oldLogs, data) + 1).map(log => {
-          const timestamp = log.time * 1000;
-          const date = new Date(timestamp);
+          const date = new Date(log.time * 1000);
           return ({
             ...log,
-            timestamp: date,
+            timestamp: log.time,
             time: date.toLocaleTimeString(),
             date: date.toLocaleDateString(),
-            key: log.message + timestamp,
+            key: log.message + log.time,
           });
         }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
 
