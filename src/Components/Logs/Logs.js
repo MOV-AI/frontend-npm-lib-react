@@ -39,7 +39,7 @@ function logsDedupe(oldLogs, data) {
 
   for (j = data.length - 1; j > -1 ; j--) {
     const newDate = data[j].time;
-    const newKey = data[j].message + timestamp;
+    const newKey = data[j].message + newDate;
 
     if (newDate > oldDate || (
       newDate === oldDate && newKey !== oldKey
