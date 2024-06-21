@@ -26,6 +26,17 @@ import i18n from "../../i18n/i18n";
 import { useStyles } from "./styles";
 import "./Logs.css";
 
+function transformLog(log) {
+  const date = new Date(log.time * 1000);
+  return ({
+    ...log,
+    timestamp: log.time,
+    time: date.toLocaleTimeString(),
+    date: date.toLocaleDateString(),
+    key: log.message + log.time,
+  });
+}
+
 function logsDedupe(oldLogs, data) {
   if (!oldLogs.length)
     return data.length;
@@ -175,16 +186,10 @@ const Logs = props => {
       .then(response => {
         const data = response?.data || [];
         const oldLogs = logsDataRef.current || [];
-        const newLogs = (data.slice(0, logsDedupe(oldLogs, data) + 1).map(log => {
-          const date = new Date(log.time * 1000);
-          return ({
-            ...log,
-            timestamp: log.time,
-            time: date.toLocaleTimeString(),
-            date: date.toLocaleDateString(),
-            key: log.message + log.time,
-          });
-        }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
+        const newLogs = data.slice(0, logsDedupe(oldLogs, data) + 1)
+          .map(log => transformLog(log))
+          .concat(oldLogs)
+          .slice(0, MAX_FETCH_LOGS);
 
         logsDataRef.current = newLogs;
         setLogsData(newLogs);
