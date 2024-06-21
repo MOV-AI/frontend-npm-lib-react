@@ -52,10 +52,12 @@ function logsDedupe(oldLogs, data) {
     const newDate = data[j].time;
     const newKey = data[j].message + newDate;
 
-    if (newDate > oldDate || (
-      newDate === oldDate && newKey !== oldKey
-    ))
+    if (newDate > oldDate)
       break;
+
+    // found same log. Previous one should be next to last old log
+    if (newDate === oldDate && newKey === oldKey)
+      return j - 1;
   }
 
   return j;
