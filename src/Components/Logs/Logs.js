@@ -38,30 +38,59 @@ function transformLog(log) {
 }
 
 function logsDedupe(oldLogs, data) {
-  if (!oldLogs.length)
-    return data.length;
+  if (!data.length)
+    return oldLogs;
 
-  const oldDate = oldLogs[0].timestamp;
-  const oldKey = oldLogs[0].key;
-  let j;
+  const oldDate = data[data.length - 1].time;
+  let i;
 
-  // starting from oldest new log, compare with newest old log.
-  // decrease j until we find a log that is not present
+  let map = {};
 
-  for (j = data.length - 1; j > -1 ; j--) {
-    const newDate = data[j].time;
-    const newKey = data[j].message + newDate;
+  // iter over old logs with last timestamp of the new logs
+  // and put in a map. Store the index.
 
-    if (newDate > oldDate)
-      break;
-
-    // found same log. Previous one should be next to last old log
-    if (newDate === oldDate && newKey === oldKey)
-      return j - 1;
+  for (
+    i = 0;
+    i < oldLogs.length && oldLogs[i].timestamp === oldDate;
+    i++
+  ) {
+    const log = oldLogs[i];
+    map[log.message] = { ...log, index: i };
   }
 
-  return j;
+  // final i is the index of the oldest
+  // log of that timestamp in old logs
+
+  let k = 0, z;
+
+  // iter over new logs (oldest to latest) with last timestamp,
+  // check if present in last map
+  //  - if present, check the index and set k to it.
+  //  - if not, add to map, set index to k - i. decrease k;
+  for (
+    k = 0, z = data.length;
+    z > 0 && data[z - 1].time === oldDate;
+    z--
+  ) {
+    const log = transformLog(data[z - 1]);
+    const exist = map[log.message];
+    if (exist)
+      k = exist.index;
+    else {
+      map[log.message] = { ...log, index: k - i };
+      k--;
+    }
+  }
+
+  // cut new logs up to z, cat with the deduped ones
+  // and the old logs up to i
+  return [].concat(
+    data.slice(0, z).map(log => transformLog(log)),
+    Object.values(map).sort(({ index: a }, { index: b }) => a - b),
+    oldLogs.slice(i),
+  );
 }
+
 
 /**
  * CONSTANTS
@@ -188,9 +217,7 @@ const Logs = props => {
       .then(response => {
         const data = response?.data || [];
         const oldLogs = logsDataRef.current || [];
-        const newLogs = data.slice(0, logsDedupe(oldLogs, data) + 1)
-          .map(log => transformLog(log))
-          .concat(oldLogs)
+        const newLogs = logsDedupe(oldLogs, data)
           .slice(0, MAX_FETCH_LOGS);
 
         logsDataRef.current = newLogs;
