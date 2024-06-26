@@ -3,3 +3,4 @@
 - [FP-2557](https://movai.atlassian.net/browse/FP-2557):  Removing frontend callbacks from backend
 - [FP-2558](https://movai.atlassian.net/browse/FP-2558): implement log streaming
 - [FP-2657](https://movai.atlassian.net/browse/FP-2657): Users with only read permissions can change the scene
+- [FP-2857](https://movai.atlassian.net/browse/FP-2857): Merge fix for FP-2810 into 2.4.1
