@@ -75,9 +75,7 @@ function logsDedupe(oldLogs, data) {
   ) {
     const log = transformLog(data[z - 1]);
     const exist = map[log.message];
-    if (exist)
-      k = exist.index;
-    else {
+    if (!exist) {
       map[log.message] = { ...log, index: k - i };
       k--;
     }
