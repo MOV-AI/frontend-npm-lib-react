@@ -12,11 +12,12 @@ import { useStyles } from "./styles";
 import { logsSub } from "./sub";
 import "./Logs.css";
 
-function transformLog(log, ts_multiplier = 1) {
+function transformLog(log, index, data, ts_multiplier = 1000) {
   const timestamp = ts_multiplier * log.time;
-  const date = new Date(timestamp * 1000);
+  const date = new Date(timestamp);
   return ({
     ...log,
+    oldTime: log.time,
     timestamp,
     time: date.toLocaleTimeString(),
     date: date.toLocaleDateString(),
@@ -25,11 +26,11 @@ function transformLog(log, ts_multiplier = 1) {
 }
 
 function logsDedupe(oldLogs, data) {
-  if (!oldLogs.length)
-    return data.length;
+  if (!data.length)
+    return oldLogs;
 
-  const oldDate = oldLogs[0].timestamp;
-  const oldMsg = oldLogs[0].message;
+  const oldDate = (oldLogs?.[0]?.timestamp ?? 0) * 0.001;
+  const oldMsg = oldLogs?.[0]?.message ?? "x";
   let j;
 
   // starting from oldest new log, compare with newest old log.
@@ -45,7 +46,7 @@ function logsDedupe(oldLogs, data) {
       break;
   }
 
-  return data.slice(0, j + 1).map(logTransform)
+  return data.slice(0, j + 1).map(transformLog)
     .concat(oldLogs);
 }
 
@@ -141,7 +142,7 @@ const Logs = props => {
     clearTimeout(getLogsTimeoutRef.current);
     RobotManager.getLogs({
       limit: MAX_FETCH_LOGS,
-      date: { from: logsDataGlobal.length ? logsDataGlobal[logsDataGlobal.length - 1].timestamp : selectedFromDate, to: selectedToDate },
+      date: { from: logsDataGlobal.length ? new Date(logsDataGlobal[0].timestamp) : selectedFromDate, to: selectedToDate },
     }).then(response => {
       const data = response?.data || [];
       const oldLogs = logsDataGlobal || [];
@@ -161,7 +162,7 @@ const Logs = props => {
   const onMessage = useCallback((msg) => {
     const item = JSON.parse(msg?.data ?? {});
     setLogsData((prevState) => logsDataGlobal = [
-      transformLog(item, 0.001),
+      transformLog(item, 0, [item], 0.001),
       ...prevState
     ].slice(0, MAX_FETCH_LOGS));
   }, [setLogsData]);
