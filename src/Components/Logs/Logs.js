@@ -26,14 +26,15 @@ import i18n from "../../i18n/i18n";
 import { useStyles } from "./styles";
 import "./Logs.css";
 
-function transformLog(log) {
-  const date = new Date(log.time * 1000);
+function transformLog(log, _index, _data, ts_multiplier = 1000) {
+  const timestamp = ts_multiplier * log.time;
+  const date = new Date(timestamp);
   return ({
     ...log,
-    timestamp: log.time,
+    timestamp,
     time: date.toLocaleTimeString(),
     date: date.toLocaleDateString(),
-    key: log.message + log.time,
+    key: log.message + timestamp,
   });
 }
 
@@ -41,7 +42,7 @@ function logsDedupe(oldLogs, data) {
   if (!data.length)
     return oldLogs;
 
-  const oldDate = data[data.length - 1].time;
+  const oldDate = data[data.length - 1].time * 1000;
   let i;
 
   let map = {};
