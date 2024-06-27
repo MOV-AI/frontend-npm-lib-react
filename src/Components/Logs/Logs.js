@@ -13,6 +13,72 @@ import { useStyles } from "./styles";
 import { logsSub } from "./sub";
 import "./Logs.css";
 
+function transformLog(log, index, data, ts_multiplier = 1000) {
+  const timestamp = ts_multiplier * log.time;
+  const date = new Date(timestamp);
+  return ({
+    ...log,
+    timestamp,
+    time: date.toLocaleTimeString(),
+    date: date.toLocaleDateString(),
+    key: log.message + timestamp,
+  });
+}
+
+function logsDedupe(oldLogs, data) {
+  if (!data.length)
+    return oldLogs;
+
+  const oldDate = data[data.length - 1].time * 1000;
+  let i;
+
+  let map = {};
+
+  // iter over old logs with last timestamp of the new logs
+  // and put in a map. Store the index.
+
+  for (
+    i = 0;
+    i < oldLogs.length && oldLogs[i].timestamp === oldDate;
+    i++
+  ) {
+    const log = oldLogs[i];
+    map[log.message] = { ...log, index: i };
+  }
+
+  // final i is the index of the oldest
+  // log of that timestamp in old logs
+
+  let k = 0, z;
+
+  // iter over new logs (oldest to latest) with last timestamp,
+  // check if present in last map
+  //  - if present, check the index and set k to it.
+  //  - if not, add to map, set index to k - i. decrease k;
+  for (
+    k = 0, z = data.length;
+    z > 0 && data[z - 1].time === oldDate;
+    z--
+  ) {
+    const log = transformLog(data[z - 1]);
+    const exist = map[log.message];
+    if (exist)
+      k = exist.index;
+    else {
+      map[log.message] = { ...log, index: k - i };
+      k--;
+    }
+  }
+
+  // cut new logs up to z, cat with the deduped ones
+  // and the old logs up to i
+  return [].concat(
+    data.slice(0, z).map(log => transformLog(log)),
+    Object.values(map).sort(({ index: a }, { index: b }) => a - b),
+    oldLogs.slice(i),
+  );
+}
+
 // TODO this should be exported. Fleetboard uses it
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   const blob = new Blob([file], { type: charset });
@@ -39,14 +105,6 @@ function getRobots(robotsData) {
   return robotsData
     .map(robot => robot.name)
     .reduce((a, robot) => ({ ...a, [robot]: true }), {});
-}
-
-async function hashString(string) {
-  const msgUint8 = new TextEncoder().encode(string);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
 }
 
 function matchTags(tags, item) {
@@ -113,36 +171,12 @@ const Logs = props => {
     clearTimeout(getLogsTimeoutRef.current);
     RobotManager.getLogs({
       limit: MAX_FETCH_LOGS,
-      date: { from: logsDataGlobal.length ? logsDataGlobal[logsDataGlobal.length - 1].timestamp : selectedFromDate, to: selectedToDate },
+      date: { from: logsDataGlobal.length ? new Date(logsDataGlobal[0].timestamp) : selectedFromDate, to: selectedToDate },
     }).then(response => {
       const data = response?.data || [];
-      return Promise.all([Promise.resolve(data)].concat(data.map(item => hashString(item.message))));
-    }).then(([data, ...hashes]) => {
       const oldLogs = logsDataGlobal || [];
-      let j = data.length - 1;
-
-      for (let i = 0; j > -1 && i < oldLogs.length; i++, j--) {
-        const timestamp = data[j].time * 1000;
-        const date = new Date(timestamp);
-
-        if (date === oldLogs[i].timestamp && (hashes[j] + (timestamp * 1000)) === oldLogs[i].key)
-          break;
-
-        if (date < oldLogs[i].timestamp)
-          break;
-      }
-
-      const newLogs =  (logsDataGlobal = data.slice(0, j).map((log, index) => {
-        const timestamp = log.time * 1000;
-        const date = new Date(timestamp);
-        return ({
-          ...log,
-          timestamp: date,
-          time: date.toLocaleTimeString(),
-          date: date.toLocaleDateString(),
-          key: hashes[index] + (timestamp * 1000),
-        });
-      }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
+      const newLogs = logsDataGlobal = logsDedupe(oldLogs, data)
+        .slice(0, MAX_FETCH_LOGS);
 
       setLogsData(newLogs);
     });
@@ -156,19 +190,10 @@ const Logs = props => {
 
   const onMessage = useCallback((msg) => {
     const item = JSON.parse(msg?.data ?? {});
-    const date = new Date(item.time / 1000000);
-    hashString(item.message).then(hash => {
-      setLogsData((prevState) => logsDataGlobal = [
-        {
-          ...item,
-          timestamp: date,
-          time: date.toLocaleTimeString(),
-          date: date.toLocaleDateString(),
-          key: hash + item.time
-        },
-        ...prevState
-      ].slice(0, MAX_FETCH_LOGS));
-    });
+    setLogsData((prevState) => logsDataGlobal = [
+      transformLog(item, 0, [item], 0.001),
+      ...prevState
+    ].slice(0, MAX_FETCH_LOGS));
   }, [setLogsData]);
 
   useEffect(() => {

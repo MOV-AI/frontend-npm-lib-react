@@ -1,6 +1,8 @@
 # Version to be assign
 
 - [FP-2848 - Review and enable lib-react unit tests](https://movai.atlassian.net/browse/FP-2848)
+- [FP-2857](https://movai.atlassian.net/browse/FP-2857): Merge fix for FP-2810 into 2.4.1
+- [FP-2858](https://movai.atlassian.net/browse/FP-2858): Removelog duplication for the second overlapping in requests
 
 # 1.3.4
 
