@@ -26,6 +26,11 @@ import i18n from "../../i18n/i18n";
 import { useStyles } from "./styles";
 import "./Logs.css";
 
+/**
+ * Tranform log from the format received from the API to the format
+ * required to be rendered
+ * @returns {array} Transformed log
+ */
 function transformLog(log, _index, _data, ts_multiplier = 1000) {
   const timestamp = ts_multiplier * log.time;
   const date = new Date(timestamp);
@@ -38,55 +43,51 @@ function transformLog(log, _index, _data, ts_multiplier = 1000) {
   });
 }
 
+/**
+ * Remove duplicates from logs for the second overlaping the
+ * current and the last request
+ * @returns {array} Concatenated logs without duplicates
+ */
 function logsDedupe(oldLogs, data) {
   if (!data.length)
     return oldLogs;
 
-  const oldDate = data[data.length - 1].time * 1000;
-  let i;
-
+  // date of the oldest log received in the current request
+  const oldDate = data[data.length - 1].timestamp;
+  // map to store the old logs of the overlaped second
   let map = {};
 
   // iter over old logs with last timestamp of the new logs
-  // and put in a map. Store the index.
-
+  // and put in a map
   for (
-    i = 0;
+    let i = 0;
     i < oldLogs.length && oldLogs[i].timestamp === oldDate;
     i++
-  ) {
-    const log = oldLogs[i];
-    map[log.message] = { ...log, index: i };
-  }
+  )
+    map[oldLogs[i].message] = oldLogs[i];
 
-  // final i is the index of the oldest
-  // log of that timestamp in old logs
-
-  let k = 0, z;
+  // array to store logs from overlap second which had not
+  // been sent  before
+  let newSecOverlap = []
+  let z;
 
   // iter over new logs (oldest to latest) with last timestamp,
   // check if present in last map
-  //  - if present, check the index and set k to it.
-  //  - if not, add to map, set index to k - i. decrease k;
+  //  - if not, push
   for (
-    k = 0, z = data.length;
-    z > 0 && data[z - 1].time === oldDate;
+    z = data.length -1;
+    z >= 0 && data[z].timestamp === oldDate;
     z--
-  ) {
-    const log = transformLog(data[z - 1]);
-    const exist = map[log.message];
-    if (!exist) {
-      map[log.message] = { ...log, index: k - i };
-      k--;
-    }
-  }
+  )
+    if (!map[data[z].message])
+      newSecOverlap.push(data[z])
 
-  // cut new logs up to z, cat with the deduped ones
+  // cut new logs up to z, concat with the deduped ones
   // and the old logs up to i
   return [].concat(
-    data.slice(0, z).map(log => transformLog(log)),
-    Object.values(map).sort(({ index: a }, { index: b }) => a - b),
-    oldLogs.slice(i),
+    data.slice(0, z + 1),
+    newSecOverlap.reverse(),
+    oldLogs,
   );
 }
 
@@ -216,7 +217,7 @@ const Logs = props => {
       .then(response => {
         const data = response?.data || [];
         const oldLogs = logsDataRef.current || [];
-        const newLogs = logsDedupe(oldLogs, data)
+        const newLogs = logsDedupe(oldLogs, data.map(transformLog))
           .slice(0, MAX_FETCH_LOGS);
 
         logsDataRef.current = newLogs;
