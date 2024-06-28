@@ -109,7 +109,6 @@ const Logs = props => {
   const getLogsTimeoutRef = useRef();
   const selectedRobotsRef = useRef({});
   const requestTimeout = useRef();
-  const lastRequestTimeRef = useRef(null);
   const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
   const logsDataRef = useRef([]);
@@ -146,7 +145,8 @@ const Logs = props => {
    * @returns {string} From Date in string or empty
    */
   const getFromDate = () => {
-    return selectedFromDate || lastRequestTimeRef.current || "";
+    // get logs since last existing log
+    return selectedFromDate || (logsData.length ? new Date(logsData[0].timestamp) : "");
   };
   /**
    * Get To Date filter
@@ -160,7 +160,6 @@ const Logs = props => {
    * Clear robot logs
    */
   const clearLogs = () => {
-    lastRequestTimeRef.current = null;
     setLogsData([]);
   };
 
@@ -224,7 +223,6 @@ const Logs = props => {
         setLogsData(newLogs);
 
         // Reset timeout for next request to default value
-        lastRequestTimeRef.current = requestTime;
         requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
         // Doesn't enqueue next request if the 'selectedToDate' inserted manually by the user is before now
         return !(selectedToDate && selectedToDate < requestTime);
@@ -407,7 +405,6 @@ const Logs = props => {
       [DATE_KEY_OPTION.FROM]: date => setSelectedFromDate(date),
       [DATE_KEY_OPTION.TO]: date => setSelectedToDate(date)
     };
-    lastRequestTimeRef.current = null;
     setDate[keyToChange](newDate);
   }, []);
 
