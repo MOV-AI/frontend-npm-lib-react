@@ -1,5 +1,4 @@
-ARG VARIANT=16-bullseye
-FROM mcr.microsoft.com/devcontainers/javascript-node:0-${VARIANT}
+FROM mcr.microsoft.com/devcontainers/javascript-node:0-20-bullseye
 
 LABEL description="Frontend development environment"
 LABEL maintaner="frontend@mov.ai"
