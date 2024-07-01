@@ -320,7 +320,7 @@ const Logs = props => {
   //  Applies for text inputs (search and limit) and date time picker
   useEffect(() => {
     clearTimeout(refreshLogsTimeoutRef.current);
-    refreshLogsTimeoutRef.current = setTimeout(refreshLogs, 1000);
+    refreshLogsTimeoutRef.current = setTimeout(refreshLogs, 300);
   }, [searchMessage]);
 
   //========================================================================================
