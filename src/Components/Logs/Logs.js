@@ -401,12 +401,13 @@ const Logs = props => {
    * On change dates from filter
    */
   const onChangeDate = useCallback((newDate, keyToChange) => {
+    clearLogs();
     const setDate = {
       [DATE_KEY_OPTION.FROM]: date => setSelectedFromDate(date),
       [DATE_KEY_OPTION.TO]: date => setSelectedToDate(date)
     };
     setDate[keyToChange](newDate);
-  }, []);
+  }, [clearLogs]);
 
   /**
    * Set simple/advanced mode
