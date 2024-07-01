@@ -146,7 +146,7 @@ const Logs = props => {
    */
   const getFromDate = () => {
     // get logs since last existing log
-    return selectedFromDate || (logsDataRef.current.length ? logsDataRef.current[0].timestamp : "");
+    return logsDataRef.current.length ? logsDataRef.current[0].timestamp : (selectedFromDate ?? "");
   };
   /**
    * Get To Date filter
