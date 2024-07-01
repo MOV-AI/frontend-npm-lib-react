@@ -18,7 +18,7 @@ import {
   SIMPLE_LEVELS_LIST
 } from "./utils/Constants";
 import { findsUniqueKey } from "./utils/Utils";
-import useUpdateEffect from "./hooks/useUpdateEffect";
+// import useUpdateEffect from "./hooks/useUpdateEffect";
 import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
 import i18n from "../../i18n/i18n";
@@ -130,7 +130,6 @@ const Logs = props => {
   const [searchMessage, setSearchMessage] = useState("");
   const [selectedFromDate, setSelectedFromDate] = useState(null);
   const [selectedToDate, setSelectedToDate] = useState(null);
-  const [logsData, setLogsData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   //========================================================================================
@@ -160,7 +159,8 @@ const Logs = props => {
    * Clear robot logs
    */
   const clearLogs = () => {
-    setLogsData([]);
+    clearTimeout(getLogsTimeoutRef.current);
+    logsDataRef.current = [];
   };
 
   /**
@@ -194,7 +194,7 @@ const Logs = props => {
     // If list of selected robot is empty : clear logs data and stop loader
     if (!robots.length) {
       setLoading(false);
-      setLogsData([]);
+      clearLogs();
       return;
     }
     // Set loading state if log data is not empty
@@ -204,7 +204,7 @@ const Logs = props => {
       level: { selected: levels, list: levelsList },
       service: { selected: selectedService },
       tag: { selected: tags },
-      message: searchMessage,
+      searchMessage,
       date: { from: getFromDate(), to: getToDate() },
       robot: { selected: robots },
       limit: limit
@@ -220,7 +220,6 @@ const Logs = props => {
           .slice(0, MAX_FETCH_LOGS);
 
         logsDataRef.current = newLogs;
-        setLogsData(newLogs);
 
         // Reset timeout for next request to default value
         requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
@@ -312,19 +311,17 @@ const Logs = props => {
   }, [robotsData]);
 
   // On change filter
-  useUpdateEffect(() => {
+  useEffect(() => {
     refreshLogs();
-  }, [levels, selectedService, advancedMode, columns, tags]);
+  }, [levels, selectedService, advancedMode, selectedFromDate, selectedToDate, columns, tags]);
 
   // Add timeout before refresh logs on text input change
   //  This will prevent unnecessary re-renders while the user is still typing
   //  Applies for text inputs (search and limit) and date time picker
-  useUpdateEffect(() => {
+  useEffect(() => {
     clearTimeout(refreshLogsTimeoutRef.current);
-    refreshLogsTimeoutRef.current = setTimeout(() => {
-      refreshLogs();
-    }, 1000);
-  }, [searchMessage, limit, selectedFromDate, selectedToDate]);
+    refreshLogsTimeoutRef.current = setTimeout(refreshLogs, 1000);
+  }, [searchMessage]);
 
   //========================================================================================
   /*                                                                                      *
@@ -354,14 +351,6 @@ const Logs = props => {
     },
     [refreshLogs]
   );
-
-  /**
-   * On change message from filter
-   * @param {string} text : Search text
-   */
-  const onChangeMessage = useCallback(text => {
-    setSearchMessage(text);
-  }, []);
 
   /**
    * On change levels from filter
@@ -508,7 +497,7 @@ const Logs = props => {
           handleSelectedService={onChangeServices}
           handleLimit={onChangeLimit}
           handleColumns={onChangeColumns}
-          handleMessageRegex={onChangeMessage}
+          handleMessageRegex={setSearchMessage}
           handleDateChange={onChangeDate}
           handleAdvancedMode={onToggleAdvancedMode}
           handleAddTag={addTag}
@@ -533,7 +522,7 @@ const Logs = props => {
           <LogsTable
             columns={columns}
             columnList={COLUMN_LIST}
-            logsData={logsData}
+            logsData={logsDataRef.current}
             levelsList={levelsList}
             onRowClick={openLogDetails}
             noRowsRenderer={handleNoRows}
