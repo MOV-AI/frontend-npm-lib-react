@@ -18,7 +18,6 @@ import {
   SIMPLE_LEVELS_LIST
 } from "./utils/Constants";
 import { findsUniqueKey } from "./utils/Utils";
-// import useUpdateEffect from "./hooks/useUpdateEffect";
 import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
 import i18n from "../../i18n/i18n";
