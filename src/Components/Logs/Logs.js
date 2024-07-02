@@ -84,8 +84,7 @@ function logsDedupe(oldLogs, data) {
 
   // cut new logs up to z, concat with the deduped ones
   // and the old logs up to i
-  return [].concat(
-    data.slice(0, z + 1),
+  return data.slice(0, z + 1).concat(
     newSecOverlap.reverse(),
     oldLogs,
   );
