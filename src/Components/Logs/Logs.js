@@ -18,7 +18,6 @@ import {
   SIMPLE_LEVELS_LIST
 } from "./utils/Constants";
 import { findsUniqueKey } from "./utils/Utils";
-import useUpdateEffect from "./hooks/useUpdateEffect";
 import _uniqWith from "lodash/uniqWith";
 import _isEqual from "lodash/isEqual";
 import i18n from "../../i18n/i18n";
@@ -26,29 +25,70 @@ import i18n from "../../i18n/i18n";
 import { useStyles } from "./styles";
 import "./Logs.css";
 
-function logsDedupe(oldLogs, data) {
-  if (!oldLogs.length)
-    return data.length;
-
-  const oldDate = oldLogs[0].timestamp;
-  const oldKey = oldLogs[0].key;
-  let j;
-
-  // starting from oldest new log, compare with newest old log.
-  // decrease j until we find a log that is not present
-
-  for (j = data.length - 1; j > -1 ; j--) {
-    const newDate = data[j].time;
-    const newKey = data[j].message + newDate;
-
-    if (newDate > oldDate || (
-      newDate === oldDate && newKey !== oldKey
-    ))
-      break;
-  }
-
-  return j;
+/**
+ * Tranform log from the format received from the API to the format
+ * required to be rendered
+ * @returns {array} Transformed log
+ */
+function transformLog(log, _index, _data, ts_multiplier = 1000) {
+  const timestamp = ts_multiplier * log.time;
+  const date = new Date(timestamp);
+  return ({
+    ...log,
+    timestamp,
+    time: date.toLocaleTimeString(),
+    date: date.toLocaleDateString(),
+    key: log.message + timestamp,
+  });
 }
+
+/**
+ * Remove duplicates from logs for the second overlaping the
+ * current and the last request
+ * @returns {array} Concatenated logs without duplicates
+ */
+function logsDedupe(oldLogs, data) {
+  if (!data.length)
+    return oldLogs;
+
+  // date of the oldest log received in the current request
+  const oldDate = data[data.length - 1].timestamp;
+  // map to store the old logs of the overlaped second
+  let map = {};
+
+  // iter over old logs with last timestamp of the new logs
+  // and put in a map
+  for (
+    let i = 0;
+    i < oldLogs.length && oldLogs[i].timestamp === oldDate;
+    i++
+  )
+    map[oldLogs[i].message] = oldLogs[i];
+
+  // array to store logs from overlap second which had not
+  // been sent  before
+  let newSecOverlap = []
+  let z;
+
+  // iter over new logs (oldest to latest) with last timestamp,
+  // check if present in last map
+  //  - if not, push
+  for (
+    z = data.length -1;
+    z >= 0 && data[z].timestamp === oldDate;
+    z--
+  )
+    if (!map[data[z].message])
+      newSecOverlap.push(data[z])
+
+  // cut new logs up to z, concat with the deduped ones
+  // and the old logs up to i
+  return data.slice(0, z + 1).concat(
+    newSecOverlap.reverse(),
+    oldLogs,
+  );
+}
+
 
 /**
  * CONSTANTS
@@ -67,7 +107,6 @@ const Logs = props => {
   const getLogsTimeoutRef = useRef();
   const selectedRobotsRef = useRef({});
   const requestTimeout = useRef();
-  const lastRequestTimeRef = useRef(null);
   const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
   const logsDataRef = useRef([]);
@@ -89,7 +128,6 @@ const Logs = props => {
   const [searchMessage, setSearchMessage] = useState("");
   const [selectedFromDate, setSelectedFromDate] = useState(null);
   const [selectedToDate, setSelectedToDate] = useState(null);
-  const [logsData, setLogsData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   //========================================================================================
@@ -104,7 +142,8 @@ const Logs = props => {
    * @returns {string} From Date in string or empty
    */
   const getFromDate = () => {
-    return selectedFromDate || lastRequestTimeRef.current || "";
+    // get logs since last existing log
+    return logsDataRef.current.length ? logsDataRef.current[0].timestamp : (selectedFromDate ?? "");
   };
   /**
    * Get To Date filter
@@ -118,8 +157,8 @@ const Logs = props => {
    * Clear robot logs
    */
   const clearLogs = () => {
-    lastRequestTimeRef.current = null;
-    setLogsData([]);
+    clearTimeout(getLogsTimeoutRef.current);
+    logsDataRef.current = [];
   };
 
   /**
@@ -153,7 +192,7 @@ const Logs = props => {
     // If list of selected robot is empty : clear logs data and stop loader
     if (!robots.length) {
       setLoading(false);
-      setLogsData([]);
+      clearLogs();
       return;
     }
     // Set loading state if log data is not empty
@@ -163,7 +202,7 @@ const Logs = props => {
       level: { selected: levels, list: levelsList },
       service: { selected: selectedService },
       tag: { selected: tags },
-      message: searchMessage,
+      searchMessage,
       date: { from: getFromDate(), to: getToDate() },
       robot: { selected: robots },
       limit: limit
@@ -175,22 +214,12 @@ const Logs = props => {
       .then(response => {
         const data = response?.data || [];
         const oldLogs = logsDataRef.current || [];
-        const newLogs = (data.slice(0, logsDedupe(oldLogs, data) + 1).map(log => {
-          const date = new Date(log.time * 1000);
-          return ({
-            ...log,
-            timestamp: log.time,
-            time: date.toLocaleTimeString(),
-            date: date.toLocaleDateString(),
-            key: log.message + log.time,
-          });
-        }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
+        const newLogs = logsDedupe(oldLogs, data.map(transformLog))
+          .slice(0, MAX_FETCH_LOGS);
 
         logsDataRef.current = newLogs;
-        setLogsData(newLogs);
 
         // Reset timeout for next request to default value
-        lastRequestTimeRef.current = requestTime;
         requestTimeout.current = DEFAULT_TIMEOUT_IN_MS;
         // Doesn't enqueue next request if the 'selectedToDate' inserted manually by the user is before now
         return !(selectedToDate && selectedToDate < requestTime);
@@ -280,19 +309,17 @@ const Logs = props => {
   }, [robotsData]);
 
   // On change filter
-  useUpdateEffect(() => {
+  useEffect(() => {
     refreshLogs();
-  }, [levels, selectedService, advancedMode, columns, tags]);
+  }, [levels, selectedService, advancedMode, selectedFromDate, selectedToDate, columns, tags]);
 
   // Add timeout before refresh logs on text input change
   //  This will prevent unnecessary re-renders while the user is still typing
   //  Applies for text inputs (search and limit) and date time picker
-  useUpdateEffect(() => {
+  useEffect(() => {
     clearTimeout(refreshLogsTimeoutRef.current);
-    refreshLogsTimeoutRef.current = setTimeout(() => {
-      refreshLogs();
-    }, 1000);
-  }, [searchMessage, limit, selectedFromDate, selectedToDate]);
+    refreshLogsTimeoutRef.current = setTimeout(refreshLogs, 300);
+  }, [searchMessage, limit]);
 
   //========================================================================================
   /*                                                                                      *
@@ -322,14 +349,6 @@ const Logs = props => {
     },
     [refreshLogs]
   );
-
-  /**
-   * On change message from filter
-   * @param {string} text : Search text
-   */
-  const onChangeMessage = useCallback(text => {
-    setSearchMessage(text);
-  }, []);
 
   /**
    * On change levels from filter
@@ -373,7 +392,6 @@ const Logs = props => {
       [DATE_KEY_OPTION.FROM]: date => setSelectedFromDate(date),
       [DATE_KEY_OPTION.TO]: date => setSelectedToDate(date)
     };
-    lastRequestTimeRef.current = null;
     setDate[keyToChange](newDate);
   }, []);
 
@@ -476,7 +494,7 @@ const Logs = props => {
           handleSelectedService={onChangeServices}
           handleLimit={onChangeLimit}
           handleColumns={onChangeColumns}
-          handleMessageRegex={onChangeMessage}
+          handleMessageRegex={setSearchMessage}
           handleDateChange={onChangeDate}
           handleAdvancedMode={onToggleAdvancedMode}
           handleAddTag={addTag}
@@ -501,7 +519,7 @@ const Logs = props => {
           <LogsTable
             columns={columns}
             columnList={COLUMN_LIST}
-            logsData={logsData}
+            logsData={logsDataRef.current}
             levelsList={levelsList}
             onRowClick={openLogDetails}
             noRowsRenderer={handleNoRows}
