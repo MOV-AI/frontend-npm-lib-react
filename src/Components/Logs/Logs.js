@@ -321,7 +321,7 @@ const Logs = props => {
   useEffect(() => {
     clearTimeout(refreshLogsTimeoutRef.current);
     refreshLogsTimeoutRef.current = setTimeout(refreshLogs, 300);
-  }, [searchMessage]);
+  }, [searchMessage, limit]);
 
   //========================================================================================
   /*                                                                                      *
