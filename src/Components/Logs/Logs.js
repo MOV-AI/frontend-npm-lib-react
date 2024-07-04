@@ -30,7 +30,7 @@ function transformLog(log, index, data, ts_multiplier = 1000) {
  * current and the last request
  * @returns {array} Concatenated logs without duplicates
  */
-function logsDedupe(oldLogs, data) {
+export function logsDedupe(oldLogs, data) {
   if (!data.length)
     return oldLogs;
 
