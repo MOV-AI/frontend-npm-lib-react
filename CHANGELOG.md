@@ -2,6 +2,7 @@
 
 - [FP-2848](https://movai.atlassian.net/browse/FP-2848):  Review and enable lib-react unit tests
 - [QAP-3962](https://movai.atlassian.net/browse/QAP-3962): Review devcontainer configuration for lib-react
+- [FP-2840](https://movai.atlassian.net/browse/FP-2840): Update ReadMe's on all apps
 
 # 1.3.4
 
