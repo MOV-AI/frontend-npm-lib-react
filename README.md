@@ -93,11 +93,6 @@ To install Node.js using `nvm` (Node Version Manager), follow these steps:
     nvm install && nvm use # uses the node version specify in the .nvmrc file
     ```
 
-   You might need to install it before using it:
-    ```bash
-    nvm install
-    ```
-
 4. **Set the used Node.js as the default version:**
 
     ```bash
