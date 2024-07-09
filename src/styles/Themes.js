@@ -62,8 +62,8 @@ const themeFactory = particular => _merge(particular, {
       },
     },
     MuiSwitch: {
-      thumb: {
-          transform: "translateY(-2px)",
+      root: {
+        "& MuiIconBase-root": { padding: 0 }
       },
       switchBase: {
         transform: "translateX(16px)",
