@@ -178,7 +178,9 @@ const Themes = {
         },
         MuiIconButton: {
           root: {
-            color: "#36b5e6 !important"
+            "&:not(.Mui-disabled)": {
+              color: "#36b5e6"
+            }
           }
         },
         MuiListItem: {
@@ -321,7 +323,9 @@ const Themes = {
         },
         MuiIconButton: {
           root: {
-            color: "#007197"
+            "&:not(.Mui-disabled)": {
+              color: "#007197"
+            }
           }
         },
         MuiListItem: {
