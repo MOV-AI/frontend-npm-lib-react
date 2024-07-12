@@ -1,4 +1,4 @@
-# Version to be assign
+# 1.3.5
 
 - [FP-2848](https://movai.atlassian.net/browse/FP-2848):  Review and enable lib-react unit tests
 - [QAP-3962](https://movai.atlassian.net/browse/QAP-3962): Review devcontainer configuration for lib-react
