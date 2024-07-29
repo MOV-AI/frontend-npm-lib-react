@@ -13,7 +13,7 @@
   },
   "scripts": {
     "lock": "mv ../../pnpm-workspace.yaml ../../pnpm-workspace.yaml.bak ; pnpm i ; mv ../../pnpm-workspace.yaml.bak ../../pnpm-workspace.yaml",
-    "test": "jest --config jest.config.js",
+    "test": "jest --config jest.config.js--coverage",
     "testDev": "jest --config jest.config.js --watchAll",
     "build": "webpack --mode=production",
     "buildDev": "webpack --mode=development --watch",
