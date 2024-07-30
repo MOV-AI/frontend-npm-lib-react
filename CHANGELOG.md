@@ -1,3 +1,7 @@
+# TBD
+
+- [QAP-4053](https://movai.atlassian.net/browse/QAP-4053): Forward test coverage for lib-react
+
 # 1.3.5
 
 - [FP-2848](https://movai.atlassian.net/browse/FP-2848):  Review and enable lib-react unit tests
