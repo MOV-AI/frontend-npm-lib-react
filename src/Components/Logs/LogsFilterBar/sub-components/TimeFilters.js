@@ -13,12 +13,12 @@ const TimeFilters = () => {
   const { selectedFromDate, selectedToDate } = logsSub.use();
 
   const handleFromDateChange = useCallback(
-    newDate => logsSub.update(newDate, "selectedFromDate"),
+    newDate => logsSub.set("selectedFromDate", newDate),
     []
   );
 
   const handleToDateChange = useCallback(
-    newDate => logsSub.update(newDate, "selectedToDate"),
+    newDate => logsSub.set("selectedToDate", newDate),
     []
   );
 

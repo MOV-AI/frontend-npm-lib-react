@@ -19,7 +19,7 @@ import { EMPTY_FUNCTION } from "../../Utils/Constants";
  *                                                                                      */
 //========================================================================================
 
-const styles = _theme => ({
+const styles = theme => ({
   horizFlex: {
     display: "flex",
     flexDirection: "row",

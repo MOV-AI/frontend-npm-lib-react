@@ -4,8 +4,8 @@ on:
     branches:
       - dev
       - main
+      - "develop/**"
       - "releases/**"
-      - 'develop/**'
 
 jobs:
   CI:
@@ -13,7 +13,9 @@ jobs:
     with:
       deploy: "false"
       run_tests: "true"
+      use_nvmrc: "true"
       pm: "pnpm"
+      pnpm_version: "9.4.0"
     secrets:
       auto_commit_user: ${{ secrets.RAISE_BOT_COMMIT_USER }}
       auto_commit_mail: ${{ secrets.RAISE_BOT_COMMIT_MAIL }}

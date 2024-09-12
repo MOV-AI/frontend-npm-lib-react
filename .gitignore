@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# Optional npm cache directory
+.npm
+.pnpm-store
+
 # testing
 /coverage
 

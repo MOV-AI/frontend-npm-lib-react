@@ -12,12 +12,16 @@ import { useStyles } from "./styles";
 import { logsSub } from "./sub";
 import "./Logs.css";
 
-function transformLog(log, index, data, ts_multiplier = 1000) {
+/**
+ * Tranform log from the format received from the API to the format
+ * required to be rendered
+ * @returns {array} Transformed log
+ */
+function transformLog(log, _index, _data, ts_multiplier = 1000) {
   const timestamp = ts_multiplier * log.time;
   const date = new Date(timestamp);
   return ({
     ...log,
-    oldTime: log.time,
     timestamp,
     time: date.toLocaleTimeString(),
     date: date.toLocaleDateString(),
@@ -25,29 +29,51 @@ function transformLog(log, index, data, ts_multiplier = 1000) {
   });
 }
 
-function logsDedupe(oldLogs, data) {
+/**
+ * Remove duplicates from logs for the second overlaping the
+ * current and the last request
+ * @returns {array} Concatenated logs without duplicates
+ */
+export function logsDedupe(oldLogs, data) {
   if (!data.length)
     return oldLogs;
 
-  const oldDate = (oldLogs?.[0]?.timestamp ?? 0) * 0.001;
-  const oldMsg = oldLogs?.[0]?.message ?? "x";
-  let j;
+  // date of the oldest log received in the current request
+  const oldDate = data[data.length - 1].timestamp;
+  // map to store the old logs of the overlaped second
+  let map = {};
 
-  // starting from oldest new log, compare with newest old log.
-  // decrease j until we find a log that is not present
+  // iter over old logs with last timestamp of the new logs
+  // and put in a map
+  for (
+    let i = 0;
+    i < oldLogs.length && oldLogs[i].timestamp === oldDate;
+    i++
+  )
+    map[oldLogs[i].message] = oldLogs[i];
 
-  for (j = data.length - 1; j > -1 ; j--) {
-    const newDate = data[j].time;
-    const newMsg = data[j].message;
+  // array to store logs from overlap second which had not
+  // been sent  before
+  let newSecOverlap = []
+  let z;
 
-    if (newDate > oldDate || (
-      newDate === oldDate && newMsg !== oldMsg
-    ))
-      break;
-  }
+  // iter over new logs (oldest to latest) with last timestamp,
+  // check if present in last map
+  //  - if not, push
+  for (
+    z = data.length -1;
+    z >= 0 && data[z].timestamp === oldDate;
+    z--
+  )
+    if (!map[data[z].message])
+      newSecOverlap.push(data[z])
 
-  return data.slice(0, j + 1).map(transformLog)
-    .concat(oldLogs);
+  // cut new logs up to z, concat with the deduped ones
+  // and the old logs up to i
+  return data.slice(0, z + 1).concat(
+    newSecOverlap.reverse(),
+    oldLogs,
+  );
 }
 
 // TODO this should be exported. Fleetboard uses it
@@ -120,33 +146,34 @@ const Logs = props => {
 
   useEffect(() => {
     for (const key of Object.keys(props.force ?? {}))
-      logsSub.update({
+      logsSub.set(key, {
         ...sub[key],
         ...force[key].reduce((a, subKey) => ({ ...a, [subKey]: 'force' }), {}),
-      }, key);
+      });
   }, [force]);
 
   useEffect(() => {
     for (const key of Object.keys(props.defaults ?? {}))
-      logsSub.update({
+      logsSub.set(key, {
         ...sub[key],
         ...defaults[key],
-      }, key);
+      });
   }, [defaults]);
 
   // if robotsData changes, update robots
-  useEffect(() => { logsSub.update(getRobots(robotsData), "robots"); }, [robotsData]);
+  useEffect(() => { logsSub.set("robots", getRobots(robotsData)); }, [robotsData]);
 
   const getLogs = useCallback(() => {
     // Remove previously enqueued requests
     clearTimeout(getLogsTimeoutRef.current);
     RobotManager.getLogs({
       limit: MAX_FETCH_LOGS,
-      date: { from: logsDataGlobal.length ? new Date(logsDataGlobal[0].timestamp) : selectedFromDate, to: selectedToDate },
+      date: { from: logsDataGlobal.length ? logsDataGlobal[0].timestamp : selectedFromDate, to: selectedToDate },
     }).then(response => {
       const data = response?.data || [];
       const oldLogs = logsDataGlobal || [];
-      const newLogs = logsDataGlobal = logsDedupe(oldLogs, data)
+      const newLogs = logsDataGlobal
+        = logsDedupe(oldLogs, data.map(transformLog))
         .slice(0, MAX_FETCH_LOGS);
 
       setLogsData(newLogs);
@@ -190,10 +217,11 @@ const Logs = props => {
   const handleExport = useCallback(() => {
     const sep = "\t";
     const contents = filteredLogs.map(log => {
-      return [log.date, log.time, log.robot, log.message].join(sep);
+      const { date, time, robot, message } = log;
+      return [date, time, robot, message].join(sep);
     });
     // from https://www.epochconverter.com/programming/
-    const dateString = !filteredLogs.length ? new Date().toISOString() : new Date(filteredLogs[0].timestamp).toISOString();
+    const dateString = !filteredLogs.length ? new Date().toISOString() : new Date(filteredLogs[0].timestamp * 0.001).toISOString();
     const columnLabels = Object.keys(columns).filter(key => columns[key]).map(key => COLUMNS_LABEL[key]);
     blobDownload([columnLabels.join(sep), ...contents].join("\n"), `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
   }, [columns, filteredLogs]);

@@ -1,10 +1,10 @@
+import React, { useEffect } from "react";
 import { Theme, createTheme, ThemeOptions, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import DefaultApplicationTheme, { defaultGetStyle } from "../../styles/Themes";
 import { Sub } from "@mov-ai/mov-fe-lib-sub";
 import { ApplicationThemeType } from "./types";
-import React from "react";
 
 type ThemeNameType = "dark" | "light" | "indigo";
 
@@ -82,7 +82,7 @@ export default function withTheme(
       setTheme(newTheme);
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
       globalThis.document.body.style.color = muiTheme.palette.text.primary;
       globalThis.document.body.style.background =
         (muiTheme as any).backgroundColor;

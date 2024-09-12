@@ -40,7 +40,8 @@
     "test": "scripts test",
     "testDev": "jest --config jest.config.js --watchAll",
     "err": "tsc --pretty false --project tsconfig.json --noEmit",
-    "build": "NODE_OPTIONS='--max-old-space-size=4096' scripts build",
+    "build": "scripts types && NODE_OPTIONS='--max-old-space-size=4096' scripts build",
+    "fast": "scripts build",
     "buildDev": "webpack --mode=development --watch",
     "clean": "rm -rf cjs esm web types",
     "storybook": "start-storybook -p 3001",
@@ -63,9 +64,9 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@material-table/core": "^6.3.2",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-13",
-    "@mov-ai/mov-fe-lib-scripts": "^0.6.0-39",
-    "@mov-ai/mov-fe-lib-sub": "^2.2.31-4",
+    "@mov-ai/mov-fe-lib-core": "workspace:^1.2.1-13",
+    "@mov-ai/mov-fe-lib-scripts": "^0.6.7-1",
+    "@mov-ai/mov-fe-lib-sub": "^2.3.1-1",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@mui/styles": "^5.15.15",
@@ -79,8 +80,8 @@
   },
   "peerDependencies": {
     "@material-table/core": "^6.3.2",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-13",
-    "@mov-ai/mov-fe-lib-sub": "^2.2.31-4",
+    "@mov-ai/mov-fe-lib-core": "workspace:^1.2.1-13",
+    "@mov-ai/mov-fe-lib-sub": "^2.3.1-1",
     "@mui/icons-material": "^5.15.11",
     "@mui/material": "^5.15.11",
     "@mui/styles": "^5.15.11",
@@ -117,5 +118,6 @@
     "esm",
     "types",
     "resources"
-  ]
+  ],
+  "packageManager": "pnpm@9.4.0"
 }
