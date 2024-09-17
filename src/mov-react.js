@@ -38,7 +38,6 @@ import withError from "./Components/HOCs/withError";
 // import Translations
 import ExportPdf from "./exporters/pdf";
 import ExportCsv from "./exporters/csv";
-console.log("LIBREACT");
 export {
   Accordion,
   AccordionDetails,

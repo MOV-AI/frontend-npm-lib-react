@@ -196,6 +196,11 @@ const getDefaults = constants => {
           backgroundColor: "#353535"
         }
       } },
+      MuiBackdrop: { styleOverrides: {
+        root: {
+          position: "absolute",
+        },
+      } },
       MuiToggleButton: { styleOverrides: {
         root: {
           color: alpha(constants.textColor, 0.38),
