@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useMemo,
   useRef,
-  MutableRefObject
+  MutableRefObject,
 } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
@@ -54,10 +54,10 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   } = props;
 
   // State hooks
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [openMenu, setOpenMenu] = useState(false);
   const [username, setUsername] = useState("");
   // Other hooks
-  const triggerButtonRef: MutableRefObject<HTMLElement | undefined> = useRef();
+  const triggerButtonRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
   const menuOpenAnimation: MutableRefObject<number | "auto"> = useRef("auto");
   const user = useMemo(() => new User(), []);
   const classes = profileMenuStyles();
@@ -75,14 +75,14 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    * @param {Event} event : Click event
    */
   const handleClick = useCallback((event: any) => {
-    setAnchorEl(event.currentTarget);
+    setOpenMenu(true);
   }, []);
 
   /**
    * Handle close ProfileMenu
    */
   const handleClose = useCallback(() => {
-    setAnchorEl(null);
+    setOpenMenu(false);
     onClose && onClose();
   }, [onClose]);
 
@@ -132,10 +132,9 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   //========================================================================================
 
   return (
-    <div data-testid="section_profile-menu">
+    <div ref={triggerButtonRef} data-testid="section_profile-menu">
       <Tooltip title={i18n.t("Settings") || "" as any}>
         <IconButton
-          buttonRef={triggerButtonRef}
           data-testid="input_button"
           aria-haspopup="true"
           onClick={handleClick}
@@ -146,8 +145,8 @@ const ProfileMenu = (props: ProfileMenuProps) => {
       <Menu
         transitionDuration={menuOpenAnimation.current}
         data-testid="section_menu"
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
+        anchorEl={triggerButtonRef.current}
+        open={openMenu}
         onClose={handleClose}
       >
         <Typography
