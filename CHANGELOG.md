@@ -1,6 +1,7 @@
 # TBD
 
 - [QAP-4053](https://movai.atlassian.net/browse/QAP-4053): Forward test coverage for lib-react
+- [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
 
 # 1.3.5
 
