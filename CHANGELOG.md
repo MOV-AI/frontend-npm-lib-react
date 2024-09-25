@@ -2,6 +2,7 @@
 
 - [QAP-4053](https://movai.atlassian.net/browse/QAP-4053): Forward test coverage for lib-react
 - [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
+- [FP-2930](https://movai.atlassian.net/browse/FP-2930): Update node and pnpm versions
 
 # 1.3.5
 
