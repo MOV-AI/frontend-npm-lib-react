@@ -4,6 +4,7 @@
 - [FP-2858](https://movai.atlassian.net/browse/FP-2858): Removelog duplication for the second overlapping in requests
 - [FP-2741](https://movai.atlassian.net/browse/FP-2741): Odd message when trying to start another flow when one is running
 - [QAP-4053](https://movai.atlassian.net/browse/QAP-4053): Forward test coverage for lib-react
+- [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
 
 # 1.3.5
 
