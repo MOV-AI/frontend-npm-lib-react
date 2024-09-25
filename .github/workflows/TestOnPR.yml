@@ -15,7 +15,7 @@ jobs:
       run_tests: "true"
       use_nvmrc: "true"
       pm: "pnpm"
-      pnpm_version: "9.4.0"
+      pnpm_version: "9.11.0"
     secrets:
       auto_commit_user: ${{ secrets.RAISE_BOT_COMMIT_USER }}
       auto_commit_mail: ${{ secrets.RAISE_BOT_COMMIT_MAIL }}
