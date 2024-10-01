@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-react",
-  "version": "1.3.5-1",
+  "version": "1.3.6-0",
   "description": "The Mov.AI's frontend library for React.",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
@@ -13,7 +13,7 @@
   },
   "scripts": {
     "lock": "mv ../../pnpm-workspace.yaml ../../pnpm-workspace.yaml.bak ; pnpm i ; mv ../../pnpm-workspace.yaml.bak ../../pnpm-workspace.yaml",
-    "test": "jest --config jest.config.js",
+    "test": "jest --config jest.config.js --coverage",
     "testDev": "jest --config jest.config.js --watchAll",
     "build": "webpack --mode=production",
     "buildDev": "webpack --mode=development --watch",
@@ -51,7 +51,7 @@
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@material-ui/pickers": "^3.3.10",
     "@material-ui/styles": "^4.11.5",
-    "@mov-ai/mov-fe-lib-core": "^1.2.2-1",
+    "@mov-ai/mov-fe-lib-core": "^1.2.3-1",
     "@storybook/addon-actions": "^6.4.19",
     "@storybook/addon-controls": "^6.4.19",
     "@storybook/addon-docs": "^6.4.19",
@@ -142,5 +142,5 @@
     "dist",
     "resources"
   ],
-  "packageManager": "pnpm@9.4.0"
+  "packageManager": "pnpm@9.11.0"
 }
