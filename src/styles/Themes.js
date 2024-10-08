@@ -62,13 +62,16 @@ const themeFactory = particular => _merge(particular, {
       },
     },
     MuiSwitch: {
+      root: {
+        overflow: "visible",
+      },
       thumb: {
-          transform: "translateY(-2px)",
+          transform: "translateY(1px)",
       },
       switchBase: {
-        transform: "translateX(16px)",
+        transform: "translateX(3px)",
         "&.Mui-checked": {
-          transform: "translateX(24px)",
+          transform: "translateX(28px)",
         }
       },
       track: {
