@@ -180,14 +180,15 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           )}
           {customEl}
           {handleToggleTheme && (
-            <div className={classes.menuItemSpacing}>
-              {darkThemeLabel}
-              <Toggle
-                onToggle={handleToggleTheme}
-                toggle={(window.localStorage.getItem("movai.theme") ?? "dark") === "dark"}
-              ></Toggle>
-            </div>
+              <MenuItem className={classes.menuItemSpacing} onClick={(ev) => ev.preventDefault()}>
+                  {darkThemeLabel}
+                  <Toggle
+                    onToggle={handleToggleTheme}
+                    toggle={(window.localStorage.getItem("movai.theme") ?? "dark") === "dark"}
+                  ></Toggle>
+              </MenuItem>
           )}
+
           <MenuItem
             className={classes.menuItemSpacing}
             onClick={handleLogoutClick}
