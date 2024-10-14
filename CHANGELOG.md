@@ -1,4 +1,4 @@
-# TBD
+# 1.3.7
 
 - [FP-2959](https://movai.atlassian.net/browse/FP-2959): Toggle button is missaligned
 
