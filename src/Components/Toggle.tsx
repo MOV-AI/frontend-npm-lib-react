@@ -2,10 +2,9 @@ import React from "react";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/styles";
-import { green, grey } from "@material-ui/core/colors";
 import { ToggleProps } from "./types";
 
-const useStyles = makeStyles(_theme => ({
+const useStyles = makeStyles(() => ({
   label: {
     fontFamily: "Roboto",
     fontStyle: "normal",
@@ -15,17 +14,6 @@ const useStyles = makeStyles(_theme => ({
     marginRight: 0,
     marginBottom: 0
   },
-  colorSwitchBase: {
-    color: grey[300],
-    "&$colorChecked": {
-      color: green[500],
-      "& + $colorBar": {
-        backgroundColor: green[500]
-      }
-    }
-  },
-  colorBar: {},
-  colorChecked: {}
 }));
 
 const Toggle = (props: ToggleProps) => {
@@ -42,11 +30,6 @@ const Toggle = (props: ToggleProps) => {
           disabled={props.disabled}
           hidden={props.hidden}
           size={props.size}
-          classes={{
-            switchBase: classes.colorSwitchBase,
-            checked: classes.colorChecked,
-            track: classes.colorBar
-          }}
         />
       }
       labelPlacement={props.labelPlacement}

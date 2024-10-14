@@ -1,3 +1,7 @@
+# 1.3.7
+
+- [FP-2959](https://movai.atlassian.net/browse/FP-2959): Toggle button is missaligned
+
 # 1.3.6
 
 - [QAP-4053](https://movai.atlassian.net/browse/QAP-4053): Forward test coverage for lib-react
