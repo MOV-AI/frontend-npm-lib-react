@@ -180,3 +180,10 @@ Here's how it can be done:
    pnpm install  # installs dependencies including the local library
    pnpm start    # runs the app
    ```
+
+## How to setup linting git hook
+
+1. Install husky git hook:
+   ```bash
+   "pnpm prepare"
+   ```
