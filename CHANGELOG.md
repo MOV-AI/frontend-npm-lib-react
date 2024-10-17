@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2917](https://movai.atlassian.net/browse/FP-2917): Configure husky, lint-staged and prettier for lib-react
+
 # 1.3.7
 
 - [FP-2959](https://movai.atlassian.net/browse/FP-2959): Toggle button is missaligned
