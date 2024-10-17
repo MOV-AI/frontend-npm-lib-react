@@ -27,9 +27,14 @@
     "buildDev": "webpack --mode=development --watch",
     "clean": "rm -rf node_modules",
     "lock": "mv ../../pnpm-workspace.yaml ../../pnpm-workspace.yaml.bak ; pnpm i ; mv ../../pnpm-workspace.yaml.bak ../../pnpm-workspace.yaml",
+    "prepare": "husky",
     "storybook": "start-storybook -p 3001",
     "test": "jest --config jest.config.js --coverage",
     "testDev": "jest --config jest.config.js --watchAll"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown",
+    "package.json": "sort-package-json"
   },
   "dependencies": {
     "@babel/runtime": "7.22.15",
@@ -95,8 +100,10 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "http-proxy-middleware": "^2.0.1",
+    "husky": "^9.1.6",
     "jest": "^28.1.0",
     "jest-environment-jsdom": "^29.0.3",
+    "lint-staged": "^15.2.10",
     "prettier": "3.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
