@@ -4,7 +4,7 @@ import AddBox from "@material-ui/icons/AddBox";
 import { EMPTY_FUNCTION } from "../src/Utils/Constants";
 
 export default {
-  title: "Table"
+  title: "Table",
 };
 
 export const simple = () => {
@@ -16,7 +16,7 @@ export const simple = () => {
 };
 
 simple.story = {
-  name: "Simple Table"
+  name: "Simple Table",
 };
 
 export const custom = () => {
@@ -30,16 +30,16 @@ export const custom = () => {
           {
             title: "Doğum Yeri",
             field: "birthCity",
-            lookup: { 34: "İstanbul", 63: "Şanlıurfa" }
-          }
+            lookup: { 34: "İstanbul", 63: "Şanlıurfa" },
+          },
         ]}
         data={[
           {
             name: "Vicente",
             surname: "Queiroz",
             birthYear: 1987,
-            birthCity: 63
-          }
+            birthCity: 63,
+          },
         ]}
       ></Table>
     </div>
@@ -47,7 +47,7 @@ export const custom = () => {
 };
 
 custom.story = {
-  name: "Table w/data"
+  name: "Table w/data",
 };
 
 export const custom2 = () => {
@@ -61,19 +61,19 @@ export const custom2 = () => {
           {
             title: "Doğum Yeri",
             field: "birthCity",
-            lookup: { 34: "İstanbul", 63: "Şanlıurfa" }
-          }
+            lookup: { 34: "İstanbul", 63: "Şanlıurfa" },
+          },
         ]}
         data={[
-          { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 }
+          { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 },
         ]}
         actions={[
           {
             icon: () => <AddBox></AddBox>,
             tooltip: "Tooltip!",
             isFreeAction: true,
-            onClick: EMPTY_FUNCTION
-          }
+            onClick: EMPTY_FUNCTION,
+          },
         ]}
         options={{
           actionsColumnIndex: -1,
@@ -82,7 +82,7 @@ export const custom2 = () => {
           search: true,
           toolbar: true,
           searchFieldAlignment: "left",
-          paging: false
+          paging: false,
         }}
       ></Table>
     </div>
@@ -90,5 +90,5 @@ export const custom2 = () => {
 };
 
 custom2.story = {
-  name: "Custom Table"
+  name: "Custom Table",
 };

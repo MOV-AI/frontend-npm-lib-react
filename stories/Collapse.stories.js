@@ -4,10 +4,10 @@ import { List } from "@material-ui/core";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 
 export default {
-  title: "Collapse"
+  title: "Collapse",
 };
 
-const data = Utils.range(10).map(i => <List key={i}>{`data${i}`}</List>);
+const data = Utils.range(10).map((i) => <List key={i}>{`data${i}`}</List>);
 
 export const closed = () => {
   return (
@@ -18,7 +18,7 @@ export const closed = () => {
 };
 
 closed.story = {
-  name: "closed Collapse "
+  name: "closed Collapse ",
 };
 
 export const opened = () => {
@@ -30,7 +30,7 @@ export const opened = () => {
 };
 
 opened.story = {
-  name: "opened Collapse"
+  name: "opened Collapse",
 };
 
 export const divided = () => {
@@ -42,7 +42,7 @@ export const divided = () => {
 };
 
 divided.story = {
-  name: "divided Collapse"
+  name: "divided Collapse",
 };
 
 export const iconStyled = () => {
@@ -58,5 +58,5 @@ export const iconStyled = () => {
 };
 
 iconStyled.story = {
-  name: "Icon styled"
+  name: "Icon styled",
 };

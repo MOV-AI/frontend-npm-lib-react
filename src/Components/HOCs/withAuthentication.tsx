@@ -11,42 +11,42 @@ interface LoginData {
   username: string;
   password: string;
   remember: any;
-  selectedProvider: any; 
+  selectedProvider: any;
 }
 
 interface LoginSub {
-  loggedIn: boolean,
-  currentUser: any,
-  loading: boolean,
-  providers: { domains: string[] },
+  loggedIn: boolean;
+  currentUser: any;
+  loading: boolean;
+  providers: { domains: string[] };
 }
 
-export
-const loggedOutInfo = {
+export const loggedOutInfo = {
   loggedIn: false,
   currentUser: null,
   loading: false,
   providers: { domains: [] },
 };
 
-export
-const authSub = makeSub<LoginSub>(loggedOutInfo);
+export const authSub = makeSub<LoginSub>(loggedOutInfo);
 
-export
-const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
+export const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
   authSub.update({ ...loggedOutInfo, loading: true });
 
   try {
     const [loggedIn, currentUserBare] = await Promise.all([
       Authentication.checkLogin(),
-      (new User()).getCurrentUserWithPermissions(),
+      new User().getCurrentUserWithPermissions(),
     ]);
 
     console.assert(currentUserBare);
 
     const currentUser = {
       ...currentUserBare,
-      roles: currentUserBare.Roles.reduce((a, role) => ({ ...a, [role]: true }), {}),
+      roles: currentUserBare.Roles.reduce(
+        (a, role) => ({ ...a, [role]: true }),
+        {},
+      ),
     };
 
     if (loggedIn)
@@ -75,8 +75,7 @@ const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
   }
 });
 
-if (!(window as any).mock)
-  authEmit();
+if (!(window as any).mock) authEmit();
 
 export default function withAuthentication(
   WrappedComponent: React.ComponentType,
@@ -86,12 +85,15 @@ export default function withAuthentication(
   return function (props: any) {
     const [errorMessage, setErrorMessage] = useState("");
     const authSubRes = useSub<LoginSub>(authSub) as LoginSub;
-    if (!authSubRes)
-      throw new Error("No auth info");
+    if (!authSubRes) throw new Error("No auth info");
     const { currentUser, loggedIn, loading, providers } = authSubRes;
-    const hasPermissions = (currentUser?.Resources?.Applications)
-      ? (currentUser.Superuser || currentUser.Resources.Applications.includes(appName as PermissionType) || !appName)
-      : (currentUser?.Superuser || allowGuest);
+    const hasPermissions = currentUser?.Resources?.Applications
+      ? currentUser.Superuser ||
+        currentUser.Resources.Applications.includes(
+          appName as PermissionType,
+        ) ||
+        !appName
+      : currentUser?.Superuser || allowGuest;
 
     /**
      * handleLogOut - log out the user
@@ -112,7 +114,7 @@ export default function withAuthentication(
             username,
             password,
             remember,
-            selectedProvider
+            selectedProvider,
           );
           if (apiResponse.error) throw new Error(apiResponse.error);
           authEmit();
@@ -120,7 +122,7 @@ export default function withAuthentication(
           setErrorMessage((e as Error).message);
         }
       },
-      []
+      [],
     );
 
     /**
@@ -137,7 +139,7 @@ export default function withAuthentication(
      */
     const renderLoginForm = () => (
       <LoginForm
-        appName={appName} 
+        appName={appName}
         domains={providers.domains}
         authErrorMessage={errorMessage}
         onLoginSubmit={handleLoginSubmit}
@@ -191,7 +193,9 @@ export default function withAuthentication(
         {loading ? (
           renderLoading()
         ) : (
-          <Modal open={!loggedIn}><span>{renderLoginForm()}</span></Modal>
+          <Modal open={!loggedIn}>
+            <span>{renderLoginForm()}</span>
+          </Modal>
         )}
       </React.Fragment>
     );

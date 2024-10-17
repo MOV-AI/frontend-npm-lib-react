@@ -5,7 +5,7 @@ import React, {
   useMemo,
   forwardRef,
   useCallback,
-  useImperativeHandle
+  useImperativeHandle,
 } from "react";
 import PropTypes from "prop-types";
 import _isEmpty from "lodash/isEmpty";
@@ -26,39 +26,39 @@ import AbstractModal from "../Modal/AbstractModal";
 
 export const VARIANT_OPTIONS = {
   CHANGE: "change",
-  RESET: "reset"
+  RESET: "reset",
 };
 
 const FORM_FIELDS = {
   CURRENT_PASSWORD: "currentPassword",
   NEW_PASSWORD: "newPassword",
-  CONFIRM_PASSWORD: "confirmPassword"
+  CONFIRM_PASSWORD: "confirmPassword",
 };
 
 const DEFAULT_VALUES = {
   [FORM_FIELDS.CURRENT_PASSWORD]: "",
   [FORM_FIELDS.NEW_PASSWORD]: "",
-  [FORM_FIELDS.CONFIRM_PASSWORD]: ""
+  [FORM_FIELDS.CONFIRM_PASSWORD]: "",
 };
 
 const DEFAULT_ERRORS = {
   [FORM_FIELDS.CURRENT_PASSWORD]: false,
   [FORM_FIELDS.NEW_PASSWORD]: false,
-  [FORM_FIELDS.CONFIRM_PASSWORD]: false
+  [FORM_FIELDS.CONFIRM_PASSWORD]: false,
 };
 
 const DEFAULT_TOUCH_STATE = {
   [FORM_FIELDS.CURRENT_PASSWORD]: false,
   [FORM_FIELDS.NEW_PASSWORD]: false,
-  [FORM_FIELDS.CONFIRM_PASSWORD]: false
+  [FORM_FIELDS.CONFIRM_PASSWORD]: false,
 };
 
 const REQUIRED_INPUTS = {
   [VARIANT_OPTIONS.CHANGE]: Object.values(FORM_FIELDS),
   [VARIANT_OPTIONS.RESET]: [
     FORM_FIELDS.NEW_PASSWORD,
-    FORM_FIELDS.CONFIRM_PASSWORD
-  ]
+    FORM_FIELDS.CONFIRM_PASSWORD,
+  ],
 };
 
 /**
@@ -91,7 +91,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
   const getTitle = () => {
     const TITLE_BY_VARIANT = {
       [VARIANT_OPTIONS.CHANGE]: i18n.t("Change Password"),
-      [VARIANT_OPTIONS.RESET]: i18n.t("Reset Password")
+      [VARIANT_OPTIONS.RESET]: i18n.t("Reset Password"),
     };
     return variant in TITLE_BY_VARIANT
       ? TITLE_BY_VARIANT[variant]
@@ -103,12 +103,12 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    * @returns {function} Function to be called
    */
   const updatePassword = useCallback(
-    body => {
+    (body) => {
       if (variant === VARIANT_OPTIONS.RESET)
         return User.resetPassword(userId, body);
       return user.changePassword(body);
     },
-    [variant, userId]
+    [variant, userId],
   );
 
   /**
@@ -119,19 +119,21 @@ const ResetPasswordModal = forwardRef((props, ref) => {
     const body = {
       CurrentPassword: form[FORM_FIELDS.CURRENT_PASSWORD],
       NewPassword: form[FORM_FIELDS.NEW_PASSWORD],
-      ConfirmPassword: form[FORM_FIELDS.CONFIRM_PASSWORD]
+      ConfirmPassword: form[FORM_FIELDS.CONFIRM_PASSWORD],
     };
     // Request password update
     setLoading(true);
     return updatePassword(body)
-      .then(response => {
+      .then((response) => {
         if (!response.success) throw new Error(response.statusText);
         const message = i18n.t("Password Updated");
         snackbar({ message, severity: ALERT_SEVERITY.SUCCESS });
         return response;
       })
-      .catch(err => {
-        const message = err.message ? err.message : i18n.t('An unexpected error occurred. Please try again.');
+      .catch((err) => {
+        const message = err.message
+          ? err.message
+          : i18n.t("An unexpected error occurred. Please try again.");
         snackbar({ message, severity: ALERT_SEVERITY.ERROR });
         console.warn(message, err);
         return err;
@@ -145,7 +147,11 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    * Get submit modal text
    */
   const getSubmitText = useCallback(() => {
-    return loading ? <CircularProgress color="primary" size={16} /> : i18n.t("Save");
+    return loading ? (
+      <CircularProgress color="primary" size={16} />
+    ) : (
+      i18n.t("Save")
+    );
   }, [loading]);
 
   //========================================================================================
@@ -177,18 +183,18 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    * @returns {{currentPassword: boolean, newPassword: boolean, confirmPassword: boolean}} Form errors
    */
   const validateRequiredFields = useCallback(
-    data => {
+    (data) => {
       const formErrors = {};
       const requiredFields =
         REQUIRED_INPUTS[variant] || REQUIRED_INPUTS[VARIANT_OPTIONS.CHANGE];
 
-      requiredFields.forEach(key => {
+      requiredFields.forEach((key) => {
         formErrors[key] = _isEmpty(data[key]) && touchRef.current[key];
       });
 
       return formErrors;
     },
-    [variant]
+    [variant],
   );
 
   //========================================================================================
@@ -201,10 +207,10 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    * Handle change inputs
    * @param {Event} event : Change event
    */
-  const handleChange = useCallback(event => {
+  const handleChange = useCallback((event) => {
     const name = event.target.id;
     event.persist();
-    setForm(prevState => ({ ...prevState, [name]: event.target.value }));
+    setForm((prevState) => ({ ...prevState, [name]: event.target.value }));
     touchRef.current[name] = true;
   }, []);
 
@@ -213,16 +219,16 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    */
   const handleConfirm = useCallback(() => {
     // Touch all
-    Object.values(FORM_FIELDS).forEach(field => {
+    Object.values(FORM_FIELDS).forEach((field) => {
       touchRef.current[field] = true;
     });
 
     // Validate form
     const validation = validateRequiredFields(form);
     // If validation pass
-    if (Object.values(validation).every(val => val === false)) {
+    if (Object.values(validation).every((val) => val === false)) {
       // Submit request to update password
-      changePassword().then(res => {
+      changePassword().then((res) => {
         if (res.success) handleCancel();
       });
     } else {
@@ -255,7 +261,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
    * Expose open method
    */
   useImperativeHandle(ref, () => ({
-    open
+    open,
   }));
 
   //========================================================================================
@@ -323,10 +329,10 @@ const ResetPasswordModal = forwardRef((props, ref) => {
 
 ResetPasswordModal.propTypes = {
   variant: PropTypes.oneOf(Object.values(VARIANT_OPTIONS)), // change password or reset password
-  userId: PropTypes.string
+  userId: PropTypes.string,
 };
 ResetPasswordModal.defaultProps = {
-  variant: VARIANT_OPTIONS.CHANGE
+  variant: VARIANT_OPTIONS.CHANGE,
 };
 
 export default ResetPasswordModal;

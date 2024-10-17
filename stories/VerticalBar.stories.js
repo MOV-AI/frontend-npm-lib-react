@@ -7,7 +7,7 @@ import InsertEmoji from "@material-ui/icons/InsertEmoticon";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
 export default {
-  title: "Vertical Bar"
+  title: "Vertical Bar",
 };
 
 export const simple = () => {
@@ -18,7 +18,7 @@ export const simple = () => {
         navigationList={[
           <AddBox></AddBox>,
           <SupervisorAccountIcon></SupervisorAccountIcon>,
-          <PermDataSettingIcon></PermDataSettingIcon>
+          <PermDataSettingIcon></PermDataSettingIcon>,
         ]}
         lowerElement={<AccountCircle></AccountCircle>}
         backgroundColor="#424242"
@@ -28,5 +28,5 @@ export const simple = () => {
 };
 
 simple.story = {
-  name: "Default Bar"
+  name: "Default Bar",
 };

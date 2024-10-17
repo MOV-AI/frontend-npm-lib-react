@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     fontSize: "14px",
     marginLeft: 0,
     marginRight: 0,
-    marginBottom: 0
+    marginBottom: 0,
   },
 }));
 

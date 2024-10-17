@@ -8,7 +8,7 @@ import withAuthentication from "../src/Components/HOCs/withAuthentication";
 
 export default {
   title: "Logs Component",
-  decorators: [withMock]
+  decorators: [withMock],
 };
 
 const LogsTable = () => {
@@ -16,17 +16,17 @@ const LogsTable = () => {
   const [robots, setRobots] = React.useState({});
 
   React.useEffect(() => {
-    robotManager.getAll(data => setRobots(data));
+    robotManager.getAll((data) => setRobots(data));
   }, []);
 
   const formatRobotData = () => {
     const res = [];
-    Object.keys(robots).forEach(elem => {
+    Object.keys(robots).forEach((elem) => {
       const id = elem;
       res.push({
         id,
         name: robots?.[id].RobotName,
-        ip: robots?.[id].IP
+        ip: robots?.[id].IP,
       });
     });
     return res;
@@ -49,5 +49,5 @@ export const logStory = Template.bind({});
 logStory.parameters = authParams;
 
 logStory.story = {
-  name: "Logs"
+  name: "Logs",
 };

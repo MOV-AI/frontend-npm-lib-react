@@ -2,9 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import withAuthentication from "../src/Components/HOCs/withAuthentication";
 import AbstractModal from "../src/Components/Modal/AbstractModal";
 import ConfirmAlertModal from "../src/Components/Modal/ConfirmAlertModal";
-import SelectScopeModal, { getAllData } from "../src/Components/Modal/SelectScopeModal";
+import SelectScopeModal, {
+  getAllData,
+} from "../src/Components/Modal/SelectScopeModal";
 export default {
-  title: "Modal"
+  title: "Modal",
 };
 
 export const simple = () => {
@@ -27,7 +29,7 @@ export const simple = () => {
 };
 
 simple.story = {
-  name: "simple Modal"
+  name: "simple Modal",
 };
 
 export const simpleConfirm = () => {
@@ -42,10 +44,18 @@ export const simpleConfirm = () => {
 };
 
 simpleConfirm.story = {
-  name: "Confirm Modal"
+  name: "Confirm Modal",
 };
 
-const scopeList = ["Annotations", "Callback", "Configuration", "Flow", "Nodes", "Layouts", "Scenes"];
+const scopeList = [
+  "Annotations",
+  "Callback",
+  "Configuration",
+  "Flow",
+  "Nodes",
+  "Layouts",
+  "Scenes",
+];
 
 function SelectScope() {
   const [modalData, setModalData] = useState(null);
@@ -54,11 +64,18 @@ function SelectScope() {
     getAllData("global").then(setModalData);
   }, []);
 
-  const filterLambda = useCallback(({name}) => {
-    return name.includes("_")
+  const filterLambda = useCallback(({ name }) => {
+    return name.includes("_");
   }, []);
 
-  return <SelectScopeModal data={modalData} scopeList={scopeList} open filter={filterLambda} />;
+  return (
+    <SelectScopeModal
+      data={modalData}
+      scopeList={scopeList}
+      open
+      filter={filterLambda}
+    />
+  );
 }
 
 const AuthSelectScope = withAuthentication(SelectScope);
@@ -68,5 +85,5 @@ export const selectScope = () => {
 };
 
 simpleConfirm.story = {
-  name: "Select Scope Modal"
+  name: "Select Scope Modal",
 };

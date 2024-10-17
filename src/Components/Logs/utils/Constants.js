@@ -5,13 +5,13 @@ export const LEVELS_LABEL = {
   WARNING: "Warnings",
   DEBUG: "Debug",
   ERROR: "Error",
-  CRITICAL: "Critical"
-}
+  CRITICAL: "Critical",
+};
 
 export const ROBOT_STATES = {
   ERROR: "ALERT",
   ACTIVE: "ACTIVE",
-  OFFLINE: "OFFLINE"
+  OFFLINE: "OFFLINE",
 };
 
 export const COLUMNS_LABEL = {
@@ -21,20 +21,23 @@ export const COLUMNS_LABEL = {
   module: "Module",
   service: "Service",
   robot: "Robot",
-  message: "Message"
+  message: "Message",
 };
 
-export const DEFAULT_SERVICE = Object.keys(CONSTANTS.SERVICE_LABEL).reduce((a, item) => ({ [item]: false, ...a }), {
-  backend: true,
-  spawner: true
-});
+export const DEFAULT_SERVICE = Object.keys(CONSTANTS.SERVICE_LABEL).reduce(
+  (a, item) => ({ [item]: false, ...a }),
+  {
+    backend: true,
+    spawner: true,
+  },
+);
 
 export const DEFAULT_LEVELS = {
   INFO: true,
   WARNING: false,
   DEBUG: false,
   ERROR: true,
-  CRITICAL: true
+  CRITICAL: true,
 };
 
 export const DEFAULT_COLUMNS = {
@@ -52,23 +55,23 @@ export const ROBOT_LOG_TYPE = ["module", "service"];
 
 export const DATE_KEY_OPTION = {
   FROM: "selectedFromDate",
-  TO: "selectedToDate"
+  TO: "selectedToDate",
 };
 
 export const COLOR_CODING = {
   INFO: {
-    backgroundColor: "rgba(33, 150, 243, 0.1)"
+    backgroundColor: "rgba(33, 150, 243, 0.1)",
   },
   WARNING: {
-    backgroundColor: "rgba(255, 152, 0, 0.1)"
+    backgroundColor: "rgba(255, 152, 0, 0.1)",
   },
   DEBUG: {
-    backgroundColor: "rgba(76, 175, 80, 0.1)"
+    backgroundColor: "rgba(76, 175, 80, 0.1)",
   },
   ERROR: {
-    backgroundColor: "rgba(244, 67, 54, 0.1)"
+    backgroundColor: "rgba(244, 67, 54, 0.1)",
   },
   CRITICAL: {
-    backgroundColor: "rgba(255, 19, 1, 0.1)"
-  }
+    backgroundColor: "rgba(255, 19, 1, 0.1)",
+  },
 };

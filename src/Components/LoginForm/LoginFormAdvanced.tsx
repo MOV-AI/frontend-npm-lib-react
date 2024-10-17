@@ -30,7 +30,9 @@ const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
         onClick={() => setOpen(!open)}
         disabled={!props.domains?.length}
       >
-        <InputLabel className={classes.label}>{i18n.t("Advanced") as string}</InputLabel>
+        <InputLabel className={classes.label}>
+          {i18n.t("Advanced") as string}
+        </InputLabel>
       </Button>
       <Collapse in={open}>
         <List dense={true} component="div">
@@ -55,7 +57,7 @@ const LoginFormAdvanced = (props: LoginFormAdvancedProps) => {
                   onChange={props.onProviderChange}
                   disabled={false}
                 >
-                  {props.domains.map(name => (
+                  {props.domains.map((name) => (
                     <MenuItem key={name} value={name}>
                       {name}
                     </MenuItem>

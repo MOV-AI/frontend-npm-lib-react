@@ -5,8 +5,8 @@ export const MENU_PROPS = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
+      width: 250,
+    },
   },
-  getContentAnchorEl: null
+  getContentAnchorEl: null,
 };

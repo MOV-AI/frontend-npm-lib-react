@@ -10,7 +10,7 @@ const LogsSkeleton = () => {
   //========================================================================================
   return (
     <>
-      {tableSkeleton.map(el => (
+      {tableSkeleton.map((el) => (
         <Skeleton data-testid="output_skeleton" animation="wave" key={el} />
       ))}
     </>

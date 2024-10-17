@@ -10,380 +10,380 @@ const CONSTANTS = {
       primary: "#424242",
       secondary: "#212121",
     },
-    iconColor: "#fff"
+    iconColor: "#fff",
   },
   light: {
     borderBottom: "1px solid #ccc",
     textColor: "rgba(0, 0, 0, 0.87)",
     background: {
       primary: "#e2e2e2",
-      secondary: "#b2b2b2"
+      secondary: "#b2b2b2",
     },
-    iconColor: "#007197"
-  }
+    iconColor: "#007197",
+  },
 };
 
-const themeFactory = particular => _merge(particular, {
-  typography: {
-    fontFamily: "Open Sans",
-    h1: {
-      fontFamily: "Open Sans"
-    },
-    h2: {
-      fontFamily: "Open Sans"
-    },
-    h3: {
-      fontFamily: "Open Sans"
-    },
-    h4: {
-      fontFamily: "Open Sans"
-    },
-    h5: {
-      fontFamily: "Open Sans"
-    },
-    h6: {
-      fontFamily: "Open Sans"
-    },
-    body1: {
-      fontFamily: "Roboto"
-    }
-  },
-  cursorDefault: {
-    cursor: "default"
-  },
-  cursorPointer: {
-    cursor: "pointer"
-  },
-  spacing: 8,
-  overrides: {
-    MuiListItem: {
-      root: {
-        width: "100% !important",
+const themeFactory = (particular) =>
+  _merge(particular, {
+    typography: {
+      fontFamily: "Open Sans",
+      h1: {
+        fontFamily: "Open Sans",
+      },
+      h2: {
+        fontFamily: "Open Sans",
+      },
+      h3: {
+        fontFamily: "Open Sans",
+      },
+      h4: {
+        fontFamily: "Open Sans",
+      },
+      h5: {
+        fontFamily: "Open Sans",
+      },
+      h6: {
+        fontFamily: "Open Sans",
+      },
+      body1: {
+        fontFamily: "Roboto",
       },
     },
-    MuiSwitch: {
-      root: {
-        overflow: "visible",
+    cursorDefault: {
+      cursor: "default",
+    },
+    cursorPointer: {
+      cursor: "pointer",
+    },
+    spacing: 8,
+    overrides: {
+      MuiListItem: {
+        root: {
+          width: "100% !important",
+        },
       },
-      thumb: {
+      MuiSwitch: {
+        root: {
+          overflow: "visible",
+        },
+        thumb: {
           transform: "translateY(1px)",
+        },
+        switchBase: {
+          transform: "translateX(3px)",
+          "&.Mui-checked": {
+            transform: "translateX(28px)",
+          },
+        },
+        track: {
+          position: "absolute",
+          width: "46px",
+          height: "16px",
+          borderRadius: "8px",
+        },
       },
-      switchBase: {
-        transform: "translateX(3px)",
-        "&.Mui-checked": {
-          transform: "translateX(28px)",
-        }
-      },
-      track: {
-        position: "absolute",
-        width: "46px",
-        height: "16px",
-        borderRadius: "8px",
-      }
     },
-  }
-});
+  });
 
 const Themes = {
   dark: themeFactory({
-      label: "dark",
-      trigger: 1,
-      textColor: CONSTANTS.dark.textColor,
-      backgroundColor: "#050505",
-      bottomNavigation: { background: "#212121" },
-      globalStats: {
-        borderColor: "#474747",
-        subTextColor: "#CDCDCD",
-        upperTextColor: "#E6E6E6"
+    label: "dark",
+    trigger: 1,
+    textColor: CONSTANTS.dark.textColor,
+    backgroundColor: "#050505",
+    bottomNavigation: { background: "#212121" },
+    globalStats: {
+      borderColor: "#474747",
+      subTextColor: "#CDCDCD",
+      upperTextColor: "#E6E6E6",
+    },
+    palette: {
+      type: "dark", // Switching the dark mode on, is a single property value change.
+      primary: {
+        main: "#36b5e6",
       },
-      palette: {
-        type: "dark", // Switching the dark mode on, is a single property value change.
-        primary: {
-          main: "#36b5e6"
+      secondary: {
+        main: "#CF6679",
+      },
+      green: {
+        main: "#03DAC5",
+      },
+      background: {
+        default: "#050505",
+        primary: CONSTANTS.dark.background.primary,
+        secondary: CONSTANTS.dark.background.secondary,
+      },
+      accent: {
+        background: "#f5f5f9",
+        color: "rgba(0, 0, 0, 0.87)",
+        border: "#dadde9",
+      },
+      text: {
+        primary: CONSTANTS.dark.textColor,
+        disabled: "#ffffff",
+      },
+      getContrastText: () => CONSTANTS.dark.iconColor,
+    },
+    icon: { color: "#c6c6c6", hoverColor: "#fff" },
+    table: { stripColor: "#505050" },
+    verticalBar: {
+      iconColor: "#9e9e9e",
+      background: "#2b2b2b",
+    },
+    overrides: {
+      MuiTableCell: {
+        body: {
+          color: CONSTANTS.dark.textColor,
         },
-        secondary: {
-          main: "#CF6679"
+      },
+      MuiAppBar: {
+        colorDefault: {
+          color: CONSTANTS.dark.textColor,
+          borderColor: "black",
+          backgroundColor: CONSTANTS.dark.background.secondary,
         },
-        green: {
-          main: "#03DAC5"
+        colorInherit: {
+          color: CONSTANTS.dark.textColor,
+          backgroundColor: "#353535",
         },
-        background: {
-          default: "#050505",
-          primary: CONSTANTS.dark.background.primary,
-          secondary: CONSTANTS.dark.background.secondary
-        },
-        accent: {
-          background: "#f5f5f9",
-          color: "rgba(0, 0, 0, 0.87)",
-          border: "#dadde9"
+      },
+      MuiButton: {
+        outlined: {
+          margin: "8px",
         },
         text: {
-          primary: CONSTANTS.dark.textColor,
-          disabled: "#ffffff",
+          margin: "8px",
         },
-        getContrastText: () => CONSTANTS.dark.iconColor
+        contained: {
+          margin: "8px",
+        },
+        containedPrimary: {
+          color: "inherit",
+          margin: "8px",
+        },
+        containedSecondary: {
+          color: "inherit",
+          margin: "8px",
+        },
       },
-      icon: { color: "#c6c6c6", hoverColor: "#fff" },
-      table: { stripColor: "#505050" },
-      verticalBar: {
-        iconColor: "#9e9e9e",
-        background: "#2b2b2b"
+      MuiButtonGroup: {
+        root: {
+          margin: "0",
+        },
+        groupedContainedPrimary: {
+          margin: "0",
+        },
+        groupedOutlined: {
+          margin: "0",
+        },
+        groupedText: {
+          margin: "0",
+        },
       },
-      overrides: {
-        MuiTableCell: {
-          body: {
-            color: CONSTANTS.dark.textColor
-          }
+      MuiIconButton: {
+        root: {
+          color: "#36b5e6 !important",
         },
-        MuiAppBar: {
-          colorDefault: {
-            color: CONSTANTS.dark.textColor,
-            borderColor: "black",
-            backgroundColor: CONSTANTS.dark.background.secondary
+      },
+      MuiListItem: {
+        button: {
+          "&:hover": {
+            backgroundColor: "rgba(54,181,230, 0.15)",
           },
-          colorInherit: {
-            color: CONSTANTS.dark.textColor,
-            backgroundColor: "#353535"
-          }
         },
-        MuiButton: {
-          outlined: {
-            margin: "8px"
-          },
-          text: {
-            margin: "8px"
-          },
-          contained: {
-            margin: "8px"
-          },
-          containedPrimary: {
-            color: "inherit",
-            margin: "8px"
-          },
-          containedSecondary: {
-            color: "inherit",
-            margin: "8px"
-          }
+      },
+      MuiFormControlLabel: {
+        label: {
+          color: "rgba(255,255,255,0.8)",
         },
-        MuiButtonGroup: {
-          root: {
-            margin: "0"
+      },
+      MuiInputBase: {
+        root: {
+          color: CONSTANTS.dark.textColor + " !important",
+        },
+        input: {
+          font: "Roboto",
+          color: CONSTANTS.dark.textColor + " !important",
+        },
+      },
+      MuiFilledInput: {
+        root: {
+          border: "4px",
+        },
+        underline: {
+          "&::before": {
+            borderRadius: "4px",
           },
-          groupedContainedPrimary: {
-            margin: "0"
-          },
-          groupedOutlined: {
-            margin: "0"
-          },
-          groupedText: {
-            margin: "0"
-          }
         },
-        MuiIconButton: {
-          root: {
-            color: "#36b5e6 !important"
-          }
+      },
+      MuiPaper: {
+        root: {
+          color: CONSTANTS.dark.textColor + " !important",
+          backgroundColor: CONSTANTS.dark.background.primary + " !important",
         },
-        MuiListItem: {
-          button: {
-            "&:hover": {
-              backgroundColor: "rgba(54,181,230, 0.15)"
-            }
-          }
-        },
-        MuiFormControlLabel: {
-          label: {
-            color: "rgba(255,255,255,0.8)"
-          }
-        },
-        MuiInputBase: {
-          root: {
-            color: CONSTANTS.dark.textColor + " !important",
-          },
-          input: {
-            font: "Roboto",
-            color: CONSTANTS.dark.textColor + " !important",
-          }
-        },
-        MuiFilledInput: {
-          root: {
-            border: "4px"
-          },
-          underline: {
-            "&::before": {
-              borderRadius: "4px"
-            }
-          }
-        },
-        MuiPaper: {
-          root: {
-            color: CONSTANTS.dark.textColor + " !important",
-            backgroundColor: CONSTANTS.dark.background.primary + " !important",
-          }
-        },
-      }
+      },
+    },
   }),
   light: themeFactory({
-      font: {
-        Roboto: {
-          fontFamily: "Roboto"
-        },
-        OpenSans: {
-          fontFamily: "Open Sans"
-        }
+    font: {
+      Roboto: {
+        fontFamily: "Roboto",
       },
-      label: "light",
-      textColor: CONSTANTS.light.textColor,
-      backgroundColor: "#ffffff",
-      bottomNavigation: { background: "#c3c3c3" },
-      icon: { color: "#757575", hoverColor: "black" },
-      table: { stripColor: "whitesmoke" },
-      globalStats: {
-        borderColor: "#E6E6E6",
-        subTextColor: "#717171",
-        upperTextColor: "#474747"
+      OpenSans: {
+        fontFamily: "Open Sans",
       },
-      palette: {
-        primary: {
-          main: "#007197"
-        },
-        secondary: {
-          main: "#BE2424"
-        },
-        green: {
-          main: "#03DAC5"
-        },
-        background: {
-          default: "#ffffff",
-          primary: CONSTANTS.light.background.primary,
-          secondary: CONSTANTS.light.background.secondary
-        },
-        accent: {
-          background: "whitesmoke",
+    },
+    label: "light",
+    textColor: CONSTANTS.light.textColor,
+    backgroundColor: "#ffffff",
+    bottomNavigation: { background: "#c3c3c3" },
+    icon: { color: "#757575", hoverColor: "black" },
+    table: { stripColor: "whitesmoke" },
+    globalStats: {
+      borderColor: "#E6E6E6",
+      subTextColor: "#717171",
+      upperTextColor: "#474747",
+    },
+    palette: {
+      primary: {
+        main: "#007197",
+      },
+      secondary: {
+        main: "#BE2424",
+      },
+      green: {
+        main: "#03DAC5",
+      },
+      background: {
+        default: "#ffffff",
+        primary: CONSTANTS.light.background.primary,
+        secondary: CONSTANTS.light.background.secondary,
+      },
+      accent: {
+        background: "whitesmoke",
+        color: CONSTANTS.light.textColor,
+        border: "darkgray",
+      },
+      text: {
+        primary: CONSTANTS.light.textColor,
+      },
+      getContrastText: () => CONSTANTS.light.iconColor,
+    },
+    verticalBar: {
+      iconColor: "#616161",
+      background: "#cccccc",
+    },
+    overrides: {
+      MuiTableCell: {
+        body: {
           color: CONSTANTS.light.textColor,
-          border: "darkgray"
+        },
+      },
+      MuiAppBar: {
+        colorDefault: {
+          color: CONSTANTS.light.textColor,
+          borderColor: CONSTANTS.light.borderBottom,
+          backgroundColor: CONSTANTS.light.background.secondary,
+        },
+        colorInherit: {
+          color: CONSTANTS.light.textColor,
+          backgroundColor: "#d2d2d2",
+        },
+      },
+      MuiButton: {
+        outlined: {
+          margin: "8px",
         },
         text: {
-          primary: CONSTANTS.light.textColor,
+          margin: "8px",
         },
-        getContrastText: () => CONSTANTS.light.iconColor
+        contained: {
+          margin: "8px",
+        },
+        containedPrimary: {
+          color: "#fff",
+          margin: "8px",
+        },
+        containedSecondary: {
+          color: "#fff",
+          margin: "8px",
+        },
       },
-      verticalBar: {
-        iconColor: "#616161",
-        background: "#cccccc"
+      MuiButtonGroup: {
+        root: {
+          margin: "0",
+        },
+        groupedContainedPrimary: {
+          margin: "0",
+        },
+        groupedOutlined: {
+          margin: "0",
+        },
+        groupedText: {
+          margin: "0",
+        },
       },
-      overrides: {
-        MuiTableCell: {
-          body: {
-            color: CONSTANTS.light.textColor
-          }
+      MuiIconButton: {
+        root: {
+          color: "#007197",
         },
-        MuiAppBar: {
-          colorDefault: {
-            color: CONSTANTS.light.textColor,
-            borderColor: CONSTANTS.light.borderBottom,
-            backgroundColor: CONSTANTS.light.background.secondary
+      },
+      MuiListItem: {
+        button: {
+          "&:hover": {
+            backgroundColor: "rgba(0,113,151, 0.15)",
           },
-          colorInherit: {
-            color: CONSTANTS.light.textColor,
-            backgroundColor: "#d2d2d2"
-          }
         },
-        MuiButton: {
-          outlined: {
-            margin: "8px"
-          },
-          text: {
-            margin: "8px"
-          },
-          contained: {
-            margin: "8px"
-          },
-          containedPrimary: {
-            color: "#fff",
-            margin: "8px"
-          },
-          containedSecondary: {
-            color: "#fff",
-            margin: "8px"
-          }
+      },
+      MuiFormControlLabel: {
+        label: {
+          color: "rgba(0,0,0,0.8)",
         },
-        MuiButtonGroup: {
-          root: {
-            margin: "0"
+      },
+      MuiInputBase: {
+        root: {
+          color: CONSTANTS.light.textColor + " !important",
+        },
+        input: {
+          font: "Roboto",
+          color: CONSTANTS.light.textColor + " !important",
+        },
+      },
+      MuiFilledInput: {
+        root: {
+          border: "4px",
+        },
+        underline: {
+          "&::before": {
+            borderRadius: "4px",
           },
-          groupedContainedPrimary: {
-            margin: "0"
+        },
+      },
+      MuiPaper: {
+        root: {
+          color: "#272727",
+          backgroundColor: CONSTANTS.light.background.primary,
+        },
+      },
+      MuiTableRow: {
+        head: {
+          "& th": {
+            backgroundColor: CONSTANTS.light.background.primary,
+            borderBottom: CONSTANTS.light.borderBottom,
           },
-          groupedOutlined: {
-            margin: "0"
+        },
+        root: {
+          "& td": {
+            borderBottom: CONSTANTS.light.borderBottom,
           },
-          groupedText: {
-            margin: "0"
-          }
         },
-        MuiIconButton: {
-          root: {
-            color: "#007197"
-          }
-        },
-        MuiListItem: {
-          button: {
-            "&:hover": {
-              backgroundColor: "rgba(0,113,151, 0.15)"
-            }
-          }
-        },
-        MuiFormControlLabel: {
-          label: {
-            color: "rgba(0,0,0,0.8)"
-          }
-        },
-        MuiInputBase: {
-          root: {
-            color: CONSTANTS.light.textColor + " !important",
-          },
-          input: {
-            font: "Roboto",
-            color: CONSTANTS.light.textColor + " !important",
-          }
-        },
-        MuiFilledInput: {
-          root: {
-            border: "4px"
-          },
-          underline: {
-            "&::before": {
-              borderRadius: "4px"
-            }
-          }
-        },
-        MuiPaper: {
-          root: {
-            color: "#272727",
-            backgroundColor: CONSTANTS.light.background.primary
-          }
-        },
-        MuiTableRow: {
-          head: {
-            "& th": {
-              backgroundColor: CONSTANTS.light.background.primary,
-              borderBottom: CONSTANTS.light.borderBottom
-            }
-          },
-          root: {
-            "& td": {
-              borderBottom: CONSTANTS.light.borderBottom
-            }
-          }
-        }
-      }
+      },
+    },
   }),
 };
 
 export default Themes;
 
-export
-function defaultGetStyle(_theme) {
+export function defaultGetStyle(_theme) {
   return {};
 }

@@ -11,7 +11,7 @@ const VerticalBar = (props: VerticalBarProps) => {
     lowerElement = <div></div>,
     backgroundColor = "#424242",
     useDividers = false,
-    unsetAccountAreaPadding = false
+    unsetAccountAreaPadding = false,
   } = props;
   // Style hook
   const classes = verticalBarStyles(props);

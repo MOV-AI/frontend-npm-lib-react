@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import i18n from "i18next";
 import {
   KeyboardDateTimePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import TodayIcon from "@material-ui/icons/Today";
@@ -15,13 +15,13 @@ const TimeFilters = () => {
   const { selectedFromDate, selectedToDate } = logsSub.use();
 
   const handleFromDateChange = useCallback(
-    newDate => logsSub.set("selectedFromDate", newDate),
-    []
+    (newDate) => logsSub.set("selectedFromDate", newDate),
+    [],
   );
 
   const handleToDateChange = useCallback(
-    newDate => logsSub.set("selectedToDate", newDate),
-    []
+    (newDate) => logsSub.set("selectedToDate", newDate),
+    [],
   );
 
   return (

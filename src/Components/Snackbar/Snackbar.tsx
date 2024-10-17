@@ -1,6 +1,12 @@
 import React, { Fragment, useCallback } from "react";
 import { Button } from "@material-ui/core";
-import { OptionsObject, ProviderContext, SnackbarKey, useSnackbar, VariantType } from "notistack";
+import {
+  OptionsObject,
+  ProviderContext,
+  SnackbarKey,
+  useSnackbar,
+  VariantType,
+} from "notistack";
 export interface SnackbarProps extends OptionsObject {
   message: string;
   closable: boolean;
@@ -26,7 +32,7 @@ export interface InnerSnackbarUtilsConfiguratorProps {
 }
 
 const InnerSnackbarUtilsConfigurator = (
-  props: InnerSnackbarUtilsConfiguratorProps
+  props: InnerSnackbarUtilsConfiguratorProps,
 ) => {
   props.setUseSnackbarRef(useSnackbar());
   return null;
@@ -94,7 +100,7 @@ export const snackbar = (props: SnackbarProps, _theme: any) => {
     variant: severity,
     anchorOrigin: {
       vertical,
-      horizontal
+      horizontal,
     },
     content,
   };

@@ -12,28 +12,35 @@ interface ThemeSub {
   themeName: ThemeNameType;
   ApplicationTheme: ApplicationThemeType;
   getStyle: typeof defaultGetStyle;
-};
+}
 
-export
-const themeSub = makeSub<ThemeSub>({
-  themeName: (window.localStorage.getItem("movai.theme") ?? "dark") as ThemeNameType,
+export const themeSub = makeSub<ThemeSub>({
+  themeName: (window.localStorage.getItem("movai.theme") ??
+    "dark") as ThemeNameType,
   ApplicationTheme: DefaultApplicationTheme,
   getStyle: defaultGetStyle,
 });
 
-const setTheme = themeSub.makeEmitNow((current: ThemeSub, themeName: ThemeNameType): ThemeSub => {
-  window.localStorage.setItem("movai.theme", themeName);
+const setTheme = themeSub.makeEmitNow(
+  (current: ThemeSub, themeName: ThemeNameType): ThemeSub => {
+    window.localStorage.setItem("movai.theme", themeName);
 
-  return {
-    ...current,
-    themeName,
+    return {
+      ...current,
+      themeName,
+    };
+  },
+);
+
+function createThemes(
+  current: ThemeSub,
+  userCreateTheme: typeof createTheme = createTheme,
+): Record<ThemeNameType, Theme> {
+  let ApplicationTheme: Record<ThemeNameType, Theme | ThemeOptions> = {
+    ...current.ApplicationTheme,
   };
-});
 
-function createThemes(current: ThemeSub, userCreateTheme: typeof createTheme = createTheme): Record<ThemeNameType, Theme> {
-  let ApplicationTheme: Record<ThemeNameType, Theme | ThemeOptions>  = { ...current.ApplicationTheme };
-
-  for (const [key, value]  of Object.entries(ApplicationTheme))
+  for (const [key, value] of Object.entries(ApplicationTheme))
     ApplicationTheme[key as ThemeNameType] = userCreateTheme(value);
 
   return ApplicationTheme as Record<ThemeNameType, Theme>;
@@ -45,13 +52,14 @@ export default function withTheme(
   getStyle?: typeof defaultGetStyle,
   userCreateTheme?: typeof createTheme,
 ) {
-  let current = themeSub.current(), changed = false;
+  let current = themeSub.current(),
+    changed = false;
 
   if (ApplicationTheme || getStyle) {
     current = {
       ...current,
       ApplicationTheme: ApplicationTheme ?? current.ApplicationTheme,
-      getStyle: getStyle ?? current.getStyle
+      getStyle: getStyle ?? current.getStyle,
     };
     changed = true;
   }
@@ -64,8 +72,7 @@ export default function withTheme(
     changed = true;
   }
 
-  if (changed)
-    themeSub.update(current);
+  if (changed) themeSub.update(current);
 
   const StyledComponent = withStyles(getStyle ?? defaultGetStyle)(Component);
 
@@ -84,8 +91,7 @@ export default function withTheme(
 
     React.useEffect(() => {
       document.body.style.color = muiTheme.palette.text.primary;
-      document.body.style.background =
-        (muiTheme as any).backgroundColor;
+      document.body.style.background = (muiTheme as any).backgroundColor;
     }, [muiTheme]);
 
     return (

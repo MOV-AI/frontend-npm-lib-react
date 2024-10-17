@@ -19,7 +19,7 @@ const SettingsPopover = () => {
         <Typography component="div" className={classes.inputHeader}>
           {`${i18n.t("Columns")}:`}
         </Typography>
-        { columnsSelector }
+        {columnsSelector}
       </div>
     </FiltersIcon>
   );

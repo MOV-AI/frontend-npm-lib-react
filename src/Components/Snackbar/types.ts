@@ -2,7 +2,7 @@ import {
   ProviderContext,
   SnackbarMessage,
   VariantType,
-  OptionsObject
+  OptionsObject,
 } from "notistack";
 
 export interface SnackbarProps extends OptionsObject {

@@ -1,9 +1,5 @@
-import React  from "react";
-import {
-  Checkbox,
-  MenuItem,
-  ListItemText
-} from "@material-ui/core";
+import React from "react";
+import { Checkbox, MenuItem, ListItemText } from "@material-ui/core";
 
 // Makes sure to find unique "i" of chip array
 // Input: [{key: 0, label: "Chip1"}, {key: 2, label: "Chip3"}], keyName= "key"
@@ -31,14 +27,14 @@ export function findsUniqueKey(array, keyName) {
 // Convert Date format to a human readable format
 // Input: 1586370146
 // Output: "08/04/2020"
-export const getJustDateFromServer = serverTime => {
+export const getJustDateFromServer = (serverTime) => {
   const time = new Date(serverTime * 1000);
   return `${time.toLocaleDateString("pt")}`;
 };
 // Convert Date format to a human readable format
 // Input: 1586370146
 // Output: "19:22:26"
-export const getJustTimeFromServer = serverTime => {
+export const getJustTimeFromServer = (serverTime) => {
   const time = new Date(serverTime * 1000);
   return `${time.toLocaleTimeString("pt")}`;
 };
@@ -47,17 +43,23 @@ export const getJustTimeFromServer = serverTime => {
 export function getDateTime(timestamp) {
   const date = getJustDateFromServer(timestamp);
   const time = getJustTimeFromServer(timestamp);
-  return [ date, time ];
+  return [date, time];
 }
 
 export function getSelector(labelMap, map) {
-  const selected = Object.entries(map).filter(([_key, value]) => value).map(([key]) => key);
+  const selected = Object.entries(map)
+    .filter(([_key, value]) => value)
+    .map(([key]) => key);
 
   return {
     list: Object.keys(map),
     selected,
-    menu: Object.keys(map).map(name => (
-      <MenuItem key={name} value={name} disabled={map[name] && map[name] !== true}>
+    menu: Object.keys(map).map((name) => (
+      <MenuItem
+        key={name}
+        value={name}
+        disabled={map[name] && map[name] !== true}
+      >
         <Checkbox
           inputProps={{ "data-testid": "input_checkbox" }}
           checked={map[name]}
@@ -66,6 +68,6 @@ export function getSelector(labelMap, map) {
         <ListItemText data-testid="output_label" primary={labelMap[name]} />
       </MenuItem>
     )),
-    renderValue: () => selected.map(name => labelMap[name]).join(", "),
+    renderValue: () => selected.map((name) => labelMap[name]).join(", "),
   };
 }
