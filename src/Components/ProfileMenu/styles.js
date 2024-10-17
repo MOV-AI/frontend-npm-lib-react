@@ -1,8 +1,9 @@
 import { makeStyles } from "@material-ui/styles";
 
-export const profileMenuStyles = makeStyles(theme => {
+export const profileMenuStyles = makeStyles((theme) => {
   return {
-    root: { // c("vertical0")
+    root: {
+      // c("vertical0")
       display: "flex",
       flexDirection: "column",
     },
@@ -10,26 +11,26 @@ export const profileMenuStyles = makeStyles(theme => {
       fontSize: "18px",
       minHeight: "18px",
       padding: theme.spacing(1.25, 2) + " !important",
-      ...theme.cursorDefault
+      ...theme.cursorDefault,
     },
     profileMenuFooter: {
       fontSize: "14px",
-      textAlign: "end"
-    }
+      textAlign: "end",
+    },
   };
 });
 
-export const resetPasswordStyles = makeStyles(_theme => ({
+export const resetPasswordStyles = makeStyles((_theme) => ({
   root: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   input: {
     fontSize: "13px",
-    margin: "10px"
+    margin: "10px",
   },
   formGroup: {
     display: "flex",
-    flexFlow: "column"
-  }
+    flexFlow: "column",
+  },
 }));

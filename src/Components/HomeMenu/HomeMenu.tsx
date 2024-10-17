@@ -27,12 +27,12 @@ const HomeMenuPopper = () => {
    * subscribe to Applications updates
    */
   useEffect(() => {
-    (new User())
+    new User()
       .getAllApps()
-      .then(res => {
+      .then((res) => {
         res.success && setCurrentApps(res.result as any);
       })
-      .catch(err => {
+      .catch((err) => {
         setErrorMessage(err.statusText);
       });
   }, []);
@@ -101,13 +101,13 @@ const HomeMenuPopper = () => {
 
       return (
         <div className={classes.menuWrapper}>
-          {arrayOfApplications.map(app => (
+          {arrayOfApplications.map((app) => (
             <MenuApp key={app.URL} app={app} />
           ))}
           {arrayOfLayouts.length > 0 && (
             <>
               <Divider orientation="horizontal" flexItem />
-              {arrayOfLayouts.map(app => (
+              {arrayOfLayouts.map((app) => (
                 <MenuApp key={app.URL} app={app} />
               ))}
             </>
@@ -115,7 +115,7 @@ const HomeMenuPopper = () => {
           {arrayOfExternalApps.length > 0 && (
             <>
               <Divider orientation="horizontal" flexItem />
-              {arrayOfExternalApps.map(app => (
+              {arrayOfExternalApps.map((app) => (
                 <MenuApp key={app.URL} app={app} />
               ))}
             </>
@@ -134,7 +134,7 @@ const HomeMenuPopper = () => {
   //========================================================================================
 
   return (
-    <Tooltip title={i18n.t("Home") || "Home" as any} placement="right">
+    <Tooltip title={i18n.t("Home") || ("Home" as any)} placement="right">
       {/* Tooltips - To accommodate disabled elements, add a simple wrapper element, such as a span. */}
       <span>
         <HTMLPopper

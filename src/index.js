@@ -24,14 +24,18 @@ import ProfileMenu from "./Components/ProfileMenu/ProfileMenu";
 import ResetPasswordModal from "./Components/ProfileMenu/ResetPassword";
 import TimeFilters from "./Components/Logs/LogsFilterBar/sub-components/TimeFilters";
 import FilterIcon from "./Components/Logs/LogsFilterBar/sub-components/_shared/FiltersIcon/FiltersIcon";
-import SelectScopeModal, { getAllData } from "./Components/Modal/SelectScopeModal";
+import SelectScopeModal, {
+  getAllData,
+} from "./Components/Modal/SelectScopeModal";
 import HTMLPopper from "./Components/Popper/HTMLPopper";
 import HomeMenuPopper from "./Components/HomeMenu/HomeMenu";
 import HomeMenuSkeleton from "./Components/HomeMenu/HomeMenuSkeleton";
 import ErrorBoundary from "./Components/ErrorBoundary";
 // import HOCs
 import withOfflineValidation from "./Components/HOCs/withOfflineValidation";
-import withAuthentication, { authSub } from "./Components/HOCs/withAuthentication";
+import withAuthentication, {
+  authSub,
+} from "./Components/HOCs/withAuthentication";
 import withNotification from "./Components/HOCs/withNotification";
 import withTheme, { themeSub } from "./Components/HOCs/withTheme";
 import withDefaults from "./Components/HOCs/withDefaults";

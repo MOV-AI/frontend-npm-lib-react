@@ -13,31 +13,31 @@ export const styles = () => {
       // borderRadius: theme.shape.borderRadius,
       backgroundColor: "transparent",
       display: "flex",
-      padding: "6px 16px"
+      padding: "6px 16px",
     },
     /* Styles applied to the root element if `variant="filled"` and `color="success"`. */
     filledSuccess: {
       color: "#fff",
       // fontWeight: theme.typography.fontWeightMedium,
-      backgroundColor: "#4caf50"
+      backgroundColor: "#4caf50",
     },
     /* Styles applied to the root element if `variant="filled"` and `color="info"`. */
     filledInfo: {
       color: "#fff",
       // fontWeight: theme.typography.fontWeightMedium,
-      backgroundColor: "#2196f3"
+      backgroundColor: "#2196f3",
     },
     /* Styles applied to the root element if `variant="filled"` and `color="warning"`. */
     filledWarning: {
       color: "#fff",
       // fontWeight: theme.typography.fontWeightMedium,
-      backgroundColor: "#ff9800"
+      backgroundColor: "#ff9800",
     },
     /* Styles applied to the root element if `variant="filled"` and `color="error"`. */
     filledError: {
       color: "#fff",
       // fontWeight: theme.typography.fontWeightMedium,
-      backgroundColor: "#f44336"
+      backgroundColor: "#f44336",
     },
     /* Styles applied to the icon wrapper element. */
     icon: {
@@ -45,14 +45,14 @@ export const styles = () => {
       padding: "7px 0",
       display: "flex",
       fontSize: 22,
-      opacity: 0.9
+      opacity: 0.9,
     },
     /* Styles applied to the message wrapper element. */
     message: {
       padding: "8px 0",
       display: "flex",
       flexDirection: "column",
-      justifyContent: "center"
+      justifyContent: "center",
     },
     /* Styles applied to the action wrapper element if `action` is provided. */
     action: {
@@ -60,8 +60,8 @@ export const styles = () => {
       alignItems: "center",
       marginLeft: "auto",
       paddingLeft: 16,
-      marginRight: -8
-    }
+      marginRight: -8,
+    },
   };
 };
 
@@ -69,10 +69,10 @@ const defaultIconMapping = {
   success: svgIcons.SuccessOutlined,
   warning: svgIcons.ReportProblemOutlined,
   error: svgIcons.ErrorOutline,
-  info: svgIcons.InfoOutlined
+  info: svgIcons.InfoOutlined,
 };
 
-const Alert = props => {
+const Alert = (props) => {
   const {
     action,
     children,
@@ -96,7 +96,7 @@ const Alert = props => {
       className={clsx(
         classes.root,
         classes[`${variant}${capitalize(color || severity)}`],
-        className
+        className,
       )}
       {...other}
     >
@@ -172,7 +172,7 @@ Alert.propTypes = {
     error: PropTypes.node,
     info: PropTypes.node,
     success: PropTypes.node,
-    warning: PropTypes.node
+    warning: PropTypes.node,
   }),
   /**
    * Callback fired when the component requests to be closed.
@@ -192,7 +192,7 @@ Alert.propTypes = {
   /**
    * The variant to use.
    */
-  variant: PropTypes.oneOf(["filled", "outlined", "standard"])
+  variant: PropTypes.oneOf(["filled", "outlined", "standard"]),
 };
 
 export default withStyles(styles, { name: "MuiAlert" })(Alert);

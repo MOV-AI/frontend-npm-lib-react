@@ -6,37 +6,37 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { withStyles } from "@material-ui/styles";
 
-const StyledMenu = props => (
+const StyledMenu = (props) => (
   <Menu
     getContentAnchorEl={null}
     anchorOrigin={{
       vertical: "bottom",
-      horizontal: "left"
+      horizontal: "left",
     }}
     transformOrigin={{
       vertical: "top",
-      horizontal: "left"
+      horizontal: "left",
     }}
     {...props}
   />
 );
 
-const StyledMenuItem = withStyles(theme => ({
+const StyledMenuItem = withStyles((theme) => ({
   root: {
     "&:focus": {
       backgroundColor: theme.palette.primary.main,
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white
-      }
-    }
-  }
+        color: theme.palette.common.white,
+      },
+    },
+  },
 }))(MenuItem);
 
-const ContextMenu = props => {
+const ContextMenu = (props) => {
   const { style } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = evt => {
+  const handleClick = (evt) => {
     setAnchorEl(evt.currentTarget);
     // Loose focus of active element (remove default focused background of first menu item)
     setTimeout(() => {
@@ -44,7 +44,7 @@ const ContextMenu = props => {
     }, 0);
   };
 
-  const handleClose = evt => {
+  const handleClose = (evt) => {
     setAnchorEl(null);
     evt.stopPropagation();
   };
@@ -52,12 +52,12 @@ const ContextMenu = props => {
   return (
     <div data-testid="section_context-menu" style={style}>
       {React.cloneElement(props.element, {
-        onClick: evt => {
+        onClick: (evt) => {
           if (props.element.props.onClick !== undefined) {
             props.element.props.onClick(evt); // If user defined an onClick
           }
           handleClick(evt); // opens the contextMenu
-        }
+        },
       })}
       <StyledMenu
         data-testid="section_menu"
@@ -71,7 +71,7 @@ const ContextMenu = props => {
           return (
             <StyledMenuItem
               data-testid="input_menu-item"
-              onClick={evt => {
+              onClick={(evt) => {
                 item.onClick(evt);
                 if (item.onClose || item.onClose === undefined) {
                   handleClose(evt);
@@ -95,7 +95,7 @@ ContextMenu.propTypes = {
   lowerElement: PropTypes.node.isRequired,
   width: PropTypes.string,
   backgroundColor: PropTypes.string,
-  styledMenuProps: PropTypes.object
+  styledMenuProps: PropTypes.object,
 };
 ContextMenu.defaultProps = {
   element: <div>Ahaha</div>,
@@ -103,14 +103,14 @@ ContextMenu.defaultProps = {
     {
       onClick: () => console.log("clicked 1"),
       element: "Profile",
-      onClose: true
-    }
+      onClose: true,
+    },
   ],
   lowerElement: <div></div>,
   width: "68px",
   backgroundColor: "#424242",
   style: {},
-  styledMenuProps: {}
+  styledMenuProps: {},
 };
 
 export default ContextMenu;

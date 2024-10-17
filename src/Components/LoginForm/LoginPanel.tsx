@@ -20,7 +20,7 @@ class NotAuthorized extends Component<{
       logo = defaultLogo,
       title = "",
       message = "",
-      progress = false
+      progress = false,
     } = this.props;
 
     return (
