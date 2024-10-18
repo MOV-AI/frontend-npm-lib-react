@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     "& > * + *": {
       marginTop: theme.spacing(2) + " !important",
-    }
+    },
   },
   link: {
     fontSize: "24px",
@@ -19,14 +19,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: "Open Sans",
     "&:hover": {
       cursor: "pointer",
-      textDecoration: "underline"
-    }
+      textDecoration: "underline",
+    },
   },
   lastLabel: {
     fontSize: "24px",
     fontWeight: 800,
-    fontFamily: "Open Sans"
-  }
+    fontFamily: "Open Sans",
+  },
 }));
 
 const Breadcrumb = (props: BreadcrumbProps) => {
@@ -67,15 +67,15 @@ const Breadcrumb = (props: BreadcrumbProps) => {
 };
 
 Breadcrumb.propTypes = {
-  pathList: PropTypes.array
+  pathList: PropTypes.array,
 };
 
 Breadcrumb.defaultProps = {
   pathList: [
     { label: "Mov.ai", function: () => console.log("pth1/") },
     { label: "User", function: () => console.log("path1/path2") },
-    { label: "John Doe" }
-  ]
+    { label: "John Doe" },
+  ],
 };
 
 export default Breadcrumb;

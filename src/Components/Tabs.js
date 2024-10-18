@@ -26,27 +26,27 @@ function TabPanel(props) {
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
-  selectedTab: PropTypes.any.isRequired
+  selectedTab: PropTypes.any.isRequired,
 };
 
 function a11yProps(index) {
   return {
     id: `tab-${index}`,
-    "aria-controls": `tabpanel-${index}`
+    "aria-controls": `tabpanel-${index}`,
   };
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    height: "100%"
+    height: "100%",
   },
   tabPanel: {
     flexGrow: 1,
     minHeight: 0,
     height: "calc(100% - 48px)",
-    overflowY: "auto"
-  }
+    overflowY: "auto",
+  },
 }));
 
 export default function Tabs(props) {
@@ -92,7 +92,7 @@ export default function Tabs(props) {
 Tabs.propTypes = {
   tabList: PropTypes.array,
   selectedTab: PropTypes.number,
-  scrollable: PropTypes.bool
+  scrollable: PropTypes.bool,
 };
 
 Tabs.defaultProps = {
@@ -112,10 +112,10 @@ Tabs.defaultProps = {
           more recently with desktop publishing software like Aldus PageMaker
           including versions of Lorem Ipsum.
         </div>
-      )
+      ),
     },
-    { label: "Tab 3", component: <div>Component 3</div> }
+    { label: "Tab 3", component: <div>Component 3</div> },
   ],
   selectedTab: 0,
-  scrollable: true
+  scrollable: true,
 };

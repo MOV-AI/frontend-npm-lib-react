@@ -34,7 +34,7 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
           {i18n.t(menuItem.title)}
         </MenuItem>
       );
-    }
+    },
   );
 }
 
@@ -50,14 +50,15 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     isMenuOpen,
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
-    onClose
+    onClose,
   } = props;
 
   // State hooks
   const [openMenu, setOpenMenu] = useState(false);
   const [username, setUsername] = useState("");
   // Other hooks
-  const triggerButtonRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
+  const triggerButtonRef: MutableRefObject<HTMLDivElement | null> =
+    useRef(null);
   const menuOpenAnimation: MutableRefObject<number | "auto"> = useRef("auto");
   const user = useMemo(() => new User(), []);
   const classes = profileMenuStyles();
@@ -122,7 +123,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
 
   const customEl = useMemo(
     () => getCustomMenuElements(menuItemConf, classes),
-    [menuItemConf, classes]
+    [menuItemConf, classes],
   );
 
   //========================================================================================
@@ -133,7 +134,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
 
   return (
     <div ref={triggerButtonRef} data-testid="section_profile-menu">
-      <Tooltip title={i18n.t("Settings") || "" as any}>
+      <Tooltip title={i18n.t("Settings") || ("" as any)}>
         <IconButton
           data-testid="input_button"
           aria-haspopup="true"
@@ -180,13 +181,19 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           )}
           {customEl}
           {handleToggleTheme && (
-              <MenuItem className={classes.menuItemSpacing} onClick={(ev) => ev.preventDefault()}>
-                  {darkThemeLabel}
-                  <Toggle
-                    onToggle={handleToggleTheme}
-                    toggle={(window.localStorage.getItem("movai.theme") ?? "dark") === "dark"}
-                  ></Toggle>
-              </MenuItem>
+            <MenuItem
+              className={classes.menuItemSpacing}
+              onClick={(ev) => ev.preventDefault()}
+            >
+              {darkThemeLabel}
+              <Toggle
+                onToggle={handleToggleTheme}
+                toggle={
+                  (window.localStorage.getItem("movai.theme") ?? "dark") ===
+                  "dark"
+                }
+              ></Toggle>
+            </MenuItem>
           )}
 
           <MenuItem

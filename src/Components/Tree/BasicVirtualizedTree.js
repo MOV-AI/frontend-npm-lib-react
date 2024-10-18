@@ -19,34 +19,34 @@ import { EMPTY_FUNCTION } from "../../Utils/Constants";
  *                                                                                      */
 //========================================================================================
 
-const styles = theme => ({
+const styles = (theme) => ({
   horizFlex: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   spaceBetween: {
     display: "flex",
     width: "100%",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   preContainer: {
     justifyContent: "space-between",
     "& button": {
-      display: "none"
+      display: "none",
     },
     "&:hover": {
       backgroundColor: "rgba(54,181,230, 0.15)",
       "& button": {
-        display: "inline-flex"
-      }
-    }
+        display: "inline-flex",
+      },
+    },
   },
   ellipsis: {
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    flex: 2
+    flex: 2,
   },
   iconSpace: {
     flex: 1,
@@ -55,16 +55,16 @@ const styles = theme => ({
     "& button": {
       position: "relative",
       bottom: "7px",
-      padding: "7px"
-    }
-  }
+      padding: "7px",
+    },
+  },
 });
 
 const testArray = [];
 for (let index = 0; index < 100; index++) {
   testArray.push({
     id: index,
-    name: `1.0.${index}`
+    name: `1.0.${index}`,
   });
 }
 
@@ -74,35 +74,35 @@ class BasicVirtualizedTree extends Component {
   state = {
     selectedGroup: EXPANDED,
     groupsEnabled: true,
-    searchValue: ""
+    searchValue: "",
   };
 
   searchFilter = (nodes, searchValue) => {
     const searchValueLower = searchValue.toLowerCase();
     const filteredNodes = nodes
       .filter(
-        node =>
+        (node) =>
           (!node.name.includes("@SM") &&
             node.name.toLowerCase().includes(searchValueLower)) ||
-          node.children.findIndex(ch =>
-            ch.name.toLowerCase().includes(searchValueLower)
-          ) >= 0
+          node.children.findIndex((ch) =>
+            ch.name.toLowerCase().includes(searchValueLower),
+          ) >= 0,
       )
-      .map(node => {
+      .map((node) => {
         return {
           ...node,
           children: (node?.children || []).filter(
-            ch =>
+            (ch) =>
               ch.name &&
               !ch.name.includes("@SM") &&
               (node.name.toLowerCase().includes(searchValueLower) ||
-                ch.name.toLowerCase().includes(searchValueLower))
-          )
+                ch.name.toLowerCase().includes(searchValueLower)),
+          ),
         };
       });
 
     // Add children id if missing
-    filteredNodes.forEach(node => {
+    filteredNodes.forEach((node) => {
       node.children.forEach((child, i) => {
         child.id = child.id ? child.id : i;
         if (child.children) {
@@ -116,7 +116,7 @@ class BasicVirtualizedTree extends Component {
     return filteredNodes;
   };
 
-  handleSelectedGroupChange = selectedGroup => {
+  handleSelectedGroupChange = (selectedGroup) => {
     this.setState({ selectedGroup });
   };
 
@@ -139,12 +139,12 @@ class BasicVirtualizedTree extends Component {
       <div data-testid="section_basic-virtualized-tree">
         <ListItemsTreeWithSearch
           style={{
-            overflow: "auto"
+            overflow: "auto",
           }}
           icon={iconStyle}
-          onSearch={input => {
+          onSearch={(input) => {
             this.setState({
-              searchValue: input
+              searchValue: input,
             });
           }}
         >
@@ -175,7 +175,7 @@ class BasicVirtualizedTree extends Component {
                           node.state?.expanded && (
                             <ExpandMoreIcon
                               data-testid="input_collapse"
-                              onClick={evt =>
+                              onClick={(evt) =>
                                 this.handleExpansion(evt, nodes, node, false)
                               }
                             />
@@ -184,7 +184,7 @@ class BasicVirtualizedTree extends Component {
                           !node.state?.expanded && (
                             <ChevronRightIcon
                               data-testid="input_expand"
-                              onClick={evt =>
+                              onClick={(evt) =>
                                 this.handleExpansion(evt, nodes, node, true)
                               }
                             />
@@ -217,7 +217,7 @@ BasicVirtualizedTree.propTypes = {
   onClickNode: PropTypes.func,
   onDoubleClickNode: PropTypes.func,
   handleChange: PropTypes.func,
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 BasicVirtualizedTree.defaultProps = {
@@ -225,7 +225,7 @@ BasicVirtualizedTree.defaultProps = {
   onClickNode: EMPTY_FUNCTION,
   onDoubleClickNode: EMPTY_FUNCTION,
   handleChange: EMPTY_FUNCTION,
-  height: 700
+  height: 700,
 };
 
 export default withStyles(styles, { withTheme: true })(BasicVirtualizedTree);

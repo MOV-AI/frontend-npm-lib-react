@@ -1,8 +1,7 @@
 import JSpdf from "jspdf";
 import "jspdf-autotable";
 
-export default
-function ExportPdf(columns, data = [], filename = "data") {
+export default function ExportPdf(columns, data = [], filename = "data") {
   try {
     let finalData = data; // Grab first item for data array, make sure it is also an array.
     // If it is an object, 'flatten' it into an array of strings.
@@ -12,8 +11,8 @@ function ExportPdf(columns, data = [], filename = "data") {
         // Turn data into an array of string arrays, without the `tableData` prop
         finalData = data.map((row) =>
           columns.map((col) =>
-            col.exportTransformer ? col.exportTransformer(row) : row[col.field]
-          )
+            col.exportTransformer ? col.exportTransformer(row) : row[col.field],
+          ),
         );
       }
     }
@@ -33,8 +32,7 @@ function ExportPdf(columns, data = [], filename = "data") {
     doc.save(filename + ".pdf");
   } catch (err) {
     console.error(
-      `exporting pdf : unable to import 'jspdf-autotable' : ${err}`
+      `exporting pdf : unable to import 'jspdf-autotable' : ${err}`,
     );
   }
 }
-

@@ -8,7 +8,7 @@ import {
   Collapse,
   IconButton,
   Paper,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { ExpandMore, Close } from "@material-ui/icons";
 
@@ -28,7 +28,7 @@ const TestContent = React.forwardRef(({ key, closeSnackbar }, ref) => {
   const data = ["Item 1", "Item 2", "Item 3"];
 
   const handleExpandClick = () => {
-    setExpanded(oldExpanded => !oldExpanded);
+    setExpanded((oldExpanded) => !oldExpanded);
   };
 
   return (
@@ -50,7 +50,7 @@ const TestContent = React.forwardRef(({ key, closeSnackbar }, ref) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         {data.length &&
-          data.map(item => {
+          data.map((item) => {
             return <Paper key={item}>{item}</Paper>;
           })}
       </Collapse>
@@ -67,8 +67,9 @@ const ExpandableSnackbar = () => {
           persist: true,
           vertical: "top",
           horizontal: "right",
-          content: closeSnackbar => key =>
+          content: (closeSnackbar) => (key) => (
             <TestContent key={key} closeSnackbar={closeSnackbar} />
+          ),
         })
       }
     >
@@ -101,9 +102,9 @@ const Template = () => {
 export const snackStory = Template.bind({});
 
 snackStory.story = {
-  name: "App Snackbar"
+  name: "App Snackbar",
 };
 
 export default {
-  title: "Snackbar"
+  title: "Snackbar",
 };
