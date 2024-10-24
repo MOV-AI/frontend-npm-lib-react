@@ -19,18 +19,69 @@ import { useStyles } from "./styles";
 import { logsSub } from "./sub";
 import "./Logs.css";
 
+/**
+ * Tranform log from the format received from the API to the format
+ * required to be rendered
+ * @returns {array} Transformed log
+ */
+function transformLog(log, _index, _data, ts_multiplier = 1000) {
+  const timestamp = ts_multiplier * log.time;
+  const date = new Date(timestamp);
+  return {
+    ...log,
+    timestamp,
+    time: date.toLocaleTimeString(),
+    date: date.toLocaleDateString(),
+    key: log.message + timestamp,
+  };
+}
+
+/**
+ * Remove duplicates from logs for the second overlaping the
+ * current and the last request
+ * @returns {array} Concatenated logs without duplicates
+ */
+export function logsDedupe(oldLogs, data) {
+  if (!data.length) return oldLogs;
+
+  // date of the oldest log received in the current request
+  const oldDate = data[data.length - 1].timestamp;
+  // map to store the old logs of the overlaped second
+  let map = {};
+
+  // iter over old logs with last timestamp of the new logs
+  // and put in a map
+  for (let i = 0; i < oldLogs.length && oldLogs[i].timestamp === oldDate; i++)
+    map[oldLogs[i].message] = oldLogs[i];
+
+  // array to store logs from overlap second which had not
+  // been sent  before
+  let newSecOverlap = [];
+  let z;
+
+  // iter over new logs (oldest to latest) with last timestamp,
+  // check if present in last map
+  //  - if not, push
+  for (z = data.length - 1; z >= 0 && data[z].timestamp === oldDate; z--)
+    if (!map[data[z].message]) newSecOverlap.push(data[z]);
+
+  // cut new logs up to z, concat with the deduped ones
+  // and the old logs up to i
+  return data.slice(0, z + 1).concat(newSecOverlap.reverse(), oldLogs);
+}
+
 // TODO this should be exported. Fleetboard uses it
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   const blob = new Blob([file], { type: charset });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  document.body.appendChild(a);
+  const a = globalThis.document.createElement("a");
+  globalThis.document.body.appendChild(a);
   a.style = "display: none";
   a.href = url;
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
-  document.body.removeChild(a);
+  globalThis.document.body.removeChild(a);
 }
 
 function noSelection(obj) {
@@ -44,16 +95,6 @@ function getRobots(robotsData) {
   return robotsData
     .map((robot) => robot.name)
     .reduce((a, robot) => ({ ...a, [robot]: true }), {});
-}
-
-async function hashString(string) {
-  const msgUint8 = new TextEncoder().encode(string);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-  return hashHex;
 }
 
 function matchTags(tags, item) {
@@ -142,54 +183,20 @@ const Logs = (props) => {
       limit: MAX_FETCH_LOGS,
       date: {
         from: logsDataGlobal.length
-          ? logsDataGlobal[logsDataGlobal.length - 1].timestamp
+          ? logsDataGlobal[0].timestamp
           : selectedFromDate,
         to: selectedToDate,
       },
-    })
-      .then((response) => {
-        const data = response?.data || [];
-        return Promise.all(
-          [Promise.resolve(data)].concat(
-            data.map((item) => hashString(item.message)),
-          ),
-        );
-      })
-      .then(([data, ...hashes]) => {
-        const oldLogs = logsDataGlobal || [];
-        let j = data.length - 1;
+    }).then((response) => {
+      const data = response?.data || [];
+      const oldLogs = logsDataGlobal || [];
+      const newLogs = (logsDataGlobal = logsDedupe(
+        oldLogs,
+        data.map(transformLog),
+      ).slice(0, MAX_FETCH_LOGS));
 
-        for (let i = 0; j > -1 && i < oldLogs.length; i++, j--) {
-          const timestamp = data[j].time * 1000;
-          const date = new Date(timestamp);
-
-          if (
-            date === oldLogs[i].timestamp &&
-            hashes[j] + timestamp * 1000 === oldLogs[i].key
-          )
-            break;
-
-          if (date < oldLogs[i].timestamp) break;
-        }
-
-        const newLogs = (logsDataGlobal = data
-          .slice(0, j)
-          .map((log, index) => {
-            const timestamp = log.time * 1000;
-            const date = new Date(timestamp);
-            return {
-              ...log,
-              timestamp: date,
-              time: date.toLocaleTimeString(),
-              date: date.toLocaleDateString(),
-              key: hashes[index] + timestamp * 1000,
-            };
-          })
-          .concat(oldLogs)
-          .slice(0, MAX_FETCH_LOGS));
-
-        setLogsData(newLogs);
-      });
+      setLogsData(newLogs);
+    });
   }, [
     selectedFromDate,
     selectedToDate,
@@ -208,22 +215,13 @@ const Logs = (props) => {
   const onMessage = useCallback(
     (msg) => {
       const item = JSON.parse(msg?.data ?? {});
-      const date = new Date(item.time / 1000000);
-      hashString(item.message).then((hash) => {
-        setLogsData(
-          (prevState) =>
-            (logsDataGlobal = [
-              {
-                ...item,
-                timestamp: date,
-                time: date.toLocaleTimeString(),
-                date: date.toLocaleDateString(),
-                key: hash + item.time,
-              },
-              ...prevState,
-            ].slice(0, MAX_FETCH_LOGS)),
-        );
-      });
+      setLogsData(
+        (prevState) =>
+          (logsDataGlobal = [
+            transformLog(item, 0, [item], 0.000001),
+            ...prevState,
+          ].slice(0, MAX_FETCH_LOGS)),
+      );
     },
     [setLogsData],
   );
@@ -250,8 +248,8 @@ const Logs = (props) => {
   const handleExport = useCallback(() => {
     const sep = "\t";
     const contents = filteredLogs.map((log) => {
-      const [date, time] = getDateTime(log.time);
-      return [date, time, log.robot, log.message].join(sep);
+      const { date, time, robot, message } = log;
+      return [date, time, robot, message].join(sep);
     });
     // from https://www.epochconverter.com/programming/
     const dateString = !filteredLogs.length

@@ -29,7 +29,7 @@ const SearchInput = () => {
         <IconButton
           data-testid="output_button"
           disabled={!message}
-          onClick={() => onChangeText("")}
+          onClick={() => onChangeText({ target: { value: "" } })}
         >
           <ResetSearch color="inherit" fontSize="small" />
         </IconButton>
