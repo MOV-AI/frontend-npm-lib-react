@@ -21,6 +21,6 @@ export interface LoginFormAdvancedProps {
   selectedProvider: string;
   onProviderChange: (
     event: React.ChangeEvent<HTMLInputElement>,
-    child: React.ReactNode
+    child: React.ReactNode,
   ) => void;
 }

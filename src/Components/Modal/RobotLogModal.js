@@ -13,20 +13,20 @@ import ChatIcon from "@mui/icons-material/Chat";
 import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import AbstractModal from "./AbstractModal";
 
-const styles = _theme => ({
+const styles = (_theme) => ({
   breakWord: {
-    wordBreak: "break-all"
-  }
+    wordBreak: "break-all",
+  },
 });
 
 class RobotLogModal extends Component {
   state = {
     data: {},
     open: false,
-    hasButton: false
+    hasButton: false,
   };
 
-  open = alert => {
+  open = (alert) => {
     const { data } = this.state;
     // Format time
     const alertButton = alert.button
@@ -46,7 +46,7 @@ class RobotLogModal extends Component {
     this.setState({
       data,
       open: true,
-      hasButton: !!alertButton
+      hasButton: !!alertButton,
     });
   };
 
@@ -54,7 +54,7 @@ class RobotLogModal extends Component {
     // Trigger callback to clear log
     if (callback) {
       return () => {
-        MasterDB.cloudFunction(callback, "", data, res => {
+        MasterDB.cloudFunction(callback, "", data, (res) => {
           this.setState({ open: false });
         });
       };
@@ -173,12 +173,12 @@ class RobotLogModal extends Component {
 
 RobotLogModal.propTypes = {
   title: PropTypes.string,
-  props: PropTypes.array
+  props: PropTypes.array,
 };
 
 RobotLogModal.defaultProps = {
   title: "Log Details",
-  props: []
+  props: [],
 };
 
 export default withStyles(styles, { withTheme: true })(RobotLogModal);

@@ -1,16 +1,16 @@
 import { alpha } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 
-export const filterIconStyles = makeStyles(theme => ({
+export const filterIconStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1) + " !important",
     color: theme.palette.primary.main,
-    borderColor: theme.palette.primary.main
+    borderColor: theme.palette.primary.main,
   },
   iconActive: {
     color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
-    backgroundColor: alpha(theme.palette.primary.main, 0.1)
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
   },
   buttonApplyFilters: {
     background: theme.palette.primary.main,
@@ -20,10 +20,10 @@ export const filterIconStyles = makeStyles(theme => ({
     fontSize: "14px",
     color: "#FAFAFA",
     margin: "0px 20px 10px 20px",
-    "&:hover": { background: theme.palette.primary.dark }
+    "&:hover": { background: theme.palette.primary.dark },
   },
   icon: {
-    "&:hover": { cursor: "pointer" }
+    "&:hover": { cursor: "pointer" },
   },
   height: { height: "100%" },
   checkbox: { marginLeft: "10px" },
@@ -34,7 +34,7 @@ export const filterIconStyles = makeStyles(theme => ({
   filterIconRoot: {
     display: "flex",
     flexDirection: "column",
-    height: "-webkit-fill-available"
+    height: "-webkit-fill-available",
   },
   titleRow: {
     display: "flex",
@@ -42,15 +42,15 @@ export const filterIconStyles = makeStyles(theme => ({
     "& > div.text": {
       fontSize: "24px",
       fontFamily: "Open Sans",
-      fontWeight: 500
-    }
+      fontWeight: 500,
+    },
   },
   spacer: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   childrenContainer: {
     flexGrow: 1,
     display: "flex",
     flexDirection: "column",
-  }
+  },
 }));

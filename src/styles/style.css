@@ -1,14 +1,15 @@
 @font-face {
-  font-family: 'mov.ai';
+  font-family: "mov.ai";
   src: url(./icomoon.woff) format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-"],
+[class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'mov.ai' !important;
+  font-family: "mov.ai" !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -120,4 +121,3 @@
 .icon-add:before {
   content: "\e92b";
 }
-

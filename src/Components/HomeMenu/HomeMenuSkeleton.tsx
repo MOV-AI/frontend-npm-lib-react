@@ -13,7 +13,7 @@ const HomeMenuSkeleton = () => {
   //========================================================================================
   return (
     <div className={classes.menuWrapper}>
-      {sklArr.map(el => {
+      {sklArr.map((el) => {
         return (
           <div key={el} className={classes.skeletonCard}>
             <Skeleton

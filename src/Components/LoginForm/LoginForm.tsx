@@ -24,7 +24,7 @@ class LoginForm extends Component<LoginFormProps> {
     formErrors: "",
     remember: false,
     capsLockOn: false,
-    selectedProvider: Authentication.DEFAULT_PROVIDER
+    selectedProvider: Authentication.DEFAULT_PROVIDER,
   };
 
   //========================================================================================
@@ -42,7 +42,7 @@ class LoginForm extends Component<LoginFormProps> {
     this.setState({
       selectedProvider:
         globalThis.localStorage?.getItem(SELECTED_DOMAIN_KEY) ||
-        Authentication.DEFAULT_PROVIDER
+        Authentication.DEFAULT_PROVIDER,
     });
   }
 
@@ -62,7 +62,7 @@ class LoginForm extends Component<LoginFormProps> {
       username,
       password,
       remember,
-      selectedProvider
+      selectedProvider,
     });
   };
 
@@ -81,11 +81,11 @@ class LoginForm extends Component<LoginFormProps> {
 
   handleProviderChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    _child: React.ReactNode
+    _child: React.ReactNode,
   ) => {
     const target = e.target;
     this.setState({
-      selectedProvider: target.value
+      selectedProvider: target.value,
     });
     globalThis.localStorage?.setItem(SELECTED_DOMAIN_KEY, target.value);
   };
@@ -102,7 +102,7 @@ class LoginForm extends Component<LoginFormProps> {
    */
   onChangeUsername: React.ChangeEventHandler<
     HTMLTextAreaElement | HTMLInputElement
-  > = event => {
+  > = (event) => {
     const username = event.target.value || "";
     const errorMessage = !username ? i18n.t("UsernameRequired") : "";
     this.state.username && this.props.onChanges?.();
@@ -115,13 +115,13 @@ class LoginForm extends Component<LoginFormProps> {
    */
   onChangePassword: React.ChangeEventHandler<
     HTMLTextAreaElement | HTMLInputElement
-  > = event => {
+  > = (event) => {
     const password = event.target.value || "";
     const errorMessage = !password ? i18n.t("PasswordRequired") : "";
     this.state.password && this.props.onChanges?.();
     this.setState({
       password,
-      formErrors: errorMessage
+      formErrors: errorMessage,
     });
   };
 
@@ -131,7 +131,7 @@ class LoginForm extends Component<LoginFormProps> {
    */
   onKeyUpPassword: React.KeyboardEventHandler<
     HTMLTextAreaElement | HTMLInputElement
-  > = event => {
+  > = (event) => {
     this.checkCapsLock(event);
     if (event.key === "Enter") {
       this.sendCreds();
@@ -140,7 +140,7 @@ class LoginForm extends Component<LoginFormProps> {
 
   hasMultipleDomains = () =>
     this.props.domains?.length > 1 &&
-    this.props.domains.some(ap => ap != Authentication.DEFAULT_PROVIDER);
+    this.props.domains.some((ap) => ap != Authentication.DEFAULT_PROVIDER);
 
   //========================================================================================
   /*                                                                                      *
@@ -153,7 +153,7 @@ class LoginForm extends Component<LoginFormProps> {
       classes,
       logo = defaultLogo,
       domains,
-      authErrorMessage
+      authErrorMessage,
     } = this.props;
     const errorMessage = this.state.formErrors || authErrorMessage;
     return (
@@ -165,7 +165,11 @@ class LoginForm extends Component<LoginFormProps> {
         alignItems="center"
         justifyContent="space-evenly"
       >
-        <Paper elevation={10} style={{ flexDirection: "column" }} className={classes.root}>
+        <Paper
+          elevation={10}
+          style={{ flexDirection: "column" }}
+          className={classes.root}
+        >
           <Grid item>
             <img
               data-testid="output_logo"

@@ -20,7 +20,7 @@ class NotAuthorized extends Component<{
       logo = defaultLogo,
       title = "",
       message = "",
-      progress = false
+      progress = false,
     } = this.props;
 
     return (
@@ -32,7 +32,11 @@ class NotAuthorized extends Component<{
         alignItems="center"
         justifyContent="space-evenly"
       >
-        <Paper elevation={10} style={{ flexDirection: "column" }} className={classes.root}>
+        <Paper
+          elevation={10}
+          style={{ flexDirection: "column" }}
+          className={classes.root}
+        >
           <Grid item>
             <img
               data-testid="output_logo"

@@ -12,10 +12,11 @@ jobs:
     uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@v2.1
     with:
       deploy: "false"
+      run_lint_staged: "true"
       run_tests: "true"
       use_nvmrc: "true"
       pm: "pnpm"
-      pnpm_version: "9.4.0"
+      pnpm_version: "9.11.0"
     secrets:
       auto_commit_user: ${{ secrets.RAISE_BOT_COMMIT_USER }}
       auto_commit_mail: ${{ secrets.RAISE_BOT_COMMIT_MAIL }}

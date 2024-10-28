@@ -23,7 +23,9 @@ import ProfileMenu from "./Components/ProfileMenu/ProfileMenu";
 import ResetPasswordModal from "./Components/ProfileMenu/ResetPassword";
 import TimeFilters from "./Components/Logs/LogsFilterBar/sub-components/TimeFilters";
 import FilterIcon from "./Components/Logs/LogsFilterBar/sub-components/_shared/FiltersIcon/FiltersIcon";
-import SelectScopeModal, { getAllData } from "./Components/Modal/SelectScopeModal";
+import SelectScopeModal, {
+  getAllData,
+} from "./Components/Modal/SelectScopeModal";
 import HTMLPopper from "./Components/Popper/HTMLPopper";
 import HomeMenuPopper from "./Components/HomeMenu/HomeMenu";
 import HomeMenuSkeleton from "./Components/HomeMenu/HomeMenuSkeleton";
@@ -121,16 +123,8 @@ export {
   Typography,
   styled,
 } from "@mui/material";
-export {
-  amber,
-  green,
-  grey,
-  red,
-  blue,
-} from "@mui/material/colors";
-export {
-  alpha,
-} from "@mui/material/styles";
+export { amber, green, grey, red, blue } from "@mui/material/colors";
+export { alpha } from "@mui/material/styles";
 export {
   AcUnit as AcUnitIcon,
   AccessAlarm as AccessAlarmIcon,
@@ -269,10 +263,7 @@ export {
   useTheme,
   ThemeProvider,
 } from "@mui/styles";
-export {
-  TreeView,
-  TreeItem,
-} from "@mui/x-tree-view";
+export { TreeView, TreeItem } from "@mui/x-tree-view";
 export {
   default as MaterialTable,
   MTableAction,

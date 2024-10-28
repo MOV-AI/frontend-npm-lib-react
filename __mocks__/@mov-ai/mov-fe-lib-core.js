@@ -5,17 +5,17 @@ const Authentication = {
   refreshTokens: jest.fn().mockResolvedValue(true),
   getToken: jest.fn().mockReturnValue("token"),
   getProviders: jest.fn().mockResolvedValue({ domains: ["internal", "ldap"] }),
-  DEFAULT_PROVIDER: "internal"
+  DEFAULT_PROVIDER: "internal",
 };
 
 const User = function () {
   return {
     getCurrentUserWithPermissions: jest.fn().mockResolvedValue({
       Resources: {
-        Applications: []
+        Applications: [],
       },
-      Superuser: true
-    })
+      Superuser: true,
+    }),
   };
 };
 

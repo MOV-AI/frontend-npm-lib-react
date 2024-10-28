@@ -13,7 +13,7 @@ const HTMLPopper = (props: HTMLPopperProps) => {
     clickableElement,
     children,
     hideOnClickAway = false,
-    popperPlacement = "bottom-start"
+    popperPlacement = "bottom-start",
   } = props;
 
   const [openPopper, setOpenPopper] = React.useState(false);
@@ -74,13 +74,13 @@ const HTMLPopper = (props: HTMLPopperProps) => {
         placement={popperPlacement}
         transition
       >
-              {hideOnClickAway ? (
-                <ClickAwayListener onClickAway={handlePopperClose}>
-                  {renderPaper()}
-                </ClickAwayListener>
-              ) : (
-                renderPaper()
-              )}
+        {hideOnClickAway ? (
+          <ClickAwayListener onClickAway={handlePopperClose}>
+            {renderPaper()}
+          </ClickAwayListener>
+        ) : (
+          renderPaper()
+        )}
       </Popper>
     </>
   );

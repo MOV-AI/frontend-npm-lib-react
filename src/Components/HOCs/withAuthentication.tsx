@@ -1,6 +1,12 @@
 import React, { useState, useCallback } from "react";
 import { Button, Modal } from "@mui/material";
-import { Authentication, PermissionType, authSub, login, LoginData } from "@mov-ai/mov-fe-lib-core";
+import {
+  Authentication,
+  PermissionType,
+  authSub,
+  login,
+  LoginData,
+} from "@mov-ai/mov-fe-lib-core";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import i18n from "i18next";
@@ -13,12 +19,15 @@ export default function withAuthentication(
   return function (props: any) {
     const [errorMessage, setErrorMessage] = useState("");
     const authSubRes = authSub.use();
-    if (!authSubRes)
-      throw new Error("No auth info");
+    if (!authSubRes) throw new Error("No auth info");
     const { currentUser, loggedIn, loading, providers } = authSubRes;
-    const hasPermissions = (currentUser?.Resources?.Applications)
-      ? (currentUser.Superuser || currentUser.Resources.Applications.includes(appName as PermissionType) || !appName)
-      : (currentUser?.Superuser || allowGuest);
+    const hasPermissions = currentUser?.Resources?.Applications
+      ? currentUser.Superuser ||
+        currentUser.Resources.Applications.includes(
+          appName as PermissionType,
+        ) ||
+        !appName
+      : currentUser?.Superuser || allowGuest;
 
     /**
      * handleLogOut - log out the user
@@ -32,16 +41,13 @@ export default function withAuthentication(
      * handleLoginSubmit - handle the user login credentials submit
      * @param {{ username, password, remember, selectedProvider }}
      */
-    const handleLoginSubmit = useCallback(
-      async (loginData: LoginData) => {
-        try {
-          login(loginData);
-        } catch (e: unknown) {
-          setErrorMessage((e as Error).message);
-        }
-      },
-      []
-    );
+    const handleLoginSubmit = useCallback(async (loginData: LoginData) => {
+      try {
+        login(loginData);
+      } catch (e: unknown) {
+        setErrorMessage((e as Error).message);
+      }
+    }, []);
 
     /**
      * renderLoading - Renders the loading panel
@@ -57,7 +63,7 @@ export default function withAuthentication(
      */
     const renderLoginForm = () => (
       <LoginForm
-        appName={appName} 
+        appName={appName}
         domains={providers.domains}
         authErrorMessage={errorMessage}
         onLoginSubmit={handleLoginSubmit}
@@ -111,7 +117,9 @@ export default function withAuthentication(
         {loading ? (
           renderLoading()
         ) : (
-          <Modal open={!loggedIn}><span>{renderLoginForm()}</span></Modal>
+          <Modal open={!loggedIn}>
+            <span>{renderLoginForm()}</span>
+          </Modal>
         )}
       </React.Fragment>
     );

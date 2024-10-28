@@ -13,37 +13,47 @@ const styles = (theme: Theme) => ({
     boxSizing: "border-box",
     backgroundColor: alpha(theme.palette.error.main, 0.2) + " !important",
     padding: "16px",
-  }
+  },
 });
 
-function getStackLine(error : any, stackFrame : StackFrame) {
+function getStackLine(error: any, stackFrame: StackFrame) {
   const { functionName, fileName, lineNumber } = stackFrame;
-  return "Error: " + error.message + "\n    in " + functionName + " (at " + fileName + ":" + lineNumber + ")";
+  return (
+    "Error: " +
+    error.message +
+    "\n    in " +
+    functionName +
+    " (at " +
+    fileName +
+    ":" +
+    lineNumber +
+    ")"
+  );
 }
 
 interface ErrorBoundaryProps {
-  children: ReactNode,
-  classes: object,
+  children: ReactNode;
+  classes: object;
 }
 
 interface ErrorBoundaryState {
-  error: Error|boolean,
-  errorInfo: any,
-  stackLine : string
+  error: Error | boolean;
+  errorInfo: any;
+  stackLine: string;
 }
 
-class ErrorBoundary extends Component<ErrorBoundaryProps,ErrorBoundaryState> {
-  constructor(props : any) {
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: any) {
     super(props);
 
     this.state = { error: false, errorInfo: false, stackLine: "" };
   }
 
-  componentDidCatch(error : Error, errorInfo : any) {
+  componentDidCatch(error: Error, errorInfo: any) {
     // TODO use future error api
     //    const stackLine = getStackLine(error);
     this.setState({ error, errorInfo, stackLine: error.stack + "\n" });
-    StackTrace.fromError(error).then(err => {
+    StackTrace.fromError(error).then((err) => {
       // const stackLine = err.map(getStackLine).join("\n");
       const stackLine = getStackLine(error, err[0]);
       this.setState({ error, errorInfo, stackLine });
@@ -53,14 +63,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps,ErrorBoundaryState> {
   render() {
     const { children, classes } = this.props;
 
-    if (!this.state.errorInfo)
-      return children;
+    if (!this.state.errorInfo) return children;
 
-    return (<div className={classes.root}>
-      <div>
-        { "Error: " + this.state.error.message }
+    return (
+      <div className={classes.root}>
+        <div>{"Error: " + this.state.error.message}</div>
       </div>
-    </div>);
+    );
   }
 }
 

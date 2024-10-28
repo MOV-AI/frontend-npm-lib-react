@@ -5,7 +5,7 @@ import { StyleRules } from "@mui/styles";
 export interface Dependencies {
   "@mui/styles"?: {
     createTheme?: typeof createTheme;
-  },
+  };
 }
 
 export interface ApplicationThemeType {

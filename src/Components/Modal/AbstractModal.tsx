@@ -8,7 +8,7 @@ import {
   Divider,
   Button,
   CardActions,
-  Modal
+  Modal,
 } from "@mui/material";
 import { modalStyles } from "./styles";
 import i18n from "i18next";
@@ -31,7 +31,7 @@ const AbstractModal = (props: AbstractModalProps) => {
     cancelColor = "secondary",
     width = "25%",
     height = "25%",
-    style = {}
+    style = {},
   } = props;
   // Styles hook
   const classes = modalStyles();
@@ -64,7 +64,7 @@ const AbstractModal = (props: AbstractModalProps) => {
         handleSubmit();
       }
     },
-    [handleSubmit]
+    [handleSubmit],
   );
 
   //========================================================================================
@@ -86,7 +86,7 @@ const AbstractModal = (props: AbstractModalProps) => {
         style={{
           ...style,
           minWidth: width,
-          minHeight: height
+          minHeight: height,
         }}
       >
         <CardContent className={classes.cardContent}>

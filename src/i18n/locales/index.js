@@ -3,5 +3,5 @@ import translationPT from "./pt/translation";
 
 export const Translations = {
   pt: translationPT,
-  en: translationEN
+  en: translationEN,
 };

@@ -34,15 +34,17 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
           {i18n.t(menuItem.title) as any}
         </MenuItem>
       );
-    }
+    },
   );
 }
 
-const WeirdTypingsButton = React.forwardRef<HTMLButtonElement, ButtonBaseProps>((props: any, ref) => (
-  <IconButton ref={ref} { ...props }>
-    { props.children }
-  </IconButton>
-));
+const WeirdTypingsButton = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
+  (props: any, ref) => (
+    <IconButton ref={ref} {...props}>
+      {props.children}
+    </IconButton>
+  ),
+);
 
 const ProfileMenu = (props: ProfileMenuProps) => {
   // Props
@@ -56,7 +58,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     isMenuOpen,
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
-    onClose
+    onClose,
   } = props;
 
   // State hooks
@@ -128,7 +130,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
 
   const customEl = useMemo(
     () => getCustomMenuElements(menuItemConf, classes),
-    [menuItemConf, classes]
+    [menuItemConf, classes],
   );
 
   //========================================================================================
@@ -139,7 +141,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
 
   return (
     <div ref={triggerButtonRef} data-testid="section_profile-menu">
-      <Tooltip title={i18n.t("Settings") || "" as any}>
+      <Tooltip title={i18n.t("Settings") || ("" as any)}>
         <WeirdTypingsButton
           ref={triggerButtonRef}
           data-testid="input_button"
@@ -187,14 +189,21 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           )}
           {customEl}
           {handleToggleTheme && (
-            <div className={classes.menuItemSpacing}>
+            <MenuItem
+              className={classes.menuItemSpacing}
+              onClick={(ev) => ev.preventDefault()}
+            >
               {darkThemeLabel}
               <Toggle
                 onToggle={handleToggleTheme}
-                toggle={(globalThis.localStorage?.getItem("movai.theme") ?? "dark") === "dark"}
+                toggle={
+                  (globalThis.localStorage.getItem("movai.theme") ?? "dark") ===
+                  "dark"
+                }
               ></Toggle>
-            </div>
+            </MenuItem>
           )}
+
           <MenuItem
             className={classes.menuItemSpacing}
             onClick={handleLogoutClick}

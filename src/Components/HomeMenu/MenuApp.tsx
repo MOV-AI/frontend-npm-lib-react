@@ -26,7 +26,7 @@ const MenuApp = (props: MenuAppProps) => {
     (event: any) => {
       if (app.Label) Utils.loadResources(event, app);
     },
-    [app]
+    [app],
   );
 
   //========================================================================================

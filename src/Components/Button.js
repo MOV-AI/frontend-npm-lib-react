@@ -2,7 +2,7 @@ import React from "react";
 import MaterialButton from "@mui/material/Button";
 import PropTypes from "prop-types";
 
-const Button = props => {
+const Button = (props) => {
   return (
     <MaterialButton
       data-testid="input_button"
@@ -28,7 +28,7 @@ Button.propTypes = {
   size: PropTypes.string,
   startIcon: PropTypes.element,
   children: PropTypes.node.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 };
 Button.defaultProps = {
   style: {},
@@ -38,7 +38,7 @@ Button.defaultProps = {
   size: "medium", // small, medium, large
   startIcon: undefined,
   children: <div></div>,
-  disabled: false
+  disabled: false,
 };
 
 export default Button;

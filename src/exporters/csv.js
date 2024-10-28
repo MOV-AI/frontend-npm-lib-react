@@ -1,11 +1,10 @@
 import { CsvBuilder } from "filefy";
 
-export default
-function ExportCsv(
+export default function ExportCsv(
   columns,
   data = [],
   filename = "data",
-  delimiter = ","
+  delimiter = ",",
 ) {
   try {
     let finalData = data;
@@ -16,8 +15,8 @@ function ExportCsv(
         // Turn data into an array of string arrays, without the `tableData` prop
         finalData = data.map((row) =>
           columns.map((col) =>
-            col.exportTransformer ? col.exportTransformer(row) : row[col.field]
-          )
+            col.exportTransformer ? col.exportTransformer(row) : row[col.field],
+          ),
         );
       }
     }

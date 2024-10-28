@@ -5,21 +5,21 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import PropTypes from "prop-types";
 
-const styles = theme => ({
+const styles = (theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25)
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginRight: theme.spacing(2) + " !important",
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3) + " !important",
-      width: "auto"
-    }
+      width: "auto",
+    },
   },
   searchIcon: {
     width: theme.spacing(7) + " !important",
@@ -28,26 +28,26 @@ const styles = theme => ({
     pointerEvents: "none",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   inputRoot: {
-    color: "inherit"
+    color: "inherit",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 7) + " !important",
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: 200
-    }
-  }
+      width: 200,
+    },
+  },
 });
 
 class SearchInput extends Component {
   searchInput = undefined;
   timer = undefined;
 
-  handleChange = evt => {
+  handleChange = (evt) => {
     this.searchInput = evt.target.value;
     if (this.props.enableTimeout) {
       if (this.timer) {
@@ -79,7 +79,7 @@ class SearchInput extends Component {
           placeholder={placeholder}
           classes={{
             root: classes.inputRoot,
-            input: classes.inputInput
+            input: classes.inputInput,
           }}
           inputProps={{ "aria-label": "search", "data-testid": "input_base" }}
           onChange={this.handleChange}
@@ -94,17 +94,17 @@ SearchInput.propTypes = {
   onChange: PropTypes.func,
   time: PropTypes.number,
   enableTimeout: PropTypes.bool,
-  style: PropTypes.object
+  style: PropTypes.object,
 };
 
 SearchInput.defaultProps = {
   placeholder: "Search...",
-  onChange: input => {
+  onChange: (input) => {
     console.log(input);
   },
   time: 250,
   enableTimeout: true,
-  style: {}
+  style: {},
 };
 
 export default withStyles(styles, { withTheme: true })(SearchInput);

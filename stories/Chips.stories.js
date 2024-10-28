@@ -2,7 +2,7 @@ import React from "react";
 import Chip from "../src/Components/Chip";
 
 export default {
-  title: "Chips"
+  title: "Chips",
 };
 
 export const chipActive = () => (
@@ -12,7 +12,7 @@ export const chipActive = () => (
 );
 
 chipActive.story = {
-  name: "Chip Active"
+  name: "Chip Active",
 };
 
 export const chipInactive = () => (
@@ -22,5 +22,5 @@ export const chipInactive = () => (
 );
 
 chipInactive.story = {
-  name: "Chip Inactive"
+  name: "Chip Inactive",
 };

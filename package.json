@@ -1,56 +1,7 @@
 {
   "name": "@mov-ai/mov-fe-lib-react",
-  "version": "1.3.3-1",
+  "version": "1.3.7-0",
   "description": "The Mov.AI's frontend library for React.",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/mov-ai"
-  },
-  "main": "cjs/mov-react.js",
-  "browser": "web/mov-react.js",
-  "module": "esm/mov-react.js",
-  "entry": "src/mov-react.js",
-  "types": "types/mov-react.d.ts",
-  "library": "MovaiReact",
-  "exports": {
-    ".": {
-      "import": "esm/mov-react.js",
-      "types": "types/mov-react.d.ts",
-      "default": "cjs/mov-react.js"
-    }
-  },
-  "external": {
-    "lodash": "global _",
-    "react": "global React",
-    "@material-table/core": "commonjs @material-table/core",
-    "@mov-ai/mov-fe-lib-core": "global Movai",
-    "@mov-ai/mov-fe-lib-sub": "global ttySub",
-    "@mui/icons-material": "commonjs @mui/icons-material",
-    "@mui/material": "commonjs @mui/material",
-    "@mui/styles": "commonjs @mui/styles",
-    "@mui/x-date-pickers": "commonjs @mui/x-date-pickers",
-    "@mui/x-tree-view": "commonjs @mui/x-tree-view"
-  },
-  "proxy": {
-    "/token-auth": "http://localhost/token-auth",
-    "/ws/subscriber": "http://localhost/ws/subscriber",
-    "/api/v1": "http://localhost/api/v1"
-  },
-  "scripts": {
-    "lock": "mv ../../pnpm-workspace.yaml ../../pnpm-workspace.yaml.bak ; pnpm i ; mv ../../pnpm-workspace.yaml.bak ../../pnpm-workspace.yaml",
-    "test": "scripts test",
-    "testDev": "jest --config jest.config.js --watchAll",
-    "err": "tsc --pretty false --project tsconfig.json --noEmit",
-    "build": "scripts types && NODE_OPTIONS='--max-old-space-size=4096' scripts build",
-    "fast": "scripts build",
-    "buildDev": "webpack --mode=development --watch",
-    "clean": "rm -rf cjs esm web types",
-    "storybook": "start-storybook -p 3001",
-    "build-storybook": "build-storybook"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/MOV-AI/frontend-npm-lib-react.git"
-  },
   "keywords": [
     "frontend",
     "core",
@@ -58,39 +9,46 @@
     "react",
     "utils"
   ],
-  "author": "MOV.AI",
-  "license": "ISC",
   "homepage": "https://github.com/MOV-AI/frontend-npm-lib-react/blob/main/README.md",
-  "devDependencies": {
-    "@fortawesome/fontawesome-free": "^6.6.0",
-    "@material-table/core": "^6.4.4",
-    "@mov-ai/mov-fe-lib-core": "workspace:^1.2.1-13",
-    "@mov-ai/mov-fe-lib-scripts": "^0.6.8-1",
-    "@mov-ai/mov-fe-lib-sub": "^2.3.2-1",
-    "@mui/icons-material": "^6.1.0",
-    "@mui/material": "^6.1.0",
-    "@mui/styles": "^6.1.0",
-    "@mui/x-date-pickers": "^7.17.0",
-    "@mui/x-tree-view": "^7.17.0",
-    "http-proxy-middleware": "^3.0.2",
-    "lodash": "^4.17.21",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-mui-dropzone": "^4.0.7"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MOV-AI/frontend-npm-lib-react.git"
   },
-  "peerDependencies": {
-    "@material-table/core": "^6.3.2",
-    "@mov-ai/mov-fe-lib-core": "workspace:^1.2.1-13",
-    "@mov-ai/mov-fe-lib-sub": "^2.3.2-1",
-    "@mui/icons-material": "^5.15.11",
-    "@mui/material": "^5.15.11",
-    "@mui/styles": "^5.15.11",
-    "@mui/x-date-pickers": "^6.19.5",
-    "@mui/x-tree-view": "^6.17.0",
-    "lodash": "^4.17.21",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-mui-dropzone": "^4.0.7"
+  "license": "ISC",
+  "author": "MOV.AI",
+  "exports": {
+    ".": {
+      "import": "esm/mov-react.js",
+      "types": "types/mov-react.d.ts",
+      "default": "cjs/mov-react.js"
+    }
+  },
+  "main": "cjs/mov-react.js",
+  "module": "esm/mov-react.js",
+  "browser": "web/mov-react.js",
+  "types": "types/mov-react.d.ts",
+  "files": [
+    "cjs",
+    "web",
+    "esm",
+    "types",
+    "resources"
+  ],
+  "scripts": {
+    "build": "scripts types && NODE_OPTIONS='--max-old-space-size=4096' scripts build",
+    "build-storybook": "build-storybook",
+    "buildDev": "webpack --mode=development --watch",
+    "clean": "rm -rf cjs esm web types",
+    "fast": "scripts build",
+    "lock": "mv ../../pnpm-workspace.yaml ../../pnpm-workspace.yaml.bak ; pnpm i ; mv ../../pnpm-workspace.yaml.bak ../../pnpm-workspace.yaml",
+    "prepare": "husky",
+    "storybook": "start-storybook -p 3001",
+    "test": "scripts test",
+    "testDev": "jest --config jest.config.js --watchAll"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown",
+    "package.json": "sort-package-json"
   },
   "dependencies": {
     "@date-io/date-fns": "^3.0.0",
@@ -112,12 +70,62 @@
     "stacktrace-js": "^2.0.2",
     "styled-components": "^6.1.13"
   },
-  "files": [
-    "cjs",
-    "web",
-    "esm",
-    "types",
-    "resources"
-  ],
-  "packageManager": "pnpm@9.4.0"
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@material-table/core": "^6.4.4",
+    "@mov-ai/mov-fe-lib-core": "workspace:^1.2.3-0",
+    "@mov-ai/mov-fe-lib-scripts": "^0.6.8-1",
+    "@mov-ai/mov-fe-lib-sub": "^2.3.2-1",
+    "@mui/icons-material": "^6.1.0",
+    "@mui/material": "^6.1.0",
+    "@mui/styles": "^6.1.0",
+    "@mui/x-date-pickers": "^7.17.0",
+    "@mui/x-tree-view": "^7.17.0",
+    "http-proxy-middleware": "^3.0.2",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "lodash": "^4.17.21",
+    "prettier": "3.3.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-mui-dropzone": "^4.0.7",
+    "sort-package-json": "2.10.1"
+  },
+  "peerDependencies": {
+    "@material-table/core": "^6.3.2",
+    "@mov-ai/mov-fe-lib-core": "workspace:^1.2.3-0",
+    "@mov-ai/mov-fe-lib-sub": "^2.3.2-1",
+    "@mui/icons-material": "^5.15.11",
+    "@mui/material": "^5.15.11",
+    "@mui/styles": "^5.15.11",
+    "@mui/x-date-pickers": "^6.19.5",
+    "@mui/x-tree-view": "^6.17.0",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-mui-dropzone": "^4.0.7"
+  },
+  "packageManager": "pnpm@9.11.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/mov-ai"
+  },
+  "entry": "src/mov-react.js",
+  "external": {
+    "lodash": "global _",
+    "react": "global React",
+    "@material-table/core": "commonjs @material-table/core",
+    "@mov-ai/mov-fe-lib-core": "global Movai",
+    "@mov-ai/mov-fe-lib-sub": "global ttySub",
+    "@mui/icons-material": "commonjs @mui/icons-material",
+    "@mui/material": "commonjs @mui/material",
+    "@mui/styles": "commonjs @mui/styles",
+    "@mui/x-date-pickers": "commonjs @mui/x-date-pickers",
+    "@mui/x-tree-view": "commonjs @mui/x-tree-view"
+  },
+  "library": "MovaiReact",
+  "proxy": {
+    "/token-auth": "http://localhost/token-auth",
+    "/ws/subscriber": "http://localhost/ws/subscriber",
+    "/api/v1": "http://localhost/api/v1"
+  }
 }

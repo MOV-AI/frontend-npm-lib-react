@@ -1,7 +1,7 @@
 const common = {
   formControl: {
-    width: "40%"
-  }
+    width: "40%",
+  },
 };
 const styles = () => ({
   ...common,
@@ -18,14 +18,14 @@ const styles = () => ({
     display: "block",
     marginLeft: "auto",
     marginRight: "auto",
-    width: "50%"
-  }
+    width: "50%",
+  },
 });
 
-const advancedSectionStyles = _theme => ({
+const advancedSectionStyles = (_theme) => ({
   ...common,
   container: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   expandCollapseButton: {
     width: "40%",
@@ -34,18 +34,18 @@ const advancedSectionStyles = _theme => ({
     paddingRight: "0px",
     marginTop: "12px",
     "&:focus-visible": {
-      backgroundColor: "rgba(0, 0, 0, 0.04)"
-    }
+      backgroundColor: "rgba(0, 0, 0, 0.04)",
+    },
   },
   label: {
-    fontSize: "11px"
+    fontSize: "11px",
   },
   providerSelectorInput: {
-    display: "flex"
+    display: "flex",
   },
   grid: {
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });
 
 export { styles, advancedSectionStyles };

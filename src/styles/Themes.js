@@ -33,7 +33,8 @@ const CONSTANTS = {
       default: "rgb(5, 5, 5)",
       primary: "#2E334D",
       secondary: "#212121",
-      overlay: "radial-gradient(79.34% 81.94% at 123.17% 23.94%, #50577C 0%, #1B1E29 100%)",
+      overlay:
+        "radial-gradient(79.34% 81.94% at 123.17% 23.94%, #50577C 0%, #1B1E29 100%)",
       grad: "linear-gradient(37.83deg, #3C415D 35.18%, #4A5070 121.84%)",
     },
     primary: {
@@ -73,51 +74,51 @@ const CONSTANTS = {
         light: "#8E95BA !important",
         dark: "#292D3F !important",
       },
-    }
-  }
+    },
+  },
 };
 
-const getDefaults = constants => {
+const getDefaults = (constants) => {
   const border = alpha(constants.textColor, 0.5);
 
-  return ({
+  return {
     font: {
       Roboto: {
-        fontFamily: "Roboto"
+        fontFamily: "Roboto",
       },
       OpenSans: {
-        fontFamily: "Open Sans"
-      }
+        fontFamily: "Open Sans",
+      },
     },
     typography: {
       fontFamily: "Open Sans",
       h1: {
-        fontFamily: "Open Sans"
+        fontFamily: "Open Sans",
       },
       h2: {
-        fontFamily: "Open Sans"
+        fontFamily: "Open Sans",
       },
       h3: {
-        fontFamily: "Open Sans"
+        fontFamily: "Open Sans",
       },
       h4: {
-        fontFamily: "Open Sans"
+        fontFamily: "Open Sans",
       },
       h5: {
-        fontFamily: "Open Sans"
+        fontFamily: "Open Sans",
       },
       h6: {
-        fontFamily: "Open Sans"
+        fontFamily: "Open Sans",
       },
       body1: {
-        fontFamily: "Roboto"
-      }
+        fontFamily: "Roboto",
+      },
     },
     cursorDefault: {
-      cursor: "default"
+      cursor: "default",
     },
     cursorPointer: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     spacing: 8,
     textColor: constants.textColor,
@@ -127,7 +128,7 @@ const getDefaults = constants => {
     globalStats: {
       borderColor: "#474747",
       subTextColor: "#CDCDCD",
-      upperTextColor: "#E6E6E6"
+      upperTextColor: "#E6E6E6",
     },
     palette: {
       type: "dark",
@@ -140,365 +141,450 @@ const getDefaults = constants => {
         main: constants.primary.main,
       },
       secondary: {
-        main: "#CF6679"
+        main: "#CF6679",
       },
       green: {
-        main: "#03DAC5"
+        main: "#03DAC5",
       },
       background: {
         default: "#050505",
         primary: constants.background.primary,
-        secondary: constants.background.secondary
+        secondary: constants.background.secondary,
       },
       accent: {
         background: "#f5f5f9",
         color: "rgba(0, 0, 0, 0.87)",
-        border: "1px solid kk#dadde9"
+        border: "1px solid kk#dadde9",
       },
       text: {
         primary: constants.textColor,
         disabled: "#ffffff",
       },
-      getContrastText: () => constants.iconColor
+      getContrastText: () => constants.iconColor,
     },
     icon: { color: "#c6c6c6", hoverColor: "#fff" },
     table: { stripColor: "#505050" },
     verticalBar: {
       iconColor: "#9e9e9e",
-      background: "#2b2b2b"
+      background: "#2b2b2b",
     },
     components: {
-      MuiTypography: { styleOverrides: {
-        root: {
-          color: "inherit",
-        }
-      } },
-      MuiTableCell: { styleOverrides: {
-        root: {
-          borderBottom: "none",
-        },
-        head: {
-          backgroundColor: constants.background.primary,
-          padding: "6px 16px !important",
-        },
-        body: {
-          color: constants.textColor
-        }
-      } },
-      MuiAppBar: { styleOverrides: {
-        colorDefault: {
-          color: constants.textColor,
-          borderColor: border,
-          backgroundColor: constants.background.secondary
-        },
-        colorInherit: {
-          color: constants.textColor,
-          backgroundColor: "#353535"
-        }
-      } },
-      MuiBackdrop: { styleOverrides: {
-        root: {
-          position: "absolute",
-        },
-      } },
-      MuiToggleButton: { styleOverrides: {
-        root: {
-          color: alpha(constants.textColor, 0.38),
-        },
-      } },
-      MuiButtonBase: { styleOverrides: {
-        root: {
-          "&.Mui-disabled": {
-            color: alpha(constants.textColor, 0.3) + " !important",
+      MuiTypography: {
+        styleOverrides: {
+          root: {
+            color: "inherit",
           },
-        },
-      } },
-      MuiButton: { styleOverrides: {
-        root: {
-          "&.Mui-disabled": {
-            color: alpha(constants.textColor, 0.3) + " !important",
-          },
-        },
-        outlined: {
-          margin: "8px"
-        },
-        text: {
-          margin: "8px"
-        },
-        contained: {
-          margin: "8px"
-        },
-        containedPrimary: {
-          color: "inherit",
-          margin: "8px"
-        },
-        containedSecondary: {
-          color: "inherit",
-          margin: "8px"
-        }
-      } },
-      MuiButtonGroup: { styleOverrides: {
-        root: {
-          margin: "0"
-        },
-        groupedContainedPrimary: {
-          margin: "0"
-        },
-        groupedOutlined: {
-          margin: "0"
-        },
-        groupedText: {
-          margin: "0"
-        }
-      } },
-      MuiAccordionSummary: { styleOverrides: {
-        expandIconWrapper: {
-          color: constants.textColor,
-        }
-      } },
-      MuiIconButton: { styleOverrides: {
-        root: {
-          color: constants.primary.main + " !important",
-        }
-      } },
-      MuiCheckbox: { styleOverrides: {
-        root: {
-          color: constants.primary.main + " !important",
-        }
-      } },
-      MuiListItem: { styleOverrides: {
-        root: {
-          width: "100% !important",
-        },
-        button: {
-          "&:hover": {
-            backgroundColor: "rgba(54,181,230, 0.15)"
-          }
-        }
-      } },
-      MuiFormControlLabel: { styleOverrides: {
-        label: {
-          color: alpha(constants.textColor, 0.6) + " !important",
-        }
-      } },
-      MuiInputLabel: { styleOverrides: {
-        root: {
-          color: alpha(constants.textColor, 0.6) + " !important",
-        },
-      } },
-      MuiInputBase: { styleOverrides: {
-        root: {
-          color: constants.textColor + " !important",
-        },
-        input: {
-          font: "Roboto",
-          color: constants.textColor + " !important",
-        },
-        underline: {
-          "&:before": {
-            borderBottomColor: constants.textColor + " !important",
-          }
-        },
-      } },
-      MuiInput: { styleOverrides: {
-        underline: {
-          "&:before": {
-            borderBottomColor: constants.textColor + " !important",
-          }
-        }
-      } },
-      MuiInputAdornment: { styleOverrides: {
-        root: {
-          color: constants.textColor + " !important",
-        }
-      } },
-      MuiSelect: { styleOverrides: {
-        icon: {
-          color: constants.textColor + " !important",
-        }
-      }, defaultProps: {
-        variant: 'standard',
-      } },
-      MuiDrawer: { styleOverrides: {
-        paper: {
-          position: 'unset',
-        },
-      } },
-      MuiList: { styleOverrides: {
-        root: {
-          backgroundColor: 'unset !important',
-        },
-      } },
-      MuiOutlinedInput: { styleOverrides: {
-        notchedOutline: {
-          borderColor: "rgba(255, 255, 255, 0.23) !important",
-        }
-      } },
-      MuiSwitch: { styleOverrides: {
-        thumb: {
-          transform: "translateY(-2px)",
-        },
-        switchBase: {
-          transform: "translateX(16px)",
-          "&.Mui-checked": {
-            transform: "translateX(24px)",
-          }
-        },
-        track: {
-          position: "absolute",
-          width: "46px",
-          height: "16px",
-          borderRadius: "8px",
-          background: constants.background.secondary,
-        }
-      } },
-      MuiFilledInput: { styleOverrides: {
-        root: {
-          border: "4px",
-          backgroundColor: alpha(constants.textColor, 0.09),
-          "&:hover": {
-            backgroundColor: alpha(constants.textColor, 0.09),
-          },
-          "&.Mui-focused": {
-            backgroundColor: alpha(constants.textColor, 0.09),
-          },
-        },
-        input: {
-          "table &": {
-            padding: "8px 12px !important",
-          }
-        },
-        underline: {
-          "&:before": {
-            borderBottomColor: constants.textColor + " !important",
-            borderRadius: "4px"
-          }
-        }
-      } },
-      MuiTextField: {
-        defaultProps: {
-          variant: 'standard',
         },
       },
-      MuiBreadcrumbs: { styleOverrides: {
-        separator: {
-          color: alpha(constants.textColor, 0.54),
-        },
-      } },
-      MuiPaper: { styleOverrides: {
-        root: {
-          color: constants.textColor + " !important",
-          backgroundColor: constants.background.primary + " !important",
-        }
-      } },
-      MuiCssBaseline: { styleOverrides: {
-        html: {
-          height: "100%",
-        },
-        body: {
-          height: "100%",
-          overflow: "auto",
-        },
-        "#root": {
-          height: "100%",
-        },
-        "tspan": {
-          fill: constants.textColor,
-        },
-        "text": {
-          fill: constants.textColor,
-        },
-        "line": {
-          stroke: constants.textColor + " !important",
-        },
-        ".fa": {
-          color: constants.textColor,
-        },
-      } },
-      MuiTableRow: { styleOverrides: {
-        head: {
-          "& th": {
+      MuiTableCell: {
+        styleOverrides: {
+          root: {
+            borderBottom: "none",
+          },
+          head: {
             backgroundColor: constants.background.primary,
-            borderColor: border,
-          }
+            padding: "6px 16px !important",
+          },
+          body: {
+            color: constants.textColor,
+          },
         },
-        root: {
-          borderBottom: "none !important",
-          "& td": {
+      },
+      MuiAppBar: {
+        styleOverrides: {
+          colorDefault: {
+            color: constants.textColor,
             borderColor: border,
-          }
-        }
-      } },
-    }
-  });
+            backgroundColor: constants.background.secondary,
+          },
+          colorInherit: {
+            color: constants.textColor,
+            backgroundColor: "#353535",
+          },
+        },
+      },
+      MuiBackdrop: {
+        styleOverrides: {
+          root: {
+            position: "absolute",
+          },
+        },
+      },
+      MuiToggleButton: {
+        styleOverrides: {
+          root: {
+            color: alpha(constants.textColor, 0.38),
+          },
+        },
+      },
+      MuiButtonBase: {
+        styleOverrides: {
+          root: {
+            "&.Mui-disabled": {
+              color: alpha(constants.textColor, 0.3) + " !important",
+            },
+          },
+        },
+      },
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            "&.Mui-disabled": {
+              color: alpha(constants.textColor, 0.3) + " !important",
+            },
+          },
+          outlined: {
+            margin: "8px",
+          },
+          text: {
+            margin: "8px",
+          },
+          contained: {
+            margin: "8px",
+          },
+          containedPrimary: {
+            color: "inherit",
+            margin: "8px",
+          },
+          containedSecondary: {
+            color: "inherit",
+            margin: "8px",
+          },
+        },
+      },
+      MuiButtonGroup: {
+        styleOverrides: {
+          root: {
+            margin: "0",
+          },
+          groupedContainedPrimary: {
+            margin: "0",
+          },
+          groupedOutlined: {
+            margin: "0",
+          },
+          groupedText: {
+            margin: "0",
+          },
+        },
+      },
+      MuiAccordionSummary: {
+        styleOverrides: {
+          expandIconWrapper: {
+            color: constants.textColor,
+          },
+        },
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            color: constants.primary.main + " !important",
+          },
+        },
+      },
+      MuiCheckbox: {
+        styleOverrides: {
+          root: {
+            color: constants.primary.main + " !important",
+          },
+        },
+      },
+      MuiListItem: {
+        styleOverrides: {
+          root: {
+            width: "100% !important",
+          },
+          button: {
+            "&:hover": {
+              backgroundColor: "rgba(54,181,230, 0.15)",
+            },
+          },
+        },
+      },
+      MuiFormControlLabel: {
+        styleOverrides: {
+          label: {
+            color: alpha(constants.textColor, 0.6) + " !important",
+          },
+        },
+      },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            color: alpha(constants.textColor, 0.6) + " !important",
+          },
+        },
+      },
+      MuiInputBase: {
+        styleOverrides: {
+          root: {
+            color: constants.textColor + " !important",
+          },
+          input: {
+            font: "Roboto",
+            color: constants.textColor + " !important",
+          },
+          underline: {
+            "&:before": {
+              borderBottomColor: constants.textColor + " !important",
+            },
+          },
+        },
+      },
+      MuiInput: {
+        styleOverrides: {
+          underline: {
+            "&:before": {
+              borderBottomColor: constants.textColor + " !important",
+            },
+          },
+        },
+      },
+      MuiInputAdornment: {
+        styleOverrides: {
+          root: {
+            color: constants.textColor + " !important",
+          },
+        },
+      },
+      MuiSelect: {
+        styleOverrides: {
+          icon: {
+            color: constants.textColor + " !important",
+          },
+        },
+        defaultProps: {
+          variant: "standard",
+        },
+      },
+      MuiDrawer: {
+        styleOverrides: {
+          paper: {
+            position: "unset",
+          },
+        },
+      },
+      MuiList: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "unset !important",
+          },
+        },
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          notchedOutline: {
+            borderColor: "rgba(255, 255, 255, 0.23) !important",
+          },
+        },
+      },
+      MuiSwitch: {
+        styleOverrides: {
+          thumb: {
+            transform: "translateY(-2px)",
+          },
+          switchBase: {
+            transform: "translateX(16px)",
+            "&.Mui-checked": {
+              transform: "translateX(24px)",
+            },
+          },
+          track: {
+            position: "absolute",
+            width: "46px",
+            height: "16px",
+            borderRadius: "8px",
+            background: constants.background.secondary,
+          },
+        },
+      },
+      MuiFilledInput: {
+        styleOverrides: {
+          root: {
+            border: "4px",
+            backgroundColor: alpha(constants.textColor, 0.09),
+            "&:hover": {
+              backgroundColor: alpha(constants.textColor, 0.09),
+            },
+            "&.Mui-focused": {
+              backgroundColor: alpha(constants.textColor, 0.09),
+            },
+          },
+          input: {
+            "table &": {
+              padding: "8px 12px !important",
+            },
+          },
+          underline: {
+            "&:before": {
+              borderBottomColor: constants.textColor + " !important",
+              borderRadius: "4px",
+            },
+          },
+        },
+      },
+      MuiTextField: {
+        defaultProps: {
+          variant: "standard",
+        },
+      },
+      MuiBreadcrumbs: {
+        styleOverrides: {
+          separator: {
+            color: alpha(constants.textColor, 0.54),
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            color: constants.textColor + " !important",
+            backgroundColor: constants.background.primary + " !important",
+          },
+        },
+      },
+      MuiCssBaseline: {
+        styleOverrides: {
+          html: {
+            height: "100%",
+          },
+          body: {
+            height: "100%",
+            overflow: "auto",
+          },
+          "#root": {
+            height: "100%",
+          },
+          tspan: {
+            fill: constants.textColor,
+          },
+          text: {
+            fill: constants.textColor,
+          },
+          line: {
+            stroke: constants.textColor + " !important",
+          },
+          ".fa": {
+            color: constants.textColor,
+          },
+        },
+      },
+      MuiTableRow: {
+        styleOverrides: {
+          head: {
+            "& th": {
+              backgroundColor: constants.background.primary,
+              borderColor: border,
+            },
+          },
+          root: {
+            borderBottom: "none !important",
+            "& td": {
+              borderColor: border,
+            },
+          },
+        },
+      },
+    },
+  };
 };
 
-const themeFactory = particular => _merge(
-  getDefaults(CONSTANTS[particular.label]),
-  particular,
-);
+const themeFactory = (particular) =>
+  _merge(getDefaults(CONSTANTS[particular.label]), particular);
 
 const Themes = {
   dark: themeFactory({ label: "dark" }),
   light: themeFactory({
-      label: "light",
-      backgroundColor: "#ffffff",
-      bottomNavigation: { background: "#c3c3c3" },
-      icon: { color: "#757575", hoverColor: "black" },
-      table: { stripColor: "whitesmoke" },
-      globalStats: {
-        borderColor: "#E6E6E6",
-        subTextColor: "#717171",
-        upperTextColor: "#474747"
+    label: "light",
+    backgroundColor: "#ffffff",
+    bottomNavigation: { background: "#c3c3c3" },
+    icon: { color: "#757575", hoverColor: "black" },
+    table: { stripColor: "whitesmoke" },
+    globalStats: {
+      borderColor: "#E6E6E6",
+      subTextColor: "#717171",
+      upperTextColor: "#474747",
+    },
+    palette: {
+      type: "light",
+      mode: "light",
+      secondary: {
+        main: "#BE2424",
       },
-      palette: {
-        type: "light",
-        mode: "light",
-        secondary: {
-          main: "#BE2424"
-        },
-        background: {
-          default: "#ffffff",
-        },
-        accent: {
-          background: "whitesmoke",
-          color: CONSTANTS.light.textColor,
-          border: "darkgray"
-        },
-        text: {
-        },
+      background: {
+        default: "#ffffff",
       },
-      verticalBar: {
-        iconColor: "#616161",
-        background: "#cccccc"
+      accent: {
+        background: "whitesmoke",
+        color: CONSTANTS.light.textColor,
       },
-      components: {
-        MuiButton: { styleOverrides: {
+    },
+    MuiAppBar: {
+      colorDefault: {
+        color: CONSTANTS.light.textColor,
+        borderColor: CONSTANTS.light.borderBottom,
+        backgroundColor: CONSTANTS.light.background.secondary,
+      },
+      colorInherit: {
+        color: CONSTANTS.light.textColor,
+        backgroundColor: "#d2d2d2",
+      },
+    },
+    MuiButton: {
+      outlined: {
+        margin: "8px",
+      },
+      text: {},
+    },
+    MuiButtonGroup: {
+      root: {
+        margin: "0",
+      },
+      groupedContainedPrimary: {
+        margin: "0",
+      },
+      groupedOutlined: {
+        margin: "0",
+      },
+      groupedText: {
+        margin: "0",
+      },
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
           containedPrimary: {
             color: "#fff",
           },
           containedSecondary: {
             color: "#fff",
-          }
-        } },
-        MuiIconButton: { styleOverrides: {
+          },
+        },
+      },
+      MuiIconButton: {
+        styleOverrides: {
           root: {
             color: CONSTANTS.light.iconColor + " !important",
-          }
-        } },
-        MuiListItem: { styleOverrides: {
+          },
+        },
+      },
+      MuiListItem: {
+        styleOverrides: {
           button: {
             "&:hover": {
-              backgroundColor: "rgba(0,113,151, 0.15)"
-            }
-          }
-        } },
-        MuiPaper: { styleOverrides: {
+              backgroundColor: "rgba(0,113,151, 0.15)",
+            },
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
           root: {
             color: "#272727",
-          }
-        } },
-      }
+          },
+        },
+      },
+    },
   }),
   indigo: themeFactory({
     label: "indigo",
@@ -521,7 +607,6 @@ const Themes = {
 
 export default Themes;
 
-export
-function defaultGetStyle(_theme) {
+export function defaultGetStyle(_theme) {
   return {};
 }

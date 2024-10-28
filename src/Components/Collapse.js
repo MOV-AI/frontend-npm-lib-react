@@ -6,7 +6,7 @@ import MaterialCollapse from "@mui/material/Collapse";
 import { Divider, ListItem, List } from "@mui/material";
 import { EMPTY_FUNCTION } from "../Utils/Constants";
 
-const Collapse = props => {
+const Collapse = (props) => {
   const [open, setOpen] = React.useState(props.open);
 
   React.useEffect(() => {
@@ -15,7 +15,7 @@ const Collapse = props => {
     }
   }, [props.open]);
 
-  const handleClickFactory = clickLambda => () => {
+  const handleClickFactory = (clickLambda) => () => {
     setOpen(!open);
     clickLambda();
   };
@@ -56,7 +56,7 @@ Collapse.propTypes = {
   onClick: PropTypes.func,
   open: PropTypes.bool,
   divided: PropTypes.bool,
-  iconStyle: PropTypes.object
+  iconStyle: PropTypes.object,
 };
 
 Collapse.defaultProps = {
@@ -65,7 +65,7 @@ Collapse.defaultProps = {
   open: false,
   divided: false,
   style: {},
-  iconStyle: {}
+  iconStyle: {},
 };
 
 export default Collapse;

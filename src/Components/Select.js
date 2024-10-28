@@ -7,21 +7,21 @@ import MaterialSelect from "@mui/material/Select";
 import PropTypes from "prop-types";
 import { Checkbox, ListItemText } from "@mui/material";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1) + " !important",
-    minWidth: 120
+    minWidth: 120,
   },
   backdrop: {
     "& div[aria-hidden=true]": {
       backgroundColor: "black !important",
       opacity: 0.5,
-      visibility: "visible"
-    }
-  }
+      visibility: "visible",
+    },
+  },
 }));
 
-const Select = props => {
+const Select = (props) => {
   const {
     variant,
     style,
@@ -88,14 +88,14 @@ Select.propTypes = {
   noneOption: PropTypes.bool,
   noneOptionConfig: PropTypes.shape({
     value: PropTypes.string,
-    text: PropTypes.text
+    text: PropTypes.text,
   }),
   label: PropTypes.string,
   variant: PropTypes.string,
   style: PropTypes.object,
   onChange: PropTypes.func,
   id: PropTypes.string,
-  inputProps: PropTypes.object
+  inputProps: PropTypes.object,
 };
 Select.defaultProps = {
   value: "",
@@ -104,10 +104,10 @@ Select.defaultProps = {
   noneOption: true,
   noneOptionConfig: {
     value: "",
-    text: "None"
+    text: "None",
   },
-  onChange: evt => console.log(evt.target.value),
-  id: "movai-react-select"
+  onChange: (evt) => console.log(evt.target.value),
+  id: "movai-react-select",
 };
 
 export default Select;

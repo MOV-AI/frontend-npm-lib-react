@@ -5,19 +5,19 @@ export default {
   title: "Select",
   argTypes: {
     multiple: {
-      control: "boolean"
-    }
-  }
+      control: "boolean",
+    },
+  },
 };
 
 const NONE_OPTION_VALUE = "";
 const ALL_ROLES = {
   DefaultRole: { Label: "DefaultRole" },
   admin: { Label: "admin" },
-  operator: { Label: "operator" }
+  operator: { Label: "operator" },
 };
 
-const Template = props => {
+const Template = (props) => {
   const { multiple } = props;
   const [emptyValue, setEmptyValue] = React.useState(multiple ? [] : "");
   const [selectedRoles, setSelectedRoles] = React.useState(emptyValue);
@@ -25,7 +25,7 @@ const Template = props => {
 
   React.useEffect(() => {
     if (multiple) {
-      setSelectorProps({ renderValue: selected => selected.join(", ") });
+      setSelectorProps({ renderValue: (selected) => selected.join(", ") });
       setEmptyValue([]);
       setSelectedRoles([]);
     } else {
@@ -35,7 +35,7 @@ const Template = props => {
     }
   }, [multiple]);
 
-  const handleRolesChange = evt => {
+  const handleRolesChange = (evt) => {
     let newSelectedRoles = evt.target.value;
     if (multiple && newSelectedRoles.includes(NONE_OPTION_VALUE))
       newSelectedRoles = emptyValue;
@@ -63,5 +63,5 @@ const Template = props => {
 export const Selector = Template.bind({});
 
 Selector.args = {
-  multiple: true
+  multiple: true,
 };

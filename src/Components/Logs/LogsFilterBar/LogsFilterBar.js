@@ -17,38 +17,48 @@ import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import useSelector from "./useSelector";
 import { logsSub } from "./../sub";
 
-
 const EMPTY_FUNCTION = () => {
   /** Empty on purpose */
 };
 
-const LogsFilterBar = props => {
-  const {
-    handleExport,
-    hide,
-  } = props;
+const LogsFilterBar = (props) => {
+  const { handleExport, hide } = props;
   const classes = useLogFilterStyles();
-  const sub = logsSub.use();
-  const { robots } = sub;
-  const robotsLabel = useMemo(() => Object.keys(robots).reduce((a, key) => ({ ...a, [key]: key }), {}), [robots]);
-  const robotSelector =  useSelector(robotsLabel, "robots", MENU_PROPS, useRobotSelectorStyles);
+  const { robots } = logsSub.use();
+  const robotsLabel = useMemo(
+    () => Object.keys(robots).reduce((a, key) => ({ ...a, [key]: key }), {}),
+    [robots],
+  );
+  const robotSelector = useSelector(
+    robotsLabel,
+    "robots",
+    MENU_PROPS,
+    useRobotSelectorStyles,
+  );
   const levelSelector = useSelector(LEVELS_LABEL, "levels", MENU_PROPS);
-  const serviceSelector =  useSelector(CONSTANTS.SERVICE_LABEL, "service", MENU_PROPS);
+  const serviceSelector = useSelector(
+    CONSTANTS.SERVICE_LABEL,
+    "service",
+    MENU_PROPS,
+  );
   const items = useMemo(
-    () => Object.entries({
-      robots: robotSelector,
-      message: <SearchInput />,
-      levels: levelSelector,
-      service: serviceSelector,
-      tags: <TagsPopover />,
-      time: <TimeFilters />,
-    }).filter(([key]) => !hide[key]).map(([_key, value]) => value),
-    [robotSelector, levelSelector, serviceSelector, classes, handleExport]
+    () =>
+      Object.entries({
+        robots: robotSelector,
+        message: <SearchInput />,
+        levels: levelSelector,
+        service: serviceSelector,
+        tags: <TagsPopover />,
+        time: <TimeFilters />,
+      })
+        .filter(([key]) => !hide[key])
+        .map(([_key, value]) => value),
+    [robotSelector, levelSelector, serviceSelector, classes, handleExport],
   );
 
   return (
     <AppBar position="static" color="inherit" className={classes.root}>
-      { items }
+      {items}
       <Tooltip title={i18n.t("Download logs")}>
         <IconButton
           onClick={handleExport}

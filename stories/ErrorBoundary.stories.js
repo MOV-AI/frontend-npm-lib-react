@@ -2,7 +2,7 @@ import React from "react";
 import ErrorBoundary from "../src/Components/ErrorBoundary";
 
 export default {
-  title: "Error Boundary"
+  title: "Error Boundary",
 };
 
 function Throw() {
@@ -22,5 +22,5 @@ export const errorBoundary = () => (
 );
 
 errorBoundary.story = {
-  name: "simple error boundary"
+  name: "simple error boundary",
 };

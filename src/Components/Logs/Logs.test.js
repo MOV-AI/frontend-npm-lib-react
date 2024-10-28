@@ -49,4 +49,3 @@ describe("Dedupes logs correctly", () => {
     ]);
   });
 });
-
