@@ -12,7 +12,6 @@ import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
 import { ROBOT_LOG_TYPE } from "./utils/Constants";
 import { COLUMNS_LABEL } from "./utils/Constants";
-import { getDateTime } from "./utils/Utils";
 import useUpdateEffect from "./hooks/useUpdateEffect";
 import _isEqual from "lodash/isEqual";
 import { useStyles } from "./styles";
@@ -254,7 +253,7 @@ const Logs = (props) => {
     // from https://www.epochconverter.com/programming/
     const dateString = !filteredLogs.length
       ? new Date().toISOString()
-      : new Date(filteredLogs[0].time * 1e3).toISOString();
+      : new Date(filteredLogs[0].time * 0.001).toISOString();
     const columnLabels = Object.keys(columns)
       .filter((key) => columns[key])
       .map((key) => COLUMNS_LABEL[key]);
