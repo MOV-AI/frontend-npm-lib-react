@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider } from "@material-ui/core";
+import { Divider } from "@mui/material";
 import { verticalBarStyles } from "./styles";
 import { VerticalBarProps } from "./types";
 
@@ -11,7 +11,7 @@ const VerticalBar = (props: VerticalBarProps) => {
     lowerElement = <div></div>,
     backgroundColor = "#424242",
     useDividers = false,
-    unsetAccountAreaPadding = false
+    unsetAccountAreaPadding = false,
   } = props;
   // Style hook
   const classes = verticalBarStyles(props);

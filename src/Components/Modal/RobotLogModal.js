@@ -1,39 +1,38 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import List from "@material-ui/core/List";
-import Avatar from "@material-ui/core/Avatar";
-import Divider from "@material-ui/core/Divider";
-import Typography from "@material-ui/core/Typography";
-import { ListItem, ListItemAvatar, ListItemText } from "@material-ui/core";
-import { withStyles } from "@material-ui/styles";
-import ScheduleIcon from "@material-ui/icons/Schedule";
-import WarningIcon from "@material-ui/icons/Warning";
-import ViewModuleIcon from "@material-ui/icons/ViewModule";
-import ChatIcon from "@material-ui/icons/Chat";
+import List from "@mui/material/List";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+import { ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import { withStyles } from "@mui/styles";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import WarningIcon from "@mui/icons-material/Warning";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
+import ChatIcon from "@mui/icons-material/Chat";
 import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import AbstractModal from "./AbstractModal";
 
-const styles = theme => ({
+const styles = (_theme) => ({
   breakWord: {
-    wordBreak: "break-all"
-  }
+    wordBreak: "break-all",
+  },
 });
 
 class RobotLogModal extends Component {
   state = {
     data: {},
     open: false,
-    hasButton: false
+    hasButton: false,
   };
 
-  open = alert => {
+  open = (alert) => {
     const { data } = this.state;
     // Format time
-    const time = new Date(alert.time * 1000);
     const alertButton = alert.button
       ? JSON.parse(alert.button.replace(/'/g, '"'))
       : null;
-    data.time = `${time.toLocaleTimeString("pt")}`;
+    data.time = alert.time;
     data.action = alert.action;
     data.message = alert.message;
     data.robot = alert.robot;
@@ -47,7 +46,7 @@ class RobotLogModal extends Component {
     this.setState({
       data,
       open: true,
-      hasButton: !!alertButton
+      hasButton: !!alertButton,
     });
   };
 
@@ -55,7 +54,7 @@ class RobotLogModal extends Component {
     // Trigger callback to clear log
     if (callback) {
       return () => {
-        MasterDB.cloudFunction(callback, "", data, res => {
+        MasterDB.cloudFunction(callback, "", data, (res) => {
           this.setState({ open: false });
         });
       };
@@ -174,12 +173,12 @@ class RobotLogModal extends Component {
 
 RobotLogModal.propTypes = {
   title: PropTypes.string,
-  props: PropTypes.array
+  props: PropTypes.array,
 };
 
 RobotLogModal.defaultProps = {
   title: "Log Details",
-  props: []
+  props: [],
 };
 
 export default withStyles(styles, { withTheme: true })(RobotLogModal);

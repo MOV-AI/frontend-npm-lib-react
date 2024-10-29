@@ -1,9 +1,9 @@
 import React from "react";
-import { IconButton, Icon } from "@material-ui/core";
+import { IconButton, Icon } from "@mui/material";
 import HTMLPopper from "../src/Components/Popper/HTMLPopper";
 
 export default {
-  title: "HTMLPopper"
+  title: "HTMLPopper",
 };
 
 const getIcon = () => {
@@ -35,5 +35,5 @@ export const popper = () => (
 );
 
 popper.story = {
-  name: "HTML Popper"
+  name: "HTML Popper",
 };

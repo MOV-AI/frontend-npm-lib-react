@@ -1,7 +1,7 @@
 import React from "react";
 import i18n from "i18next";
-import { Typography } from "@material-ui/core";
-import TuneIcon from "@material-ui/icons/Tune";
+import { Typography } from "@mui/material";
+import TuneIcon from "@mui/icons-material/Tune";
 import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
 import { useSettingsStyles } from "../../styles";
 
@@ -19,7 +19,7 @@ const SettingsPopover = () => {
         <Typography component="div" className={classes.inputHeader}>
           {`${i18n.t("Columns")}:`}
         </Typography>
-        { columnsSelector }
+        {columnsSelector}
       </div>
     </FiltersIcon>
   );

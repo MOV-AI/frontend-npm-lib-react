@@ -2,13 +2,13 @@ export const ALERT_SEVERITY = {
   ERROR: "error",
   WARNING: "warning",
   INFO: "info",
-  SUCCESS: "success"
+  SUCCESS: "success",
 };
 
 export const APP_TYPES = {
   APPLICATION: "application",
   EXTERNAL: "external",
-  LAYOUT: "layout"
+  LAYOUT: "layout",
 };
 
 export const LAUNCHER_APP = "launcher";

@@ -1,8 +1,8 @@
 import React, { useCallback, useRef } from "react";
 import { infoButtonStyles } from "./styles";
 import PropTypes from "prop-types";
-import { Fade, Paper, Popper } from "@material-ui/core";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import { Fade, Paper, Popper } from "@mui/material";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { HTMLPopperProps } from "./types";
 
 const FADE_OUT_TIMEOUT = 350;
@@ -13,7 +13,7 @@ const HTMLPopper = (props: HTMLPopperProps) => {
     clickableElement,
     children,
     hideOnClickAway = false,
-    popperPlacement = "bottom-start"
+    popperPlacement = "bottom-start",
   } = props;
 
   const [openPopper, setOpenPopper] = React.useState(false);
@@ -74,13 +74,13 @@ const HTMLPopper = (props: HTMLPopperProps) => {
         placement={popperPlacement}
         transition
       >
-              {hideOnClickAway ? (
-                <ClickAwayListener onClickAway={handlePopperClose}>
-                  {renderPaper()}
-                </ClickAwayListener>
-              ) : (
-                renderPaper()
-              )}
+        {hideOnClickAway ? (
+          <ClickAwayListener onClickAway={handlePopperClose}>
+            {renderPaper()}
+          </ClickAwayListener>
+        ) : (
+          renderPaper()
+        )}
       </Popper>
     </>
   );

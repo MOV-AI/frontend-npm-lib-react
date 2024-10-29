@@ -4,7 +4,7 @@ export interface ToggleProps {
   toggle: boolean;
   onToggle: (
     event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
+    checked: boolean,
   ) => void;
   label?: string;
   color?: "primary" | "secondary" | "default";

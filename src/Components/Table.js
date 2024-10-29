@@ -4,21 +4,21 @@ import MaterialTable from "@material-table/core";
 
 import { forwardRef } from "react";
 
-import AddBox from "@material-ui/icons/AddBox";
-import ArrowDownward from "@material-ui/icons/ArrowDownward";
-import Check from "@material-ui/icons/Check";
-import ChevronLeft from "@material-ui/icons/ChevronLeft";
-import ChevronRight from "@material-ui/icons/ChevronRight";
-import Clear from "@material-ui/icons/Clear";
-import DeleteOutline from "@material-ui/icons/DeleteOutline";
-import Edit from "@material-ui/icons/Edit";
-import FilterList from "@material-ui/icons/FilterList";
-import FirstPage from "@material-ui/icons/FirstPage";
-import LastPage from "@material-ui/icons/LastPage";
-import Remove from "@material-ui/icons/Remove";
-import SaveAlt from "@material-ui/icons/SaveAlt";
-import Search from "@material-ui/icons/Search";
-import ViewColumn from "@material-ui/icons/ViewColumn";
+import AddBox from "@mui/icons-material/AddBox";
+import ArrowDownward from "@mui/icons-material/ArrowDownward";
+import Check from "@mui/icons-material/Check";
+import ChevronLeft from "@mui/icons-material/ChevronLeft";
+import ChevronRight from "@mui/icons-material/ChevronRight";
+import Clear from "@mui/icons-material/Clear";
+import DeleteOutline from "@mui/icons-material/DeleteOutline";
+import Edit from "@mui/icons-material/Edit";
+import FilterList from "@mui/icons-material/FilterList";
+import FirstPage from "@mui/icons-material/FirstPage";
+import LastPage from "@mui/icons-material/LastPage";
+import Remove from "@mui/icons-material/Remove";
+import SaveAlt from "@mui/icons-material/SaveAlt";
+import Search from "@mui/icons-material/Search";
+import ViewColumn from "@mui/icons-material/ViewColumn";
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -41,12 +41,12 @@ const tableIcons = {
   Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
 // More information in: https://material-table.com/#/docs/all-props
 
-const Table = props => {
+const Table = (props) => {
   return (
     <MaterialTable
       data-testid="section_material-table"
@@ -61,7 +61,7 @@ const Table = props => {
       localization={props.localization}
       icons={{
         ...tableIcons,
-        ...props.icons
+        ...props.icons,
       }}
     />
   );
@@ -76,7 +76,7 @@ Table.propTypes = {
   options: PropTypes.object,
   components: PropTypes.object,
   localization: PropTypes.object,
-  icons: PropTypes.object
+  icons: PropTypes.object,
 };
 Table.defaultProps = {
   style: {},
@@ -92,9 +92,9 @@ Table.defaultProps = {
     search: false,
     toolbar: false,
     searchFieldAlignment: "left",
-    paging: false
+    paging: false,
   },
-  components: {}
+  components: {},
 };
 
 export default Table;

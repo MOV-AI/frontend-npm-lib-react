@@ -1,20 +1,21 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
-import { IconButton, Tooltip } from "@material-ui/core";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import { IconButton, Tooltip } from "@mui/material";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import StyledMenu from "./StyledMenu";
 import { filterIconStyles } from "./styles";
 
-const FiltersIcon = props => {
-  const { disabled, tooltip, title, icon, isActive, children, className } = props;
+const FiltersIcon = (props) => {
+  const { disabled, tooltip, title, icon, isActive, children, className } =
+    props;
   const [anchorEl, setAnchorEl] = useState();
   const classes = filterIconStyles();
 
-  const handleOpen = useCallback(event => {
+  const handleOpen = useCallback((event) => {
     setAnchorEl(event.currentTarget);
   }, []);
 
-  const handleClose = useCallback(_event => {
+  const handleClose = useCallback((_event) => {
     setAnchorEl(null);
   }, []);
 
@@ -26,7 +27,9 @@ const FiltersIcon = props => {
           size="small"
           onClick={handleOpen}
           disabled={disabled}
-          className={className + " " + (isActive ? classes.iconActive : classes.icon)}
+          className={
+            className + " " + (isActive ? classes.iconActive : classes.icon)
+          }
         >
           {icon}
         </IconButton>
@@ -38,7 +41,10 @@ const FiltersIcon = props => {
         onClose={handleClose}
         className={classes.height}
       >
-        <div data-testid="section_filters-icon" className={classes.filterIconRoot}>
+        <div
+          data-testid="section_filters-icon"
+          className={classes.filterIconRoot}
+        >
           <div className={classes.titleRow}>
             <div data-testid="output_title" className="text">
               {title}
@@ -66,7 +72,7 @@ FiltersIcon.propTypes = {
   disabled: PropTypes.bool,
   tooltip: PropTypes.string,
   title: PropTypes.string,
-  icon: PropTypes.element
+  icon: PropTypes.element,
 };
 
 FiltersIcon.defaultProps = {
@@ -74,7 +80,7 @@ FiltersIcon.defaultProps = {
   disabled: false,
   tooltip: "",
   title: "Filters",
-  icon: <FilterListIcon />
+  icon: <FilterListIcon />,
 };
 
 export default FiltersIcon;

@@ -1,3 +1,10 @@
+# TBD
+
+- [FP-2857](https://movai.atlassian.net/browse/FP-2857): Merge fix for FP-2810 into 2.4.1
+- [FP-2858](https://movai.atlassian.net/browse/FP-2858): Removelog duplication for the second overlapping in requests
+- [FP-2741](https://movai.atlassian.net/browse/FP-2741): Odd message when trying to start another flow when one is running
+- [FP-2917](https://movai.atlassian.net/browse/FP-2917): Configure husky, lint-staged and prettier for lib-react
+
 # 1.3.7
 
 - [FP-2959](https://movai.atlassian.net/browse/FP-2959): Toggle button is missaligned

@@ -5,11 +5,11 @@ import {
   IconButton,
   Typography,
   Divider,
-  ListItem
-} from "@material-ui/core";
+  ListItem,
+} from "@mui/material";
 import PropTypes from "prop-types";
-import SearchIcon from "@material-ui/icons/Search";
-import ClearIcon from "@material-ui/icons/Clear";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
 import i18n from "i18next";
 
 class TreeSearch extends Component {
@@ -17,7 +17,7 @@ class TreeSearch extends Component {
   timer = null;
   inputRef = React.createRef();
 
-  handleChange = evt => {
+  handleChange = (evt) => {
     this.searchInput = evt.target.value;
     if (this.timer) {
       clearTimeout(this.timer);
@@ -51,7 +51,7 @@ class TreeSearch extends Component {
           padding: "2px 4px",
           display: "flex",
           alignItems: "center",
-          width: "100%"
+          width: "100%",
         }}
       >
         <InputBase
@@ -59,7 +59,7 @@ class TreeSearch extends Component {
           ref={this.inputRef}
           style={{
             marginLeft: 10,
-            flex: 1
+            flex: 1,
           }}
           placeholder={i18n.t("Search")}
           onChange={this.handleChange}
@@ -84,7 +84,7 @@ class TreeSearch extends Component {
  *
  * @param {*} props: contains children which are Items
  */
-const ListItemsTree = props => {
+const ListItemsTree = (props) => {
   return (
     <List
       data-testid="section_list"
@@ -98,7 +98,7 @@ const ListItemsTree = props => {
   );
 };
 
-const ListItemsTreeWithTitle = props => {
+const ListItemsTreeWithTitle = (props) => {
   return (
     <ListItemsTree>
       <ListItem>
@@ -116,7 +116,7 @@ const ListItemsTreeWithTitle = props => {
 
   Using either the _shared/Search method or using a predicate 
 */
-const ListItemsTreeWithSearch = props => {
+const ListItemsTreeWithSearch = (props) => {
   return (
     <ListItemsTree
       data-testid="section_list-items"
@@ -124,11 +124,11 @@ const ListItemsTreeWithSearch = props => {
       onKeyUp={props.onKeyUp}
     >
       <ListItem>
-        <TreeSearch search={input => props.onSearch(input)} />
+        <TreeSearch search={(input) => props.onSearch(input)} />
       </ListItem>
       <Divider />
       <Typography style={props.style} component="div">
-        {React.Children.map(props.children, x => {
+        {React.Children.map(props.children, (x) => {
           return x;
         })}
       </Typography>
@@ -137,11 +137,11 @@ const ListItemsTreeWithSearch = props => {
 };
 
 ListItemsTreeWithSearch.propTypes = {
-  onSearch: PropTypes.func
+  onSearch: PropTypes.func,
 };
 
 ListItemsTreeWithSearch.defaultProps = {
-  onSearch: input => console.log(input)
+  onSearch: (input) => console.log(input),
 };
 
 export { ListItemsTree, ListItemsTreeWithSearch, ListItemsTreeWithTitle };

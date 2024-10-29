@@ -1,5 +1,5 @@
 import React from "react";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from "@mui/material/Skeleton";
 import { homeMenuPopperStyles } from "./styles";
 
 const HomeMenuSkeleton = () => {
@@ -13,7 +13,7 @@ const HomeMenuSkeleton = () => {
   //========================================================================================
   return (
     <div className={classes.menuWrapper}>
-      {sklArr.map(el => {
+      {sklArr.map((el) => {
         return (
           <div key={el} className={classes.skeletonCard}>
             <Skeleton

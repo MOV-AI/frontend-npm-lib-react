@@ -1,7 +1,7 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 
-const Text = props => {
+const Text = (props) => {
   return (
     <TextField
       inputProps={{ "data-testid": "input_textfield" }}

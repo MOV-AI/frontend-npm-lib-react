@@ -5,14 +5,14 @@ export const authParams = {
       url: "/token-auth/",
       method: "POST",
       status: 200,
-      response: _ => {
+      response: (_) => {
         // MUST BE A REAL TOKEN FROM MOVAI BE
         return {
-          "refresh_token": "",
-          "access_token": "",
-          "error": false
-        }
-      }
-    }
-  ]
+          refresh_token: "",
+          access_token: "",
+          error: false,
+        };
+      },
+    },
+  ],
 };

@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { MenuAppProps } from "./types";
 
 import { menuAppStyles } from "./styles";
@@ -26,7 +26,7 @@ const MenuApp = (props: MenuAppProps) => {
     (event: any) => {
       if (app.Label) Utils.loadResources(event, app);
     },
-    [app]
+    [app],
   );
 
   //========================================================================================

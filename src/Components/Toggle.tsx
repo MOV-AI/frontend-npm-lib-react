@@ -1,7 +1,7 @@
 import React from "react";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import { makeStyles } from "@material-ui/styles";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import { makeStyles } from "@mui/styles";
 import { ToggleProps } from "./types";
 
 const useStyles = makeStyles(() => ({
@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     fontSize: "14px",
     marginLeft: 0,
     marginRight: 0,
-    marginBottom: 0
+    marginBottom: 0,
   },
 }));
 

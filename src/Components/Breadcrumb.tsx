@@ -1,9 +1,9 @@
 import React from "react";
-import { Theme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/styles";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import Typography from "@material-ui/core/Typography";
+import { Theme } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { BreadcrumbProps } from "./types";
 
@@ -11,22 +11,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     "& > * + *": {
       marginTop: theme.spacing(2) + " !important",
-    }
+    },
   },
   link: {
-    fontSize: "24px",
-    fontWeight: 800,
-    fontFamily: "Open Sans",
+    fontSize: "24px !important",
+    fontWeight: "800 !important",
+    fontFamily: "Open Sans !important",
     "&:hover": {
       cursor: "pointer",
-      textDecoration: "underline"
-    }
+      textDecoration: "underline",
+    },
   },
   lastLabel: {
-    fontSize: "24px",
-    fontWeight: 800,
-    fontFamily: "Open Sans"
-  }
+    fontSize: "24px !important",
+    fontWeight: "800 !important",
+    fontFamily: "Open Sans !important",
+  },
 }));
 
 const Breadcrumb = (props: BreadcrumbProps) => {
@@ -67,15 +67,15 @@ const Breadcrumb = (props: BreadcrumbProps) => {
 };
 
 Breadcrumb.propTypes = {
-  pathList: PropTypes.array
+  pathList: PropTypes.array,
 };
 
 Breadcrumb.defaultProps = {
   pathList: [
     { label: "Mov.ai", function: () => console.log("pth1/") },
     { label: "User", function: () => console.log("path1/path2") },
-    { label: "John Doe" }
-  ]
+    { label: "John Doe" },
+  ],
 };
 
 export default Breadcrumb;

@@ -13,7 +13,7 @@ const ConfirmAlertModal = ({
   submitColor = "secondary",
   cancelText = "Cancel",
   cancelColor = "primary",
-  children = <div></div>
+  children = <div></div>,
 }: ConfirmModalProps) => {
   return (
     <AbstractModal

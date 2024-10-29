@@ -20,10 +20,10 @@ describe("Tests of component LogsTable", () => {
             label: "Time",
             dataKey: "time",
             width: 110,
-            render: () => {}
-          }
+            render: () => {},
+          },
         }}
-      ></Themed>
+      ></Themed>,
     );
     expect(container).toBeInTheDocument();
   });

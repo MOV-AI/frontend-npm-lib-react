@@ -1,7 +1,7 @@
-import translationEN from "./en/translation.json";
-import translationPT from "./pt/translation.json";
+import translationEN from "./en/translation";
+import translationPT from "./pt/translation";
 
 export const Translations = {
   pt: translationPT,
-  en: translationEN
+  en: translationEN,
 };

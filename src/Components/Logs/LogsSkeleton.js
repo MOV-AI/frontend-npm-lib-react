@@ -1,5 +1,5 @@
 import React from "react";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from "@mui/material/Skeleton";
 
 const LogsSkeleton = () => {
   const tableSkeleton = ["row1", "row2", "row3"];
@@ -10,7 +10,7 @@ const LogsSkeleton = () => {
   //========================================================================================
   return (
     <>
-      {tableSkeleton.map(el => (
+      {tableSkeleton.map((el) => (
         <Skeleton data-testid="output_skeleton" animation="wave" key={el} />
       ))}
     </>

@@ -1,11 +1,11 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
-export const modalStyles = makeStyles(theme => {
+export const modalStyles = makeStyles((theme) => {
   return {
     root: {
       display: "flex",
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "center",
     },
     card: {
       margin: "auto",
@@ -13,20 +13,23 @@ export const modalStyles = makeStyles(theme => {
       overflow: "auto",
       display: "flex",
       flexDirection: "column",
-      maxHeight: "98%"
+      maxHeight: "98%",
     },
     cardContent: {
       flexGrow: 1,
       maxHeight: "calc(100% - 70px)",
-      overflowY: "auto"
+      display: "flex",
+      gap: "16px",
+      flexDirection: "column",
+      overflowY: "auto",
     },
     divider: {
-      marginBottom: "12px"
+      marginBottom: "12px",
     },
     childrenContainer: {
       maxHeight: "calc(100% - 35px)",
       overflowY: "auto",
-      paddingTop: "5px"
+      paddingTop: "5px",
     },
     closeButton: {
       cursor: "pointer",
@@ -35,8 +38,8 @@ export const modalStyles = makeStyles(theme => {
       top: "15px",
       right: "15px",
       "&:hover": {
-        color: "gray"
-      }
-    }
+        color: "gray",
+      },
+    },
   };
 });

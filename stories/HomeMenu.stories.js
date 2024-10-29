@@ -6,7 +6,7 @@ import withAuthentication from "../src/Components/HOCs/withAuthentication";
 
 export default {
   title: "Home menu",
-  decorators: [withMock]
+  decorators: [withMock],
 };
 
 const HomeMenuSimple = () => {
@@ -25,5 +25,5 @@ const Template = () => {
 export const HomeMenuSimpleStory = Template.bind({});
 
 HomeMenuSimpleStory.story = {
-  name: "Default menu"
+  name: "Default menu",
 };

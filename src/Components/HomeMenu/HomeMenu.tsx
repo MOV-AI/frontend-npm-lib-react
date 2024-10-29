@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Divider, IconButton, Typography } from "@material-ui/core";
+import { Button, Divider, IconButton, Typography } from "@mui/material";
 import { User } from "@mov-ai/mov-fe-lib-core";
-import AppsIcon from "@material-ui/icons/Apps";
-import Tooltip from "@material-ui/core/Tooltip";
+import AppsIcon from "@mui/icons-material/Apps";
+import Tooltip from "@mui/material/Tooltip";
 import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
 import i18n from "i18next";
 import HTMLPopper from "../Popper/HTMLPopper";
@@ -27,12 +27,12 @@ const HomeMenuPopper = () => {
    * subscribe to Applications updates
    */
   useEffect(() => {
-    (new User())
+    new User()
       .getAllApps()
-      .then(res => {
+      .then((res) => {
         res.success && setCurrentApps(res.result as any);
       })
-      .catch(err => {
+      .catch((err) => {
         setErrorMessage(err.statusText);
       });
   }, []);
@@ -52,7 +52,7 @@ const HomeMenuPopper = () => {
   };
 
   const redirectToLocalhost = useCallback(() => {
-    window.location.replace(window.location.origin); // go to localhost or localhost:3000
+    globalThis.location.replace(globalThis.location.origin); // go to localhost or localhost:3000
   }, []);
 
   //========================================================================================
@@ -101,13 +101,13 @@ const HomeMenuPopper = () => {
 
       return (
         <div className={classes.menuWrapper}>
-          {arrayOfApplications.map(app => (
+          {arrayOfApplications.map((app) => (
             <MenuApp key={app.URL} app={app} />
           ))}
           {arrayOfLayouts.length > 0 && (
             <>
               <Divider orientation="horizontal" flexItem />
-              {arrayOfLayouts.map(app => (
+              {arrayOfLayouts.map((app) => (
                 <MenuApp key={app.URL} app={app} />
               ))}
             </>
@@ -115,7 +115,7 @@ const HomeMenuPopper = () => {
           {arrayOfExternalApps.length > 0 && (
             <>
               <Divider orientation="horizontal" flexItem />
-              {arrayOfExternalApps.map(app => (
+              {arrayOfExternalApps.map((app) => (
                 <MenuApp key={app.URL} app={app} />
               ))}
             </>
@@ -134,7 +134,7 @@ const HomeMenuPopper = () => {
   //========================================================================================
 
   return (
-    <Tooltip title={i18n.t("Home") || "Home" as any} placement="right">
+    <Tooltip title={i18n.t("Home") || ("Home" as any)} placement="right">
       {/* Tooltips - To accommodate disabled elements, add a simple wrapper element, such as a span. */}
       <span>
         <HTMLPopper

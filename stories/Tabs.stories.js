@@ -1,7 +1,7 @@
 import React from "react";
 import Tabs from "../src/Components/Tabs";
 export default {
-  title: "Tabs"
+  title: "Tabs",
 };
 
 export const simpleTab = () => (
@@ -24,16 +24,16 @@ export const simpleTab = () => (
               publishing software like Aldus PageMaker including versions of
               Lorem Ipsum.
             </div>
-          )
+          ),
         },
-        { label: "Tab 3", component: <div>Component 3</div> }
+        { label: "Tab 3", component: <div>Component 3</div> },
       ]}
     ></Tabs>
   </div>
 );
 
 simpleTab.story = {
-  name: "simple tab"
+  name: "simple tab",
 };
 export const controlledTab = () => (
   <div style={{ height: "90vh" }}>
@@ -42,7 +42,7 @@ export const controlledTab = () => (
 );
 
 controlledTab.story = {
-  name: "controlled tab"
+  name: "controlled tab",
 };
 
 export const flexTab = () => (
@@ -188,9 +188,9 @@ export const flexTab = () => (
               are also reproduced in their exact original form, accompanied by
               English versions from the 1914 translation by H. Rackham.
             </div>
-          )
+          ),
         },
-        { label: "Tab 3", component: <div>Component 3</div> }
+        { label: "Tab 3", component: <div>Component 3</div> },
       ]}
     ></Tabs>
     <div style={{ height: "68px", backgroundColor: "salmon" }}>Bottom Bar</div>
@@ -198,5 +198,5 @@ export const flexTab = () => (
 );
 
 flexTab.story = {
-  name: "scrollable tab"
+  name: "scrollable tab",
 };

@@ -13,14 +13,14 @@ module.exports = function (app) {
         "/logout/**",
         "/static/maps/**",
         "/static/meshes/**",
-        "/static/point_clouds/**"
+        "/static/point_clouds/**",
       ],
       {
         target: "https://localhost",
         ws: true,
         logLevel: "debug",
-        secure: false
-      }
-    )
+        secure: false,
+      },
+    ),
   );
 };

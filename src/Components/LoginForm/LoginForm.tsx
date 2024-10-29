@@ -1,14 +1,14 @@
 import React, { Component, KeyboardEvent } from "react";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
 import defaultLogo from "../../../resources/favicon.png";
-import Paper from "@material-ui/core/Paper";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import { withStyles } from "@material-ui/styles";
+import Paper from "@mui/material/Paper";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+import { withStyles } from "@mui/styles";
 import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import LoginFormAdvanced from "./LoginFormAdvanced";
@@ -24,7 +24,7 @@ class LoginForm extends Component<LoginFormProps> {
     formErrors: "",
     remember: false,
     capsLockOn: false,
-    selectedProvider: Authentication.DEFAULT_PROVIDER
+    selectedProvider: Authentication.DEFAULT_PROVIDER,
   };
 
   //========================================================================================
@@ -41,8 +41,8 @@ class LoginForm extends Component<LoginFormProps> {
       return;
     this.setState({
       selectedProvider:
-        localStorage.getItem(SELECTED_DOMAIN_KEY) ||
-        Authentication.DEFAULT_PROVIDER
+        globalThis.localStorage?.getItem(SELECTED_DOMAIN_KEY) ||
+        Authentication.DEFAULT_PROVIDER,
     });
   }
 
@@ -62,7 +62,7 @@ class LoginForm extends Component<LoginFormProps> {
       username,
       password,
       remember,
-      selectedProvider
+      selectedProvider,
     });
   };
 
@@ -80,13 +80,14 @@ class LoginForm extends Component<LoginFormProps> {
   };
 
   handleProviderChange = (
-    e: React.ChangeEvent<{ name?: string; value: unknown }>
+    e: React.ChangeEvent<HTMLInputElement>,
+    _child: React.ReactNode,
   ) => {
-    const target = e.target as HTMLInputElement;
+    const target = e.target;
     this.setState({
-      selectedProvider: target.value
+      selectedProvider: target.value,
     });
-    localStorage.setItem(SELECTED_DOMAIN_KEY, target.value);
+    globalThis.localStorage?.setItem(SELECTED_DOMAIN_KEY, target.value);
   };
 
   //========================================================================================
@@ -101,7 +102,7 @@ class LoginForm extends Component<LoginFormProps> {
    */
   onChangeUsername: React.ChangeEventHandler<
     HTMLTextAreaElement | HTMLInputElement
-  > = event => {
+  > = (event) => {
     const username = event.target.value || "";
     const errorMessage = !username ? i18n.t("UsernameRequired") : "";
     this.state.username && this.props.onChanges?.();
@@ -114,13 +115,13 @@ class LoginForm extends Component<LoginFormProps> {
    */
   onChangePassword: React.ChangeEventHandler<
     HTMLTextAreaElement | HTMLInputElement
-  > = event => {
+  > = (event) => {
     const password = event.target.value || "";
     const errorMessage = !password ? i18n.t("PasswordRequired") : "";
     this.state.password && this.props.onChanges?.();
     this.setState({
       password,
-      formErrors: errorMessage
+      formErrors: errorMessage,
     });
   };
 
@@ -130,7 +131,7 @@ class LoginForm extends Component<LoginFormProps> {
    */
   onKeyUpPassword: React.KeyboardEventHandler<
     HTMLTextAreaElement | HTMLInputElement
-  > = event => {
+  > = (event) => {
     this.checkCapsLock(event);
     if (event.key === "Enter") {
       this.sendCreds();
@@ -139,7 +140,7 @@ class LoginForm extends Component<LoginFormProps> {
 
   hasMultipleDomains = () =>
     this.props.domains?.length > 1 &&
-    this.props.domains.some(ap => ap != Authentication.DEFAULT_PROVIDER);
+    this.props.domains.some((ap) => ap != Authentication.DEFAULT_PROVIDER);
 
   //========================================================================================
   /*                                                                                      *
@@ -152,7 +153,7 @@ class LoginForm extends Component<LoginFormProps> {
       classes,
       logo = defaultLogo,
       domains,
-      authErrorMessage
+      authErrorMessage,
     } = this.props;
     const errorMessage = this.state.formErrors || authErrorMessage;
     return (
@@ -164,7 +165,11 @@ class LoginForm extends Component<LoginFormProps> {
         alignItems="center"
         justifyContent="space-evenly"
       >
-        <Paper elevation={10} className={classes.root}>
+        <Paper
+          elevation={10}
+          style={{ flexDirection: "column" }}
+          className={classes.root}
+        >
           <Grid item>
             <img
               data-testid="output_logo"

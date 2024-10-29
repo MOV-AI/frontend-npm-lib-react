@@ -13,11 +13,11 @@ export default {
       description: "Welcome description",
       table: {
         type: { summary: "string" },
-        defaultValue: { summary: "Hello" }
+        defaultValue: { summary: "Hello" },
       },
       control: {
-        type: "text"
-      }
+        type: "text",
+      },
     },
     userName: {
       name: "userName",
@@ -26,11 +26,11 @@ export default {
       description: "Set username",
       table: {
         type: { summary: "string" },
-        defaultValue: { summary: "User" }
+        defaultValue: { summary: "User" },
       },
       control: {
-        type: "text"
-      }
+        type: "text",
+      },
     },
     darkThemeLabel: {
       name: "darkThemeLabel",
@@ -39,11 +39,11 @@ export default {
       description: "Theme description",
       table: {
         type: { summary: "string" },
-        defaultValue: { summary: "Dark Theme" }
+        defaultValue: { summary: "Dark Theme" },
       },
       control: {
-        type: "text"
-      }
+        type: "text",
+      },
     },
     logoutLabel: {
       name: "logoutLabel",
@@ -52,11 +52,11 @@ export default {
       description: "Set logout label",
       table: {
         type: { summary: "string" },
-        defaultValue: { summary: "Logout" }
+        defaultValue: { summary: "Logout" },
       },
       control: {
-        type: "text"
-      }
+        type: "text",
+      },
     },
     version: {
       name: "version",
@@ -65,19 +65,19 @@ export default {
       description: "Inform the project version",
       table: {
         type: { summary: "string" },
-        defaultValue: { summary: "v1.2.3" }
+        defaultValue: { summary: "v1.2.3" },
       },
       control: {
-        type: "text"
-      }
+        type: "text",
+      },
     },
     handleLogout: {
       description: "Function to logout",
       type: "function",
       table: {
         type: { summary: "function" },
-        defaultValue: { summary: arg => res }
-      }
+        defaultValue: { summary: (arg) => res },
+      },
     },
     isDarkTheme: {
       name: "isDarkTheme",
@@ -86,29 +86,31 @@ export default {
       description: "Inform if dark theme is activated",
       table: {
         type: { summary: "boolean" },
-        defaultValue: { summary: true }
+        defaultValue: { summary: true },
       },
       control: {
-        type: "boolean"
-      }
+        type: "boolean",
+      },
     },
     handleToggleTheme: {
       description: "Function to change theme",
       type: "function",
       table: {
         type: { summary: "function" },
-        defaultValue: { summary: () => true }
-      }
+        defaultValue: { summary: () => true },
+      },
     },
     extraItems: {
       description:
         "An array of items that can ben added to the menu, each item must have one LABEL and one FUNCTION ",
       default: { label: "label", func: () => alert("test") },
       type: "object",
-      defaultValue: [{
-        label: "label",
-        func: () => alert("test")
-      }]
+      defaultValue: [
+        {
+          label: "label",
+          func: () => alert("test"),
+        },
+      ],
     },
     menuItemConf: {
       description:
@@ -118,17 +120,15 @@ export default {
       defaultValue: {
         summary: {
           title: "A string to present inside the menu item",
-          handler: () => alert("test")
-        }
+          handler: () => alert("test"),
+        },
       },
     },
-  }
+  },
 };
 
-export const profileMenu = args => {
-  return (
-    <ProfileMenu {...args} handleToggleTheme={EMPTY_FUNCTION} />
-  );
+export const profileMenu = (args) => {
+  return <ProfileMenu {...args} handleToggleTheme={EMPTY_FUNCTION} />;
 };
 
 profileMenu.story = {
@@ -139,5 +139,5 @@ profileMenu.story = {
   version: "v.1.1.2020",
   extraItems: [],
   handleLogout: () => console.log("logout"),
-  handleToggleTheme: () => console.log("toggle")
+  handleToggleTheme: () => console.log("toggle"),
 };
