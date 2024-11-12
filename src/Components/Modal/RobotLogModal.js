@@ -13,7 +13,7 @@ import ChatIcon from "@material-ui/icons/Chat";
 import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import AbstractModal from "./AbstractModal";
 
-const styles = (theme) => ({
+const styles = (_theme) => ({
   breakWord: {
     wordBreak: "break-all",
   },
@@ -29,11 +29,10 @@ class RobotLogModal extends Component {
   open = (alert) => {
     const { data } = this.state;
     // Format time
-    const time = new Date(alert.time * 1000);
     const alertButton = alert.button
       ? JSON.parse(alert.button.replace(/'/g, '"'))
       : null;
-    data.time = `${time.toLocaleTimeString("pt")}`;
+    data.time = alert.time;
     data.action = alert.action;
     data.message = alert.message;
     data.robot = alert.robot;
