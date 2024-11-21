@@ -1,73 +1,17 @@
-import React, {
-  useCallback,
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-} from "react";
-import { RobotManager, Features } from "@mov-ai/mov-fe-lib-core";
-import useSub from "../../hooks/useSub";
+import React, { useCallback, useState, useRef, useEffect } from "react";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
 import { ROBOT_LOG_TYPE } from "./utils/Constants";
 import { COLUMNS_LABEL } from "./utils/Constants";
-import useUpdateEffect from "./hooks/useUpdateEffect";
 import _isEqual from "lodash/isEqual";
 import { useStyles } from "./styles";
-import { logsSub } from "./sub";
+import { useLogs } from "./useLogs";
+import { Logs } from "@mov-ai/mov-fe-lib-core";
+import { DEFAULT_COLUMNS } from "./utils/Constants";
 import "./Logs.css";
 
-/**
- * Tranform log from the format received from the API to the format
- * required to be rendered
- * @returns {array} Transformed log
- */
-function transformLog(log, _index, _data, ts_multiplier = 1000) {
-  const timestamp = ts_multiplier * log.time;
-  const date = new Date(timestamp);
-  return {
-    ...log,
-    timestamp,
-    time: date.toLocaleTimeString(),
-    date: date.toLocaleDateString(),
-    key: log.message + timestamp,
-  };
-}
-
-/**
- * Remove duplicates from logs for the second overlaping the
- * current and the last request
- * @returns {array} Concatenated logs without duplicates
- */
-export function logsDedupe(oldLogs, data) {
-  if (!data.length) return oldLogs;
-
-  // date of the oldest log received in the current request
-  const oldDate = data[data.length - 1].timestamp;
-  // map to store the old logs of the overlaped second
-  let map = {};
-
-  // iter over old logs with last timestamp of the new logs
-  // and put in a map
-  for (let i = 0; i < oldLogs.length && oldLogs[i].timestamp === oldDate; i++)
-    map[oldLogs[i].message] = oldLogs[i];
-
-  // array to store logs from overlap second which had not
-  // been sent  before
-  let newSecOverlap = [];
-  let z;
-
-  // iter over new logs (oldest to latest) with last timestamp,
-  // check if present in last map
-  //  - if not, push
-  for (z = data.length - 1; z >= 0 && data[z].timestamp === oldDate; z--)
-    if (!map[data[z].message]) newSecOverlap.push(data[z]);
-
-  // cut new logs up to z, concat with the deduped ones
-  // and the old logs up to i
-  return data.slice(0, z + 1).concat(newSecOverlap.reverse(), oldLogs);
-}
+const MAX_LOGS = 3000;
 
 // TODO this should be exported. Fleetboard uses it
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
@@ -83,38 +27,57 @@ function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   globalThis.document.body.removeChild(a);
 }
 
-function noSelection(obj) {
-  for (let key in obj) {
-    if (obj[key]) return false;
-  }
-  return true;
-}
-
 function getRobots(robotsData) {
   return robotsData
     .map((robot) => robot.name)
     .reduce((a, robot) => ({ ...a, [robot]: true }), {});
 }
 
-function matchTags(tags, item) {
-  for (const tag in tags)
-    if (item[tag] !== undefined) continue;
-    else return false;
-  return true;
+function calcFilters(filters, defaults, force) {
+  return Object.entries(filters).reduce(
+    (a, [key, value]) => ({
+      ...a,
+      [key]:
+        value && typeof value === "object"
+          ? {
+              ...value,
+              ...(force?.[key]
+                ? force[key].reduce(
+                    (a, subKey) => ({ ...a, [subKey]: "force" }),
+                    {},
+                  )
+                : {}),
+              ...(defaults?.[key] ?? {}),
+            }
+          : value,
+    }),
+    {},
+  );
 }
 
-const MAX_FETCH_LOGS = 20000;
-const MAX_LOGS = 2000;
-let logsDataGlobal = [];
-
-const Logs = (props) => {
+const ReactLogs = (props) => {
   const { robotsData, hide, force, defaults } = props;
   const classes = useStyles();
-  const getLogsTimeoutRef = useRef();
-  const refreshLogsTimeoutRef = useRef();
   const handleContainerRef = useRef();
   const logModalRef = useRef();
-  const sub = useSub(logsSub);
+
+  const [filters, setFilters] = useState(
+    calcFilters(
+      {
+        robots: getRobots(robotsData),
+        levels: Logs.CONSTANTS.DEFAULT_LEVELS,
+        service: Logs.CONSTANTS.DEFAULT_SERVICE,
+        columns: DEFAULT_COLUMNS,
+        tags: {},
+        message: "",
+        selectedFromDate: null,
+        selectedToDate: null,
+      },
+      defaults,
+      force,
+    ),
+  );
+
   const {
     robots,
     levels,
@@ -124,125 +87,25 @@ const Logs = (props) => {
     message,
     selectedFromDate,
     selectedToDate,
-  } = sub;
-  const [logsData, setLogsData] = useState(logsDataGlobal);
-  const restLogs = useMemo(() => !Features.get("logStreaming"), []);
+  } = filters;
 
-  const filteredLogs = useMemo(
-    () =>
-      logsDataGlobal
-        .filter(
-          (item) =>
-            (levels[item.level] || noSelection(levels)) &&
-            (service[item.service] || noSelection(service)) &&
-            (matchTags(tags, item) || noSelection(tags)) &&
-            (item.message || "").includes(message) &&
-            (robots[item.robot] || noSelection(robots)) &&
-            (!selectedFromDate || item.timestamp >= selectedFromDate) &&
-            (!selectedToDate || item.timestamp <= selectedToDate),
-        )
-        .slice(0, MAX_LOGS),
-    [
-      logsData,
+  const filteredLogs = useLogs(
+    {
       levels,
       service,
-      message,
       tags,
+      message,
       robots,
       selectedFromDate,
       selectedToDate,
-    ],
-  );
-
-  useEffect(() => {
-    for (const key of Object.keys(props.force ?? {}))
-      logsSub.set(key, {
-        ...sub[key],
-        ...force[key].reduce((a, subKey) => ({ ...a, [subKey]: "force" }), {}),
-      });
-  }, [force]);
-
-  useEffect(() => {
-    for (const key of Object.keys(props.defaults ?? {}))
-      logsSub.set(key, {
-        ...sub[key],
-        ...defaults[key],
-      });
-  }, [defaults]);
-
-  // if robotsData changes, update robots
-  useEffect(() => {
-    logsSub.set("robots", getRobots(robotsData));
-  }, [robotsData]);
-
-  const getLogs = useCallback(() => {
-    // Remove previously enqueued requests
-    clearTimeout(getLogsTimeoutRef.current);
-    RobotManager.getLogs({
-      limit: MAX_FETCH_LOGS,
-      date: {
-        from: logsDataGlobal.length
-          ? logsDataGlobal[0].timestamp
-          : selectedFromDate,
-        to: selectedToDate,
-      },
-    }).then((response) => {
-      const data = response?.data || [];
-      const oldLogs = logsDataGlobal || [];
-      const newLogs = (logsDataGlobal = logsDedupe(
-        oldLogs,
-        data.map(transformLog),
-      ).slice(0, MAX_FETCH_LOGS));
-
-      setLogsData(newLogs);
-    });
-  }, [
-    selectedFromDate,
-    selectedToDate,
-    logsData,
-    setLogsData,
-    robotsData,
-    restLogs,
-  ]);
-
-  const sock = useMemo(() => (restLogs ? null : RobotManager.openLogs({})), []);
-
-  useEffect(() => {
-    getLogs();
-  }, []);
-
-  const onMessage = useCallback(
-    (msg) => {
-      const item = JSON.parse(msg?.data ?? {});
-      setLogsData(
-        (prevState) =>
-          (logsDataGlobal = [
-            transformLog(item, 0, [item], 0.000001),
-            ...prevState,
-          ].slice(0, MAX_FETCH_LOGS)),
-      );
+      limit: MAX_LOGS,
     },
-    [setLogsData],
+    [levels, service, tags, message, robots, selectedFromDate, selectedToDate],
   );
 
   useEffect(() => {
-    if (restLogs) return;
-
-    sock.onmessage = onMessage;
-
-    return () => {
-      sock.close();
-    };
-  }, [onMessage, sock, restLogs]);
-
-  useUpdateEffect(() => {
-    if (restLogs) {
-      clearTimeout(refreshLogsTimeoutRef.current);
-      refreshLogsTimeoutRef.current = setTimeout(() => {
-        getLogs();
-      }, 1000);
-    }
-  }, [getLogs, restLogs]);
+    setFilters((oldFilters) => calcFilters(oldFilters, defaults, force));
+  }, [setFilters, defaults, force]);
 
   const handleExport = useCallback(() => {
     const sep = "\t";
@@ -271,7 +134,12 @@ const Logs = (props) => {
   return (
     <div className={classes.externalDiv}>
       <div data-testid="section_logs" className={classes.wrapper}>
-        <LogsFilterBar handleExport={handleExport} hide={hide} />
+        <LogsFilterBar
+          filters={filters}
+          setFilters={setFilters}
+          handleExport={handleExport}
+          hide={hide}
+        />
         <div
           data-testid="section_table-container"
           ref={handleContainerRef}
@@ -290,4 +158,4 @@ const Logs = (props) => {
   );
 };
 
-export default Logs;
+export default ReactLogs;

@@ -4,10 +4,10 @@ import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
 import LabelIcon from "@material-ui/icons/Label";
 import AddIcon from "@material-ui/icons/Add";
 import { useTagsStyles } from "../../styles";
-import { logsSub } from "./../../sub";
 
-const TagsPopover = () => {
-  const { tags } = logsSub.use();
+const TagsPopover = (props) => {
+  const { filters, setFilters } = props;
+  const { tags } = filters;
   const selectedTags = Object.entries(tags)
     .filter(([_key, value]) => value)
     .map(([key]) => key);
@@ -18,15 +18,21 @@ const TagsPopover = () => {
     (tagText) => {
       const newState = { ...tags };
       delete newState[tagText];
-      logsSub.set("tags", newState);
+      setFilters((oldFilters) => ({ ...oldFilters, tags: newState }));
     },
-    [tags],
+    [setFilters, tags],
   );
 
   const addTag = useCallback(() => {
-    logsSub.set("tags", { ...tags, [tagText]: true });
+    setFilters((oldFilters) => ({
+      ...oldFilters,
+      tags: {
+        ...oldFilters.tags,
+        [tagText]: true,
+      },
+    }));
     setTagText("");
-  }, [tagText]);
+  }, [tagText, setFilters]);
 
   const handleKeyUp = (event) => {
     if (event.key === "Enter") addTag();

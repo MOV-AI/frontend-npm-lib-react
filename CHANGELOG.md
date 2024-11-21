@@ -1,5 +1,7 @@
 # TBD
 
+- [FP-3066](https://movai.atlassian.net/browse/FP-3066): Fleetboard: Logs of the workers are stored in the manager but the fleetboard is not able to display them correctly
+- [FP-3034](https://movai.atlassian.net/browse/FP-3034): Logs - Do not select backend by default
 - [FP-2857](https://movai.atlassian.net/browse/FP-2857): Fleetboard - Logs refactor, merge fix for FP-2810
 - [FP-2780](https://movai.atlassian.net/browse/FP-2780): Fleetboard - Logs - clear search not working
 - [FP-2917](https://movai.atlassian.net/browse/FP-2917): Configure husky, lint-staged and prettier for lib-react
