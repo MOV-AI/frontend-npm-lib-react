@@ -1,4 +1,10 @@
-import React, { useCallback, useState, useRef, useEffect } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
@@ -9,6 +15,7 @@ import { useStyles } from "./styles";
 import { useLogs } from "./useLogs";
 import { Logs } from "@mov-ai/mov-fe-lib-core";
 import { DEFAULT_COLUMNS } from "./utils/Constants";
+import useAutoScroll from "./../../hooks/useAutoScroll";
 import "./Logs.css";
 
 const MAX_LOGS = 3000;
@@ -98,7 +105,7 @@ const ReactLogs = (props) => {
       robots,
       selectedFromDate,
       selectedToDate,
-      limit: MAX_LOGS,
+      // limit: MAX_LOGS,
     },
     [levels, service, tags, message, robots, selectedFromDate, selectedToDate],
   );
@@ -131,6 +138,11 @@ const ReactLogs = (props) => {
     logModalRef.current.open(log.rowData);
   }, []);
 
+  const reversedLogs = useMemo(() => filteredLogs.reverse(), [filteredLogs]);
+  const { onScroll, isAutoScroll } = useAutoScroll(handleContainerRef, [
+    reversedLogs,
+  ]);
+
   return (
     <div className={classes.externalDiv}>
       <div data-testid="section_logs" className={classes.wrapper}>
@@ -144,12 +156,14 @@ const ReactLogs = (props) => {
           data-testid="section_table-container"
           ref={handleContainerRef}
           className={classes.tableContainer}
+          onScroll={onScroll}
         >
           <LogsTable
             columns={columns}
-            logsData={filteredLogs}
+            logsData={reversedLogs}
             levels={levels}
             onRowClick={openLogDetails}
+            isAutoScroll={isAutoScroll}
           ></LogsTable>
         </div>
       </div>

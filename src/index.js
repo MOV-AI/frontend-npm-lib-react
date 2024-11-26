@@ -44,6 +44,7 @@ import withError from "./Components/HOCs/withError";
 // import Translations
 export * from "./Utils/Sub";
 import useSub, { withSub } from "./hooks/useSub";
+import useAutoScroll from "./hooks/useAutoScroll";
 import ExportPdf from "./exporters/pdf";
 import ExportCsv from "./exporters/csv";
 
@@ -52,6 +53,7 @@ export {
   withAuthentication,
   withNotification,
   withTheme,
+  useAutoScroll,
   authSub,
   themeSub,
   useSub,

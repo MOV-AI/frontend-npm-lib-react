@@ -58,7 +58,8 @@ const useStyles = makeStyles((theme) => {
 });
 
 const MuiVirtualizedTable = (props) => {
-  const { columns, rowHeight, onRowClick, data, nonVirtual } = props;
+  const { columns, rowHeight, onRowClick, data, nonVirtual, isAutoScroll } =
+    props;
 
   const columnKeys = useMemo(
     () => Object.keys(columns).filter((key) => columns[key]),
@@ -178,6 +179,7 @@ const MuiVirtualizedTable = (props) => {
     return (
       <TableVirtuoso
         itemContent={itemRender}
+        followOutput={isAutoScroll}
         fixedHeaderContent={fixedHeaderRender}
         components={{ TableRow: Row, Table: CustomTable }}
         data={data}
@@ -213,6 +215,7 @@ LogsTable.propTypes = {
   height: PropTypes.number,
   onRowClick: PropTypes.func,
   nonVirtual: PropTypes.bool,
+  isAutoScroll: PropTypes.bool,
 };
 
 LogsTable.defaultProps = {

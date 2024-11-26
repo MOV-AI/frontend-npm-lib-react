@@ -5,7 +5,7 @@ export function useLogs(myQuery, dependencies) {
   const logs = new Logs();
 
   const getFiltered = useCallback(
-    ({ limit, ...query }) => logs.filter(query).slice(0, limit),
+    ({ limit = 0, ...query }) => logs.filter(query).slice(-limit),
     [],
   );
 
