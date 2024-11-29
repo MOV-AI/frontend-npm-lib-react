@@ -15,28 +15,37 @@ import { MENU_PROPS } from "./sub-components/_shared/Constants";
 import { LEVELS_LABEL } from "./../utils/Constants";
 import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import useSelector from "./useSelector";
-import { logsSub } from "./../sub";
 
 const EMPTY_FUNCTION = () => {
   /** Empty on purpose */
 };
 
 const LogsFilterBar = (props) => {
-  const { handleExport, hide } = props;
+  const { filters, setFilters, handleExport, hide } = props;
   const classes = useLogFilterStyles();
-  const { robots } = logsSub.use();
+  const { robots } = filters;
   const robotsLabel = useMemo(
     () => Object.keys(robots).reduce((a, key) => ({ ...a, [key]: key }), {}),
     [robots],
   );
   const robotSelector = useSelector(
+    filters,
+    setFilters,
     robotsLabel,
     "robots",
     MENU_PROPS,
     useRobotSelectorStyles,
   );
-  const levelSelector = useSelector(LEVELS_LABEL, "levels", MENU_PROPS);
+  const levelSelector = useSelector(
+    filters,
+    setFilters,
+    LEVELS_LABEL,
+    "levels",
+    MENU_PROPS,
+  );
   const serviceSelector = useSelector(
+    filters,
+    setFilters,
     CONSTANTS.SERVICE_LABEL,
     "service",
     MENU_PROPS,
@@ -45,11 +54,11 @@ const LogsFilterBar = (props) => {
     () =>
       Object.entries({
         robots: robotSelector,
-        message: <SearchInput />,
+        message: <SearchInput filters={filters} setFilters={setFilters} />,
         levels: levelSelector,
         service: serviceSelector,
-        tags: <TagsPopover />,
-        time: <TimeFilters />,
+        tags: <TagsPopover filters={filters} setFilters={setFilters} />,
+        time: <TimeFilters filters={filters} setFilters={setFilters} />,
       })
         .filter(([key]) => !hide[key])
         .map(([_key, value]) => value),
@@ -67,7 +76,7 @@ const LogsFilterBar = (props) => {
           <GetAppIcon />
         </IconButton>
       </Tooltip>
-      <SettingsPopover />
+      <SettingsPopover filters={filters} setFilters={setFilters} />
     </AppBar>
   );
 };

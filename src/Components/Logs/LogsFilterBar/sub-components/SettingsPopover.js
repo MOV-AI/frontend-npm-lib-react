@@ -9,9 +9,16 @@ import { MENU_PROPS } from "./_shared/Constants";
 import { COLUMNS_LABEL } from "./../../utils/Constants";
 import useSelector from "./../useSelector";
 
-const SettingsPopover = () => {
+const SettingsPopover = (props) => {
+  const { filters, setFilters } = props;
   const classes = useSettingsStyles();
-  const columnsSelector = useSelector(COLUMNS_LABEL, "columns", MENU_PROPS);
+  const columnsSelector = useSelector(
+    filters,
+    setFilters,
+    COLUMNS_LABEL,
+    "columns",
+    MENU_PROPS,
+  );
 
   return (
     <FiltersIcon icon={<TuneIcon></TuneIcon>} title={i18n.t("Configuration")}>

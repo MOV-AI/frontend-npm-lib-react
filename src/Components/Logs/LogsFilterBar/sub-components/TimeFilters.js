@@ -7,21 +7,29 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import TodayIcon from "@material-ui/icons/Today";
 import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
-import { logsSub } from "../../sub";
 
 const DATE_TIME_FORMAT = "yyyy/MM/dd HH:mm";
 
-const TimeFilters = () => {
-  const { selectedFromDate, selectedToDate } = logsSub.use();
+const TimeFilters = (props) => {
+  const { filters, setFilters } = props;
+  const { selectedFromDate, selectedToDate } = filters;
 
   const handleFromDateChange = useCallback(
-    (newDate) => logsSub.set("selectedFromDate", newDate),
-    [],
+    (newDate) =>
+      setFilters((oldFilters) => ({
+        ...oldFilters,
+        selectedFromDate: newDate,
+      })),
+    [setFilters],
   );
 
   const handleToDateChange = useCallback(
-    (newDate) => logsSub.set("selectedToDate", newDate),
-    [],
+    (newDate) =>
+      setFilters((oldFilters) => ({
+        ...oldFilters,
+        selectedToDate: newDate,
+      })),
+    [setFilters],
   );
 
   return (

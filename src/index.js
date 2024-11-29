@@ -18,6 +18,7 @@ import { snackbar } from "./Components/Snackbar/Snackbar";
 import Themes from "./styles/Themes";
 import Style from "./styles/Style";
 import Logs from "./Components/Logs/Logs";
+export { useLogs } from "./Components/Logs/useLogs";
 import LoginForm from "./Components/LoginForm/LoginForm";
 import NotAuthorized from "./Components/LoginForm/LoginPanel";
 import ProfileMenu from "./Components/ProfileMenu/ProfileMenu";
@@ -43,6 +44,7 @@ import withError from "./Components/HOCs/withError";
 // import Translations
 export * from "./Utils/Sub";
 import useSub, { withSub } from "./hooks/useSub";
+import useAutoScroll from "./hooks/useAutoScroll";
 import ExportPdf from "./exporters/pdf";
 import ExportCsv from "./exporters/csv";
 
@@ -51,6 +53,7 @@ export {
   withAuthentication,
   withNotification,
   withTheme,
+  useAutoScroll,
   authSub,
   themeSub,
   useSub,
