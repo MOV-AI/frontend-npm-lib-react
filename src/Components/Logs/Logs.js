@@ -1,4 +1,10 @@
-import React, { useCallback, useState, useRef, useEffect, useMemo } from "react";
+import React, {
+  useCallback,
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+} from "react";
 import { RobotManager, Features } from "@mov-ai/mov-fe-lib-core";
 import useSub from "../../hooks/useSub";
 import RobotLogModal from "../Modal/RobotLogModal";
@@ -6,55 +12,94 @@ import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
 import { ROBOT_LOG_TYPE } from "./utils/Constants";
 import { COLUMNS_LABEL } from "./utils/Constants";
-import { getDateTime } from "./utils/Utils";
 import useUpdateEffect from "./hooks/useUpdateEffect";
 import _isEqual from "lodash/isEqual";
 import { useStyles } from "./styles";
 import { logsSub } from "./sub";
 import "./Logs.css";
 
+/**
+ * Tranform log from the format received from the API to the format
+ * required to be rendered
+ * @returns {array} Transformed log
+ */
+function transformLog(log, _index, _data, ts_multiplier = 1000) {
+  const timestamp = ts_multiplier * log.time;
+  const date = new Date(timestamp);
+  return {
+    ...log,
+    timestamp,
+    time: date.toLocaleTimeString(),
+    date: date.toLocaleDateString(),
+    key: log.message + timestamp,
+  };
+}
+
+/**
+ * Remove duplicates from logs for the second overlaping the
+ * current and the last request
+ * @returns {array} Concatenated logs without duplicates
+ */
+export function logsDedupe(oldLogs, data) {
+  if (!data.length) return oldLogs;
+
+  // date of the oldest log received in the current request
+  const oldDate = data[data.length - 1].timestamp;
+  // map to store the old logs of the overlaped second
+  let map = {};
+
+  // iter over old logs with last timestamp of the new logs
+  // and put in a map
+  for (let i = 0; i < oldLogs.length && oldLogs[i].timestamp === oldDate; i++)
+    map[oldLogs[i].message] = oldLogs[i];
+
+  // array to store logs from overlap second which had not
+  // been sent  before
+  let newSecOverlap = [];
+  let z;
+
+  // iter over new logs (oldest to latest) with last timestamp,
+  // check if present in last map
+  //  - if not, push
+  for (z = data.length - 1; z >= 0 && data[z].timestamp === oldDate; z--)
+    if (!map[data[z].message]) newSecOverlap.push(data[z]);
+
+  // cut new logs up to z, concat with the deduped ones
+  // and the old logs up to i
+  return data.slice(0, z + 1).concat(newSecOverlap.reverse(), oldLogs);
+}
+
 // TODO this should be exported. Fleetboard uses it
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   const blob = new Blob([file], { type: charset });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  document.body.appendChild(a);
+  const a = globalThis.document.createElement("a");
+  globalThis.document.body.appendChild(a);
   a.style = "display: none";
   a.href = url;
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
-  document.body.removeChild(a);
+  globalThis.document.body.removeChild(a);
 }
 
 function noSelection(obj) {
   for (let key in obj) {
-    if (obj[key])
-      return false;
+    if (obj[key]) return false;
   }
   return true;
 }
 
 function getRobots(robotsData) {
   return robotsData
-    .map(robot => robot.name)
+    .map((robot) => robot.name)
     .reduce((a, robot) => ({ ...a, [robot]: true }), {});
-}
-
-async function hashString(string) {
-  const msgUint8 = new TextEncoder().encode(string);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
 }
 
 function matchTags(tags, item) {
   for (const tag in tags)
-    if (item[tag] !== undefined)
-      continue;
-    else
-      return false;
+    if (item[tag] !== undefined) continue;
+    else return false;
   return true;
 }
 
@@ -62,7 +107,7 @@ const MAX_FETCH_LOGS = 20000;
 const MAX_LOGS = 2000;
 let logsDataGlobal = [];
 
-const Logs = props => {
+const Logs = (props) => {
   const { robotsData, hide, force, defaults } = props;
   const classes = useStyles();
   const getLogsTimeoutRef = useRef();
@@ -71,29 +116,49 @@ const Logs = props => {
   const logModalRef = useRef();
   const sub = useSub(logsSub);
   const {
-    robots, levels, service, columns, tags,
-    message, selectedFromDate, selectedToDate,
+    robots,
+    levels,
+    service,
+    columns,
+    tags,
+    message,
+    selectedFromDate,
+    selectedToDate,
   } = sub;
   const [logsData, setLogsData] = useState(logsDataGlobal);
   const restLogs = useMemo(() => !Features.get("logStreaming"), []);
 
-  const filteredLogs = useMemo(() => (
-    logsDataGlobal.filter(item => (
-      (levels[item.level] || noSelection(levels))
-      && (service[item.service] || noSelection(service))
-      && (matchTags(tags, item) || noSelection(tags))
-      && (item.message || "").includes(message)
-      && (robots[item.robot] || noSelection(robots))
-      && (!selectedFromDate || item.timestamp >= selectedFromDate)
-      && (!selectedToDate || item.timestamp <= selectedToDate)
-    )).slice(0, MAX_LOGS)
-  ), [logsData, levels, service, message, tags, robots, selectedFromDate, selectedToDate]);
+  const filteredLogs = useMemo(
+    () =>
+      logsDataGlobal
+        .filter(
+          (item) =>
+            (levels[item.level] || noSelection(levels)) &&
+            (service[item.service] || noSelection(service)) &&
+            (matchTags(tags, item) || noSelection(tags)) &&
+            (item.message || "").includes(message) &&
+            (robots[item.robot] || noSelection(robots)) &&
+            (!selectedFromDate || item.timestamp >= selectedFromDate) &&
+            (!selectedToDate || item.timestamp <= selectedToDate),
+        )
+        .slice(0, MAX_LOGS),
+    [
+      logsData,
+      levels,
+      service,
+      message,
+      tags,
+      robots,
+      selectedFromDate,
+      selectedToDate,
+    ],
+  );
 
   useEffect(() => {
     for (const key of Object.keys(props.force ?? {}))
       logsSub.set(key, {
         ...sub[key],
-        ...force[key].reduce((a, subKey) => ({ ...a, [subKey]: 'force' }), {}),
+        ...force[key].reduce((a, subKey) => ({ ...a, [subKey]: "force" }), {}),
       });
   }, [force]);
 
@@ -106,74 +171,62 @@ const Logs = props => {
   }, [defaults]);
 
   // if robotsData changes, update robots
-  useEffect(() => { logsSub.set("robots", getRobots(robotsData)); }, [robotsData]);
+  useEffect(() => {
+    logsSub.set("robots", getRobots(robotsData));
+  }, [robotsData]);
 
   const getLogs = useCallback(() => {
     // Remove previously enqueued requests
     clearTimeout(getLogsTimeoutRef.current);
     RobotManager.getLogs({
       limit: MAX_FETCH_LOGS,
-      date: { from: logsDataGlobal.length ? logsDataGlobal[logsDataGlobal.length - 1].timestamp : selectedFromDate, to: selectedToDate },
-    }).then(response => {
+      date: {
+        from: logsDataGlobal.length
+          ? logsDataGlobal[0].timestamp
+          : selectedFromDate,
+        to: selectedToDate,
+      },
+    }).then((response) => {
       const data = response?.data || [];
-      return Promise.all([Promise.resolve(data)].concat(data.map(item => hashString(item.message))));
-    }).then(([data, ...hashes]) => {
       const oldLogs = logsDataGlobal || [];
-      let j = data.length - 1;
-
-      for (let i = 0; j > -1 && i < oldLogs.length; i++, j--) {
-        const timestamp = data[j].time * 1000;
-        const date = new Date(timestamp);
-
-        if (date === oldLogs[i].timestamp && (hashes[j] + (timestamp * 1000)) === oldLogs[i].key)
-          break;
-
-        if (date < oldLogs[i].timestamp)
-          break;
-      }
-
-      const newLogs =  (logsDataGlobal = data.slice(0, j).map((log, index) => {
-        const timestamp = log.time * 1000;
-        const date = new Date(timestamp);
-        return ({
-          ...log,
-          timestamp: date,
-          time: date.toLocaleTimeString(),
-          date: date.toLocaleDateString(),
-          key: hashes[index] + (timestamp * 1000),
-        });
-      }).concat(oldLogs).slice(0, MAX_FETCH_LOGS));
+      const newLogs = (logsDataGlobal = logsDedupe(
+        oldLogs,
+        data.map(transformLog),
+      ).slice(0, MAX_FETCH_LOGS));
 
       setLogsData(newLogs);
     });
-  }, [selectedFromDate, selectedToDate, logsData, setLogsData, robotsData, restLogs]);
+  }, [
+    selectedFromDate,
+    selectedToDate,
+    logsData,
+    setLogsData,
+    robotsData,
+    restLogs,
+  ]);
 
-  const sock = useMemo(() => restLogs ? null : RobotManager.openLogs({}), []);
+  const sock = useMemo(() => (restLogs ? null : RobotManager.openLogs({})), []);
 
   useEffect(() => {
     getLogs();
   }, []);
 
-  const onMessage = useCallback((msg) => {
-    const item = JSON.parse(msg?.data ?? {});
-    const date = new Date(item.time / 1000000);
-    hashString(item.message).then(hash => {
-      setLogsData((prevState) => logsDataGlobal = [
-        {
-          ...item,
-          timestamp: date,
-          time: date.toLocaleTimeString(),
-          date: date.toLocaleDateString(),
-          key: hash + item.time
-        },
-        ...prevState
-      ].slice(0, MAX_FETCH_LOGS));
-    });
-  }, [setLogsData]);
+  const onMessage = useCallback(
+    (msg) => {
+      const item = JSON.parse(msg?.data ?? {});
+      setLogsData(
+        (prevState) =>
+          (logsDataGlobal = [
+            transformLog(item, 0, [item], 0.000001),
+            ...prevState,
+          ].slice(0, MAX_FETCH_LOGS)),
+      );
+    },
+    [setLogsData],
+  );
 
   useEffect(() => {
-    if (restLogs)
-      return;
+    if (restLogs) return;
 
     sock.onmessage = onMessage;
 
@@ -193,17 +246,25 @@ const Logs = props => {
 
   const handleExport = useCallback(() => {
     const sep = "\t";
-    const contents = filteredLogs.map(log => {
-      const [date, time] = getDateTime(log.time);
-      return [date, time, log.robot, log.message].join(sep);
+    const contents = filteredLogs.map((log) => {
+      const { date, time, robot, message } = log;
+      return [date, time, robot, message].join(sep);
     });
     // from https://www.epochconverter.com/programming/
-    const dateString = !filteredLogs.length ? new Date().toISOString() : new Date(filteredLogs[0].time * 1e3).toISOString();
-    const columnLabels = Object.keys(columns).filter(key => columns[key]).map(key => COLUMNS_LABEL[key]);
-    blobDownload([columnLabels.join(sep), ...contents].join("\n"), `movai-logs-${dateString}.csv`, "text/csv;charset=utf-8");
+    const dateString = !filteredLogs.length
+      ? new Date().toISOString()
+      : new Date(filteredLogs[0].time * 0.001).toISOString();
+    const columnLabels = Object.keys(columns)
+      .filter((key) => columns[key])
+      .map((key) => COLUMNS_LABEL[key]);
+    blobDownload(
+      [columnLabels.join(sep), ...contents].join("\n"),
+      `movai-logs-${dateString}.csv`,
+      "text/csv;charset=utf-8",
+    );
   }, [columns, filteredLogs]);
 
-  const openLogDetails = useCallback(log => {
+  const openLogDetails = useCallback((log) => {
     logModalRef.current.open(log.rowData);
   }, []);
 

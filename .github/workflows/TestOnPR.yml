@@ -12,6 +12,7 @@ jobs:
     uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@v2.1
     with:
       deploy: "false"
+      run_lint_staged: "true"
       run_tests: "true"
       use_nvmrc: "true"
       pm: "pnpm"

@@ -1,3 +1,9 @@
+# v1.3.8
+
+- [FP-2857](https://movai.atlassian.net/browse/FP-2857): Fleetboard - Logs refactor, merge fix for FP-2810
+- [FP-2780](https://movai.atlassian.net/browse/FP-2780): Fleetboard - Logs - clear search not working
+- [FP-2917](https://movai.atlassian.net/browse/FP-2917): Configure husky, lint-staged and prettier for lib-react
+
 # 1.3.7
 
 - [FP-2959](https://movai.atlassian.net/browse/FP-2959): Toggle button is missaligned

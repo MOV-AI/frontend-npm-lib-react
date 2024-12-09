@@ -5,17 +5,17 @@ import List from "@material-ui/core/List";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { ListItem } from "@material-ui/core";
 export default {
-  title: "Drawer"
+  title: "Drawer",
 };
 
-const drawerFactory = initialOpen => () => {
+const drawerFactory = (initialOpen) => () => {
   const [open, setOpen] = React.useState(initialOpen);
   return (
     <div>
       <Button onClick={() => setOpen(!open)}>Toggle</Button>
       <Drawer open={open} onClose={() => setOpen(false)}>
         <List>
-          {Utils.range(10).map(i => (
+          {Utils.range(10).map((i) => (
             <ListItem key={"listItem" + i}>
               <span key={"span" + i}>{`Span${i}`}</span>
             </ListItem>
@@ -29,11 +29,11 @@ const drawerFactory = initialOpen => () => {
 export const drawerClosed = drawerFactory(false);
 
 drawerClosed.story = {
-  name: "closed drawer"
+  name: "closed drawer",
 };
 
 export const drawerOpen = drawerFactory(true);
 
 drawerOpen.story = {
-  name: "opened drawer"
+  name: "opened drawer",
 };

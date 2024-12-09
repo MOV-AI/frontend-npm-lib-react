@@ -19,9 +19,7 @@
   },
   "postCreateCommand": "bash -i -c 'nvm install $(cat .nvmrc) -y && nvm use && corepack enable && pnpm clean && pnpm install'",
   "remoteUser": "node",
-  "runArgs": [
-    "--network=host"
-  ],
+  "runArgs": ["--network=host"],
   "mounts": [
     "type=bind,src=${localEnv:HOME}/.npmrc,dst=/home/node/.npmrc",
     "type=bind,src=${localEnv:HOME}/.ssh,dst=/home/node/.ssh",

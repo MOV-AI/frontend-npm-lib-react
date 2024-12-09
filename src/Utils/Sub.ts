@@ -1,26 +1,26 @@
-// 
+//
 // This file incorporates code covered by the BSD-3-Clause License.
 //
 // License clause URL: https://github.com/tty-pt/sub?tab=BSD-3-Clause-1-ov-file#readme
-// 
+//
 // BSD 3-Clause License
-// 
+//
 // Copyright (c) 2022, Paulo Andre Azevedo Quirino
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this
 //    list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
 //    and/or other materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its
 //    contributors may be used to endorse or promote products derived from
 //    this software without specific prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,19 +31,17 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 // Source code incorporated: https://github.com/tty-pt/sub/blob/194d8912cb87bbc5262013c27ebaccc34946cbe2/src/main.tsx
 // Source code contributors: Copyright (c) 2022, Paulo Andre Azevedo Quirino
-// 
-
+//
 
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 export type EmitNow<T extends any> = (...args: any[]) => T;
 export type Emit<T extends any> = (...args: any[]) => T | Promise<T>;
 
-export
-interface Sub<T extends any> {
+export interface Sub<T extends any> {
   update: (val: T) => T;
   current: () => T;
   subscribe: Function;
@@ -57,18 +55,15 @@ interface Sub<T extends any> {
   set: (path: string, value: any) => T;
 }
 
-export
-type setState<T extends any> = (newState: T) => void;
+export type setState<T extends any> = (newState: T) => void;
 
-export
-function makeSub<T extends any>(defaultData: T): Sub<T> {
+export function makeSub<T extends any>(defaultData: T): Sub<T> {
   const subs = new Map<Function, boolean>();
   const valueMap: { value: T } = { value: defaultData };
 
   function update(obj: T): T {
     valueMap.value = obj;
-    for (const [sub] of subs)
-      sub(obj);
+    for (const [sub] of subs) sub(obj);
     return obj;
   }
 
@@ -88,7 +83,6 @@ function makeSub<T extends any>(defaultData: T): Sub<T> {
 
   function makeEmit(cb: Emit<T> = (_old: T, a: T): Promise<T> | T => a) {
     return async (...args: any[]) => {
-
       try {
         return update(await (cb ?? ((a: T) => a))(valueMap.value, ...args));
       } catch (e) {
@@ -113,19 +107,31 @@ function makeSub<T extends any>(defaultData: T): Sub<T> {
     if (path) {
       const obj = valueMap.value as object;
       return update({ ...obj, [path]: value } as T);
-    } else
-      return update(value);
+    } else return update(value);
   }
 
   function use() {
-    const [data, setData] = useState(valueMap.value) as [T, Dispatch<SetStateAction<T>>];
+    const [data, setData] = useState(valueMap.value) as [
+      T,
+      Dispatch<SetStateAction<T>>,
+    ];
     useEffect(() => subscribe(setData), []);
     return data;
-  };
+  }
 
   function current() {
     return valueMap.value;
   }
 
-  return { current, update, subscribe, data: valueMap, makeEmit, makeEmitNow, boundEmit, use, set };
+  return {
+    current,
+    update,
+    subscribe,
+    data: valueMap,
+    makeEmit,
+    makeEmitNow,
+    boundEmit,
+    use,
+    set,
+  };
 }

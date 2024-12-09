@@ -1,7 +1,7 @@
 import React from "react";
 import Breadcrumb from "../src/Components/Breadcrumb";
 export default {
-  title: "Breadcrumbs"
+  title: "Breadcrumbs",
 };
 
 export const simpleBreadcrumb = () => {
@@ -9,5 +9,5 @@ export const simpleBreadcrumb = () => {
 };
 
 simpleBreadcrumb.story = {
-  name: "simple breadcrumb"
+  name: "simple breadcrumb",
 };
