@@ -181,10 +181,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           )}
           {customEl}
           {handleToggleTheme && (
-            <MenuItem
-              className={classes.menuItemSpacing}
-              onClick={(ev) => ev.preventDefault()}
-            >
+            <MenuItem className={classes.menuItemSpacing}>
               {darkThemeLabel}
               <Toggle
                 onToggle={handleToggleTheme}
