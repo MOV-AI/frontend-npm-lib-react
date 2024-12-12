@@ -12,8 +12,8 @@ export function useLogs(myQuery, dependencies) {
   const [logsData, setLogsData] = useState(getFiltered(myQuery));
 
   useEffect(
-    () => logs.subscribe(() => setLogsData(getFiltered(myQuery))),
-    [setLogsData, getFiltered, dependencies],
+    () => logs.subscribe(() => setLogsData(getFiltered(myQuery)), myQuery),
+    [dependencies],
   );
 
   return logsData;

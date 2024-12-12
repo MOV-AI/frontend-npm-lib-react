@@ -10,25 +10,34 @@ import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
 
 const DATE_TIME_FORMAT = "yyyy/MM/dd HH:mm";
 
+function isValidDate(dateString) {
+  const date = new Date(dateString);
+  return !isNaN(date.getTime());
+}
+
 const TimeFilters = (props) => {
   const { filters, setFilters } = props;
   const { selectedFromDate, selectedToDate } = filters;
 
   const handleFromDateChange = useCallback(
     (newDate) =>
-      setFilters((oldFilters) => ({
-        ...oldFilters,
-        selectedFromDate: newDate,
-      })),
+      isValidDate(newDate)
+        ? setFilters((oldFilters) => ({
+            ...oldFilters,
+            selectedFromDate: newDate,
+          }))
+        : null,
     [setFilters],
   );
 
   const handleToDateChange = useCallback(
     (newDate) =>
-      setFilters((oldFilters) => ({
-        ...oldFilters,
-        selectedToDate: newDate,
-      })),
+      isValidDate(newDate)
+        ? setFilters((oldFilters) => ({
+            ...oldFilters,
+            selectedToDate: newDate,
+          }))
+        : null,
     [setFilters],
   );
 

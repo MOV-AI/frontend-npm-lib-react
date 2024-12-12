@@ -111,8 +111,14 @@ const ReactLogs = (props) => {
   );
 
   useEffect(() => {
-    setFilters((oldFilters) => calcFilters(oldFilters, defaults, force));
-  }, [setFilters, defaults, force]);
+    setFilters((oldFilters) =>
+      calcFilters(
+        oldFilters,
+        { ...defaults, robots: getRobots(robotsData) },
+        force,
+      ),
+    );
+  }, [setFilters, defaults, force, robotsData.length]);
 
   const handleExport = useCallback(() => {
     const sep = "\t";
