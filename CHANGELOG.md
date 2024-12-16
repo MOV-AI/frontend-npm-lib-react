@@ -1,4 +1,4 @@
-# TBD
+# v1.3.8
 
 - [FP-2857](https://movai.atlassian.net/browse/FP-2857): Fleetboard - Logs refactor, merge fix for FP-2810
 - [FP-2780](https://movai.atlassian.net/browse/FP-2780): Fleetboard - Logs - clear search not working
