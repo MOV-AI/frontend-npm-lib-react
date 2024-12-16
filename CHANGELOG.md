@@ -1,6 +1,6 @@
 # v1.3.9
 
-- [FP-2959](https://movai.atlassian.net/browse/FP-2959): Removed onClick handler that was causing issues
+- [FP-3093](https://movai.atlassian.net/browse/FP-3093): Removed onClick handler that was causing issues
 
 # v1.3.8
 
