@@ -1,3 +1,7 @@
+# v1.3.9
+
+- [FP-2959](https://movai.atlassian.net/browse/FP-2959): Removed onClick handler that was causing issues
+
 # v1.3.8
 
 - [FP-2857](https://movai.atlassian.net/browse/FP-2857): Fleetboard - Logs refactor, merge fix for FP-2810
