@@ -32,6 +32,7 @@ import HTMLPopper from "./Components/Popper/HTMLPopper";
 import HomeMenuPopper from "./Components/HomeMenu/HomeMenu";
 import HomeMenuSkeleton from "./Components/HomeMenu/HomeMenuSkeleton";
 import ErrorBoundary from "./Components/ErrorBoundary";
+import Settings from "./Components/Settings";
 // import HOCs
 import withOfflineValidation from "./Components/HOCs/withOfflineValidation";
 import withAuthentication, {
@@ -43,6 +44,13 @@ import withDefaults from "./Components/HOCs/withDefaults";
 import withError from "./Components/HOCs/withError";
 // import Translations
 export * from "./Utils/Sub";
+import useSize from "./hooks/useSize";
+import Navigable, {
+  NavContext,
+  useNavContext,
+  useNavigate,
+  useParams,
+} from "./Components/Navigable";
 import useSub, { withSub } from "./hooks/useSub";
 import useAutoScroll from "./hooks/useAutoScroll";
 import ExportPdf from "./exporters/pdf";
@@ -58,6 +66,13 @@ export {
   themeSub,
   useSub,
   withSub,
+  useSize,
+  Navigable,
+  NavContext,
+  useNavContext,
+  useNavigate,
+  useParams,
+  Settings,
   withDefaults,
   withError,
   Button,
