@@ -7,6 +7,13 @@ import i18n from "./../../i18n";
 
 const useStyles = makeStyles((theme) => {
   return {
+    root: {
+      padding: "16px",
+      bottom: 0,
+      position: "sticky",
+      display: "flex",
+      justifyContent: "flex-end",
+    },
     scroll: {
       fontFamily: "Avenir",
       fontStyle: "normal",
@@ -19,6 +26,17 @@ const useStyles = makeStyles((theme) => {
         theme.scrollButton?.backgroundColor ?? theme.palette.primary.main,
       borderRadius: "50%",
       overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      borderRadius: "50%",
+      textAlign: "center",
+      width: "50px",
+      height: "50px",
+      cursor: "pointer",
+      zIndex: 1,
+      transitionTimingFunction: "linear",
+      transitionDuration: "0.2s",
     },
     inner: {
       display: "flex",
@@ -27,19 +45,12 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const defaultClassName =
-  " round size-50 text-align align-items position-absolute" +
-  " scroll-button right cursor z-index-1 transition-linear-smallest vertical-0 ";
-
 const ScrollButton = (props) => {
   const { className } = props;
   const classes = useStyles();
   return (
-    <div className="scroll-button">
-      <ScrollUp
-        className={className + defaultClassName + classes.scroll}
-        {...props}
-      >
+    <div className={classes.root}>
+      <ScrollUp className={className + " " + classes.scroll} {...props}>
         <KeyBoardArrowUp></KeyBoardArrowUp>
         <div>{i18n.t("Top")}</div>
       </ScrollUp>

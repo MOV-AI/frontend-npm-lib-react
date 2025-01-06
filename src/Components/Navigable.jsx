@@ -77,7 +77,6 @@ const useStyles = makeStyles((theme) => ({
     0px 1px 14px 0px rgba(0, 0, 0, 0.12) inset;
     `,
     minHeight: 0,
-    position: "relative",
   },
   navContainer: {
     display: "flex",
