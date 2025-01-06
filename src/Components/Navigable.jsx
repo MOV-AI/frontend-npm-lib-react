@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import { ButtonBase, Modal, Paper } from "@material-ui/core";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import SettingsIcon from "@material-ui/icons/Settings";
+import { makeStyles } from "@material-ui/styles";
 import i18n from "./../i18n";
 import { extract } from "./../Utils/utils";
 import useSize from "./../hooks/useSize";
@@ -17,22 +18,104 @@ import ScrollButton from "./ScrollButton";
 import ProfileMenu from "./ProfileMenu/ProfileMenu";
 import "./../styles/style.css";
 
-export const NavContext = React.createContext();
 const isMobile = /Mobi/i.test(window.navigator.userAgent);
 
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    bottom: 0,
+    padding: "16px",
+    inset: "revert-layer !important",
+
+    display: "flex",
+    flexDirection: "initial !important",
+  },
+  modalPaper: {
+    width: "100%",
+    padding: "16px",
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "initial !important",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    alignContent: "end !important",
+    gap: "16px",
+  },
+  navChild: {
+    display: "flex",
+    flexDirection: "column !important",
+    width: "90px",
+    ...(isMobile
+      ? {
+          padding: "16px !important",
+          flexGrow: 1,
+        }
+      : {
+          padding: "8px !important",
+          flexGrow: "0.1",
+        }),
+    gap: "8px",
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  navIcon: {
+    fontSize: "24px",
+    color: theme.verticalBar.iconColor,
+    fill: theme.verticalBar.iconColor,
+  },
+  navIconSelected: {
+    fontSize: "24px",
+    color: theme.palette.getContrastText(),
+    fill: theme.palette.getContrastText(),
+  },
+  viewContainer: {
+    overflow: "auto",
+    flexGrow: 1,
+    boxShadow: `
+    0px 3px 5px -1px rgba(0, 0, 0, 0.2) inset,
+    0px 5px 8px 0px rgba(0, 0, 0, 0.14) inset,
+    0px 1px 14px 0px rgba(0, 0, 0, 0.12) inset;
+    `,
+    minHeight: 0,
+    position: "relative",
+  },
+  navContainer: {
+    display: "flex",
+    textAlign: "center",
+    borderRadius: "0px",
+    boxShadow: "0px 3px 3px 0px rgba(0, 0, 0, 0.2) inset",
+    ...(isMobile
+      ? {
+          // flexDirection: "initial !important",
+          overflow: "visible",
+          columnGap: "16px",
+          flexDirection: "row",
+        }
+      : {
+          flexDirection: "column",
+        }),
+  },
+  desktopRoot: {
+    display: "flex",
+    flexDirection: "initial",
+    flexGrow: 1,
+    overflow: "auto",
+    position: "relative",
+  },
+}));
+
+export const NavContext = React.createContext();
+
 function MobileApp(props) {
-  const { Navigation, View, mobileRef } = props;
+  const { Navigation, View, mobileRef, classes } = props;
   return (
     <>
-      <div className="mobile overflow flex-grow box-shadow-inset min-size-vertical-0 position-relative">
+      <div className={classes.viewContainer}>
         <View mobile />
         <ScrollButton />
       </div>
 
-      <Paper
-        ref={mobileRef}
-        className="mobile horizontal-0 nav-container overflow-visible"
-      >
+      <Paper ref={mobileRef} className={classes.navContainer}>
         <Navigation />
       </Paper>
     </>
@@ -40,15 +123,15 @@ function MobileApp(props) {
 }
 
 function DesktopApp(props) {
-  const { Navigation, View } = props;
+  const { Navigation, View, classes } = props;
 
   return (
-    <div className="horizontal-0 bottom-container">
-      <Paper className="vertical-0 nav-container color-disabled">
+    <div className={classes.desktopRoot}>
+      <Paper className={classes.navContainer}>
         <Navigation />
       </Paper>
 
-      <div className="overflow box-shadow-inset flex-grow min-size-vertical-0">
+      <div className={classes.viewContainer}>
         <View />
         <ScrollButton />
       </div>
@@ -57,19 +140,19 @@ function DesktopApp(props) {
 }
 
 function NavChild(props) {
-  const { entry } = props;
+  const { entry, classes } = props;
   const [key, child] = entry;
   const Icon = child.Icon;
-  const iconC = child.isActive() ? "icon-selected" : "icon";
+  const iconC = child.isActive() ? classes.navIconSelected : classes.navIcon;
 
   return (
     <ButtonBase
       data-testid={"nav-child-" + key}
       key={key}
-      className="nav-child"
+      className={classes.navChild}
       onClick={props.onClick || child.onClick}
     >
-      <Icon className={child.iconClassName + " font-size-24 " + iconC} />
+      <Icon className={child.iconClassName + " " + iconC} />
       <span>{child.name}</span>
     </ButtonBase>
   );
@@ -81,10 +164,6 @@ NavChild.propTypes = {
   isActive: PropTypes.func,
 };
 
-function entryMap(entry, idx) {
-  return <NavChild key={entry[0]} entry={entry} idx={idx} />;
-}
-
 export default function Navigable(props = {}) {
   const {
     routes = {},
@@ -94,6 +173,7 @@ export default function Navigable(props = {}) {
     decorateArgs = [],
     ...rest
   } = props;
+  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const allRoutes = useMemo(
     () => ({
@@ -203,6 +283,13 @@ export default function Navigable(props = {}) {
     [menuEntries, setOpen, noMenuMap, matchPath],
   );
 
+  const entryMap = useCallback(
+    (entry, idx) => (
+      <NavChild key={entry[0]} entry={entry} idx={idx} classes={classes} />
+    ),
+    [classes],
+  );
+
   const menuEntriesEl = useMemo(
     () =>
       mMenuEntries.map(
@@ -213,12 +300,12 @@ export default function Navigable(props = {}) {
               return <Menu key={entry[0]} {...viewProps} />;
             },
       ),
-    [mMenuEntries, viewProps],
+    [mMenuEntries, viewProps, entryMap],
   );
 
   const noMenuEntriesEl = useMemo(
     () => noMenuEntries.map(noMenuMap).map(entryMap),
-    [noMenuEntries, noMenuMap],
+    [noMenuEntries, noMenuMap, entryMap],
   );
 
   const allEntriesEl = useMemo(
@@ -270,16 +357,14 @@ export default function Navigable(props = {}) {
           <Modal
             open={open}
             onClose={() => setOpen(false)}
-            className="pad horizontal-0 position-bottom-0 inset-revert"
+            className={classes.modal}
           >
-            <Paper className="nav-modal horizontal align-content-end justify-content-space-evenly">
-              {allEntriesEl}
-            </Paper>
+            <Paper className={classes.modalPaper}>{allEntriesEl}</Paper>
           </Modal>
         </NavContext.Provider>
       );
     },
-    [allEntriesEl, limit, open],
+    [allEntriesEl, limit, open, entryMap],
   );
 
   const current = allRoutes[matchPath];
@@ -329,6 +414,7 @@ export default function Navigable(props = {}) {
         mobileRef={mobileRef}
         View={() => null}
         Navigation={Navigation}
+        classes={classes}
       />
     );
 
@@ -337,6 +423,7 @@ export default function Navigable(props = {}) {
       mobileRef={mobileRef}
       View={FinalView}
       Navigation={Navigation}
+      classes={classes}
       {...rest}
     />
   );
