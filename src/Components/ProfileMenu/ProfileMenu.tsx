@@ -201,6 +201,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   if (view)
     return (
       <div className={classes.viewRoot}>
+        <div className={classes.title}>{i18n.t("Settings") as string}</div>
         <Paper data-testid="section_profile-menu">{itemsEl}</Paper>
         <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>
       </div>

@@ -2,8 +2,15 @@ import { makeStyles } from "@material-ui/styles";
 
 export const profileMenuStyles = makeStyles((theme) => {
   return {
+    title: {
+      fontWeight: "bold",
+      fontSize: "24px",
+    },
     viewRoot: {
       padding: "16px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "16px",
     },
     root: {
       // c("vertical0")
