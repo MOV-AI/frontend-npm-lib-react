@@ -9,13 +9,11 @@ import PropTypes from "prop-types";
 import { ButtonBase, Modal, Paper } from "@material-ui/core";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import SettingsIcon from "@material-ui/icons/Settings";
-import Menu from "@material-ui/core/Menu";
 import i18n from "./../i18n";
 import { extract } from "./../Utils/utils";
 import useSize from "./../hooks/useSize";
 import withError from "./HOCs/withError";
 import ScrollButton from "./ScrollButton";
-import Settings from "./Settings";
 import ProfileMenu from "./ProfileMenu/ProfileMenu";
 import "./../styles/style.css";
 
@@ -101,9 +99,8 @@ export default function Navigable(props = {}) {
     () => ({
       ...routes,
       [`/settings`]: {
-        Menu: Settings,
+        Menu: ProfileMenu,
         Icon: SettingsIcon,
-        FallbackMenu: ProfileMenu,
         name: i18n.t("Settings"),
       },
     }),
@@ -140,7 +137,6 @@ export default function Navigable(props = {}) {
 
     return ret;
   })();
-  const [menuPath, goMenu] = useState(null);
 
   const go = useCallback(
     (arg) => {
@@ -195,7 +191,7 @@ export default function Navigable(props = {}) {
               key,
               {
                 ...value,
-                isActive: () => key === menuPath,
+                isActive: () => key === matchPath,
                 onClick: () => {
                   value.onClick();
                   setOpen(false);
@@ -204,7 +200,7 @@ export default function Navigable(props = {}) {
             ]
           : noMenuMap,
       ),
-    [menuEntries, setOpen, noMenuMap, menuPath],
+    [menuEntries, setOpen, noMenuMap, matchPath],
   );
 
   const menuEntriesEl = useMemo(
@@ -212,34 +208,12 @@ export default function Navigable(props = {}) {
       mMenuEntries.map(
         isMobile
           ? entryMap
-          : (entry, idx) => {
-              const FallbackMenu = entry[1].FallbackMenu;
-
-              if (FallbackMenu) return <FallbackMenu key={entry[0]} />;
-
-              const ref = useRef(null);
-              const InnerMenu = entry[1].Menu;
-
-              return (
-                <span key={entry[0]} ref={ref}>
-                  <NavChild
-                    entry={entry}
-                    idx={idx}
-                    onClick={() => goMenu(idx)}
-                  />
-                  <Menu
-                    anchorEl={ref.current}
-                    open={menuPath !== null}
-                    onClose={() => goMenu(null)}
-                    style={{ textAlign: "center" }}
-                  >
-                    <InnerMenu />
-                  </Menu>
-                </span>
-              );
+          : (entry) => {
+              const Menu = entry[1].Menu;
+              return <Menu key={entry[0]} {...viewProps} />;
             },
       ),
-    [mMenuEntries, menuPath, goMenu],
+    [mMenuEntries, viewProps],
   );
 
   const noMenuEntriesEl = useMemo(
@@ -329,11 +303,11 @@ export default function Navigable(props = {}) {
 
       return (
         <NavContext.Provider value={{ go, params }}>
-          <Component {...props} />
+          <Component {...props} {...viewProps} />
         </NavContext.Provider>
       );
     },
-    [current.Component, go],
+    [current.Component, go, viewProps],
   );
 
   const FinalView = useCallback(

@@ -9,6 +9,7 @@ import React, {
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import Paper from "@material-ui/core/Paper";
 import SettingsIcon from "@material-ui/icons/Settings";
 import Toggle from "../Toggle";
 import { profileMenuStyles } from "./styles";
@@ -51,6 +52,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
     onClose,
+    view,
   } = props;
 
   // State hooks
@@ -132,24 +134,9 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    *                                                                                      */
   //========================================================================================
 
-  return (
-    <div ref={triggerButtonRef} data-testid="section_profile-menu">
-      <Tooltip title={i18n.t("Settings") || ("" as any)}>
-        <IconButton
-          data-testid="input_button"
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
-          <SettingsIcon />
-        </IconButton>
-      </Tooltip>
-      <Menu
-        transitionDuration={menuOpenAnimation.current}
-        data-testid="section_menu"
-        anchorEl={triggerButtonRef.current}
-        open={openMenu}
-        onClose={handleClose}
-      >
+  const itemsEl = (
+    <>
+      <>
         <Typography
           data-testid="section_welcome"
           component="div"
@@ -207,6 +194,37 @@ const ProfileMenu = (props: ProfileMenuProps) => {
             {version}
           </div>
         </Typography>
+      </>
+    </>
+  );
+
+  if (view)
+    return (
+      <div className={classes.viewRoot}>
+        <Paper data-testid="section_profile-menu">{itemsEl}</Paper>
+        <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>
+      </div>
+    );
+
+  return (
+    <div ref={triggerButtonRef} data-testid="section_profile-menu">
+      <Tooltip title={i18n.t("Settings") || ("" as any)}>
+        <IconButton
+          data-testid="input_button"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <SettingsIcon />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        transitionDuration={menuOpenAnimation.current}
+        data-testid="section_menu"
+        anchorEl={triggerButtonRef.current}
+        open={openMenu}
+        onClose={handleClose}
+      >
+        {itemsEl}
       </Menu>
       {/* Password Modal */}
       <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>

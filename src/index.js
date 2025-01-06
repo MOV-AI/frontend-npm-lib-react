@@ -32,7 +32,6 @@ import HTMLPopper from "./Components/Popper/HTMLPopper";
 import HomeMenuPopper from "./Components/HomeMenu/HomeMenu";
 import HomeMenuSkeleton from "./Components/HomeMenu/HomeMenuSkeleton";
 import ErrorBoundary from "./Components/ErrorBoundary";
-import Settings from "./Components/Settings";
 // import HOCs
 import withOfflineValidation from "./Components/HOCs/withOfflineValidation";
 import withAuthentication, {
@@ -70,7 +69,6 @@ export {
   useNavContext,
   useNavigate,
   useParams,
-  Settings,
   withDefaults,
   withError,
   Button,

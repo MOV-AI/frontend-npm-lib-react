@@ -2,6 +2,9 @@ import { makeStyles } from "@material-ui/styles";
 
 export const profileMenuStyles = makeStyles((theme) => {
   return {
+    viewRoot: {
+      padding: "16px",
+    },
     root: {
       // c("vertical0")
       display: "flex",
