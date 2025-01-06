@@ -65,8 +65,8 @@ const useStyles = makeStyles((theme) => ({
   },
   navIconSelected: {
     fontSize: "24px",
-    color: theme.palette.getContrastText(),
-    fill: theme.palette.getContrastText(),
+    color: theme.palette.getContrastText() + " !important",
+    fill: theme.palette.getContrastText() + " !important",
   },
   viewContainer: {
     overflow: "auto",
