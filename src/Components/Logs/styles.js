@@ -1,16 +1,22 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((_theme) => ({
   tableContainer: {
     flexGrow: 1,
     minHeight: 0,
-    overflow: "auto",
+    overflow: "hidden",
   },
   externalDiv: {
     width: "100%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
+  },
+  noRows: {
+    display: "flex",
+    fontSize: "20px",
+    justifyContent: "center",
+    padding: "32px",
   },
   wrapper: {
     flexGrow: "1",
@@ -24,14 +30,14 @@ export const useStyles = makeStyles((_theme) => ({
 const logFilterCommonStyles = (theme) => {
   return {
     toggleContainer: {
-      margin: theme.spacing(2) + " !important",
+      margin: theme.spacing(2),
     },
     smallToggleContainer: {
       display: "flex",
       justifyContent: "center",
     },
     formControl: {
-      margin: theme.spacing(1) + " !important",
+      margin: theme.spacing(1),
       minWidth: 120,
       maxWidth: 300,
     },
@@ -47,16 +53,22 @@ export const useSearchInputStyles = makeStyles((theme) => ({
   ...logFilterCommonStyles(theme),
   searchText: {
     minWidth: "150px",
-    paddingLeft: theme.spacing(3) + " !important",
+    paddingLeft: theme.spacing(3),
   },
   smallSearchText: {
     marginLeft: "18px !important",
-    paddingLeft: theme.spacing(3) + " !important",
+    paddingLeft: theme.spacing(3),
   },
 }));
 
 export const useSelectBoxStyle = makeStyles((theme) => ({
   ...logFilterCommonStyles(theme),
+  selectBox: {
+    minWidth: "290px",
+  },
+  smallSelectBox: {
+    width: "130px",
+  },
 }));
 
 export const useTagsStyles = makeStyles((theme) => ({
@@ -67,17 +79,23 @@ export const useTagsStyles = makeStyles((theme) => ({
   tagsContainer: {
     display: "flex",
     flexDirection: "column",
+    padding: theme.spacing(0.5),
+    margin: theme.spacing(0, 3, 0, 3),
   },
   tagsList: {
-    marginTop: theme.spacing(3) + " !important",
+    marginTop: theme.spacing(3),
   },
   chip: {
-    margin: theme.spacing(0.5) + " !important",
+    margin: theme.spacing(0.5),
   },
 }));
 
 export const useSettingsStyles = makeStyles((theme) => ({
   ...logFilterCommonStyles(theme),
+  filtersButton: {
+    display: "flex",
+    flexDirection: "row",
+  },
   columnsFilter: {
     display: "flex",
     flexDirection: "column",
@@ -90,22 +108,20 @@ export const useSettingsStyles = makeStyles((theme) => ({
   },
   limitText: {
     width: "50px",
-    margin: theme.spacing(0, 3, 0, 3) + " !important",
+    margin: theme.spacing(0, 3, 0, 3),
   },
 }));
 
 export const useLogFilterStyles = makeStyles((theme) => ({
   ...logFilterCommonStyles(theme),
-  root: {
-    display: "flex",
-    flexDirection: "row",
-    overflow: "auto",
-    alignItems: "center",
-    padding: "0px 16px",
-    gap: "16px",
-    overflowX: "auto",
+  flexContainer: {
+    flex: 1,
   },
-  marginLeftAuto: {
-    marginLeft: "auto",
+  doubleFlexContainer: {
+    flex: 2,
   },
+  displayFlex: { display: "flex" },
+  spaceBetween: { justifyContent: "space-between" },
+  flexEnd: { justifyContent: "flex-end" },
+  center: { justifyContent: "center" },
 }));

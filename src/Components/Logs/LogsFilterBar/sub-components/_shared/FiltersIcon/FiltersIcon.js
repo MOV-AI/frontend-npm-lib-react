@@ -1,35 +1,55 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
-import { IconButton, Tooltip } from "@material-ui/core";
+import { IconButton, Tooltip, Typography } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import StyledMenu from "./StyledMenu";
 import { filterIconStyles } from "./styles";
 
 const FiltersIcon = (props) => {
-  const { disabled, tooltip, title, icon, isActive, children, className } =
-    props;
+  // Props
+  const { disabled, tooltip, title, icon, isActive, children } = props;
+  // State hooks
   const [anchorEl, setAnchorEl] = useState();
+  // Style hook
   const classes = filterIconStyles();
 
+  //========================================================================================
+  /*                                                                                      *
+   *                                       Handlers                                       *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * Handle popup open
+   * @param {Event} event : onClick event
+   */
   const handleOpen = useCallback((event) => {
     setAnchorEl(event.currentTarget);
   }, []);
 
+  /**
+   * Handle popup close
+   * @param {Event} _event : Close Event
+   */
   const handleClose = useCallback((_event) => {
     setAnchorEl(null);
   }, []);
 
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Render                                        *
+   *                                                                                      */
+  //========================================================================================
+
   return (
     <React.Fragment>
-      <Tooltip title={tooltip || title || ""}>
+      <Tooltip title={tooltip || title}>
         <IconButton
           data-testid="input_button"
           size="small"
           onClick={handleOpen}
           disabled={disabled}
-          className={
-            className + " " + (isActive ? classes.iconActive : classes.icon)
-          }
+          className={isActive ? classes.iconActive : classes.icon}
         >
           {icon}
         </IconButton>
@@ -41,27 +61,33 @@ const FiltersIcon = (props) => {
         onClose={handleClose}
         className={classes.height}
       >
-        <div
+        <Typography
+          component="div"
           data-testid="section_filters-icon"
           className={classes.filterIconRoot}
         >
-          <div className={classes.titleRow}>
-            <div data-testid="output_title" className="text">
+          <Typography component="div" className={classes.titleRow}>
+            <Typography
+              component="div"
+              data-testid="output_title"
+              className="text"
+            >
               {title}
-            </div>
-            <div className={classes.spacer}></div>
-            <div
+            </Typography>
+            <Typography component="div" className={classes.spacer}></Typography>
+            <Typography
               data-testid="input_close"
+              component="div"
               onClick={handleClose}
               className={classes.icon}
             >
               <i className="fas fa-times"></i>
-            </div>
-          </div>
-          <div component="div" className={classes.childrenContainer}>
+            </Typography>
+          </Typography>
+          <Typography component="div" className={classes.childrenContainer}>
             {children}
-          </div>
-        </div>
+          </Typography>
+        </Typography>
       </StyledMenu>
     </React.Fragment>
   );

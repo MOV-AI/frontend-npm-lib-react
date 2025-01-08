@@ -1,12 +1,18 @@
-import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
+import { getJustDateFromServer, getJustTimeFromServer } from "./Utils";
 
-export const LEVELS_LABEL = {
-  INFO: "Info",
-  WARNING: "Warnings",
-  DEBUG: "Debug",
-  ERROR: "Error",
-  CRITICAL: "Critical",
-};
+export const SIMPLE_LEVELS_LIST = [
+  { value: "INFO", label: "Info" },
+  { value: "ERROR", label: "Error" },
+  { value: "CRITICAL", label: "Critical" },
+];
+
+export const ADVANCED_LEVELS_LIST = [
+  { value: "INFO", label: "Info" },
+  { value: "WARNING", label: "Warnings" },
+  { value: "DEBUG", label: "Debug" },
+  { value: "ERROR", label: "Error" },
+  { value: "CRITICAL", label: "Critical" },
+];
 
 export const ROBOT_STATES = {
   ERROR: "ALERT",
@@ -14,42 +20,42 @@ export const ROBOT_STATES = {
   OFFLINE: "OFFLINE",
 };
 
-export const COLUMNS_LABEL = {
-  date: "Date",
-  time: "Time",
-  level: "Level",
-  module: "Module",
-  service: "Service",
-  robot: "Robot",
-  message: "Message",
-};
-
-export const DEFAULT_SERVICE = Object.keys(CONSTANTS.SERVICE_LABEL).reduce(
-  (a, item) => ({ [item]: false, ...a }),
-  {
-    backend: true,
-    spawner: true,
+export const COLUMN_LIST = {
+  Date: {
+    label: "Date",
+    dataKey: "date",
+    width: 110,
   },
-);
-
-export const DEFAULT_LEVELS = {
-  INFO: true,
-  WARNING: false,
-  DEBUG: false,
-  ERROR: true,
-  CRITICAL: true,
+  Time: {
+    label: "Time",
+    dataKey: "time",
+    width: 100,
+  },
+  Level: {
+    label: "Level",
+    dataKey: "level",
+    width: 100,
+  },
+  Module: {
+    label: "Module",
+    dataKey: "module",
+    width: 150,
+  },
+  Robot: {
+    label: "Robot",
+    dataKey: "robot",
+    width: 100,
+  },
+  Message: {
+    label: "Message",
+    dataKey: "message",
+    width: 100,
+  },
 };
 
-export const DEFAULT_COLUMNS = {
-  date: true,
-  time: true,
-  level: false,
-  module: false,
-  service: false,
-  robot: true,
-  message: true,
-};
-
+export const DEFAULT_SELECTED_SERVICES = ["BACKEND", "SPAWNER"];
+export const DEFAULT_SELECTED_LEVELS = ["INFO", "ERROR", "CRITICAL"];
+export const DEFAULT_SELECTED_COLUMNS = ["Date", "Time", "Robot", "Message"];
 export const DEFAULT_LIMIT = 50;
 export const ROBOT_LOG_TYPE = ["module", "service"];
 
