@@ -1,50 +1,85 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useCallback } from "react";
+import i18n from "./../../../../i18n";
 import { InputAdornment, TextField, IconButton } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import ResetSearch from "@material-ui/icons/Close";
 import { useSearchInputStyles } from "../../styles";
-import { logsSub } from "./../../sub";
-import i18n from "i18next";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { MEDIA_QUERY_BREAKPOINT } from "../../../../Utils/Constants";
 
-const SearchInput = () => {
-  const { message } = logsSub.use();
+const SearchInput = (props) => {
+  // Props
+  const { messageRegex, handleMessageRegex } = props;
+  // Style hook
   const classes = useSearchInputStyles();
+  const bigScreen = useMediaQuery(MEDIA_QUERY_BREAKPOINT);
 
+  //========================================================================================
+  /*                                                                                      *
+   *                                       Handlers                                       *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * On change text input
+   * @param {Event} On Change event
+   */
   const onChangeText = useCallback((event) => {
-    logsSub.set("message", event.target.value);
+    handleMessageRegex(event.target.value);
   }, []);
 
-  const startAdornment = useMemo(
-    () => (
+  //========================================================================================
+  /*                                                                                      *
+   *                                      Adornments                                      *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * Render input start adornment
+   */
+  const renderStartAdornment = useCallback(() => {
+    return (
       <InputAdornment className={classes.iconAdornment} position="start">
         <SearchIcon data-testid="output_icon" fontSize="small" />
       </InputAdornment>
-    ),
-    [classes],
-  );
+    );
+  }, [classes]);
 
-  const endAdornment = useMemo(
-    () => (
+  /**
+   * Render input end adornment
+   */
+  const renderEndAdornment = useCallback(() => {
+    return (
       <InputAdornment position="end">
         <IconButton
           data-testid="output_button"
-          disabled={!message}
-          onClick={() => onChangeText({ target: { value: "" } })}
+          disabled={!messageRegex}
+          onClick={() => handleMessageRegex("")}
         >
           <ResetSearch color="inherit" fontSize="small" />
         </IconButton>
       </InputAdornment>
-    ),
-    [message, onChangeText],
-  );
+    );
+  }, [messageRegex, handleMessageRegex]);
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Render                                        *
+   *                                                                                      */
+  //========================================================================================
 
   return (
     <TextField
+      className={bigScreen ? classes.searchText : classes.smallSearchText}
       placeholder={i18n.t("Search")}
-      value={message}
+      value={messageRegex}
       onChange={onChangeText}
       InputProps={
-        ({ "data-testid": "output_search" }, { startAdornment, endAdornment })
+        ({ "data-testid": "output_search" },
+        {
+          startAdornment: renderStartAdornment(),
+          endAdornment: renderEndAdornment(),
+        })
       }
       size="small"
     />

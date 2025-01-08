@@ -1,11 +1,12 @@
 import React from "react";
-import { withStyles } from "@material-ui/styles";
+import { withStyles } from "@material-ui/core/styles";
 import { Popover } from "@material-ui/core";
 
 const StyledMenu = withStyles((_theme) => ({
   paper: {
     borderRadius: "8px",
-    padding: "16px",
+    width: "242px",
+    height: "411px",
     boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.25)",
   },
 }))((props) => (

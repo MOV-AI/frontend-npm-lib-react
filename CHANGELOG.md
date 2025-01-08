@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3084](https://movai.atlassian.net/browse/FP-3084): Fleetboard - Migrate Logs solution from 2.3 to 2.4
+
 # v1.3.9
 
 - [FP-3093](https://movai.atlassian.net/browse/FP-3093): Removed onClick handler that was causing issues

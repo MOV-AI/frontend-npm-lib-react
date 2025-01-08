@@ -1,41 +1,50 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback } from "react";
 import { Chip, InputAdornment, IconButton, TextField } from "@material-ui/core";
 import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
 import LabelIcon from "@material-ui/icons/Label";
 import AddIcon from "@material-ui/icons/Add";
 import { useTagsStyles } from "../../styles";
-import { logsSub } from "./../../sub";
 
-const TagsPopover = () => {
-  const { tags } = logsSub.use();
-  const selectedTags = Object.entries(tags)
-    .filter(([_key, value]) => value)
-    .map(([key]) => key);
+const TagsPopover = (props) => {
+  // Props
+  const { advancedMode, tags, handleAddTag, handleDeleteTag } = props;
+  // State hook
   const [tagText, setTagText] = useState("");
+  // Style hook
   const classes = useTagsStyles();
 
-  const deleteTag = useCallback(
-    (tagText) => {
-      const newState = { ...tags };
-      delete newState[tagText];
-      logsSub.set("tags", newState);
-    },
-    [tags],
-  );
+  //========================================================================================
+  /*                                                                                      *
+   *                                       Handlers                                       *
+   *                                                                                      */
+  //========================================================================================
 
   const addTag = useCallback(() => {
-    logsSub.set("tags", { ...tags, [tagText]: true });
+    handleAddTag(tagText);
     setTagText("");
   }, [tagText]);
 
   const handleKeyUp = (event) => {
-    if (event.key === "Enter") addTag();
+    // User pressed Enter
+    if (event.key === "Enter") {
+      addTag();
+    }
   };
 
   const handleOnChangeKey = (evt) => setTagText(evt.target.value);
 
-  const endAdornment = useMemo(
-    () => (
+  //========================================================================================
+  /*                                                                                      *
+   *                               Private Secondary Renders                              *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * @private Render input end adornment
+   * @returns {Component} Input end adornment
+   */
+  const renderEndAdornment = () => {
+    return (
       <InputAdornment position="end">
         <IconButton
           inputProps={{ "data-testid": "input_button" }}
@@ -44,28 +53,39 @@ const TagsPopover = () => {
           <AddIcon />
         </IconButton>
       </InputAdornment>
-    ),
-    [addTag],
-  );
+    );
+  };
 
+  /**
+   * Render each tag in Chip
+   * @param {{key: string, label: string}} tag : Tag to render
+   * @returns {Component} Each tag as a Chip
+   */
   const renderTag = (tag) => {
     return (
       <Chip
         data-testid="output_chip"
-        key={tag}
-        label={tag}
-        onDelete={tags[tag] === true ? () => deleteTag(tag) : undefined}
+        key={tag.key}
+        label={tag.label}
+        onDelete={() => handleDeleteTag(tag)}
         className={classes.chip}
         size="small"
       />
     );
   };
 
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Render                                        *
+   *                                                                                      */
+  //========================================================================================
+
   return (
     <FiltersIcon
       icon={<LabelIcon data-testid="output_icon"></LabelIcon>}
       title="Tags"
-      isActive={selectedTags.length > 0}
+      disabled={!advancedMode}
+      isActive={tags?.length > 0}
     >
       <div data-testid="section_tags" className={classes.tagsContainer}>
         <TextField
@@ -74,10 +94,12 @@ const TagsPopover = () => {
           onChange={handleOnChangeKey}
           onKeyUp={handleKeyUp}
           label="Add Tag"
-          InputProps={{ endAdornment }}
+          InputProps={{
+            endAdornment: renderEndAdornment(),
+          }}
           size="small"
         />
-        <div className={classes.tagsList}>{selectedTags.map(renderTag)}</div>
+        <div className={classes.tagsList}>{tags?.map(renderTag)}</div>
       </div>
     </FiltersIcon>
   );

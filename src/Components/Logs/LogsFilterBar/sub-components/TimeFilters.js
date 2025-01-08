@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import i18n from "i18next";
 import {
   KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
@@ -7,22 +6,42 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import TodayIcon from "@material-ui/icons/Today";
 import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
-import { logsSub } from "../../sub";
+import i18n from "./../../../../i18n";
+import { DATE_KEY_OPTION } from "../../utils/Constants";
 
 const DATE_TIME_FORMAT = "yyyy/MM/dd HH:mm";
 
-const TimeFilters = () => {
-  const { selectedFromDate, selectedToDate } = logsSub.use();
+const TimeFilters = (props) => {
+  // Props
+  const { selectedFromDate, selectedToDate, handleDateChange } = props;
 
+  //========================================================================================
+  /*                                                                                      *
+   *                                       Handlers                                       *
+   *                                                                                      */
+  //========================================================================================
+
+  /**
+   * Triggered on From date change
+   */
   const handleFromDateChange = useCallback(
-    (newDate) => logsSub.set("selectedFromDate", newDate),
-    [],
+    (newDate) => handleDateChange(newDate, DATE_KEY_OPTION.FROM),
+    [handleDateChange],
   );
 
+  /**
+   * Triggered on To date change
+   */
   const handleToDateChange = useCallback(
-    (newDate) => logsSub.set("selectedToDate", newDate),
-    [],
+    (newDate) => handleDateChange(newDate, DATE_KEY_OPTION.TO),
+    [handleDateChange],
   );
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Render                                        *
+   *                                                                                      */
+  //========================================================================================
 
   return (
     <FiltersIcon
@@ -30,6 +49,7 @@ const TimeFilters = () => {
       title={i18n.t("Date Range")}
       isActive={!selectedFromDate || !selectedToDate}
     >
+      {/* From -> To Date */}
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDateTimePicker
           key="time-picker"
