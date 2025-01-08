@@ -1,4 +1,8 @@
-# TBD
+# v1.3.9
+
+- [FP-3093](https://movai.atlassian.net/browse/FP-3093): Removed onClick handler that was causing issues
+
+# v1.3.8
 
 - [FP-3066](https://movai.atlassian.net/browse/FP-3066): Fleetboard: Logs of the workers are stored in the manager but the fleetboard is not able to display them correctly
 - [FP-3034](https://movai.atlassian.net/browse/FP-3034): Logs - Do not select backend by default
