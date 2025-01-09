@@ -98,13 +98,13 @@ const ReactLogs = (props) => {
 
   const filteredLogs = useLogs(
     {
-      levels,
+      level: levels,
       service,
       tags,
       message,
-      robots,
-      selectedFromDate,
-      selectedToDate,
+      robot: robots,
+      fromDate: selectedFromDate,
+      toDate: selectedToDate,
       // limit: MAX_LOGS,
     },
     [levels, service, tags, message, robots, selectedFromDate, selectedToDate],
