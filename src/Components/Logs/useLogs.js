@@ -5,16 +5,16 @@ export function useLogs(myQuery, dependencies) {
   const logs = new Logs();
 
   const getFiltered = useCallback(
-    ({ limit = 0, ...query }) => logs.filter(query).slice(-limit),
+    ({ limit = 0, ...query }) => logs.filter(query).slice(0, limit),
     [],
   );
 
   const [logsData, setLogsData] = useState(getFiltered(myQuery));
 
-  useEffect(
-    () => logs.subscribe(() => setLogsData(getFiltered(myQuery)), myQuery),
-    [dependencies],
-  );
+  useEffect(() => {
+    setLogsData(getFiltered(myQuery));
+    return logs.subscribe(() => setLogsData(getFiltered(myQuery)), myQuery);
+  }, dependencies);
 
   return logsData;
 }

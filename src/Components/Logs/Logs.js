@@ -18,8 +18,6 @@ import { DEFAULT_COLUMNS } from "./utils/Constants";
 import useAutoScroll from "./../../hooks/useAutoScroll";
 import "./Logs.css";
 
-const MAX_LOGS = 3000;
-
 // TODO this should be exported. Fleetboard uses it
 function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   const blob = new Blob([file], { type: charset });
@@ -63,7 +61,7 @@ function calcFilters(filters, defaults, force) {
 }
 
 const ReactLogs = (props) => {
-  const { robotsData, hide, force, defaults } = props;
+  const { robotsData, hide, force, defaults, reverse } = props;
   const classes = useStyles();
   const handleContainerRef = useRef();
   const logModalRef = useRef();
@@ -144,9 +142,12 @@ const ReactLogs = (props) => {
     logModalRef.current.open(log.rowData);
   }, []);
 
-  const reversedLogs = useMemo(() => filteredLogs.reverse(), [filteredLogs]);
+  const versedLogs = useMemo(
+    () => (reverse ? filteredLogs.reverse() : filteredLogs),
+    [filteredLogs, reverse],
+  );
   const { onScroll, isAutoScroll } = useAutoScroll(handleContainerRef, [
-    reversedLogs,
+    versedLogs,
   ]);
 
   return (
@@ -166,10 +167,10 @@ const ReactLogs = (props) => {
         >
           <LogsTable
             columns={columns}
-            logsData={reversedLogs}
+            logsData={versedLogs}
             levels={levels}
             onRowClick={openLogDetails}
-            isAutoScroll={isAutoScroll}
+            isAutoScroll={reverse ? isAutoScroll : false}
           ></LogsTable>
         </div>
       </div>
