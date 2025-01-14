@@ -3,16 +3,22 @@ import { InputAdornment, TextField, IconButton } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import ResetSearch from "@material-ui/icons/Close";
 import { useSearchInputStyles } from "../../styles";
-import { logsSub } from "./../../sub";
 import i18n from "i18next";
 
-const SearchInput = () => {
-  const { message } = logsSub.use();
+const SearchInput = (props) => {
+  const { filters, setFilters } = props;
+  const { message } = filters;
   const classes = useSearchInputStyles();
 
-  const onChangeText = useCallback((event) => {
-    logsSub.set("message", event.target.value);
-  }, []);
+  const onChangeText = useCallback(
+    (event) => {
+      setFilters((oldFilters) => ({
+        ...oldFilters,
+        message: event.target.value,
+      }));
+    },
+    [setFilters],
+  );
 
   const startAdornment = useMemo(
     () => (
