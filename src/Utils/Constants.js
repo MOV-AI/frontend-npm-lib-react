@@ -18,3 +18,10 @@ export const MEDIA_QUERY_BREAKPOINT = "(min-width:1030px)";
 export const EMPTY_FUNCTION = () => {
   /* Empty on purpose */
 };
+
+export const SCOPES = {
+  CALLBACK: "Callback",
+  CONFIGURATION: "Configuration",
+  NODE: "Node",
+  FLOW: "Flow",
+};
