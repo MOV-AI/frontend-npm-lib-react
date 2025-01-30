@@ -253,7 +253,7 @@ const Logs = (props) => {
     // from https://www.epochconverter.com/programming/
     const dateString = !filteredLogs.length
       ? new Date().toISOString()
-      : new Date(filteredLogs[0].time * 0.001).toISOString();
+      : new Date(filteredLogs[0].timestamp * 0.001).toISOString();
     const columnLabels = Object.keys(columns)
       .filter((key) => columns[key])
       .map((key) => COLUMNS_LABEL[key]);

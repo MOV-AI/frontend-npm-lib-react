@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2783](https://movai.atlassian.net/browse/FP-2783): Fleetboard - Logs - Export tool
+
 # v1.3.9
 
 - [FP-3093](https://movai.atlassian.net/browse/FP-3093): Removed onClick handler that was causing issues
