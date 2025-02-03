@@ -8,7 +8,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { withStyles } from "@mui/styles";
+import { withStyles } from "./../../hooks/makeStyles";
 import _get from "lodash/get";
 import { ListItemsTreeWithSearch } from "./TreeSearch";
 import { EMPTY_FUNCTION } from "../../Utils/Constants";

@@ -6,7 +6,7 @@ import {
   ThemeProvider,
 } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
-import { withStyles } from "@mui/styles";
+import { withStyles } from "./../../hooks/makeStyles";
 import DefaultApplicationTheme, { defaultGetStyle } from "../../styles/Themes";
 import { Sub } from "@mov-ai/mov-fe-lib-sub";
 import { ApplicationThemeType } from "./types";

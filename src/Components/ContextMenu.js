@@ -4,7 +4,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { withStyles } from "@mui/styles";
+import { withStyles } from "./../hooks/makeStyles";
 
 const StyledMenu = (props) => (
   <Menu

@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "./../../hooks/makeStyles";
 
 export const verticalBarStyles = makeStyles((theme) => ({
   container: {

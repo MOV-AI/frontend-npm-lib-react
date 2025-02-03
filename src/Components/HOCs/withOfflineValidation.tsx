@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { MasterDB } from "@mov-ai/mov-fe-lib-core";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "./../../hooks/makeStyles";
 import { Button } from "@mui/material";
 
 const useStyles = makeStyles((theme: any) => ({

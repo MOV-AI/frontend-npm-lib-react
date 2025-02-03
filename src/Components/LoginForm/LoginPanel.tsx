@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { LinearProgress } from "@mui/material";
-import { withStyles } from "@mui/styles";
+import { withStyles } from "./../../hooks/makeStyles";
 import { styles } from "./style";
 import defaultLogo from "../../../resources/favicon.png";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "./../hooks/makeStyles";
 import { ToggleProps } from "./types";
 
 const useStyles = makeStyles(() => ({

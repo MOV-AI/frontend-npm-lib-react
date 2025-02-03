@@ -10,6 +10,7 @@ import ContextMenu from "./Components/ContextMenu";
 import Table from "./Components/Table";
 import Tabs from "./Components/Tabs";
 import Text from "./Components/Text";
+import TopBar from "./Components/TopBar";
 import Toggle from "./Components/Toggle";
 import SearchInput from "./Components/SearchInput";
 import Breadcrumb from "./Components/Breadcrumb";
@@ -38,6 +39,13 @@ import withTheme, { themeSub } from "./Components/HOCs/withTheme";
 import withDefaults from "./Components/HOCs/withDefaults";
 import withError from "./Components/HOCs/withError";
 // import Translations
+import useSize from "./hooks/useSize";
+import Navigable, {
+  NavContext,
+  useNavContext,
+  useNavigate,
+  useParams,
+} from "./Components/Navigable";
 import ExportPdf from "./exporters/pdf";
 import ExportCsv from "./exporters/csv";
 export {
@@ -256,9 +264,8 @@ export {
   Wifi as WifiIcon,
   WifiOff as WifiOffIcon,
 } from "@mui/icons-material";
+export { makeStyles, withStyles } from "./hooks/makeStyles";
 export {
-  makeStyles,
-  withStyles,
   withTheme as withBaseTheme,
   useTheme,
   ThemeProvider,
@@ -280,6 +287,12 @@ export {
   withNotification,
   withTheme,
   themeSub,
+  useSize,
+  Navigable,
+  NavContext,
+  useNavContext,
+  useNavigate,
+  useParams,
   withDefaults,
   withError,
   Button,
@@ -308,6 +321,7 @@ export {
   ProfileMenu,
   ResetPasswordModal,
   HTMLPopper,
+  TopBar,
   HomeMenuPopper,
   HomeMenuSkeleton,
   ErrorBoundary,

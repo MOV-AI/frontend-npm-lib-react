@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from "react";
-import { withStyles } from "@mui/styles";
+import { withStyles } from "./../hooks/makeStyles";
 import { alpha } from "@mui/material/styles";
 import { Theme } from "@mui/material/styles";
 import StackTrace, { StackFrame } from "stacktrace-js";

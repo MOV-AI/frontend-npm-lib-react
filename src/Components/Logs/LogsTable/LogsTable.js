@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "./../../../hooks/makeStyles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";

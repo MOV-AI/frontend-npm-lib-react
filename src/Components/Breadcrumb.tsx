@@ -1,6 +1,6 @@
 import React from "react";
 import { Theme } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "./../hooks/makeStyles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Typography from "@mui/material/Typography";

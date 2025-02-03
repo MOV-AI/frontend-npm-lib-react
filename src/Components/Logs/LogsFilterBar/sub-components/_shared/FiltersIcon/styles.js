@@ -1,5 +1,5 @@
 import { alpha } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "./../../../../../../hooks/makeStyles";
 
 export const filterIconStyles = makeStyles((theme) => ({
   button: {

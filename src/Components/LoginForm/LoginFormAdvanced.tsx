@@ -11,7 +11,7 @@ import List from "@mui/material/List";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { advancedSectionStyles } from "./style";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "./../../hooks/makeStyles";
 import i18n from "i18next";
 import { LoginFormAdvancedProps } from "./types";
 

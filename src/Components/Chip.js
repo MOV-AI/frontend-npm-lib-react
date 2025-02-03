@@ -1,6 +1,6 @@
 import React from "react";
 import { alpha } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "./../hooks/makeStyles";
 import MaterialChip from "@mui/material/Chip";
 
 const useStyles = makeStyles((theme) => ({

@@ -9,6 +9,7 @@ import React, {
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Toggle from "../Toggle";
 import { profileMenuStyles } from "./styles";
@@ -38,14 +39,6 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
   );
 }
 
-const WeirdTypingsButton = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
-  (props: any, ref) => (
-    <IconButton ref={ref} {...props}>
-      {props.children}
-    </IconButton>
-  ),
-);
-
 const ProfileMenu = (props: ProfileMenuProps) => {
   // Props
   const {
@@ -59,6 +52,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
     onClose,
+    view,
   } = props;
 
   // State hooks
@@ -139,25 +133,9 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    *                                                                                      */
   //========================================================================================
 
-  return (
-    <div ref={triggerButtonRef} data-testid="section_profile-menu">
-      <Tooltip title={i18n.t("Settings") || ("" as any)}>
-        <WeirdTypingsButton
-          ref={triggerButtonRef}
-          data-testid="input_button"
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
-          <SettingsIcon />
-        </WeirdTypingsButton>
-      </Tooltip>
-      <Menu
-        transitionDuration={menuOpenAnimation.current}
-        data-testid="section_menu"
-        anchorEl={triggerButtonRef.current}
-        open={openMenu}
-        onClose={handleClose}
-      >
+  const itemsEl = (
+    <>
+      <>
         <Typography
           data-testid="section_welcome"
           component="div"
@@ -215,6 +193,38 @@ const ProfileMenu = (props: ProfileMenuProps) => {
             {version}
           </div>
         </Typography>
+      </>
+    </>
+  );
+
+  if (view)
+    return (
+      <div className={classes.viewRoot}>
+        <div className={classes.title}>{i18n.t("Settings") as string}</div>
+        <Paper data-testid="section_profile-menu">{itemsEl}</Paper>
+        <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>
+      </div>
+    );
+
+  return (
+    <div ref={triggerButtonRef} data-testid="section_profile-menu">
+      <Tooltip title={i18n.t("Settings") || ("" as any)}>
+        <IconButton
+          data-testid="input_button"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <SettingsIcon />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        transitionDuration={menuOpenAnimation.current}
+        data-testid="section_menu"
+        anchorEl={triggerButtonRef.current}
+        open={openMenu}
+        onClose={handleClose}
+      >
+        {itemsEl}
       </Menu>
       {/* Password Modal */}
       <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>

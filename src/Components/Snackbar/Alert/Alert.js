@@ -1,7 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { withStyles } from "@mui/styles";
+import { withStyles } from "./../../../hooks/makeStyles";
 import IconButton from "@mui/material/IconButton";
 import { capitalize } from "@mui/material/utils";
 import { svgIcons } from "./svg-icons/svgIcons";

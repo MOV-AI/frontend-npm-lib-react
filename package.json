@@ -18,10 +18,11 @@
   "author": "MOV.AI",
   "exports": {
     ".": {
-      "import": "esm/mov-react.js",
-      "types": "types/mov-react.d.ts",
-      "default": "cjs/mov-react.js"
-    }
+      "import": "./esm/mov-react.js",
+      "types": "./types/mov-react.d.ts",
+      "default": "./cjs/mov-react.js"
+    },
+    "./resources/*": "./resources/*"
   },
   "main": "cjs/mov-react.js",
   "module": "esm/mov-react.js",
@@ -75,7 +76,7 @@
     "@material-table/core": "^6.4.4",
     "@mov-ai/mov-fe-lib-core": "workspace:^1.2.4-1",
     "@mov-ai/mov-fe-lib-scripts": "^0.6.8-1",
-    "@mov-ai/mov-fe-lib-sub": "^2.3.2-1",
+    "@mov-ai/mov-fe-lib-sub": "workspace:^2.3.2-1",
     "@mui/icons-material": "^6.1.0",
     "@mui/material": "^6.1.0",
     "@mui/styles": "^6.1.0",
@@ -94,15 +95,15 @@
   "peerDependencies": {
     "@material-table/core": "^6.3.2",
     "@mov-ai/mov-fe-lib-core": "workspace:^1.2.4-1",
-    "@mov-ai/mov-fe-lib-sub": "^2.3.2-1",
+    "@mov-ai/mov-fe-lib-sub": "workspace:^2.3.2-1",
     "@mui/icons-material": "^5.15.11",
-    "@mui/material": "^5.15.11",
-    "@mui/styles": "^5.15.11",
-    "@mui/x-date-pickers": "^6.19.5",
-    "@mui/x-tree-view": "^6.17.0",
+    "@mui/material": "^6.1.0",
+    "@mui/styles": "^6.1.0",
+    "@mui/x-date-pickers": "^7.17.0",
+    "@mui/x-tree-view": "^7.17.0",
     "lodash": "^4.17.21",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-mui-dropzone": "^4.0.7"
   },
   "packageManager": "pnpm@9.11.0",

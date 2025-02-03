@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { alpha } from "@mui/material/styles";
-import { withStyles } from "@mui/styles";
+import { withStyles } from "./../hooks/makeStyles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import PropTypes from "prop-types";
