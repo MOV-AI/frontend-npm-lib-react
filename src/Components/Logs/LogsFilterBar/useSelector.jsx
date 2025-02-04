@@ -2,7 +2,6 @@ import React, { useCallback, useMemo } from "react";
 import { Input, Select, FormControl } from "@mui/material";
 import { useSelectBoxStyle } from "../styles";
 import { getSelector } from "../utils/Utils";
-import { logsSub } from "../sub";
 
 function onChangeSelect(set, prevState, event) {
   const selected = event.target.value.reduce(
@@ -21,15 +20,24 @@ function onChangeSelect(set, prevState, event) {
 }
 
 export default function useSelector(
+  filters,
+  setFilters,
   labelMap,
   label,
   menuProps,
   useStyles = useSelectBoxStyle,
 ) {
-  const { [label]: map } = logsSub.use();
+  const { [label]: map } = filters;
   const selector = useMemo(() => getSelector(labelMap, map), [map]);
   const classes = useStyles();
-  const set = useCallback((value) => logsSub.set(label, value), [label]);
+  const set = useCallback(
+    (value) =>
+      setFilters((oldFilters) => ({
+        ...oldFilters,
+        [label]: value,
+      })),
+    [label, setFilters],
+  );
   const onChange = useCallback(
     (event) => onChangeSelect(set, map, event),
     [set, map],

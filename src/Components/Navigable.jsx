@@ -192,8 +192,9 @@ export default function Navigable(props = {}) {
   const matchPath = useMemo(
     () =>
       Object.keys(allRoutes).filter((key) => {
-        const pathSplits = path.split("/");
-        const keySplits = key.split("/");
+        const cleanPath = path.replace(/\/$/, "");
+        const pathSplits = cleanPath.split("/");
+        const keySplits = key.replace(/\/$/, "").split("/");
         for (let i = 0; i < pathSplits.length; i++) {
           if (typeof keySplits[i] === "string" && keySplits[i].startsWith(":"))
             continue;
@@ -221,7 +222,10 @@ export default function Navigable(props = {}) {
 
   const go = useCallback(
     (arg) => {
-      const pathname = typeof arg === "string" ? arg : arg.pathname;
+      const pathname = new URL(
+        typeof arg === "string" ? arg : arg.pathname,
+        location.origin,
+      ).pathname;
       history.pushState(null, "", pathname);
       innerGo(pathname);
     },

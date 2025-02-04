@@ -24,22 +24,6 @@ export const COLUMNS_LABEL = {
   message: "Message",
 };
 
-export const DEFAULT_SERVICE = Object.keys(CONSTANTS.SERVICE_LABEL).reduce(
-  (a, item) => ({ [item]: false, ...a }),
-  {
-    backend: true,
-    spawner: true,
-  },
-);
-
-export const DEFAULT_LEVELS = {
-  INFO: true,
-  WARNING: false,
-  DEBUG: false,
-  ERROR: true,
-  CRITICAL: true,
-};
-
 export const DEFAULT_COLUMNS = {
   date: true,
   time: true,
