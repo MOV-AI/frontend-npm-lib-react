@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "./../../hooks/makeStyles";
 
 export const infoButtonStyles = makeStyles((theme) => ({
   childWrapper: {

@@ -1,12 +1,12 @@
 import React, { useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableRow from "@material-ui/core/TableRow";
-import TableHead from "@material-ui/core/TableHead";
-import TableCell from "@material-ui/core/TableCell";
+import { makeStyles } from "./../../../hooks/makeStyles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableHead from "@mui/material/TableHead";
+import TableCell from "@mui/material/TableCell";
 import { COLOR_CODING, COLUMNS_LABEL } from "../utils/Constants";
 import i18n from "i18next";
 import { TableVirtuoso } from "react-virtuoso";
@@ -14,9 +14,9 @@ import { TableVirtuoso } from "react-virtuoso";
 const useStyles = makeStyles((theme) => {
   return {
     noRows: {
-      fontSize: "20px",
-      textAlign: "center",
-      padding: "32px",
+      fontSize: "20px !important",
+      textAlign: "center !important",
+      padding: "32px !important",
     },
     flexContainer: {
       display: "flex",
@@ -58,7 +58,8 @@ const useStyles = makeStyles((theme) => {
 });
 
 const MuiVirtualizedTable = (props) => {
-  const { columns, rowHeight, onRowClick, data, nonVirtual } = props;
+  const { columns, rowHeight, onRowClick, data, nonVirtual, isAutoScroll } =
+    props;
 
   const columnKeys = useMemo(
     () => Object.keys(columns).filter((key) => columns[key]),
@@ -178,6 +179,7 @@ const MuiVirtualizedTable = (props) => {
     return (
       <TableVirtuoso
         itemContent={itemRender}
+        followOutput={isAutoScroll}
         fixedHeaderContent={fixedHeaderRender}
         components={{ TableRow: Row, Table: CustomTable }}
         data={data}
@@ -213,6 +215,7 @@ LogsTable.propTypes = {
   height: PropTypes.number,
   onRowClick: PropTypes.func,
   nonVirtual: PropTypes.bool,
+  isAutoScroll: PropTypes.bool,
 };
 
 LogsTable.defaultProps = {

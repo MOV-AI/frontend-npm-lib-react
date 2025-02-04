@@ -1,12 +1,17 @@
-import { createTheme, Theme, ThemeOptions } from "@material-ui/core/styles";
-import { ThemeProvider, withStyles } from "@material-ui/styles";
+import React, { useEffect } from "react";
+import {
+  Theme,
+  createTheme,
+  ThemeOptions,
+  ThemeProvider,
+} from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+import { withStyles } from "./../../hooks/makeStyles";
 import DefaultApplicationTheme, { defaultGetStyle } from "../../styles/Themes";
-import { makeSub } from "../../Utils/Sub";
-import useSub from "../../hooks/useSub";
+import { Sub } from "@mov-ai/mov-fe-lib-sub";
 import { ApplicationThemeType } from "./types";
-import React from "react";
 
-type ThemeNameType = "dark" | "light";
+type ThemeNameType = "dark" | "light" | "indigo";
 
 interface ThemeSub {
   themeName: ThemeNameType;
@@ -14,16 +19,16 @@ interface ThemeSub {
   getStyle: typeof defaultGetStyle;
 }
 
-export const themeSub = makeSub<ThemeSub>({
+export const themeSub = new Sub<ThemeSub>({
   themeName: (window.localStorage.getItem("movai.theme") ??
     "dark") as ThemeNameType,
   ApplicationTheme: DefaultApplicationTheme,
   getStyle: defaultGetStyle,
 });
 
-const setTheme = themeSub.makeEmitNow(
-  (current: ThemeSub, themeName: ThemeNameType): ThemeSub => {
-    window.localStorage.setItem("movai.theme", themeName);
+const setTheme = themeSub.makeEmit(
+  (themeName: ThemeNameType, current: ThemeSub): ThemeSub => {
+    globalThis.localStorage?.setItem("movai.theme", themeName);
 
     return {
       ...current,
@@ -77,7 +82,7 @@ export default function withTheme(
   const StyledComponent = withStyles(getStyle ?? defaultGetStyle)(Component);
 
   return function (props: any) {
-    const sub = useSub<ThemeSub>(themeSub);
+    const sub = themeSub.use();
     const theme = sub.themeName;
     const muiTheme = sub.ApplicationTheme[theme] as Theme;
 
@@ -89,13 +94,16 @@ export default function withTheme(
       setTheme(newTheme);
     };
 
-    React.useEffect(() => {
-      document.body.style.color = muiTheme.palette.text.primary;
-      document.body.style.background = (muiTheme as any).backgroundColor;
+    useEffect(() => {
+      globalThis.document.body.style.color = muiTheme.palette.text.primary;
+      globalThis.document.body.style.background = (
+        muiTheme as any
+      ).backgroundColor;
     }, [muiTheme]);
 
     return (
       <ThemeProvider theme={muiTheme}>
+        <CssBaseline />
         <StyledComponent
           handleToggleTheme={handleToggleTheme}
           theme={theme}

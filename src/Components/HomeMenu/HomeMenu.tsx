@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Divider, IconButton, Typography } from "@material-ui/core";
+import { Button, Divider, IconButton, Typography } from "@mui/material";
 import { User } from "@mov-ai/mov-fe-lib-core";
-import AppsIcon from "@material-ui/icons/Apps";
-import Tooltip from "@material-ui/core/Tooltip";
+import AppsIcon from "@mui/icons-material/Apps";
+import Tooltip from "@mui/material/Tooltip";
 import { APP_TYPES, LAUNCHER_APP } from "../../Utils/Constants";
 import i18n from "i18next";
 import HTMLPopper from "../Popper/HTMLPopper";
@@ -52,7 +52,7 @@ const HomeMenuPopper = () => {
   };
 
   const redirectToLocalhost = useCallback(() => {
-    window.location.replace(window.location.origin); // go to localhost or localhost:3000
+    globalThis.location.replace(globalThis.location.origin); // go to localhost or localhost:3000
   }, []);
 
   //========================================================================================

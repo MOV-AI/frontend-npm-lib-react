@@ -9,8 +9,8 @@ import React, {
 } from "react";
 import PropTypes from "prop-types";
 import _isEmpty from "lodash/isEmpty";
-import TextField from "@material-ui/core/TextField";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
 import { User } from "@mov-ai/mov-fe-lib-core";
 import i18n from "i18next";
 import { resetPasswordStyles } from "./styles";

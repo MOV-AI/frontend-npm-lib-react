@@ -6,15 +6,16 @@ import React, {
   useRef,
   MutableRefObject,
 } from "react";
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import SettingsIcon from "@material-ui/icons/Settings";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import SettingsIcon from "@mui/icons-material/Settings";
 import Toggle from "../Toggle";
 import { profileMenuStyles } from "./styles";
-import Divider from "@material-ui/core/Divider";
+import Divider from "@mui/material/Divider";
 import { User } from "@mov-ai/mov-fe-lib-core";
-import { Typography, Tooltip } from "@material-ui/core";
+import { Typography, Tooltip, ButtonBaseProps } from "@mui/material";
 import i18n from "i18next";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
@@ -31,7 +32,7 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
           className={classes.menuItemSpacing}
           onClick={menuItem.handler}
         >
-          {i18n.t(menuItem.title)}
+          {i18n.t(menuItem.title) as any}
         </MenuItem>
       );
     },
@@ -51,14 +52,14 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     handleLogout = () => console.log("logout"),
     handleToggleTheme,
     onClose,
+    view,
   } = props;
 
   // State hooks
   const [openMenu, setOpenMenu] = useState(false);
   const [username, setUsername] = useState("");
   // Other hooks
-  const triggerButtonRef: MutableRefObject<HTMLDivElement | null> =
-    useRef(null);
+  const triggerButtonRef = useRef<HTMLButtonElement>(null);
   const menuOpenAnimation: MutableRefObject<number | "auto"> = useRef("auto");
   const user = useMemo(() => new User(), []);
   const classes = profileMenuStyles();
@@ -132,24 +133,9 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    *                                                                                      */
   //========================================================================================
 
-  return (
-    <div ref={triggerButtonRef} data-testid="section_profile-menu">
-      <Tooltip title={i18n.t("Settings") || ("" as any)}>
-        <IconButton
-          data-testid="input_button"
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
-          <SettingsIcon />
-        </IconButton>
-      </Tooltip>
-      <Menu
-        transitionDuration={menuOpenAnimation.current}
-        data-testid="section_menu"
-        anchorEl={triggerButtonRef.current}
-        open={openMenu}
-        onClose={handleClose}
-      >
+  const itemsEl = (
+    <>
+      <>
         <Typography
           data-testid="section_welcome"
           component="div"
@@ -176,7 +162,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               className={classes.menuItemSpacing}
               onClick={handlePasswordReset}
             >
-              {i18n.t("Change Password")}
+              {i18n.t("Change Password") as any}
             </MenuItem>
           )}
           {customEl}
@@ -186,7 +172,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               <Toggle
                 onToggle={handleToggleTheme}
                 toggle={
-                  (window.localStorage.getItem("movai.theme") ?? "dark") ===
+                  (globalThis.localStorage.getItem("movai.theme") ?? "dark") ===
                   "dark"
                 }
               ></Toggle>
@@ -207,6 +193,38 @@ const ProfileMenu = (props: ProfileMenuProps) => {
             {version}
           </div>
         </Typography>
+      </>
+    </>
+  );
+
+  if (view)
+    return (
+      <div className={classes.viewRoot}>
+        <div className={classes.title}>{i18n.t("Settings") as string}</div>
+        <Paper data-testid="section_profile-menu">{itemsEl}</Paper>
+        <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>
+      </div>
+    );
+
+  return (
+    <div ref={triggerButtonRef} data-testid="section_profile-menu">
+      <Tooltip title={i18n.t("Settings") || ("" as any)}>
+        <IconButton
+          data-testid="input_button"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <SettingsIcon />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        transitionDuration={menuOpenAnimation.current}
+        data-testid="section_menu"
+        anchorEl={triggerButtonRef.current}
+        open={openMenu}
+        onClose={handleClose}
+      >
+        {itemsEl}
       </Menu>
       {/* Password Modal */}
       <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>
