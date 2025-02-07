@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3098](https://movai.atlassian.net/browse/FP-3098): UI is logged out but just reports that is offline
+
 # v1.3.9
 
 - [FP-3093](https://movai.atlassian.net/browse/FP-3093): Removed onClick handler that was causing issues
