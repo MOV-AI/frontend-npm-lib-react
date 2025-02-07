@@ -16,6 +16,7 @@ export default function withOfflineValidation(Component: React.ComponentType) {
     const [validator, setValidator] = React.useState<{
       retryConnection: () => Promise<void>;
     }>();
+    const [loading, setLoading] = React.useState(false);
     const classes = useStyles();
 
     /**
