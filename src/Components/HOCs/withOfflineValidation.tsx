@@ -38,8 +38,7 @@ export default function withOfflineValidation(Component: React.ComponentType) {
     };
 
     const retryConnection = () => {
-      setLoading(true);
-      validator?.retryConnection().then(() => setLoading(false));
+      location.reload(true);
     };
 
     /**
