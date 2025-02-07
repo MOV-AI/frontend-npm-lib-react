@@ -38,7 +38,7 @@ export default function withOfflineValidation(Component: React.ComponentType) {
     };
 
     const retryConnection = () => {
-      location.reload(true);
+      location.reload();
     };
 
     /**
