@@ -13,10 +13,10 @@ export default function withOfflineValidation(Component: React.ComponentType) {
   return function (props: any) {
     const [isConnected, setConnected] = React.useState(true);
     const [showSuccessAlert, setSuccessAlert] = React.useState(false);
-    const [validator, setValidator] = React.useState<{
+    const [, setValidator] = React.useState<{
       retryConnection: () => Promise<void>;
     }>();
-    const [loading, setLoading] = React.useState(false);
+    const [loading] = React.useState(false);
     const classes = useStyles();
 
     /**
