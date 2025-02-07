@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3034](https://movai.atlassian.net/browse/FP-3034): Logs - Do not select backend by default
+
 # v1.3.9
 
 - [FP-3093](https://movai.atlassian.net/browse/FP-3093): Removed onClick handler that was causing issues
