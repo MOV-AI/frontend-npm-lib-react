@@ -4,6 +4,7 @@ import Alert from "@material-ui/lab/Alert";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/styles";
 import { Button } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles(() => ({
   alert: { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 9999 },
@@ -13,10 +14,10 @@ export default function withOfflineValidation(Component: React.ComponentType) {
   return function (props: any) {
     const [isConnected, setConnected] = React.useState(true);
     const [showSuccessAlert, setSuccessAlert] = React.useState(false);
-    const [, setValidator] = React.useState<{
+    const [validator, setValidator] = React.useState<{
       retryConnection: () => Promise<void>;
     }>();
-    const [loading] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
     const classes = useStyles();
 
     /**
@@ -38,7 +39,8 @@ export default function withOfflineValidation(Component: React.ComponentType) {
     };
 
     const retryConnection = () => {
-      location.reload();
+      setLoading(true);
+      validator?.retryConnection().then(() => setLoading(false));
     };
 
     /**
@@ -54,16 +56,34 @@ export default function withOfflineValidation(Component: React.ComponentType) {
               variant="filled"
               severity="error"
               action={
-                <Button color="inherit" size="small" onClick={retryConnection}>
-                  {loading ? (
-                    <CircularProgress
-                      size={20}
-                      color="inherit"
-                    ></CircularProgress>
-                  ) : (
-                    "RETRY"
-                  )}
-                </Button>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  padding={2}
+                >
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={retryConnection}
+                  >
+                    {loading ? (
+                      <CircularProgress
+                        size={20}
+                        color="inherit"
+                      ></CircularProgress>
+                    ) : (
+                      "RETRY CONNECTION"
+                    )}
+                  </Button>
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={() => location.reload()}
+                  >
+                    RELOAD PAGE
+                  </Button>
+                </Box>
               }
             >
               Connection failed... You're now in offline mode, please wait to
