@@ -7,7 +7,15 @@ import { Button } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles(() => ({
-  alert: { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 9999 },
+  alert: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 9999,
+    display: "flex",
+    alignItems: "center",
+  },
 }));
 
 export default function withOfflineValidation(Component: React.ComponentType) {
@@ -56,12 +64,7 @@ export default function withOfflineValidation(Component: React.ComponentType) {
               variant="filled"
               severity="error"
               action={
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  padding={2}
-                >
+                <Box display="flex" justifyContent="center" alignItems="center">
                   <Button
                     color="inherit"
                     size="small"
