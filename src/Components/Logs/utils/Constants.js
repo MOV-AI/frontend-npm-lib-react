@@ -27,7 +27,6 @@ export const COLUMNS_LABEL = {
 export const DEFAULT_SERVICE = Object.keys(CONSTANTS.SERVICE_LABEL).reduce(
   (a, item) => ({ [item]: false, ...a }),
   {
-    backend: true,
     spawner: true,
   },
 );
