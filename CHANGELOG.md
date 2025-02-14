@@ -1,6 +1,10 @@
 # TBD
 
+<<<<<<< HEAD
+
+- # [FP-3098](https://movai.atlassian.net/browse/FP-3098): UI is logged out but just reports that is offline
 - [FP-3034](https://movai.atlassian.net/browse/FP-3034): Logs - Do not select backend by default
+  > > > > > > > dev
 
 # v1.3.9
 
