@@ -1,4 +1,4 @@
-# TBD
+# v1.3.11
 
 - [FP-2206](https://movai.atlassian.net/browse/FP-2206): IDE- 'current password' field behaves as mandatory but does not marked with asterisk
 - [FP-3098](https://movai.atlassian.net/browse/FP-3098): UI is logged out but just reports that is offline
