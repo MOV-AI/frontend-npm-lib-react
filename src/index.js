@@ -10,6 +10,7 @@ import ContextMenu from "./Components/ContextMenu";
 import Table from "./Components/Table";
 import Tabs from "./Components/Tabs";
 import Text from "./Components/Text";
+import TopBar from "./Components/TopBar";
 import Toggle from "./Components/Toggle";
 import SearchInput from "./Components/SearchInput";
 import Breadcrumb from "./Components/Breadcrumb";
@@ -42,6 +43,13 @@ import withDefaults from "./Components/HOCs/withDefaults";
 import withError from "./Components/HOCs/withError";
 // import Translations
 export * from "./Utils/Sub";
+import useSize from "./hooks/useSize";
+import Navigable, {
+  NavContext,
+  useNavContext,
+  useNavigate,
+  useParams,
+} from "./Components/Navigable";
 import useSub, { withSub } from "./hooks/useSub";
 import ExportPdf from "./exporters/pdf";
 import ExportCsv from "./exporters/csv";
@@ -55,6 +63,12 @@ export {
   themeSub,
   useSub,
   withSub,
+  useSize,
+  Navigable,
+  NavContext,
+  useNavContext,
+  useNavigate,
+  useParams,
   withDefaults,
   withError,
   Button,
@@ -84,6 +98,7 @@ export {
   ProfileMenu,
   ResetPasswordModal,
   HTMLPopper,
+  TopBar,
   HomeMenuPopper,
   HomeMenuSkeleton,
   ErrorBoundary,

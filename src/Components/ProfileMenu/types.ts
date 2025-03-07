@@ -4,6 +4,7 @@ export interface ProfileMenuProps {
   welcomeLabel: string;
   darkThemeLabel: string;
   logoutLabel: string;
+  view: boolean;
   version: string;
   extraItems: { func: MouseEventHandler; label: string }[];
   isDarkTheme: boolean;
