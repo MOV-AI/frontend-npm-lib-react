@@ -294,6 +294,7 @@ const ResetPasswordModal = forwardRef((props, ref) => {
                 id={FORM_FIELDS.CURRENT_PASSWORD}
                 onChange={handleChange}
                 variant="outlined"
+                required
               />
             )}
             <TextField
