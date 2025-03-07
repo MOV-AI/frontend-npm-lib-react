@@ -4,9 +4,18 @@ import Alert from "@material-ui/lab/Alert";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/styles";
 import { Button } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles(() => ({
-  alert: { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 9999 },
+  alert: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 9999,
+    display: "flex",
+    alignItems: "center",
+  },
 }));
 
 export default function withOfflineValidation(Component: React.ComponentType) {
@@ -55,16 +64,29 @@ export default function withOfflineValidation(Component: React.ComponentType) {
               variant="filled"
               severity="error"
               action={
-                <Button color="inherit" size="small" onClick={retryConnection}>
-                  {loading ? (
-                    <CircularProgress
-                      size={20}
-                      color="inherit"
-                    ></CircularProgress>
-                  ) : (
-                    "RETRY"
-                  )}
-                </Button>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={retryConnection}
+                  >
+                    {loading ? (
+                      <CircularProgress
+                        size={20}
+                        color="inherit"
+                      ></CircularProgress>
+                    ) : (
+                      "RETRY CONNECTION"
+                    )}
+                  </Button>
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={() => location.reload()}
+                  >
+                    RELOAD PAGE
+                  </Button>
+                </Box>
               }
             >
               Connection failed... You're now in offline mode, please wait to
