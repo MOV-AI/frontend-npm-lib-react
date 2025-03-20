@@ -17,12 +17,13 @@
       ]
     }
   },
-  "postCreateCommand": "bash -i -c 'nvm install $(cat .nvmrc) -y && nvm use && corepack enable && pnpm clean && pnpm install'",
+  "postCreateCommand": "bash -i -c 'nvm install $(cat .nvmrc) -y && nvm use && corepack enable && pnpm clean && pnpm install && pnpm prepare; npm i -g corepack@latest && corepack enable'",
   "remoteUser": "node",
   "runArgs": ["--network=host"],
   "mounts": [
     "type=bind,src=${localEnv:HOME}/.npmrc,dst=/home/node/.npmrc",
     "type=bind,src=${localEnv:HOME}/.ssh,dst=/home/node/.ssh",
-    "type=bind,src=${localEnv:HOME}/movai/src/feapps,dst=/workspaces/"
+    "type=bind,src=${localEnv:HOME}/movai/src/feapps,dst=/workspaces/",
+    "type=bind,src=${localEnv:HOME}/.gitconfig,dst=/home/node/.gitconfig"
   ]
 }
