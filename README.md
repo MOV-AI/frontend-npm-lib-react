@@ -59,8 +59,6 @@ Replace GITHUB_TOKEN with your actual token.
 
    Open the project directory in VS Code. You should be prompted to reopen the project in a container. Accept this prompt.
 
-3. If `Error: Cannot find matching keyid:` in `corepack` appears, please run `npm i -g corepack@latest && corepack enable`.
-
 ### Using a Local Setup
 
 #### Tools Required

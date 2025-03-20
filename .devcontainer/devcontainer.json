@@ -17,7 +17,7 @@
       ]
     }
   },
-  "postCreateCommand": "bash -i -c 'nvm install $(cat .nvmrc) -y && nvm use && corepack enable && pnpm clean && pnpm install && pnpm prepare'",
+  "postCreateCommand": "bash -i -c 'nvm install $(cat .nvmrc) -y && nvm use && corepack enable && pnpm clean && pnpm install && pnpm prepare; npm i -g corepack@latest && corepack enable'",
   "remoteUser": "node",
   "runArgs": ["--network=host"],
   "mounts": [

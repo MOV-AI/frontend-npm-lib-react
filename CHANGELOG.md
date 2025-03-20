@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3138](https://movai.atlassian.net/browse/FP-3138): Not able to use dev container in all frontend repos
+
 # v1.3.11
 
 - [FP-2206](https://movai.atlassian.net/browse/FP-2206): IDE- 'current password' field behaves as mandatory but does not marked with asterisk
