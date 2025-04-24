@@ -11,7 +11,7 @@ on:
 
 jobs:
   CI:
-    uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@v1
+    uses: MOV-AI/.github/.github/workflows/npm-workflow.yml@fix-npm-sonar
     with:
       deploy: "false"
       run_tests: "true"
