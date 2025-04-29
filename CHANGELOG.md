@@ -1,4 +1,4 @@
-# 1.1.6.2
+# 1.1.6-2 ... 1.1.6-4 
 - [FP-3195](https://movai.atlassian.net/browse/FP-3195):[GRAPHIC SCENE] - Add annotation does not work properly
 
 # 1.1.6
