@@ -14,7 +14,6 @@ export interface ToggleProps {
   size?: "small" | "medium";
   style?: object;
 }
-
 export interface BreadcrumbProps {
   style: React.CSSProperties;
   pathList: { function: MouseEventHandler; label: string }[];
