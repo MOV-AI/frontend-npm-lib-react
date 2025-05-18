@@ -1,5 +1,6 @@
 # TBD
 
+- [FP-3224](https://movai.atlassian.net/browse/FP-3224): User with "Operator" permissions is able to change it's own password
 - [FP-3138](https://movai.atlassian.net/browse/FP-3138): Not able to use dev container in all frontend repos
 
 # v1.3.11
