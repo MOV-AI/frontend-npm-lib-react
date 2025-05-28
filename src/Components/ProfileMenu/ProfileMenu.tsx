@@ -54,6 +54,9 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   } = props;
 
   // State hooks
+  const [canChangePassword, setCanChangePassword] = useState<boolean | null>(
+    null,
+  );
   const [openMenu, setOpenMenu] = useState(false);
   const [username, setUsername] = useState("");
   // Other hooks
@@ -64,6 +67,25 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   const classes = profileMenuStyles();
   // Refs
   const resetModalRef = useRef<{ open: Function }>();
+
+  const isAbleToChangePassword = async () => {
+    let userPermissions;
+
+    try {
+      userPermissions = await user.getCurrentUserWithPermissions();
+    } catch (error) {
+      console.error("fetching user permissions failed.", error);
+      // If for some reason the call fails, it's better we always allow the password change,
+      // than to prevent it and putting at risk all other users
+      return user.isInternalUser();
+    }
+
+    const userRoles = userPermissions?.Roles ?? [];
+    const isOperatorOnly =
+      userRoles.length === 1 && userRoles[0] === "OPERATOR";
+
+    return !isOperatorOnly && user.isInternalUser();
+  };
 
   //========================================================================================
   /*                                                                                      *
@@ -121,6 +143,10 @@ const ProfileMenu = (props: ProfileMenuProps) => {
     setUsername(user.getUsername());
   }, [user]);
 
+  useEffect(() => {
+    isAbleToChangePassword().then(setCanChangePassword);
+  }, []);
+
   const customEl = useMemo(
     () => getCustomMenuElements(menuItemConf, classes),
     [menuItemConf, classes],
@@ -131,6 +157,17 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    *                                        Render                                        *
    *                                                                                      */
   //========================================================================================
+
+  const renderPasswordChange = () =>
+    canChangePassword ? (
+      <MenuItem
+        data-testid="input_reset-password"
+        className={classes.menuItemSpacing}
+        onClick={handlePasswordReset}
+      >
+        {i18n.t("Change Password")}
+      </MenuItem>
+    ) : null;
 
   return (
     <div ref={triggerButtonRef} data-testid="section_profile-menu">
@@ -170,15 +207,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
             </MenuItem>
           ))}
           <Divider variant="middle" />
-          {user.isInternalUser() && (
-            <MenuItem
-              data-testid="input_reset-password"
-              className={classes.menuItemSpacing}
-              onClick={handlePasswordReset}
-            >
-              {i18n.t("Change Password")}
-            </MenuItem>
-          )}
+          {renderPasswordChange()}
           {customEl}
           {handleToggleTheme && (
             <MenuItem className={classes.menuItemSpacing}>
