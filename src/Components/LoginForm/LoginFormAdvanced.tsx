@@ -12,7 +12,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import { advancedSectionStyles } from "./style";
 import { makeStyles } from "@material-ui/core";
-import i18n from "i18next";
+import i18n from "../../i18n";
 import { LoginFormAdvancedProps } from "./types";
 
 const advancedLoginStyles = makeStyles(advancedSectionStyles);

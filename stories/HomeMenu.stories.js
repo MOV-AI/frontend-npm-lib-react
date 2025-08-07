@@ -1,12 +1,10 @@
 import React from "react";
-import withMock from "storybook-addon-mock";
 import HomeMenu from "../src/Components/HomeMenu/HomeMenu";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import withAuthentication from "../src/Components/HOCs/withAuthentication";
 
 export default {
   title: "Home menu",
-  decorators: [withMock],
 };
 
 const HomeMenuSimple = () => {

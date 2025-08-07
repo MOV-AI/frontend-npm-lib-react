@@ -8,7 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableHead from "@material-ui/core/TableHead";
 import TableCell from "@material-ui/core/TableCell";
 import { COLOR_CODING, COLUMNS_LABEL } from "../utils/Constants";
-import i18n from "i18next";
+import i18n from "../../../i18n";
 import { TableVirtuoso } from "react-virtuoso";
 
 const useStyles = makeStyles((theme) => {
@@ -194,6 +194,7 @@ MuiVirtualizedTable.propTypes = {
 
 export default function LogsTable(props) {
   const { columns, logsData } = props;
+  console.log("LogsTable props:", props.columns);
   return (
     <MuiVirtualizedTable
       {...props}

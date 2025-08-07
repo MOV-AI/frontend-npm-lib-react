@@ -15,7 +15,7 @@ import { profileMenuStyles } from "./styles";
 import Divider from "@material-ui/core/Divider";
 import { User } from "@mov-ai/mov-fe-lib-core";
 import { Typography, Tooltip } from "@material-ui/core";
-import i18n from "i18next";
+import i18n from "../../i18n";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
 
@@ -41,9 +41,9 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
 const ProfileMenu = (props: ProfileMenuProps) => {
   // Props
   const {
-    welcomeLabel = "Hello",
-    darkThemeLabel = "Dark Theme",
-    logoutLabel = "Logout",
+    welcomeLabel = i18n.t("Hello"),
+    darkThemeLabel = i18n.t("Dark Theme"),
+    logoutLabel = i18n.t("Logout"),
     version = "",
     extraItems = [],
     menuItemConf,
@@ -176,7 +176,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               className={classes.menuItemSpacing}
               onClick={handlePasswordReset}
             >
-              {i18n.t("Change Password")}
+              {i18n.t("Change Password").toString()}
             </MenuItem>
           )}
           {customEl}

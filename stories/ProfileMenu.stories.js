@@ -9,7 +9,7 @@ export default {
     welcomeLabel: {
       name: "welcomeLabel",
       type: { name: "string", required: false },
-      defaultValue: "Hello",
+      defaultValue: undefined,
       description: "Welcome description",
       table: {
         type: { summary: "string" },
@@ -35,7 +35,7 @@ export default {
     darkThemeLabel: {
       name: "darkThemeLabel",
       type: { name: "string", required: false },
-      defaultValue: "Dark Theme",
+      defaultValue: undefined,
       description: "Theme description",
       table: {
         type: { summary: "string" },
@@ -132,9 +132,7 @@ export const profileMenu = (args) => {
 };
 
 profileMenu.story = {
-  welcomeLabel: "Hello",
   userName: "User",
-  darkThemeLabel: "Dark Theme",
   logoutLabel: "Logout",
   version: "v.1.1.2020",
   extraItems: [],

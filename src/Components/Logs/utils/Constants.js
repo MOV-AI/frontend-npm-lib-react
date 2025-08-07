@@ -1,4 +1,5 @@
 import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
+import i18n from "../../../i18n";
 
 export const LEVELS_LABEL = {
   INFO: "Info",
@@ -15,13 +16,13 @@ export const ROBOT_STATES = {
 };
 
 export const COLUMNS_LABEL = {
-  date: "Date",
-  time: "Time",
-  level: "Level",
-  module: "Module",
-  service: "Service",
-  robot: "Robot",
-  message: "Message",
+  date: i18n.t("Date"),
+  time: i18n.t("Time"),
+  level: i18n.t("Level"),
+  module: i18n.t("Module"),
+  service: i18n.t("Service"),
+  robot: i18n.t("Robot"),
+  message: i18n.t("Message"),
 };
 
 export const DEFAULT_SERVICE = Object.keys(CONSTANTS.SERVICE_LABEL).reduce(
