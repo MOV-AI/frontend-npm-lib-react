@@ -13,12 +13,16 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import Toggle from "../Toggle";
 import { profileMenuStyles } from "./styles";
 import Divider from "@material-ui/core/Divider";
-import { InternalUserModel, Rest, User } from "@mov-ai/mov-fe-lib-core";
-import { Typography, Tooltip } from "@material-ui/core";
+import {
+  InternalUserModel,
+  Rest,
+  User,
+  CONSTANTS,
+} from "@mov-ai/mov-fe-lib-core";
+import { Typography, Tooltip, Select } from "@material-ui/core";
 import i18n from "../../i18n";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
-import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 
 const LOCAL_STORAGE_LANG_KEY = CONSTANTS.LOCAL_STORAGE_LANG_KEY;
 
@@ -253,8 +257,10 @@ const LanguageSelection = (props: { user: User }) => {
     fetchLanguages();
   }, [user]);
 
-  const handleChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedLang = event.target.value;
+  const handleChange = async (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>,
+  ) => {
+    const selectedLang = event.target.value as string;
     setLanguage(selectedLang);
     window.localStorage.setItem("movai.lang", selectedLang);
     i18n.changeLanguage(selectedLang);
@@ -265,7 +271,8 @@ const LanguageSelection = (props: { user: User }) => {
   return (
     <MenuItem className={classes.menuItemSpacing}>
       {i18n.t("Language Selection").toString()}
-      <select
+      <Select
+        native
         value={language}
         onChange={handleChange}
         style={{ marginLeft: 8 }}
@@ -276,7 +283,7 @@ const LanguageSelection = (props: { user: User }) => {
             {lang.toUpperCase()}
           </option>
         ))}
-      </select>
+      </Select>
     </MenuItem>
   );
 };
