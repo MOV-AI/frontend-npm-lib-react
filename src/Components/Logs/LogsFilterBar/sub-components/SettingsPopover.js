@@ -11,7 +11,11 @@ import useSelector from "./../useSelector";
 
 const SettingsPopover = () => {
   const classes = useSettingsStyles();
-  const columnsSelector = useSelector(COLUMNS_LABEL, "columns", MENU_PROPS);
+  const translatedColumns = Object.keys(COLUMNS_LABEL).reduce((acc, key) => {
+    acc[key] = i18n.t(COLUMNS_LABEL[key]);
+    return acc;
+  }, {});
+  const columnsSelector = useSelector(translatedColumns, "columns", MENU_PROPS);
 
   return (
     <FiltersIcon icon={<TuneIcon></TuneIcon>} title={i18n.t("Configuration")}>

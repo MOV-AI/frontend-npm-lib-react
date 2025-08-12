@@ -12,7 +12,7 @@ const resources = Object.keys(Translations).reduce((acc, lang) => {
 
 i18n.init({
   resources,
-  lng: "pt",
+  lng: "en",
   fallbackLng: "en",
   debug: false,
   interpolation: {

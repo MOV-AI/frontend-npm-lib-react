@@ -116,7 +116,7 @@ const MuiVirtualizedTable = (props) => {
 
   const headerRender = useCallback(
     (dataKey) => {
-      const label = COLUMNS_LABEL[dataKey];
+      const label = i18n.t(COLUMNS_LABEL[dataKey]);
       return (
         <TableCell
           key={label}
@@ -194,7 +194,6 @@ MuiVirtualizedTable.propTypes = {
 
 export default function LogsTable(props) {
   const { columns, logsData } = props;
-  console.log("LogsTable props:", props.columns);
   return (
     <MuiVirtualizedTable
       {...props}
