@@ -222,7 +222,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   );
 };
 
-const LanguageSelection = (props: { user: User }) => {
+export const LanguageSelection = (props: { user: User }) => {
   const { user } = props;
   const [language, setLanguage] = useState("en");
   const [availableLanguages, setAvailableLanguages] = useState<string[]>([]);
@@ -232,13 +232,12 @@ const LanguageSelection = (props: { user: User }) => {
     const fetchLanguages = async () => {
       // Try to get user language
       try {
-        const localLang = window.localStorage.getItem("movai.lang") ?? "en";
         const userData = (await user.getData()) as InternalUserModel;
-        const userLanguage = userData?.Language ?? localLang;
+        const userLanguage = userData?.Language ?? "en";
         setLanguage(userLanguage);
       } catch (error) {
         console.error("Failed to fetch user language:", error);
-        setLanguage(window.localStorage.getItem("movai.lang") ?? "en");
+        setLanguage("en");
       }
 
       // Try to get available languages
@@ -262,7 +261,7 @@ const LanguageSelection = (props: { user: User }) => {
   ) => {
     const selectedLang = event.target.value as string;
     setLanguage(selectedLang);
-    window.localStorage.setItem("movai.lang", selectedLang);
+    window.localStorage.setItem(LOCAL_STORAGE_LANG_KEY, selectedLang);
     i18n.changeLanguage(selectedLang);
     await user.setLanguage(selectedLang);
     window.location.reload();
