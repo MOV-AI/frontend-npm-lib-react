@@ -1,3 +1,7 @@
+# 2.7.0
+
+- [FP-3278](https://movai.atlassian.net/browse/FP-3278): Create a dropdown on the setting for the user to choose his preferred language
+
 # 2.6.0
 
 - [FP-3138](https://movai.atlassian.net/browse/FP-3138): Not able to use dev container in all frontend repos

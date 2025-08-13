@@ -125,8 +125,8 @@ devDependencies:
     specifier: ^4.11.5
     version: 4.11.5(@types/react@18.3.23)(react-dom@18.3.1)(react@18.3.1)
   '@mov-ai/mov-fe-lib-core':
-    specifier: ^1.2.3-1
-    version: 1.2.3-1
+    specifier: 2.8.0-1
+    version: 2.8.0-1
   '@storybook/addon-actions':
     specifier: ^6.4.19
     version: 6.5.16(react-dom@18.3.1)(react@18.3.1)
@@ -3026,8 +3026,8 @@ packages:
     resolution: {integrity: sha512-H1rQc1ZOHANWBvPcW+JpGwr+juXSxM8Q8YCkm3GhZd8REu1fHR3z99CErO1p9pkcfcxZnMdIZdIsXkOHY0NilA==}
     dev: true
 
-  /@mov-ai/mov-fe-lib-core@1.2.3-1:
-    resolution: {integrity: sha512-XegfLMF7vlaSCuPqhWimI2WLlZ2/iqC5NQ8mizi6BOzWfWPti/qSCB077l3PFk8lLGnjQ1D6Yzsj5uUNtz3ouA==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-core/1.2.3-1/40bb98f24930b20cd823166188015c1fb67c49ac}
+  /@mov-ai/mov-fe-lib-core@2.8.0-1:
+    resolution: {integrity: sha512-7Y+xGtqp/emJFiLNOOmBzaP3PwgC9dkN6JdZFFxeYl3uMINoyXFokE/vC8Q7ARKMrX3fxd1Tk8DNPaPqvlPiaQ==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-core/2.8.0-1/ff7b8aa71d7f1aecca4c376254817c082d5c05c4}
     dependencies:
       '@babel/runtime': 7.22.15
       fast-equals: 5.2.2
