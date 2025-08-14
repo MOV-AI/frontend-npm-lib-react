@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-react",
-  "version": "2.6.0-0",
+  "version": "2.7.0-0",
   "description": "The Mov.AI's frontend library for React.",
   "keywords": [
     "frontend",
@@ -26,6 +26,7 @@
     "build-storybook": "build-storybook",
     "buildDev": "webpack --mode=development --watch",
     "clean": "rm -rf node_modules",
+    "gen-i18n": "npx i18next-parser",
     "lock": "mv ../../pnpm-workspace.yaml ../../pnpm-workspace.yaml.bak ; pnpm i ; mv ../../pnpm-workspace.yaml.bak ../../pnpm-workspace.yaml",
     "prepare": "husky",
     "storybook": "start-storybook -p 3001",
@@ -74,7 +75,7 @@
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@material-ui/pickers": "^3.3.10",
     "@material-ui/styles": "^4.11.5",
-    "@mov-ai/mov-fe-lib-core": "^1.2.3-1",
+    "@mov-ai/mov-fe-lib-core": "2.8.0-1",
     "@storybook/addon-actions": "^6.4.19",
     "@storybook/addon-controls": "^6.4.19",
     "@storybook/addon-docs": "^6.4.19",
@@ -107,6 +108,7 @@
     "prettier": "3.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^15.6.1",
     "sort-package-json": "2.10.1",
     "storybook-addon-mock": "^2.4.1",
     "style-loader": "^3.3.0",

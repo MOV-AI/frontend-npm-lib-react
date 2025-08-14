@@ -1,5 +1,5 @@
 import React from "react";
-import i18n from "i18next";
+import i18n from "../../../../i18n";
 import { Typography } from "@material-ui/core";
 import TuneIcon from "@material-ui/icons/Tune";
 import FiltersIcon from "./_shared/FiltersIcon/FiltersIcon";
@@ -11,7 +11,10 @@ import useSelector from "./../useSelector";
 
 const SettingsPopover = () => {
   const classes = useSettingsStyles();
-  const columnsSelector = useSelector(COLUMNS_LABEL, "columns", MENU_PROPS);
+  const translatedColumns = Object.fromEntries(
+    Object.entries(COLUMNS_LABEL).map(([key, value]) => [key, i18n.t(value)]),
+  );
+  const columnsSelector = useSelector(translatedColumns, "columns", MENU_PROPS);
 
   return (
     <FiltersIcon icon={<TuneIcon></TuneIcon>} title={i18n.t("Configuration")}>

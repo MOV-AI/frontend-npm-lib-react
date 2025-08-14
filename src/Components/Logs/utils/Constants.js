@@ -14,6 +14,7 @@ export const ROBOT_STATES = {
   OFFLINE: "OFFLINE",
 };
 
+// Don't use translation here, since they will not be dynamically updated
 export const COLUMNS_LABEL = {
   date: "Date",
   time: "Time",

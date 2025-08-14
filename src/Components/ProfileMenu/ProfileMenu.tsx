@@ -13,11 +13,18 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import Toggle from "../Toggle";
 import { profileMenuStyles } from "./styles";
 import Divider from "@material-ui/core/Divider";
-import { User } from "@mov-ai/mov-fe-lib-core";
-import { Typography, Tooltip } from "@material-ui/core";
-import i18n from "i18next";
+import {
+  InternalUserModel,
+  Rest,
+  User,
+  CONSTANTS,
+} from "@mov-ai/mov-fe-lib-core";
+import { Typography, Tooltip, Select } from "@material-ui/core";
+import i18n from "../../i18n";
 import ResetPasswordModal from "./ResetPassword";
 import { ProfileMenuProps } from "./types";
+
+const LOCAL_STORAGE_LANG_KEY = CONSTANTS.LOCAL_STORAGE_LANG_KEY;
 
 function getCustomMenuElements(menuItemConf: any, classes: any) {
   return Object.entries(menuItemConf ?? {}).map(
@@ -31,7 +38,7 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
           className={classes.menuItemSpacing}
           onClick={menuItem.handler}
         >
-          {i18n.t(menuItem.title)}
+          {i18n.t(menuItem.title).toString()}
         </MenuItem>
       );
     },
@@ -41,9 +48,9 @@ function getCustomMenuElements(menuItemConf: any, classes: any) {
 const ProfileMenu = (props: ProfileMenuProps) => {
   // Props
   const {
-    welcomeLabel = "Hello",
-    darkThemeLabel = "Dark Theme",
-    logoutLabel = "Logout",
+    welcomeLabel = i18n.t("Hello"),
+    darkThemeLabel = i18n.t("Dark Theme"),
+    logoutLabel = i18n.t("Logout"),
     version = "",
     extraItems = [],
     menuItemConf,
@@ -100,6 +107,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
    */
   const handleLogoutClick = useCallback(() => {
     handleLogout();
+    localStorage.removeItem(LOCAL_STORAGE_LANG_KEY);
   }, [handleLogout]);
 
   //========================================================================================
@@ -176,7 +184,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               className={classes.menuItemSpacing}
               onClick={handlePasswordReset}
             >
-              {i18n.t("Change Password")}
+              {i18n.t("Change Password").toString()}
             </MenuItem>
           )}
           {customEl}
@@ -192,7 +200,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
               ></Toggle>
             </MenuItem>
           )}
-
+          <LanguageSelection user={user} />
           <MenuItem
             className={classes.menuItemSpacing}
             onClick={handleLogoutClick}
@@ -211,6 +219,77 @@ const ProfileMenu = (props: ProfileMenuProps) => {
       {/* Password Modal */}
       <ResetPasswordModal ref={resetModalRef}></ResetPasswordModal>
     </div>
+  );
+};
+
+const DEFAULT_LANGUAGE = "en";
+
+export const LanguageSelection = (props: { user: User }) => {
+  const { user } = props;
+  const [language, setLanguage] = useState(DEFAULT_LANGUAGE);
+  const [availableLanguages, setAvailableLanguages] = useState<string[]>([
+    DEFAULT_LANGUAGE,
+  ]);
+  const classes = profileMenuStyles();
+
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      // Try to get user language
+      try {
+        const userData = (await user.getData()) as InternalUserModel;
+        const userLanguage = userData?.Language ?? DEFAULT_LANGUAGE;
+        setLanguage(userLanguage);
+      } catch (error) {
+        console.error("Failed to fetch user language:", error);
+        setLanguage(DEFAULT_LANGUAGE);
+      }
+
+      // Try to get available languages
+      try {
+        const response = await Rest.get({ path: "v2/languages/" });
+        const languages = Array.isArray(response?.languages)
+          ? response.languages
+          : [DEFAULT_LANGUAGE];
+        setAvailableLanguages(
+          languages.length > 0 ? languages : [DEFAULT_LANGUAGE],
+        );
+      } catch (error) {
+        console.error("Failed to fetch available languages:", error);
+        setAvailableLanguages([DEFAULT_LANGUAGE]);
+      }
+    };
+
+    fetchLanguages();
+  }, [user]);
+
+  const handleChange = async (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>,
+  ) => {
+    const selectedLang = event.target.value as string;
+    setLanguage(selectedLang);
+    window.localStorage.setItem(LOCAL_STORAGE_LANG_KEY, selectedLang);
+    i18n.changeLanguage(selectedLang);
+    await user.setLanguage(selectedLang);
+    window.location.reload();
+  };
+
+  return (
+    <MenuItem className={classes.menuItemSpacing}>
+      {i18n.t("Language Selection").toString()}
+      <Select
+        native
+        value={language}
+        onChange={handleChange}
+        className={classes.languageSelector}
+        data-testid="input_language-selector"
+      >
+        {availableLanguages.map((lang) => (
+          <option key={lang} value={lang}>
+            {lang.toUpperCase()}
+          </option>
+        ))}
+      </Select>
+    </MenuItem>
   );
 };
 

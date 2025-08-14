@@ -5,7 +5,7 @@ import { Emit, makeSub } from "../../Utils/Sub";
 import useSub from "../../hooks/useSub";
 import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
-import i18n from "i18next";
+import i18n from "../../i18n";
 
 interface LoginData {
   username: string;
@@ -70,7 +70,7 @@ export const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
     };
   } catch (e: any) {
     if (!(globalThis as any).mock)
-      console.error("Auth Error: " + e.error?.message ?? e.message ?? e);
+      console.error("Auth Error: " + (e.error?.message ?? e.message ?? e));
     return { ...loggedOutInfo, loading: false };
   }
 });
@@ -130,7 +130,9 @@ export default function withAuthentication(
      * @returns React Component
      */
     const renderLoading = () => {
-      return <LoginPanel message={"Preparing the bots"} progress={true} />;
+      return (
+        <LoginPanel message={i18n.t("Preparing the bots")} progress={true} />
+      );
     };
 
     /**

@@ -13,10 +13,10 @@ import LogsTable from "./LogsTable/LogsTable";
 import { ROBOT_LOG_TYPE } from "./utils/Constants";
 import { COLUMNS_LABEL } from "./utils/Constants";
 import useUpdateEffect from "./hooks/useUpdateEffect";
-import _isEqual from "lodash/isEqual";
 import { useStyles } from "./styles";
 import { logsSub } from "./sub";
 import "./Logs.css";
+import i18n from "../../i18n";
 
 /**
  * Tranform log from the format received from the API to the format
@@ -256,7 +256,7 @@ const Logs = (props) => {
       : new Date(filteredLogs[0].time * 0.001).toISOString();
     const columnLabels = Object.keys(columns)
       .filter((key) => columns[key])
-      .map((key) => COLUMNS_LABEL[key]);
+      .map((key) => i18n.t(COLUMNS_LABEL[key]));
     blobDownload(
       [columnLabels.join(sep), ...contents].join("\n"),
       `movai-logs-${dateString}.csv`,
