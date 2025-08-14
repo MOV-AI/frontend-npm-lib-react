@@ -7,7 +7,7 @@ import { Grid, Typography } from "@material-ui/core";
 import { Workspace, CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import i18n from "i18next";
+import i18n from "../../i18n";
 import BasicVirtualizedTree from "../Tree/BasicVirtualizedTree";
 import AbstractModal from "./AbstractModal";
 

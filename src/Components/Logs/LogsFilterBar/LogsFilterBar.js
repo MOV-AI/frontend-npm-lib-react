@@ -8,7 +8,7 @@ import SearchInput from "./sub-components/SearchInput";
 import TagsPopover from "./sub-components/TagsPopover";
 import TimeFilters from "./sub-components/TimeFilters";
 import SettingsPopover from "./sub-components/SettingsPopover";
-import i18n from "i18next";
+import i18n from "../../../i18n";
 // Styles
 import { useLogFilterStyles, useRobotSelectorStyles } from "../styles";
 import { MENU_PROPS } from "./sub-components/_shared/Constants";

@@ -1,12 +1,9 @@
 import React from "react";
-import withMock from "storybook-addon-mock";
 
-import { authParams } from "./_mockLogin";
 import withOfflineValidation from "../src/Components/HOCs/withOfflineValidation";
 
 export default {
   title: "With offline validation Component",
-  decorators: [withMock],
 };
 
 const withOfflineComponent = () => {
@@ -24,8 +21,6 @@ const Template = () => {
 };
 
 export const offlineStory = Template.bind({});
-
-offlineStory.parameters = authParams;
 
 offlineStory.story = {
   name: "WithOfflineValidations",

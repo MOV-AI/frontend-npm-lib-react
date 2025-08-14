@@ -12,7 +12,7 @@ import { withStyles } from "@material-ui/styles";
 import { styles } from "./style";
 import { Authentication } from "@mov-ai/mov-fe-lib-core";
 import LoginFormAdvanced from "./LoginFormAdvanced";
-import i18n from "i18next";
+import i18n from "../../i18n";
 import { LoginFormProps } from "./types";
 
 const SELECTED_DOMAIN_KEY = "movai.loggedin-domain";
@@ -181,7 +181,7 @@ class LoginForm extends Component<LoginFormProps> {
                 error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-username-error">
-                  Username
+                  {i18n.t("Username") as string}
                 </InputLabel>
                 <Input
                   inputProps={{ "data-testid": "input_username" }}
@@ -200,7 +200,7 @@ class LoginForm extends Component<LoginFormProps> {
                 error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-password-error">
-                  Password
+                  {i18n.t("Password") as string}
                 </InputLabel>
                 <Input
                   inputProps={{ "data-testid": "input_password" }}
@@ -219,7 +219,7 @@ class LoginForm extends Component<LoginFormProps> {
                 )}
                 {this.state.capsLockOn && (
                   <FormHelperText id="component-warning-text">
-                    Warning: Caps lock is ON!
+                    {i18n.t("CapsLockOn") as string}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -239,7 +239,7 @@ class LoginForm extends Component<LoginFormProps> {
           <Grid>
             <Typography align="center" gutterBottom>
               <Button data-testid="input_login" onClick={this.sendCreds}>
-                Login
+                {i18n.t("Login") as string}
               </Button>
             </Typography>
           </Grid>

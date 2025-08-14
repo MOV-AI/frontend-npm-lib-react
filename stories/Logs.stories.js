@@ -1,14 +1,10 @@
 import React from "react";
-import withMock from "storybook-addon-mock";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
-
-import { authParams } from "./_mockLogin";
 import Logs from "../src/Components/Logs/Logs";
 import withAuthentication from "../src/Components/HOCs/withAuthentication";
 
 export default {
   title: "Logs Component",
-  decorators: [withMock],
 };
 
 const LogsTable = () => {
@@ -45,8 +41,6 @@ const Template = () => {
 };
 
 export const logStory = Template.bind({});
-
-logStory.parameters = authParams;
 
 logStory.story = {
   name: "Logs",

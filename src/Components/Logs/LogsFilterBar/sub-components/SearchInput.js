@@ -4,7 +4,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import ResetSearch from "@material-ui/icons/Close";
 import { useSearchInputStyles } from "../../styles";
 import { logsSub } from "./../../sub";
-import i18n from "i18next";
+import i18n from "../../../../i18n";
 
 const SearchInput = () => {
   const { message } = logsSub.use();

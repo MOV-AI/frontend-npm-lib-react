@@ -17,6 +17,9 @@ export const profileMenuStyles = makeStyles((theme) => {
       fontSize: "14px",
       textAlign: "end",
     },
+    languageSelector: {
+      marginLeft: 8,
+    },
   };
 });
 

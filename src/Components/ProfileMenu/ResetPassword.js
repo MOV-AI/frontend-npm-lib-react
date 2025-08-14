@@ -12,7 +12,7 @@ import _isEmpty from "lodash/isEmpty";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { User } from "@mov-ai/mov-fe-lib-core";
-import i18n from "i18next";
+import i18n from "../../i18n";
 import { resetPasswordStyles } from "./styles";
 import { ALERT_SEVERITY } from "../../Utils/Constants";
 import { snackbar } from "../Snackbar/Snackbar";

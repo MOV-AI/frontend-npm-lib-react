@@ -1,17 +1,24 @@
 import { Translations } from "./locales";
 import i18n from "i18next";
+
+const resources = Object.keys(Translations).reduce((acc, lang) => {
+  acc[lang] = {
+    translation: {
+      ...Translations[lang],
+    },
+  };
+  return acc;
+}, {});
+
 i18n.init({
-  resources: {
-    en: { translation: Translations.en },
-    pt: { translation: Translations.pt },
-  },
-  lng: globalThis.SERVER_DATA?.Language || "en",
-  fallbackLng: false,
+  resources,
+  lng: "en",
+  fallbackLng: "en",
   debug: false,
-  missingKeyHandler: (_lng, _ns, key, fallbackValue) => fallbackValue ?? key,
   interpolation: {
-    escape: (a) => a,
+    escapeValue: false, // not needed for react as it escapes by default
   },
 });
+
 export { Translations };
 export default i18n;

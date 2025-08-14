@@ -8,7 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableHead from "@material-ui/core/TableHead";
 import TableCell from "@material-ui/core/TableCell";
 import { COLOR_CODING, COLUMNS_LABEL } from "../utils/Constants";
-import i18n from "i18next";
+import i18n from "../../../i18n";
 import { TableVirtuoso } from "react-virtuoso";
 
 const useStyles = makeStyles((theme) => {
@@ -116,7 +116,7 @@ const MuiVirtualizedTable = (props) => {
 
   const headerRender = useCallback(
     (dataKey) => {
-      const label = COLUMNS_LABEL[dataKey];
+      const label = i18n.t(COLUMNS_LABEL[dataKey]);
       return (
         <TableCell
           key={label}
