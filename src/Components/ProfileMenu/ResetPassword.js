@@ -30,9 +30,9 @@ export const VARIANT_OPTIONS = {
 };
 
 const FORM_FIELDS = {
-  CURRENT_PASSWORD: "currentPasswordField",
-  NEW_PASSWORD: "newPasswordField",
-  CONFIRM_PASSWORD: "confirmPasswordField",
+  CURRENT_PASSWORD: "currentPassword",
+  NEW_PASSWORD: "newPassword",
+  CONFIRM_PASSWORD: "confirmPassword",
 };
 
 const DEFAULT_VALUES = {
