@@ -11,10 +11,9 @@ import useSelector from "./../useSelector";
 
 const SettingsPopover = () => {
   const classes = useSettingsStyles();
-  const translatedColumns = Object.keys(COLUMNS_LABEL).reduce((acc, key) => {
-    acc[key] = i18n.t(COLUMNS_LABEL[key]);
-    return acc;
-  }, {});
+  const translatedColumns = Object.fromEntries(
+    Object.entries(COLUMNS_LABEL).map(([key, value]) => [key, i18n.t(value)]),
+  );
   const columnsSelector = useSelector(translatedColumns, "columns", MENU_PROPS);
 
   return (

@@ -222,10 +222,14 @@ const ProfileMenu = (props: ProfileMenuProps) => {
   );
 };
 
+const DEFAULT_LANGUAGE = "en";
+
 export const LanguageSelection = (props: { user: User }) => {
   const { user } = props;
-  const [language, setLanguage] = useState("en");
-  const [availableLanguages, setAvailableLanguages] = useState<string[]>([]);
+  const [language, setLanguage] = useState(DEFAULT_LANGUAGE);
+  const [availableLanguages, setAvailableLanguages] = useState<string[]>([
+    DEFAULT_LANGUAGE,
+  ]);
   const classes = profileMenuStyles();
 
   useEffect(() => {
@@ -233,11 +237,11 @@ export const LanguageSelection = (props: { user: User }) => {
       // Try to get user language
       try {
         const userData = (await user.getData()) as InternalUserModel;
-        const userLanguage = userData?.Language ?? "en";
+        const userLanguage = userData?.Language ?? DEFAULT_LANGUAGE;
         setLanguage(userLanguage);
       } catch (error) {
         console.error("Failed to fetch user language:", error);
-        setLanguage("en");
+        setLanguage(DEFAULT_LANGUAGE);
       }
 
       // Try to get available languages
@@ -245,11 +249,13 @@ export const LanguageSelection = (props: { user: User }) => {
         const response = await Rest.get({ path: "v2/languages/" });
         const languages = Array.isArray(response?.languages)
           ? response.languages
-          : ["en"];
-        setAvailableLanguages(languages.length > 0 ? languages : ["en"]);
+          : [DEFAULT_LANGUAGE];
+        setAvailableLanguages(
+          languages.length > 0 ? languages : [DEFAULT_LANGUAGE],
+        );
       } catch (error) {
         console.error("Failed to fetch available languages:", error);
-        setAvailableLanguages(["en"]);
+        setAvailableLanguages([DEFAULT_LANGUAGE]);
       }
     };
 
@@ -274,7 +280,7 @@ export const LanguageSelection = (props: { user: User }) => {
         native
         value={language}
         onChange={handleChange}
-        style={{ marginLeft: 8 }}
+        className={classes.languageSelector}
         data-testid="input_language-selector"
       >
         {availableLanguages.map((lang) => (

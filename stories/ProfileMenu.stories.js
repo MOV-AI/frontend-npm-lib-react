@@ -9,7 +9,7 @@ export default {
     welcomeLabel: {
       name: "welcomeLabel",
       type: { name: "string", required: false },
-      defaultValue: undefined,
+      defaultValue: "Hello",
       description: "Welcome description",
       table: {
         type: { summary: "string" },
