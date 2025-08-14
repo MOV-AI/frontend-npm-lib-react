@@ -181,7 +181,7 @@ class LoginForm extends Component<LoginFormProps> {
                 error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-username-error">
-                  {String(i18n.t("Username"))}
+                  {i18n.t("Username") as string}
                 </InputLabel>
                 <Input
                   inputProps={{ "data-testid": "input_username" }}
@@ -200,7 +200,7 @@ class LoginForm extends Component<LoginFormProps> {
                 error={!!errorMessage}
               >
                 <InputLabel htmlFor="component-password-error">
-                  {String(i18n.t("Password"))}
+                  {i18n.t("Password") as string}
                 </InputLabel>
                 <Input
                   inputProps={{ "data-testid": "input_password" }}
@@ -219,7 +219,7 @@ class LoginForm extends Component<LoginFormProps> {
                 )}
                 {this.state.capsLockOn && (
                   <FormHelperText id="component-warning-text">
-                    {String(i18n.t("CapsLockOn"))}
+                    {i18n.t("CapsLockOn") as string}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -239,7 +239,7 @@ class LoginForm extends Component<LoginFormProps> {
           <Grid>
             <Typography align="center" gutterBottom>
               <Button data-testid="input_login" onClick={this.sendCreds}>
-                {String(i18n.t("Login"))}
+                {i18n.t("Login") as string}
               </Button>
             </Typography>
           </Grid>
