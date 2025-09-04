@@ -5,6 +5,7 @@ import LabelIcon from "@material-ui/icons/Label";
 import AddIcon from "@material-ui/icons/Add";
 import { useTagsStyles } from "../../styles";
 import { logsSub } from "./../../sub";
+import i18n from "../../../../i18n";
 
 const TagsPopover = () => {
   const { tags } = logsSub.use();
@@ -73,7 +74,7 @@ const TagsPopover = () => {
           value={tagText}
           onChange={handleOnChangeKey}
           onKeyUp={handleKeyUp}
-          label="Add Tag"
+          label={i18n.t("Add Tag")}
           InputProps={{ endAdornment }}
           size="small"
         />
