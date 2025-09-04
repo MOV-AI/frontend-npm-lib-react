@@ -1,17 +1,17 @@
 import React, {
   useCallback,
-  useState,
-  useRef,
   useEffect,
   useMemo,
+  useRef,
+  useState,
 } from "react";
-import { RobotManager, Features } from "@mov-ai/mov-fe-lib-core";
+import PropTypes from "prop-types";
+import { Features, RobotManager } from "@mov-ai/mov-fe-lib-core";
 import useSub from "../../hooks/useSub";
 import RobotLogModal from "../Modal/RobotLogModal";
 import LogsFilterBar from "./LogsFilterBar/LogsFilterBar";
 import LogsTable from "./LogsTable/LogsTable";
-import { ROBOT_LOG_TYPE } from "./utils/Constants";
-import { COLUMNS_LABEL } from "./utils/Constants";
+import { COLUMNS_LABEL, ROBOT_LOG_TYPE } from "./utils/Constants";
 import useUpdateEffect from "./hooks/useUpdateEffect";
 import { useStyles } from "./styles";
 import { logsSub } from "./sub";
@@ -66,7 +66,8 @@ export function logsDedupe(oldLogs, data) {
 
   // cut new logs up to z, concat with the deduped ones
   // and the old logs up to i
-  return data.slice(0, z + 1).concat(newSecOverlap.reverse(), oldLogs);
+  const reversed = newSecOverlap.toReversed();
+  return data.slice(0, z + 1).concat(reversed, oldLogs);
 }
 
 // TODO this should be exported. Fleetboard uses it
@@ -125,7 +126,7 @@ const Logs = (props) => {
     selectedFromDate,
     selectedToDate,
   } = sub;
-  const [logsData, setLogsData] = useState(logsDataGlobal);
+  const [, setLogsData] = useState(logsDataGlobal);
   const restLogs = useMemo(() => !Features.get("logStreaming"), []);
 
   const filteredLogs = useMemo(
@@ -142,16 +143,7 @@ const Logs = (props) => {
             (!selectedToDate || item.timestamp <= selectedToDate),
         )
         .slice(0, MAX_LOGS),
-    [
-      logsData,
-      levels,
-      service,
-      message,
-      tags,
-      robots,
-      selectedFromDate,
-      selectedToDate,
-    ],
+    [levels, service, message, tags, robots, selectedFromDate, selectedToDate],
   );
 
   useEffect(() => {
@@ -196,20 +188,13 @@ const Logs = (props) => {
 
       setLogsData(newLogs);
     });
-  }, [
-    selectedFromDate,
-    selectedToDate,
-    logsData,
-    setLogsData,
-    robotsData,
-    restLogs,
-  ]);
+  }, [selectedFromDate, selectedToDate, setLogsData]);
 
   const sock = useMemo(() => (restLogs ? null : RobotManager.openLogs({})), []);
 
   useEffect(() => {
     getLogs();
-  }, []);
+  }, [getLogs]);
 
   const onMessage = useCallback(
     (msg) => {
@@ -291,3 +276,14 @@ const Logs = (props) => {
 };
 
 export default Logs;
+
+Logs.propTypes = {
+  robotsData: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  hide: PropTypes.object,
+  force: PropTypes.object,
+  defaults: PropTypes.object,
+};
