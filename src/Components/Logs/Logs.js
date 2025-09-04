@@ -126,7 +126,7 @@ const Logs = (props) => {
     selectedFromDate,
     selectedToDate,
   } = sub;
-  const [logsData, setLogsData] = useState(logsDataGlobal);
+  const [, setLogsData] = useState(logsDataGlobal);
   const restLogs = useMemo(() => !Features.get("logStreaming"), []);
 
   const filteredLogs = useMemo(
