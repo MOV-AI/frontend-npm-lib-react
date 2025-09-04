@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import PropTypes from "prop-types";
 import { Features, RobotManager } from "@mov-ai/mov-fe-lib-core";
 import useSub from "../../hooks/useSub";
 import RobotLogModal from "../Modal/RobotLogModal";
@@ -275,3 +276,14 @@ const Logs = (props) => {
 };
 
 export default Logs;
+
+Logs.propTypes = {
+  robotsData: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  hide: PropTypes.object,
+  force: PropTypes.object,
+  defaults: PropTypes.object,
+};
