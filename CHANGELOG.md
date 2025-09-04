@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3336](https://movai.atlassian.net/browse/FP-3336): Missing portuguese translations on Logs page
+
 # 2.7.0
 
 - [FP-3278](https://movai.atlassian.net/browse/FP-3278): Create a dropdown on the setting for the user to choose his preferred language

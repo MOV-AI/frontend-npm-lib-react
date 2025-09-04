@@ -53,7 +53,7 @@ const LogsFilterBar = (props) => {
       })
         .filter(([key]) => !hide[key])
         .map(([_key, value]) => value),
-    [robotSelector, levelSelector, serviceSelector, classes, handleExport],
+    [robotSelector, levelSelector, serviceSelector, hide],
   );
 
   return (
