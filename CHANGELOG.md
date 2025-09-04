@@ -1,3 +1,9 @@
+# TBD
+
+- [FP-3335](https://movai.atlassian.net/browse/FP-3335): Missing portuguese translation on Health Monitor
+- [FP-3336](https://movai.atlassian.net/browse/FP-3336): Missing portuguese translations on Logs page
+- [FP-3337](https://movai.atlassian.net/browse/FP-3337): Missing portuguese translation in Overview page
+
 # 2.7.0
 
 - [FP-3278](https://movai.atlassian.net/browse/FP-3278): Create a dropdown on the setting for the user to choose his preferred language
