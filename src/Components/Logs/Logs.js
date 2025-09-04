@@ -66,7 +66,8 @@ export function logsDedupe(oldLogs, data) {
 
   // cut new logs up to z, concat with the deduped ones
   // and the old logs up to i
-  return data.slice(0, z + 1).concat(newSecOverlap.reverse(), oldLogs);
+  const reversed = newSecOverlap.reverse();
+  return data.slice(0, z + 1).concat(reversed, oldLogs);
 }
 
 // TODO this should be exported. Fleetboard uses it
