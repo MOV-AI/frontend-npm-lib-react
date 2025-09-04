@@ -1,4 +1,4 @@
-# TBD
+# 2.7.1
 
 - [FP-3336](https://movai.atlassian.net/browse/FP-3336): Missing portuguese translations on Logs page
 
