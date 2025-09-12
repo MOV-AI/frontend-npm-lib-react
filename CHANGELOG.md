@@ -1,3 +1,7 @@
+# 2.7.2
+
+- [FP-3329](https://movai.atlassian.net/browse/FP-3329): MOVAI Logs out and does not allow user to save it's work
+
 # 2.7.1
 
 - [FP-3336](https://movai.atlassian.net/browse/FP-3336): Missing portuguese translations on Logs page

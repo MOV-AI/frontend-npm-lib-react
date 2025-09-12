@@ -18,6 +18,11 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+/**
+ * Higher-order component for handling offline validation - just offline/online status, not authentication
+ * @param Component
+ * @returns
+ */
 export default function withOfflineValidation(Component: React.ComponentType) {
   return function (props: any) {
     const [isConnected, setConnected] = React.useState(true);

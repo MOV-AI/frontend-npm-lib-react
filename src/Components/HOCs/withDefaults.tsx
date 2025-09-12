@@ -14,7 +14,6 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
     dependencies = {} as Dependencies,
     getStyle,
     ApplicationTheme,
-    allowGuest,
   } = appOptions;
 
   let componentWithDefaults = withError(appComponent);
@@ -27,7 +26,6 @@ export default function withDefaults(appOptions: WithDefaultsProps) {
   const componentWithAuthentication = withAuthentication(
     componentWithNotifications,
     appName,
-    allowGuest,
   );
 
   return withTheme(
