@@ -202,6 +202,7 @@ const ProfileMenu = (props: ProfileMenuProps) => {
           )}
           <LanguageSelection user={user} />
           <MenuItem
+            data-testid="logout"
             className={classes.menuItemSpacing}
             onClick={handleLogoutClick}
           >
