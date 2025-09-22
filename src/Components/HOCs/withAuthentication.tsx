@@ -5,6 +5,16 @@ import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import jwtDecode from "jwt-decode";
 import i18n from "../../i18n/index";
+import { makeSub } from "../../Utils/Sub";
+
+declare global {
+  interface Window {
+    DocManager?: {
+      hasDirties: () => boolean;
+      // Add other DocManager methods/properties if needed
+    };
+  }
+}
 
 const RECHECK_VALID_DELAY = 10000; // milliseconds
 const RECHECK_AUTH_FAIL = 60000; // milliseconds
@@ -154,6 +164,15 @@ export default function withAuthentication<P extends object>(
 
     // handleLogOut - log out the user
     const handleLogOut = (redirect?: string) => {
+      // Check for unsaved documents using global DocManager (kind of a hack)
+      const hasDirties = window?.DocManager?.hasDirties?.() ?? false;
+      if (hasDirties) {
+        const confirmed = window.confirm(
+          "You have unsaved documents. Are you sure you want to quit?",
+        );
+        if (!confirmed) return;
+      }
+      window.onbeforeunload = null;
       Authentication.logout(redirect);
     };
 
@@ -250,3 +269,25 @@ export default function withAuthentication<P extends object>(
     );
   };
 }
+
+//========================================================================================
+/*                                                                                      *
+ *                            LEGACY TO DELETE IN THE FUTURE                            *
+ *                                                                                      */
+//========================================================================================
+
+interface LoginSub {
+  loggedIn: boolean;
+  currentUser: any;
+  loading: boolean;
+  providers: { domains: string[] };
+}
+
+export const loggedOutInfo = {
+  loggedIn: false,
+  currentUser: null,
+  loading: false,
+  providers: { domains: [] },
+};
+
+export const authSub = makeSub<LoginSub>(loggedOutInfo);
