@@ -138,7 +138,6 @@ export default function withAuthentication<P extends object>(
           () =>
             Authentication.refreshTokens()
               .then((res: boolean) => {
-                console.log("Token refresh result: ", res);
                 setState((prevState) => ({
                   ...prevState,
                   loggedIn: res,
