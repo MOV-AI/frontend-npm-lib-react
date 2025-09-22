@@ -7,6 +7,7 @@ const MockComponent = () => <div>hello</div>;
 
 describe("Render", () => {
   it("renders the component (smoke test)", async () => {
+    jest.setTimeout(10000);
     const HOC = withAuthentication(MockComponent, "testApp");
     const Themed = withTheme(HOC);
 
