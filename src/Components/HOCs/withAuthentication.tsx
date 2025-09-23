@@ -108,13 +108,12 @@ export default function withAuthentication<P extends object>(
 
     // Check every 1 minute if the user is still authenticated
     useEffect(() => {
-      const checkAuth = async () => {
+      const interval = setInterval(async () => {
         const isConnected = await checkConnection();
         if (!isConnected && state.loggedIn) {
           setState((prevState) => ({ ...prevState, loggedIn: false }));
         }
-      };
-      const interval = setInterval(checkAuth, RECHECK_AUTH_FAIL);
+      }, RECHECK_AUTH_FAIL);
       return () => clearInterval(interval);
     }, [state.loggedIn]);
 
@@ -135,18 +134,20 @@ export default function withAuthentication<P extends object>(
           RECHECK_VALID_DELAY,
         );
 
-        const refreshTokens = () =>
-          Authentication.refreshTokens()
-            .then((res: boolean) => {
-              setState((prevState) => ({
-                ...prevState,
-                loggedIn: res,
-              }));
-            })
-            .catch((error: unknown) =>
-              console.log("Error while trying to refresh the tokens", error),
-            );
-        const timeOut = setTimeout(refreshTokens, timeToRun);
+        const timeOut = setTimeout(
+          () =>
+            Authentication.refreshTokens()
+              .then((res: boolean) => {
+                setState((prevState) => ({
+                  ...prevState,
+                  loggedIn: res,
+                }));
+              })
+              .catch((error: unknown) =>
+                console.log("Error while trying to refresh the tokens", error),
+              ),
+          timeToRun,
+        );
 
         return () => {
           clearTimeout(timeOut);
