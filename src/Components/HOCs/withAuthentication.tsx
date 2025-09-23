@@ -108,12 +108,13 @@ export default function withAuthentication<P extends object>(
 
     // Check every 1 minute if the user is still authenticated
     useEffect(() => {
-      const interval = setInterval(async () => {
+      const checkAuth = async () => {
         const isConnected = await checkConnection();
         if (!isConnected && state.loggedIn) {
           setState((prevState) => ({ ...prevState, loggedIn: false }));
         }
-      }, RECHECK_AUTH_FAIL);
+      };
+      const interval = setInterval(checkAuth, RECHECK_AUTH_FAIL);
       return () => clearInterval(interval);
     }, [state.loggedIn]);
 
