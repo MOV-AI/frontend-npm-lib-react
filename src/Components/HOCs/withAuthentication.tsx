@@ -134,20 +134,18 @@ export default function withAuthentication<P extends object>(
           RECHECK_VALID_DELAY,
         );
 
-        const timeOut = setTimeout(
-          () =>
-            Authentication.refreshTokens()
-              .then((res: boolean) => {
-                setState((prevState) => ({
-                  ...prevState,
-                  loggedIn: res,
-                }));
-              })
-              .catch((error: unknown) =>
-                console.log("Error while trying to refresh the tokens", error),
-              ),
-          timeToRun,
-        );
+        const refreshTokens = () =>
+          Authentication.refreshTokens()
+            .then((res: boolean) => {
+              setState((prevState) => ({
+                ...prevState,
+                loggedIn: res,
+              }));
+            })
+            .catch((error: unknown) =>
+              console.log("Error while trying to refresh the tokens", error),
+            );
+        const timeOut = setTimeout(refreshTokens, timeToRun);
 
         return () => {
           clearTimeout(timeOut);
