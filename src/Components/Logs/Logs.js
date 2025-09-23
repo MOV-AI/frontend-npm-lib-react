@@ -44,7 +44,7 @@ export function logsDedupe(oldLogs, data) {
   if (!data.length) return oldLogs;
 
   // date of the oldest log received in the current request
-  const oldDate = data[data.length - 1].timestamp;
+  const oldDate = data.at(-1).timestamp;
   // map to store the old logs of the overlaped second
   let map = {};
 
@@ -81,7 +81,7 @@ function blobDownload(file, fileName, charset = "text/plain;charset=utf-8") {
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
-  globalThis.document.body.removeChild(a);
+  a.remove();
 }
 
 function noSelection(obj) {
@@ -98,9 +98,9 @@ function getRobots(robotsData) {
 }
 
 function matchTags(tags, item) {
-  for (const tag in tags)
-    if (item[tag] !== undefined) continue;
-    else return false;
+  for (const tag in tags) {
+    if (item[tag] === undefined) return false;
+  }
   return true;
 }
 
@@ -252,9 +252,10 @@ const Logs = (props) => {
       return [date, time, robot, message].join(sep);
     });
     // from https://www.epochconverter.com/programming/
-    const dateString = !filteredLogs.length
-      ? new Date().toISOString()
-      : new Date(filteredLogs[0].time * 0.001).toISOString();
+    const dateString =
+      filteredLogs.length === 0
+        ? new Date().toISOString()
+        : new Date(filteredLogs[0].timestamp * 0.001).toISOString();
     const columnLabels = Object.keys(columns)
       .filter((key) => columns[key])
       .map((key) => i18n.t(COLUMNS_LABEL[key]));
