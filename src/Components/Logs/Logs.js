@@ -126,7 +126,7 @@ const Logs = (props) => {
     selectedFromDate,
     selectedToDate,
   } = sub;
-  const [, setLogsData] = useState(logsDataGlobal);
+  const [logsData, setLogsData] = useState(logsDataGlobal);
   const restLogs = useMemo(() => !Features.get("logStreaming"), []);
 
   const filteredLogs = useMemo(
@@ -143,7 +143,16 @@ const Logs = (props) => {
             (!selectedToDate || item.timestamp <= selectedToDate),
         )
         .slice(0, MAX_LOGS),
-    [levels, service, message, tags, robots, selectedFromDate, selectedToDate],
+    [
+      logsData,
+      levels,
+      service,
+      message,
+      tags,
+      robots,
+      selectedFromDate,
+      selectedToDate,
+    ],
   );
 
   useEffect(() => {
@@ -188,13 +197,20 @@ const Logs = (props) => {
 
       setLogsData(newLogs);
     });
-  }, [selectedFromDate, selectedToDate, setLogsData]);
+  }, [
+    selectedFromDate,
+    selectedToDate,
+    logsData,
+    setLogsData,
+    robotsData,
+    restLogs,
+  ]);
 
   const sock = useMemo(() => (restLogs ? null : RobotManager.openLogs({})), []);
 
   useEffect(() => {
     getLogs();
-  }, [getLogs]);
+  }, []);
 
   const onMessage = useCallback(
     (msg) => {
