@@ -46,3 +46,53 @@ describe("withAuthentication HOC", () => {
     );
   });
 });
+
+import { authEmit, loggedOutInfo, authSub } from "./withAuthentication";
+
+describe("authEmit", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    authSub.update(loggedOutInfo);
+  });
+
+  it("returns logged out info when not authenticated", async () => {
+    const core = require("@mov-ai/mov-fe-lib-core");
+    core.Authentication.checkLogin.mockResolvedValue(false);
+    core.Authentication.refreshTokens.mockResolvedValue(false);
+
+    const result = await authEmit();
+    expect(result.loggedIn).toBe(false);
+    expect(result.currentUser).toBeDefined();
+    expect(result.loading).toBe(false);
+    // expect(result.providers).toEqual({ domains: ["default"] });
+  });
+
+  it("returns logged in info when authenticated", async () => {
+    const core = require("@mov-ai/mov-fe-lib-core");
+    core.Authentication.checkLogin.mockResolvedValue(true);
+    core.User.mockImplementation(() => ({
+      getCurrentUserWithPermissions: jest.fn().mockResolvedValue({
+        Resources: { Applications: ["testApp"] },
+        Superuser: true,
+        Roles: ["admin"],
+      }),
+    }));
+
+    const result = await authEmit();
+    expect(result.loggedIn).toBe(true);
+    expect(result.currentUser).toHaveProperty("roles");
+    expect(result.loading).toBe(false);
+    expect(result.providers).toEqual({ domains: ["default"] });
+  });
+
+  it("handles error and emits logged out info", async () => {
+    const core = require("@mov-ai/mov-fe-lib-core");
+    core.Authentication.checkLogin.mockRejectedValue(new Error("fail"));
+
+    const result = await authEmit();
+    expect(result.loggedIn).toBe(false);
+    expect(result.currentUser).toBeNull();
+    expect(result.loading).toBe(false);
+    expect(result.providers).toEqual({ domains: [] });
+  });
+});
