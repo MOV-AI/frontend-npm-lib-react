@@ -5,6 +5,16 @@ import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import jwtDecode from "jwt-decode";
 import i18n from "../../i18n/index";
+import { makeSub } from "../../Utils/Sub";
+
+declare global {
+  interface Window {
+    DocManager?: {
+      hasDirties: () => boolean;
+      // Add other DocManager methods/properties if needed
+    };
+  }
+}
 
 const RECHECK_VALID_DELAY = 10000; // milliseconds
 const RECHECK_AUTH_FAIL = 60000; // milliseconds
@@ -16,9 +26,54 @@ function checkConnection(): Promise<boolean> {
   }).then((res) => res.ok);
 }
 
+/* --------------------- EXTRACTED HELPERS --------------------- */
+
+// renderLoading - Renders the loading panel
+const renderLoading = () => (
+  <LoginPanel message={i18n.t("Preparing the bots")} progress={true} />
+);
+
+// renderLoginForm - Renders the login form
+const renderLoginForm = (
+  authenticationProviders: string[],
+  errorMessage: string,
+  handleLoginSubmit: (args: {
+    username: string;
+    password: string;
+    remember: boolean;
+    selectedProvider: string;
+  }) => void,
+) => (
+  <LoginForm
+    domains={authenticationProviders}
+    authErrorMessage={errorMessage}
+    onLoginSubmit={handleLoginSubmit}
+  />
+);
+
+// renderNotAuthorized - Renders the not authorized panel
+const renderNotAuthorized = (handleLogOut: () => void) => (
+  <LoginPanel
+    title={i18n.t("NotAuthorized")}
+    message={
+      <>
+        <p>{i18n.t("NotAuthorizedDescription") as string}</p>
+        <Button
+          variant="outlined"
+          data-testid="input_unauthorized_login"
+          onClick={handleLogOut}
+        >
+          {i18n.t("NotAuthorizedRedirectToLogin") as string}
+        </Button>
+      </>
+    }
+  />
+);
+
+/* --------------------- HOC --------------------- */
+
 /**
- * Higher-order component for handling authentication and authorization - refreshes tokens, checks permissions and verifies preodically if the user is still authenticated
- * @param WrappedComponent
+ * Higher-order component for handling authentication and authorization
  */
 export default function withAuthentication<P extends object>(
   WrappedComponent: React.ComponentType<P>,
@@ -128,7 +183,6 @@ export default function withAuthentication<P extends object>(
           () =>
             Authentication.refreshTokens()
               .then((res: boolean) => {
-                console.log("Token refresh result: ", res);
                 setState((prevState) => ({
                   ...prevState,
                   loggedIn: res,
@@ -154,6 +208,15 @@ export default function withAuthentication<P extends object>(
 
     // handleLogOut - log out the user
     const handleLogOut = (redirect?: string) => {
+      // Check for unsaved documents using global DocManager (kind of a hack)
+      const hasDirties = window?.DocManager?.hasDirties?.() ?? false;
+      if (hasDirties) {
+        const confirmed = window.confirm(
+          "You have unsaved documents. Are you sure you want to quit?",
+        );
+        if (!confirmed) return;
+      }
+      window.onbeforeunload = null;
       Authentication.logout(redirect);
     };
 
@@ -188,50 +251,15 @@ export default function withAuthentication<P extends object>(
       [authenticate],
     );
 
-    // renderLoading - Renders the loading panel
-    const renderLoading = () => {
-      return (
-        <LoginPanel message={i18n.t("Preparing the bots")} progress={true} />
-      );
-    };
-
-    // renderLoginForm - Renders the login form
-    const renderLoginForm = () => (
-      <LoginForm
-        domains={authenticationProviders}
-        authErrorMessage={errorMessage}
-        onLoginSubmit={handleLoginSubmit}
-      />
-    );
-
-    // handleLoginAfterNotAuthorized - after user is unauthorized, logout and redirect to login
-    const handleLoginAfterNotAuthorized = useCallback(() => handleLogOut(), []);
-
-    // renderNotAuthorized - Renders the not authorized panel
-    const renderNotAuthorized = () => {
-      return (
-        <LoginPanel
-          title={i18n.t("NotAuthorized")}
-          message={
-            <>
-              <p>{i18n.t("NotAuthorizedDescription") as string}</p>
-              <Button
-                variant="outlined"
-                data-testid="input_unauthorized_login"
-                onClick={handleLoginAfterNotAuthorized}
-              >
-                {i18n.t("NotAuthorizedRedirectToLogin") as string}
-              </Button>
-            </>
-          }
-        />
-      );
-    };
-
     // Render the Login form if the user is not logged in
     if (loading && firstRender.current) return renderLoading();
-    if (!state.loggedIn && firstRender.current) return renderLoginForm();
-    if (!state.hasPermissions) return renderNotAuthorized();
+    if (!state.loggedIn && firstRender.current)
+      return renderLoginForm(
+        authenticationProviders,
+        errorMessage,
+        handleLoginSubmit,
+      );
+    if (!state.hasPermissions) return renderNotAuthorized(handleLogOut);
 
     return (
       <>
@@ -244,9 +272,37 @@ export default function withAuthentication<P extends object>(
         {loading ? (
           renderLoading()
         ) : (
-          <Modal open={!state.loggedIn}>{renderLoginForm()}</Modal>
+          <Modal open={!state.loggedIn}>
+            {renderLoginForm(
+              authenticationProviders,
+              errorMessage,
+              handleLoginSubmit,
+            )}
+          </Modal>
         )}
       </>
     );
   };
 }
+
+//========================================================================================
+/*                                                                                      *
+ *                            LEGACY TO DELETE IN THE FUTURE                            *
+ *                                                                                      */
+//========================================================================================
+
+interface LoginSub {
+  loggedIn: boolean;
+  currentUser: any;
+  loading: boolean;
+  providers: { domains: string[] };
+}
+
+export const loggedOutInfo = {
+  loggedIn: false,
+  currentUser: null,
+  loading: false,
+  providers: { domains: [] },
+};
+
+export const authSub = makeSub<LoginSub>(loggedOutInfo);

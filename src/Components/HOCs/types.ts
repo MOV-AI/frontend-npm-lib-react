@@ -23,5 +23,4 @@ export interface WithDefaultsProps {
   dependencies?: Dependencies;
   ApplicationTheme: ApplicationThemeType;
   getStyle: (theme: ThemeOptions) => StyleRules;
-  allowGuest: boolean;
 }
