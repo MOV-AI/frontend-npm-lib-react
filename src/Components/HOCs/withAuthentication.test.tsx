@@ -6,7 +6,6 @@ import withTheme from "./withTheme";
 /* =========  MOCKS  ========= */
 jest.mock("@mov-ai/mov-fe-lib-core", () => ({
   Authentication: {
-    // 👇 Força usuário DESLOGADO
     checkLogin: jest.fn().mockResolvedValue(false),
     getProviders: jest.fn().mockResolvedValue({ domains: ["default"] }),
     getToken: jest.fn().mockReturnValue("fake-token"),
@@ -39,10 +38,8 @@ describe("withAuthentication HOC", () => {
 
     render(<Themed />);
 
-    // 1️⃣ Primeiro: tela de loading
     expect(screen.getByText("Preparing the bots")).toBeInTheDocument();
 
-    // 2️⃣ Em seguida: formulário de login com 'Username'
     await waitFor(
       () => expect(screen.getByText("Username")).toBeInTheDocument(),
       { timeout: 6000 },
