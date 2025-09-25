@@ -5,7 +5,7 @@ import LoginForm from "../LoginForm/LoginForm";
 import LoginPanel from "../LoginForm/LoginPanel";
 import jwtDecode from "jwt-decode";
 import i18n from "../../i18n/index";
-import { makeSub } from "../../Utils/Sub";
+import { Emit, makeSub } from "../../Utils/Sub";
 
 declare global {
   interface Window {
@@ -287,7 +287,7 @@ export default function withAuthentication<P extends object>(
 
 //========================================================================================
 /*                                                                                      *
- *                            LEGACY TO DELETE IN THE FUTURE                            *
+ *                            LOGIN SUB - LEGACY - PLS REMOVE                           *
  *                                                                                      */
 //========================================================================================
 
@@ -306,3 +306,48 @@ export const loggedOutInfo = {
 };
 
 export const authSub = makeSub<LoginSub>(loggedOutInfo);
+
+export const authEmit: Emit<LoginSub> = authSub.makeEmit(async () => {
+  authSub.update({ ...loggedOutInfo, loading: true });
+
+  try {
+    const [loggedIn, currentUserBare] = await Promise.all([
+      Authentication.checkLogin(),
+      new User().getCurrentUserWithPermissions(),
+    ]);
+
+    const currentUser = {
+      ...currentUserBare,
+      roles: currentUserBare.Roles.reduce(
+        (a, role) => ({ ...a, [role]: true }),
+        {},
+      ),
+    };
+
+    if (loggedIn)
+      return {
+        loggedIn: true,
+        providers: await Authentication.getProviders(),
+        currentUser,
+        loading: false,
+      };
+
+    const [providers, res] = await Promise.all([
+      Authentication.getProviders(),
+      Authentication.refreshTokens(),
+    ]);
+
+    return {
+      loggedIn: res,
+      providers,
+      currentUser,
+      loading: false,
+    };
+  } catch (e: any) {
+    if (!(globalThis as any).mock)
+      console.error("Auth Error: " + (e.error?.message ?? e.message ?? e));
+    return { ...loggedOutInfo, loading: false };
+  }
+});
+
+if (!(window as any).mock) authEmit();
