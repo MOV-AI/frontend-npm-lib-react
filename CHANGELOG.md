@@ -1,3 +1,8 @@
+# 2.7.3
+
+- [FP-3350](https://movai.atlassian.net/browse/FP-3350): Change in an editor and then logout
+- [FP-3355](https://movai.atlassian.net/browse/FP-3355): Fleetboard: Logs not updating
+
 # 2.7.2
 
 - [FP-3329](https://movai.atlassian.net/browse/FP-3329): MOVAI Logs out and does not allow user to save it's work
