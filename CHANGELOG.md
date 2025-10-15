@@ -1,3 +1,7 @@
+# 2.7.4
+
+- Update data test id in logs
+
 # 2.7.3
 
 - [FP-3350](https://movai.atlassian.net/browse/FP-3350): Change in an editor and then logout
