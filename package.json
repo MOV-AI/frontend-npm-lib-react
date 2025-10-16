@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-react",
-  "version": "2.7.3-0",
+  "version": "2.7.4-0",
   "description": "The Mov.AI's frontend library for React.",
   "keywords": [
     "frontend",

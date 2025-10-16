@@ -17,7 +17,11 @@ const SettingsPopover = () => {
   const columnsSelector = useSelector(translatedColumns, "columns", MENU_PROPS);
 
   return (
-    <FiltersIcon icon={<TuneIcon></TuneIcon>} title={i18n.t("Configuration")}>
+    <FiltersIcon
+      icon={<TuneIcon></TuneIcon>}
+      title={i18n.t("Configuration")}
+      data_testid="Configuration"
+    >
       <div className={classes.columnsFilter}>
         <Typography component="div" className={classes.inputHeader}>
           {`${i18n.t("Columns")}:`}
