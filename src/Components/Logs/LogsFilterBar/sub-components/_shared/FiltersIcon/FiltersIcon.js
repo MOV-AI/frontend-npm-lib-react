@@ -6,8 +6,16 @@ import StyledMenu from "./StyledMenu";
 import { filterIconStyles } from "./styles";
 
 const FiltersIcon = (props) => {
-  const { disabled, tooltip, title, icon, isActive, children, className } =
-    props;
+  const {
+    disabled,
+    tooltip,
+    title,
+    icon,
+    isActive,
+    children,
+    className,
+    data_testid,
+  } = props;
   const [anchorEl, setAnchorEl] = useState();
   const classes = filterIconStyles();
 
@@ -23,7 +31,7 @@ const FiltersIcon = (props) => {
     <React.Fragment>
       <Tooltip title={tooltip || title || ""}>
         <IconButton
-          data-testid="input_button"
+          data-testid={`input_button_${data_testid}`}
           size="small"
           onClick={handleOpen}
           disabled={disabled}
