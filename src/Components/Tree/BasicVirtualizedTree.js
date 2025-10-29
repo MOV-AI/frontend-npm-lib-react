@@ -19,7 +19,7 @@ import { EMPTY_FUNCTION } from "../../Utils/Constants";
 
 const styles = (theme) => ({
   rowWrapper: {
-    minHeight: "20px", // important to be this value, other values break visualization of tree
+    minHeight: "20px", // very sensitive value, minor change will create issues
 
     marginBottom: "4px",
 
