@@ -1,4 +1,4 @@
-# TBD
+# 2.7.5
 
 - [FP-3419](https://movai.atlassian.net/browse/FP-3419): Bug in Task Template when adding a score function
 
