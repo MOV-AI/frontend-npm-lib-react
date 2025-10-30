@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Tree from "react-virtualized-tree";
 import "material-icons/css/material-icons.css";
-import "react-virtualized/styles.css";
-import "react-virtualized-tree/lib/main.css";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Box from "@material-ui/core/Box";
@@ -20,6 +18,20 @@ import { EMPTY_FUNCTION } from "../../Utils/Constants";
 //========================================================================================
 
 const styles = (theme) => ({
+  rowWrapper: {
+    minHeight: "20px", // very sensitive value, minor change will create issues
+
+    marginBottom: "4px",
+
+    display: "flex",
+    alignItems: "center",
+  },
+  hoverableRow: {
+    "&:hover": {
+      // You can use the same color as before, or a slightly lighter/darker one
+      backgroundColor: "rgba(54,181,230, 0.15)",
+    },
+  },
   horizFlex: {
     display: "flex",
     flexDirection: "row",
@@ -36,7 +48,7 @@ const styles = (theme) => ({
       display: "none",
     },
     "&:hover": {
-      backgroundColor: "rgba(54,181,230, 0.15)",
+      backgroundColor: "rgba(54, 230, 177, 0.15)",
       "& button": {
         display: "inline-flex",
       },
@@ -153,7 +165,7 @@ class BasicVirtualizedTree extends Component {
               nodes={this.searchFilter(nodes, this.state.searchValue)}
               onChange={this.props.handleChange}
             >
-              {({ style, node, ...rest }) => {
+              {({ style, node }) => {
                 // Adjust tree indentation
                 style.paddingLeft = style.marginLeft / 1.5;
                 style.marginLeft = 0;
@@ -164,29 +176,26 @@ class BasicVirtualizedTree extends Component {
                     style={style}
                     onClick={() => this.props.onClickNode(node)}
                     onDoubleClick={() => this.props.onDoubleClickNode(node)}
-                    p={2}
-                    className={
-                      !_get(node, `children`, false) ? classes.preContainer : ""
-                    }
+                    className={`${classes.rowWrapper} ${classes.hoverableRow} ${!_get(node, `children`, false) ? classes.preContainer : ""}`}
                   >
-                    <Box p={1} className={classes.inlineFlex}>
+                    <Box p={0}>
                       <Grid alignContent={"space-between"} container>
                         {_get(node, `children`, false) &&
                           node.state?.expanded && (
                             <ExpandMoreIcon
                               data-testid="input_collapse"
-                              onClick={(evt) =>
-                                this.handleExpansion(evt, nodes, node, false)
-                              }
+                              onClick={(evt) => {
+                                this.handleExpansion(evt, nodes, node, false);
+                              }}
                             />
                           )}
                         {_get(node, `children`, false) &&
                           !node.state?.expanded && (
                             <ChevronRightIcon
                               data-testid="input_expand"
-                              onClick={(evt) =>
-                                this.handleExpansion(evt, nodes, node, true)
-                              }
+                              onClick={(evt) => {
+                                this.handleExpansion(evt, nodes, node, true);
+                              }}
                             />
                           )}
 
