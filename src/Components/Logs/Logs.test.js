@@ -1,4 +1,8 @@
-import { logsDedupe } from "./Logs.js";
+import React from "react";
+import "@testing-library/jest-dom";
+import Logs, { logsDedupe } from "./Logs.js";
+import { render, waitFor, findByText } from "@testing-library/react";
+import withTheme from "./../HOCs/withTheme";
 
 describe("Dedupes logs correctly", () => {
   // this first test is based on an algorithm
@@ -47,5 +51,16 @@ describe("Dedupes logs correctly", () => {
       { timestamp: 0, message: "b" },
       { timestamp: 0, message: "a" },
     ]);
+  });
+});
+
+describe("Logs component (smoke test)", () => {
+  it("renders without crashing", async () => {
+    // Dynamically import React and testing utilities
+    const robotsData = [{ name: "robot1" }];
+    const Themed = withTheme(Logs);
+    const { container } = render(<Themed robotsData={robotsData} />);
+    await waitFor(() => findByText(container, "robot1"));
+    expect(container).toBeInTheDocument();
   });
 });
