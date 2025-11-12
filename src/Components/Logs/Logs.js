@@ -138,7 +138,7 @@ const Logs = (props) => {
             (service[item.service] || noSelection(service)) &&
             (matchTags(tags, item) || noSelection(tags)) &&
             (item.message || "").includes(message) &&
-            (robots[item.robot] || noSelection(robots)) &&
+            robots[item.robot] &&
             (!selectedFromDate || item.timestamp >= selectedFromDate) &&
             (!selectedToDate || item.timestamp <= selectedToDate),
         )
