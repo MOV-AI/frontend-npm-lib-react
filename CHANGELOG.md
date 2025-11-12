@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3425](https://movai.atlassian.net/browse/FP-3425): Logs filter for robot not working
+
 # 2.7.5
 
 - [FP-3419](https://movai.atlassian.net/browse/FP-3419): Bug in Task Template when adding a score function
