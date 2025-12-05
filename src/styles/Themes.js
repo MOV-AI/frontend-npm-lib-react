@@ -1,5 +1,5 @@
-import "@fontsource/open-sans";
-import "@fontsource/roboto";
+import "@fontsource/open-sans/index.css";
+import "@fontsource/roboto/index.css";
 import _merge from "lodash/merge";
 
 const CONSTANTS = {
