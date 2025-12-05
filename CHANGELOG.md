@@ -1,3 +1,7 @@
+# 2.7.7
+
+- fix css import for vite
+
 # 2.7.6
 
 - [FP-3425](https://movai.atlassian.net/browse/FP-3425): Logs filter for robot not working
